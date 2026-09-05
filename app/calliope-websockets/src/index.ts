@@ -1,4 +1,3 @@
-import { setupWSConnection } from '@y/websocket-server/utils'
 import chalk from 'chalk'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
@@ -11,10 +10,13 @@ import { persistenceLeaderService } from './services/PersistenceLeaderService.js
 import { initRedisConnection } from './services/RedisService.js'
 import { TokenService } from './services/TokenService.js'
 import { WebsocketService } from './services/WebsocketService.js'
+import { YjsHandshakeService } from './services/YjsHandshakeService.js'
+import { YjsLineageService } from './services/YjsLineageService.js'
 import { recordLastWritingUser, YjsSyncService } from './services/YjsSyncService.js'
 import { ClientToCalliopeMessage } from './ts-shared/ClientToCalliopeMessage.js'
 import { AUTH_COOKIE_NAME } from './ts-shared/const/constants.js'
 import { Logger } from './utils/logger.js'
+import { SocketBuffer } from './utils/SocketBuffer.js'
 
 const app = websocketify(new Koa())
 
@@ -56,17 +58,7 @@ app.ws.use(
 
 app.ws.use(
 	route.all('/live/yjs/:worldId/:entityType/:documentId', async function (ctx) {
-		const messageQueue: { data: Buffer | ArrayBuffer | Buffer[]; isBinary: boolean }[] = []
-		let isSetupComplete = false
-
-		ctx.websocket.onmessage = (event) => {
-			if (!isSetupComplete) {
-				messageQueue.push({
-					data: event.data as Buffer | ArrayBuffer | Buffer[],
-					isBinary: typeof event.data !== 'string',
-				})
-			}
-		}
+		const buffer = new SocketBuffer(ctx.websocket)
 
 		try {
 			const authCookie = ctx.cookies.get(AUTH_COOKIE_NAME)
@@ -89,15 +81,37 @@ app.ws.use(
 			const docName = `${worldId}:${documentId}`
 			const { id: userId } = TokenService.decodeUserToken(authCookie)
 
-			const { accessLevel } = await YjsSyncService.setupDocumentListener({
+			const connection = await YjsSyncService.setupDocumentListener({
 				userId,
 				worldId,
 				entityId: documentId,
 				entityType: entityType as 'actor' | 'event' | 'article' | 'node',
 				docName,
 			})
+			const { accessLevel, lineageId } = connection
 
-			setupWSConnection(ctx.websocket, ctx.req, { docName, gc: true })
+			const clientStateVector = await YjsHandshakeService.readClientStateVector(buffer)
+			if (!clientStateVector) {
+				Logger.yjsWarn(docName, `Client sent no sync handshake, declining`)
+				ctx.websocket.close(4008, 'No sync handshake')
+				await connection.abandon()
+				return
+			}
+			if (!YjsLineageService.isCompatibleClientState(lineageId, clientStateVector)) {
+				Logger.yjsWarn(
+					docName,
+					`Client holds a different lineage (server ${lineageId}, client ${[...clientStateVector.keys()].join(',')}), declining`,
+				)
+				ctx.websocket.close(4409, 'Document lineage changed')
+				await connection.abandon()
+				return
+			}
+			if (!connection.attach(ctx.websocket, ctx.req)) {
+				Logger.yjsWarn(docName, `Document was reset while the client was validated, asking it to retry`)
+				ctx.websocket.close(4008, 'Document reloaded')
+				await connection.abandon()
+				return
+			}
 
 			if (accessLevel === 'read') {
 				const yListeners = ctx.websocket.listeners('message')
@@ -125,12 +139,7 @@ app.ws.use(
 				})
 			}
 
-			// Replay queued messages
-			isSetupComplete = true
-			for (const queuedMessage of messageQueue) {
-				ctx.websocket.emit('message', queuedMessage.data, queuedMessage.isBinary)
-			}
-			messageQueue.length = 0
+			buffer.replay()
 		} catch (e) {
 			console.error('Error establishing Yjs websocket:', e)
 			ctx.websocket.close(4500, 'Error establishing socket')

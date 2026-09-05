@@ -53,7 +53,7 @@ export function RichTextEditorComponent({
 	const scrollbars = useBrowserSpecificScrollbars()
 	const { isReadOnly } = useSelector(getWorldState, (a, b) => a.isReadOnly === b.isReadOnly)
 
-	const { extension: collaborationExtension, isReady: collabReady } = useCollaboration({
+	const { extension: collaborationExtension, hasSynced: collabSynced } = useCollaboration({
 		enabled: !!collaboration,
 		documentId: collaboration?.documentId ?? '',
 		entityType: collaboration?.entityType ?? 'actor',
@@ -84,7 +84,7 @@ export function RichTextEditorComponent({
 
 	const { handlePaste } = useEditorPasteHandler()
 
-	const showPreview = !!collaboration && !collabReady
+	const showPreview = !!collaboration && !collabSynced
 	const previewEditor = useEditor({
 		content: value,
 		editable: false,
@@ -137,9 +137,9 @@ export function RichTextEditorComponent({
 	}, [value])
 
 	useEffect(() => {
-		const editable = !isReadOnly && (!collaboration || collabReady)
+		const editable = !isReadOnly && (!collaboration || collabSynced)
 		editor?.setEditable(editable)
-	}, [collabReady, collaboration, editor, isReadOnly])
+	}, [collabSynced, collaboration, editor, isReadOnly])
 
 	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {
