@@ -12,12 +12,14 @@ import { useEventBusDispatch, useEventBusSubscribe } from '../../eventBus'
 import { useLiveMessageHandlers } from './useLiveMessageHandlers'
 
 const expBackoffDelays = [50, 1000, 2000, 3000, 4000, 5000, 6000, 7000, 8000, 9000, 10000]
+const CONNECTION_ALERT_DELAY_MS = 3000
 
 export const useLiveUpdates = () => {
 	const { sessionId, user } = useSelector(getAuthState)
 
 	const currentWebsocket = useRef<WebSocket | null>(null)
 	const heartbeatInterval = useRef<number | null>(null)
+	const connectionAlertTimeout = useRef<number | null>(null)
 	const backoffLevel = useRef<number>(-1)
 	useEventBusSubscribe['calliope/requestSendMessage']({
 		callback: (message) => {
@@ -87,6 +89,10 @@ export const useLiveUpdates = () => {
 
 			socket.onopen = function () {
 				console.info('[ws] Connection established!')
+				if (connectionAlertTimeout.current !== null) {
+					window.clearTimeout(connectionAlertTimeout.current)
+					connectionAlertTimeout.current = null
+				}
 				dispatch(hideCalliopeConnectionAlert())
 				const message: ClientToCalliopeMessage = {
 					type: ClientToCalliopeMessageType.INIT,
@@ -114,7 +120,12 @@ export const useLiveUpdates = () => {
 				}
 				clearHeartbeat()
 				if (userRef.current) {
-					dispatch(showCalliopeConnectionAlert())
+					if (connectionAlertTimeout.current === null) {
+						connectionAlertTimeout.current = window.setTimeout(() => {
+							connectionAlertTimeout.current = null
+							dispatch(showCalliopeConnectionAlert())
+						}, CONNECTION_ALERT_DELAY_MS)
+					}
 					reconnect()
 				}
 			}
