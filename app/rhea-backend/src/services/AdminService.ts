@@ -5,14 +5,17 @@ import { UserUncheckedUpdateInput } from '../../prisma/client/models.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
-	listHourlyActivityStats: async ({ hours }: { hours: number }) => {
+	listHourlyActivityStats: async ({ hours, excludeUserId }: { hours: number; excludeUserId: string }) => {
 		const now = new Date()
 		const start = new Date(now)
 		start.setUTCMinutes(0, 0, 0)
 		start.setUTCHours(start.getUTCHours() - (hours - 1))
 
 		const rows = await getPrismaClient().auditLog.findMany({
-			where: { createdAt: { gte: start } },
+			where: {
+				createdAt: { gte: start },
+				OR: [{ userId: null }, { userId: { not: excludeUserId } }],
+			},
 			select: { createdAt: true, action: true, userId: true },
 		})
 

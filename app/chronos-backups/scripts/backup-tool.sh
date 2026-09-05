@@ -6,7 +6,7 @@ set -e
 # Usage:
 #   /scripts/backup-tool.sh list       List all available snapshots
 #   /scripts/backup-tool.sh restore    Interactive restore
-#   /scripts/backup-tool.sh backup     Create a new backup now
+#   /scripts/backup-tool.sh create     Create a new backup now
 
 RESTORE_DIR="/data/restore"
 
@@ -222,7 +222,7 @@ case "${COMMAND}" in
     list)
         cmd_list
         ;;
-    backup)
+    create)
         cmd_backup
         ;;
     restore)
@@ -231,7 +231,7 @@ case "${COMMAND}" in
     *)
         echo "Usage:"
         echo "  /scripts/backup-tool.sh list       List all available snapshots"
-        echo "  /scripts/backup-tool.sh backup     Create a new backup now"
+        echo "  /scripts/backup-tool.sh create     Create a new backup now"
         echo "  /scripts/backup-tool.sh restore    Interactive restore"
         exit 1
         ;;

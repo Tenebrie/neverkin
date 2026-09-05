@@ -100,6 +100,10 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 		weeklyActiveUsers: number
 		monthlyActiveUsers: number
 		regulars: number
+		hourly: {
+			hour: string
+			dailyActiveUsers: number
+		}[]
 		daily: {
 			dailyActiveUsers: number
 			weeklyActiveUsers: number

@@ -42,12 +42,26 @@ export const AuditLogService = {
 				(set) => [...set].filter((day) => day >= from && day <= to).length >= minDays,
 			).length
 
-		const usersActiveSince = (since: Date) =>
+		const usersActiveBetween = (from: Date, to: Date) =>
 			new Set(
 				rows
-					.filter((row) => row.action === 'UserAuth' && row.userId && row.createdAt >= since)
+					.filter(
+						(row) => row.action === 'UserAuth' && row.userId && row.createdAt >= from && row.createdAt <= to,
+					)
 					.map((row) => row.userId),
 			).size
+		const usersActiveSince = (since: Date) => usersActiveBetween(since, now)
+
+		const currentHour = new Date(now)
+		currentHour.setUTCMinutes(0, 0, 0)
+		const hourly = Array.from({ length: 24 }, (_, i) => {
+			const hour = new Date(currentHour.getTime() - (23 - i) * HOUR_MS)
+			const end = new Date(hour.getTime() + HOUR_MS)
+			return {
+				hour: hour.toISOString(),
+				dailyActiveUsers: usersActiveBetween(new Date(end.getTime() - DAY_MS), end),
+			}
+		})
 
 		const lastDay = historyDays - 1
 		const daily = counts.slice(days).map((day, i) => {
@@ -76,6 +90,7 @@ export const AuditLogService = {
 			weeklyActiveUsers: usersActiveSince(new Date(now.getTime() - 7 * DAY_MS)),
 			monthlyActiveUsers: usersActiveSince(new Date(now.getTime() - days * DAY_MS)),
 			regulars: usersActiveWithin(lastDay - days + 1, lastDay, REGULAR_ACTIVE_DAYS),
+			hourly,
 			daily,
 		}
 	},
@@ -172,7 +187,8 @@ export const AuditLogService = {
 	},
 }
 
-const DAY_MS = 86_400_000
+const HOUR_MS = 3_600_000
+const DAY_MS = 24 * HOUR_MS
 const REGULAR_ACTIVE_DAYS = 7
 
 const COUNTED_ACTIONS = {

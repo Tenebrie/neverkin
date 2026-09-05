@@ -31,8 +31,14 @@ export function AdminDashboardView() {
 	const StatCard = AdminDashboardStatCard
 	const StorageCard = AdminDashboardStorageCard
 
-	const series = (key: DailyStatKey): StatCardSeries =>
-		auditStats.daily.map((day) => ({ label: dayFormat.format(new Date(day.day)), value: day[key] }))
+	const series = (key: DailyStatKey, days = auditStats.daily.length): StatCardSeries =>
+		auditStats.daily
+			.slice(-days)
+			.map((day) => ({ label: dayFormat.format(new Date(day.day)), value: day[key] }))
+	const hourlySeries: StatCardSeries = auditStats.hourly.map((entry) => ({
+		label: hourFormat.format(new Date(entry.hour)),
+		value: entry.dailyActiveUsers,
+	}))
 
 	return (
 		<Stack gap={2.5} width="100%" alignSelf="center">
@@ -46,13 +52,13 @@ export function AdminDashboardView() {
 					label="Daily"
 					value={auditStats.dailyActiveUsers}
 					sub="Last 24 hours"
-					series={series('dailyActiveUsers')}
+					series={hourlySeries}
 				/>
 				<StatCard
 					label="Weekly"
 					value={auditStats.weeklyActiveUsers}
 					sub="Last 7 days"
-					series={series('weeklyActiveUsers')}
+					series={series('weeklyActiveUsers', 7)}
 				/>
 				<StatCard
 					label="Monthly"
@@ -117,6 +123,7 @@ export function AdminDashboardView() {
 type DailyStatKey = Exclude<keyof AdminGetDashboardApiResponse['auditStats']['daily'][number], 'day'>
 
 const dayFormat = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' })
+const hourFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' })
 
 function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
 	const theme = useTheme()

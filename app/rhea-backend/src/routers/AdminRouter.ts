@@ -30,14 +30,14 @@ const router = new Router().with(async (ctx) => {
 	}
 })
 
-router.get('/api/admin/dashboard', async () => {
+router.get('/api/admin/dashboard', async (ctx) => {
 	useApiEndpoint({
 		name: 'adminGetDashboard',
 		description: 'Gets dashboard information for the admin panel',
 		tags: [adminUsersTag],
 	})
 
-	const hourlyActivity = await AdminService.listHourlyActivityStats({ hours: 72 })
+	const hourlyActivity = await AdminService.listHourlyActivityStats({ hours: 72, excludeUserId: ctx.user.id })
 	const auditStats = await AuditLogService.getStats({ days: 30 })
 	const contentStats = await AdminService.listContentStats({ days: 30 })
 	const fileSystemStats = await FileSystemService.getStorageStats()

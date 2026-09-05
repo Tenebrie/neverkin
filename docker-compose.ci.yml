@@ -3,6 +3,8 @@ services:
         build:
             context: ./app/gatekeeper-proxy
             dockerfile: ./Dockerfile.prod
+            cache_from: ["type=gha,scope=build-gatekeeper"]
+            cache_to: ["type=gha,mode=max,scope=build-gatekeeper"]
         networks:
             dev-playwright:
                 aliases:
@@ -16,6 +18,8 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ci
+            cache_from: ["type=gha,scope=build-styx"]
+            cache_to: ["type=gha,mode=max,scope=build-styx"]
         networks:
             - dev-playwright
 
@@ -23,6 +27,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-rhea"]
+            cache_to: ["type=gha,mode=max,scope=build-rhea"]
         environment:
             NODE_ENV: production
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
@@ -49,6 +55,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-calliope"]
+            cache_to: ["type=gha,mode=max,scope=build-calliope"]
         environment:
             NODE_ENV: production
             jwt-secret: ci-secret-key
@@ -63,6 +71,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/orpheus-mcp/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-orpheus"]
+            cache_to: ["type=gha,mode=max,scope=build-orpheus"]
         environment:
             NODE_ENV: production
             REQUIRE_OAUTH: "true"
@@ -78,6 +88,8 @@ services:
         build:
             context: ./
             dockerfile: ./app/thetis-landing/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-thetis"]
+            cache_to: ["type=gha,mode=max,scope=build-thetis"]
         networks:
             - dev-playwright
 
@@ -100,6 +112,7 @@ services:
         build:
             context: ./
             dockerfile: ./app/rhea-backend/Dockerfile.prod
+            cache_from: ["type=gha,scope=build-rhea"]
         environment:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         depends_on:
@@ -110,7 +123,7 @@ services:
             - dev-playwright
 
     redis:
-        image: redis:7-alpine
+        image: redis:8-alpine
         networks:
             - dev-playwright
 

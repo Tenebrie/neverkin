@@ -27,18 +27,14 @@ FROM node:26-alpine
 
 WORKDIR /app/orpheus
 
-# Copy only the built JavaScript
-COPY --from=builder /app/orpheus/dist /app/orpheus/dist
+# Install ONLY production dependencies
 COPY --from=builder /app/orpheus/package.json /app/orpheus/package-lock.json /app/orpheus/
+COPY --from=builder /library /library
+RUN npm ci --omit=dev && npm cache clean --force
 
-# Copy only ts-shared source (no node_modules)
+# Copy only the built JavaScript and ts-shared source (no node_modules)
+COPY --from=builder /app/orpheus/dist /app/orpheus/dist
 COPY ./app/ts-shared/package.json /app/ts-shared/package.json
 COPY ./app/ts-shared/src /app/ts-shared/src
-
-# Copy built libraries
-COPY --from=builder /library /library
-
-# Install ONLY production dependencies
-RUN npm ci --omit=dev && npm cache clean --force
 
 EXPOSE 3002

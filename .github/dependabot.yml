@@ -6,6 +6,9 @@ updates:
     directory: '/'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       root-npm-minor-patch:
         patterns: ['*']
@@ -14,17 +17,39 @@ updates:
         patterns: ['*']
         update-types: ['major']
 
+  - package-ecosystem: 'docker-compose'
+    directory: '/'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'postgres'
+        update-types: ['version-update:semver-major']
+    groups:
+      root-compose-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      root-compose-major:
+        patterns: ['*']
+        update-types: ['major']
+
   # Styx
   - package-ecosystem: 'npm'
     directory: '/app/styx-frontend'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
+      styx-npm-tiptap:
+        patterns: ['@tiptap/*']
       styx-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       styx-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   - package-ecosystem: 'docker'
@@ -44,6 +69,9 @@ updates:
     directory: '/app/rhea-backend'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       rhea-npm-minor-patch:
         patterns: ['*']
@@ -69,12 +97,19 @@ updates:
     directory: '/app/calliope-websockets'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
+      calliope-npm-tiptap:
+        patterns: ['@tiptap/*']
       calliope-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       calliope-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   - package-ecosystem: 'docker'
@@ -94,6 +129,9 @@ updates:
     directory: '/app/orpheus-mcp'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       orpheus-npm-minor-patch:
         patterns: ['*']
@@ -119,6 +157,24 @@ updates:
     directory: '/app/thetis-landing'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+      # Starlight bundles against js-yaml 4; a hoisted v5 breaks `astro build`
+      - dependency-name: 'js-yaml'
+        update-types: ['version-update:semver-major']
+      # Astro ecosystem stays on the current major
+      - dependency-name: 'astro'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@astrojs/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: '@astrolib/*'
+        update-types: ['version-update:semver-major']
+      - dependency-name: 'astro-*'
+        update-types: ['version-update:semver-major']
+      # 0.x: minors are its majors, and each tracks an astro major
+      - dependency-name: '@astrojs/starlight'
+        update-types: ['version-update:semver-minor']
     groups:
       thetis-npm-minor-patch:
         patterns: ['*']
@@ -139,17 +195,63 @@ updates:
         patterns: ['*']
         update-types: ['major']
 
+  # Echo
+  - package-ecosystem: 'npm'
+    directory: '/app/echo-desktop'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+    groups:
+      echo-npm-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      echo-npm-major:
+        patterns: ['*']
+        update-types: ['major']
+
   # ts-shared
   - package-ecosystem: 'npm'
     directory: '/app/ts-shared'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
+      ts-shared-npm-tiptap:
+        patterns: ['@tiptap/*']
       ts-shared-npm-minor-patch:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['minor', 'patch']
       ts-shared-npm-major:
         patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
+        update-types: ['major']
+
+  # Libraries
+  - package-ecosystem: 'npm'
+    directories:
+      - '/library/tiptap-schema'
+      - '/library/openapi-fetch'
+      - '/library/esoteric-date'
+    schedule:
+      interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
+    groups:
+      library-npm-tiptap:
+        patterns: ['@tiptap/*']
+      library-npm-minor-patch:
+        patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
+        update-types: ['minor', 'patch']
+      library-npm-major:
+        patterns: ['*']
+        exclude-patterns: ['@tiptap/*']
         update-types: ['major']
 
   # Gatekeeper
@@ -183,11 +285,26 @@ updates:
     directory: '/test/e2e'
     schedule:
       interval: 'weekly'
+    ignore:
+      - dependency-name: 'typescript'
+        update-types: ['version-update:semver-major']
     groups:
       e2e-npm-minor-patch:
         patterns: ['*']
         update-types: ['minor', 'patch']
       e2e-npm-major:
+        patterns: ['*']
+        update-types: ['major']
+
+  - package-ecosystem: 'docker'
+    directory: '/test/e2e'
+    schedule:
+      interval: 'weekly'
+    groups:
+      e2e-docker-minor-patch:
+        patterns: ['*']
+        update-types: ['minor', 'patch']
+      e2e-docker-major:
         patterns: ['*']
         update-types: ['major']
 

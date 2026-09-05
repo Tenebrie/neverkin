@@ -15,12 +15,12 @@ case "${COMMAND}" in
     list)
         docker exec -it "${CONTAINER}" /scripts/backup-tool.sh list
         ;;
-    backup)
+    create)
         # Use -t only if we have a TTY (not in CI)
         if [ -t 1 ]; then
-            docker exec -it "${CONTAINER}" /scripts/backup-tool.sh backup
+            docker exec -it "${CONTAINER}" /scripts/backup-tool.sh create
         else
-            docker exec "${CONTAINER}" /scripts/backup-tool.sh backup
+            docker exec "${CONTAINER}" /scripts/backup-tool.sh create
         fi
         ;;
     restore)
@@ -31,7 +31,7 @@ case "${COMMAND}" in
         echo ""
         echo "Usage:"
         echo "  ./scripts/backups.sh list       List all available snapshots"
-        echo "  ./scripts/backups.sh backup     Create a new backup now"
+        echo "  ./scripts/backups.sh create     Create a new backup now"
         echo "  ./scripts/backups.sh restore    Interactive restore"
         exit 1
         ;;

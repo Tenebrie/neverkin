@@ -1,0 +1,29 @@
+services:
+    gatekeeper:
+        build:
+            cache_from: ["type=gha,scope=build-gatekeeper"]
+            cache_to: ["type=gha,mode=max,scope=build-gatekeeper"]
+    styx:
+        build:
+            cache_from: ["type=gha,scope=build-styx"]
+            cache_to: ["type=gha,mode=max,scope=build-styx"]
+    rhea:
+        build:
+            cache_from: ["type=gha,scope=build-rhea"]
+            cache_to: ["type=gha,mode=max,scope=build-rhea"]
+    calliope:
+        build:
+            cache_from: ["type=gha,scope=build-calliope"]
+            cache_to: ["type=gha,mode=max,scope=build-calliope"]
+    orpheus:
+        build:
+            cache_from: ["type=gha,scope=build-orpheus"]
+            cache_to: ["type=gha,mode=max,scope=build-orpheus"]
+    thetis:
+        build:
+            cache_from: ["type=gha,scope=build-thetis"]
+            cache_to: ["type=gha,mode=max,scope=build-thetis"]
+    chronos:
+        build:
+            cache_from: ["type=gha,scope=build-chronos"]
+            cache_to: ["type=gha,mode=max,scope=build-chronos"]

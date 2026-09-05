@@ -79,13 +79,19 @@ jobs:
             echo "missing=true" >> "$GITHUB_OUTPUT"
           fi
 
+      - uses: docker/setup-buildx-action@v4
+        if: steps.check-container.outputs.missing == 'true'
+      - uses: crazy-max/ghaction-github-runtime@v4
+        if: steps.check-container.outputs.missing == 'true'
+
       - name: Build & Publish
         if: steps.check-container.outputs.missing == 'true'
         run: |
-          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml build ${{ matrix.service }}
+          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml -f docker-compose.build.yml build ${{ matrix.service }}
           docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
+          COMPOSE_BAKE: true
 
   create-release:
     name: Create Release
@@ -213,11 +219,8 @@ jobs:
       - name: Checkout branch
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && git fetch && git checkout dev && git pull"
 
-      - name: Backup Database (Legacy)
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-staging"
-
       - name: Backup Database (Backrest)
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh backup"
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh create"
 
       - name: Deploy to DigitalOcean
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
@@ -257,11 +260,8 @@ jobs:
       - name: Checkout branch
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && git fetch && git checkout main && git pull"
 
-      - name: Backup Database (Legacy)
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-create-db-backup.sh timelines-prod"
-
       - name: Backup Database (Backrest)
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh backup"
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh create"
 
       - name: Deploy to DigitalOcean
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"

@@ -148,6 +148,7 @@ export function AuthBackground({ children }: Props) {
 					sx={{
 						position: 'fixed',
 						inset: 0,
+						pointerEvents: 'none',
 						'--purple-x': variation.purpleX,
 						'--purple-y': variation.purpleY,
 						'--red-x': variation.redX,

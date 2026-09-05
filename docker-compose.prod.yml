@@ -15,6 +15,9 @@ services:
         deploy:
             endpoint_mode: dnsrr
             replicas: 1
+            placement:
+                constraints:
+                    - node.role == manager
             update_config:
                 order: stop-first
                 parallelism: 1
@@ -135,9 +138,18 @@ services:
             retries: 2
             start_period: 30s
     rhea-postgres:
+        deploy:
+            placement:
+                constraints:
+                    - node.role == manager
         volumes:
             - /mnt/volume_rhea_postgres/data:/var/lib/postgresql/data/:cached
-            - /mnt/volume_rhea_postgres/backups:/backups:cached
+
+    redis:
+        deploy:
+            placement:
+                constraints:
+                    - node.role == manager
 
     chronos:
         image: tenebrie/timelines-chronos:${VERSION}
@@ -150,6 +162,9 @@ services:
             XDG_CACHE_HOME: /cache
         deploy:
             replicas: 1
+            placement:
+                constraints:
+                    - node.role == manager
             update_config:
                 order: stop-first
                 parallelism: 1

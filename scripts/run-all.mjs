@@ -15,12 +15,15 @@ const targets = selectors.length
 	? subPackages.filter((pkg) => selectors.some((selector) => matches(pkg, selector)))
 	: subPackages
 
+const npmArgs = script === 'install' ? ['install'] : ['run', script, '--if-present', '--', ...passthroughArgs]
+
 function run(pkg) {
 	return new Promise((resolve) => {
 		const chunks = []
-		const child = spawn('npm', ['run', script, '--if-present', '--', ...passthroughArgs], {
+		const child = spawn('npm', npmArgs, {
 			cwd: pkg,
 			env: { ...process.env, FORCE_COLOR: '1' },
+			shell: process.platform === 'win32',
 		})
 		// Push stdout and stderr into one buffer in arrival order to preserve the
 		// process's output exactly, then flush it as a single contiguous block on exit.

@@ -1,9 +1,6 @@
 # Build stage
 FROM node:26-alpine AS builder
 
-ARG VERSION=dev
-ENV VERSION=${VERSION}
-
 WORKDIR /app
 
 # Copy and build ts-shared first
@@ -24,6 +21,8 @@ RUN npm ci
 
 # Copy source files and build
 COPY ./app/styx-frontend /app/styx
+ARG VERSION=dev
+ENV VERSION=${VERSION}
 RUN npm run build:ci
 
 # Production stage - use nginx to serve static files

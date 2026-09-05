@@ -32,16 +32,14 @@ RUN apk --update --no-cache add curl
 
 WORKDIR /app/rhea
 
+# Install ONLY production dependencies
+COPY --from=builder /app/rhea/package.json /app/rhea/package-lock.json /app/rhea/
+COPY --from=builder /library /library
+RUN npm ci --omit=dev && npm cache clean --force
+
 # Copy only the built JavaScript and necessary runtime files
 COPY --from=builder /app/rhea/dist /app/rhea/dist
 COPY --from=builder /app/rhea/prisma /app/rhea/prisma
 COPY --from=builder /app/rhea/prisma.config.ts /app/rhea/prisma.config.ts
-COPY --from=builder /app/rhea/package.json /app/rhea/package-lock.json /app/rhea/
-
-# Copy built libraries
-COPY --from=builder /library /library
-
-# Install ONLY production dependencies
-RUN npm ci --omit=dev && npm cache clean --force
 
 EXPOSE 3000

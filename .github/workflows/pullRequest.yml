@@ -7,6 +7,10 @@ on:
   push:
     branches: [dev]
 
+concurrency:
+  group: ${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
   test:
     name: Build & Test (${{ matrix.service }})
@@ -48,8 +52,12 @@ jobs:
             browser: chromium
           - name: Firefox
             browser: firefox
+    env:
+      COMPOSE_BAKE: true
     steps:
       - uses: actions/checkout@v7
+      - uses: docker/setup-buildx-action@v4
+      - uses: crazy-max/ghaction-github-runtime@v4
 
       - name: Start services
         run: |
