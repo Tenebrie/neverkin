@@ -6,8 +6,8 @@
 
 # Introduction
 
-[![Build & Test](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/pullRequest.yml)
-[![Deploy](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml/badge.svg)](https://github.com/Tenebrie/timelines/actions/workflows/deploy.yml)
+[![Build & Test](https://github.com/Tenebrie/neverkin/actions/workflows/pullRequest.yml/badge.svg)](https://github.com/Tenebrie/neverkin/actions/workflows/pullRequest.yml)
+[![Deploy](https://github.com/Tenebrie/neverkin/actions/workflows/deploy.yml/badge.svg)](https://github.com/Tenebrie/neverkin/actions/workflows/deploy.yml)
 
 Neverkin is an open-source non-commercial collaborative writing and worldbuilding app for storytellers, DMs, writers and novelists. It's great for planning your D&D sessions, writing fanfiction with your friends, keeping track of your thoughts or just when you need to quickly write something down.
 
@@ -21,8 +21,6 @@ Neverkin is an open-source non-commercial collaborative writing and worldbuildin
 - Real-time collaboration
 - Multi-track timelines
 - Custom calendars
-
-Formerly known internally as Timelines, which is a name still used across the repository.
 
 ## Live Deployments
 
@@ -75,7 +73,7 @@ The default admin user is `admin@localhost` with password `q`.
 
 ### Desktop application
 
-You may download the built desktop application from the [downloads page](https://neverkin.com/download) on the main website, or from the [releases page](https://github.com/Tenebrie/timelines/releases) here.
+You may download the built desktop application from the [downloads page](https://neverkin.com/download) on the main website, or from the [releases page](https://github.com/Tenebrie/neverkin/releases) here.
 
 ### Self-hosting
 
