@@ -12,6 +12,7 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AdminRouteImport } from './routes/admin'
 import { Route as CreateAccountRouteImport } from './routes/create-account'
+import { Route as GuestLoginRouteImport } from './routes/guest-login'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
@@ -56,6 +57,11 @@ const AdminRoute = AdminRouteImport.update({
 const CreateAccountRoute = CreateAccountRouteImport.update({
   id: '/create-account',
   path: '/create-account',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const GuestLoginRoute = GuestLoginRouteImport.update({
+  id: '/guest-login',
+  path: '/guest-login',
   getParentRoute: () => rootRouteImport,
 } as any)
 const LoginRoute = LoginRouteImport.update({
@@ -222,6 +228,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/create-account': typeof CreateAccountRoute
+  '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -256,6 +263,7 @@ export interface FileRoutesByFullPath {
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/create-account': typeof CreateAccountRoute
+  '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -289,6 +297,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/admin': typeof AdminRouteWithChildren
   '/create-account': typeof CreateAccountRoute
+  '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
@@ -326,6 +335,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/create-account'
+    | '/guest-login'
     | '/login'
     | '/admin/audit'
     | '/admin/notifications'
@@ -360,6 +370,7 @@ export interface FileRouteTypes {
   to:
     | '/'
     | '/create-account'
+    | '/guest-login'
     | '/login'
     | '/admin/audit'
     | '/admin/notifications'
@@ -392,6 +403,7 @@ export interface FileRouteTypes {
     | '/'
     | '/admin'
     | '/create-account'
+    | '/guest-login'
     | '/login'
     | '/admin/audit'
     | '/admin/notifications'
@@ -428,6 +440,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   AdminRoute: typeof AdminRouteWithChildren
   CreateAccountRoute: typeof CreateAccountRoute
+  GuestLoginRoute: typeof GuestLoginRoute
   LoginRoute: typeof LoginRoute
   CalendarCalendarIdRoute: typeof CalendarCalendarIdRoute
   ProfileProfileRoute: typeof ProfileProfileRouteWithChildren
@@ -462,6 +475,13 @@ declare module '@tanstack/react-router' {
       path: '/create-account'
       fullPath: '/create-account'
       preLoaderRoute: typeof CreateAccountRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/guest-login': {
+      id: '/guest-login'
+      path: '/guest-login'
+      fullPath: '/guest-login'
+      preLoaderRoute: typeof GuestLoginRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/login': {
@@ -769,6 +789,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   AdminRoute: AdminRouteWithChildren,
   CreateAccountRoute: CreateAccountRoute,
+  GuestLoginRoute: GuestLoginRoute,
   LoginRoute: LoginRoute,
   CalendarCalendarIdRoute: CalendarCalendarIdRoute,
   ProfileProfileRoute: ProfileProfileRouteWithChildren,

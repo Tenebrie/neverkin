@@ -31,7 +31,7 @@ export function Header({ variant, icon, sx, children, endAdornment, ...rest }: P
 	return (
 		<Typography variant={defaults.typographyVariant} sx={{ ...defaults.sx, ...sx }} {...rest}>
 			<Stack direction="row" alignItems="center" justifyContent="space-between" gap={1} sx={{ width: 1 }}>
-				<span>
+				<span style={{ flex: 1 }}>
 					{icon} {children}
 				</span>
 				{endAdornment}

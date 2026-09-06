@@ -46,7 +46,8 @@ export const BaseNavigator = () => {
 	const isCompact = useMediaQuery(muiTheme.breakpoints.down('lg'))
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
-	if (isShareLinkRoute && !user) {
+	const isGuestLoginRoute = useCheckRouteMatch('/guest-login')
+	if ((isShareLinkRoute || isGuestLoginRoute) && !user) {
 		return null
 	}
 
