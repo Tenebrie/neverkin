@@ -22,6 +22,8 @@ Neverkin is an open-source non-commercial collaborative writing and worldbuildin
 - Multi-track timelines
 - Custom calendars
 
+For more information, please refer to the [official documentation](https://neverkin.com/docs).
+
 ## Live Deployments
 
 - **Production**: https://neverkin.com/
