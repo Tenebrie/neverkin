@@ -35,7 +35,7 @@ You agree not to:
 
 ## Open Source
 
-Neverkin is licensed under the GPL-3.0-or-later license. The source code is available on [GitHub](https://github.com/tenebrie/timelines). These Terms apply to the hosted version of the Service.
+Neverkin is licensed under the GPL-3.0-or-later license. The source code is available on [GitHub](https://github.com/tenebrie/neverkin). These Terms apply to the hosted version of the Service.
 
 ## Limitation of Liability
 
@@ -51,4 +51,4 @@ We may update these Terms from time to time. Continued use of the Service consti
 
 ## Contact
 
-For questions about these Terms, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).
+For questions about these Terms, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/neverkin).

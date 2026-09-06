@@ -84,7 +84,7 @@ const platforms = [
 								<Button
 									variant="primary"
 									text={`Download for ${platform.name}`}
-									href={`https://github.com/Tenebrie/timelines/releases/latest/download/${platform.asset}`}
+									href={`https://github.com/Tenebrie/neverkin/releases/latest/download/${platform.asset}`}
 									icon="tabler:download"
 									class="w-full max-w-xs"
 								/>
@@ -98,7 +98,7 @@ const platforms = [
 				<p class="text-sm text-gray-500 dark:text-slate-400">
 					Previous versions available as
 					<a
-						href="https://github.com/Tenebrie/timelines/releases"
+						href="https://github.com/Tenebrie/neverkin/releases"
 						target="_blank"
 						rel="noopener noreferrer"
 						class="text-primary hover:underline">GitHub releases</a
@@ -135,7 +135,7 @@ const platforms = [
 					return tag
 				}
 			}
-			const response = await fetch('https://api.github.com/repos/Tenebrie/timelines/releases/latest', {
+			const response = await fetch('https://api.github.com/repos/Tenebrie/neverkin/releases/latest', {
 				headers: { Accept: 'application/vnd.github+json' },
 			})
 			if (!response.ok) {

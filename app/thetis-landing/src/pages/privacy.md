@@ -45,7 +45,7 @@ You have the right to:
 
 ## Open Source Transparency
 
-Neverkin is open source under the GPL-3.0 license. You can review exactly how your data is handled by examining the [source code](https://github.com/tenebrie/timelines). You may also self-host the Service if you prefer full control over your data.
+Neverkin is open source under the GPL-3.0 license. You can review exactly how your data is handled by examining the [source code](https://github.com/tenebrie/neverkin). You may also self-host the Service if you prefer full control over your data.
 
 ## Children's Privacy
 
@@ -57,4 +57,4 @@ We may update this Privacy Policy from time to time. Changes will be reflected b
 
 ## Contact
 
-For privacy-related questions, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/timelines).
+For privacy-related questions, please [get in touch](/contact) or open an issue on the [GitHub repository](https://github.com/tenebrie/neverkin).

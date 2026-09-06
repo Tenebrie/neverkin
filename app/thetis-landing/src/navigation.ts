@@ -41,7 +41,7 @@ export const footerData = {
 			title: 'Resources',
 			links: [
 				{ text: 'Comparison', href: getPermalink('/alternatives') },
-				{ text: 'GitHub', href: 'https://github.com/tenebrie/timelines' },
+				{ text: 'GitHub', href: 'https://github.com/tenebrie/neverkin' },
 				{ text: 'Status', href: 'https://status.neverkin.com' },
 				// { text: 'Changelog', href: '#' },
 				// { text: 'Roadmap', href: '#' },
@@ -52,7 +52,7 @@ export const footerData = {
 			links: [
 				{ text: 'Discord', href: 'https://discord.gg/rD3KdXmqDP' },
 				// { text: 'Reddit', href: '#' },
-				{ text: 'Contribute', href: 'https://github.com/tenebrie/timelines' },
+				{ text: 'Contribute', href: 'https://github.com/tenebrie/neverkin' },
 				{ text: 'Contact Form', href: getPermalink('/contact') },
 			],
 		},
@@ -69,10 +69,10 @@ export const footerData = {
 		{ text: 'Privacy Policy', href: getPermalink('/privacy') },
 	],
 	socialLinks: [
-		{ ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/tenebrie/timelines' },
+		{ ariaLabel: 'GitHub', icon: 'tabler:brand-github', href: 'https://github.com/tenebrie/neverkin' },
 		{ ariaLabel: 'Discord', icon: 'tabler:brand-discord', href: 'https://discord.gg/rD3KdXmqDP' },
 	],
 	footNote: `
-    <span class="text-muted">© 2022-2026 Neverkin. Open source under <a class="text-primary hover:underline" href="https://github.com/tenebrie/timelines">GPL-3.0</a>.</span>
+    <span class="text-muted">© 2022-2026 Neverkin. Open source under <a class="text-primary hover:underline" href="https://github.com/tenebrie/neverkin">GPL-3.0</a>.</span>
   `,
 }
