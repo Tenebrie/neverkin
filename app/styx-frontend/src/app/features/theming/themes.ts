@@ -150,6 +150,7 @@ export const customLightTheme = {
 		outlineStrong: 'rgb(60 40 120 / 40%)',
 		hintText: 'rgb(0 0 0 / 60%)',
 		highlight: 'hsla(31, 100%, 50%, 1.00)',
+		brandGradient: 'linear-gradient(135deg, #b8860b 0%, #c56030 33%, #b4574b 66%, #9c3e4e 100%)',
 		neutralBackground: {
 			contrastText: 'rgb(0 0 0 / 38%)',
 			normal: 'rgb(0 0 0 / 20%)',
@@ -186,6 +187,7 @@ export const customDarkTheme: typeof customLightTheme = {
 		outlineStrong: 'rgb(180 170 220 / 40%)',
 		hintText: 'rgb(255 255 255 / 50%)',
 		highlight: 'hsla(31, 100%, 50%, 1.00)',
+		brandGradient: 'linear-gradient(135deg, #f2edb6 0%, #f8c569 33%, #ce7259 66%, #9c3e4e 100%)',
 		neutralBackground: {
 			contrastText: 'rgb(255, 255, 255, 38%)',
 			normal: 'rgb(255 255 255 / 10%)',

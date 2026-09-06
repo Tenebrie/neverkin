@@ -74,7 +74,7 @@ type GradientVariation = {
 	visible: boolean
 }
 
-const variations: Record<string, GradientVariation> = {
+const variations = {
 	home: { purpleX: '10%', purpleY: '15%', redX: '90%', redY: '85%', visible: true },
 	login: { purpleX: '25%', purpleY: '15%', redX: '75%', redY: '85%', visible: true },
 	createAccount: { purpleX: '75%', purpleY: '15%', redX: '25%', redY: '85%', visible: true },
@@ -93,10 +93,12 @@ const variations: Record<string, GradientVariation> = {
 		visible: true,
 	},
 	hidden: { purpleX: '50%', purpleY: '50%', redX: '50%', redY: '50%', visible: false },
-}
+} satisfies Record<string, GradientVariation>
 
 function getVariation(pathname: string): GradientVariation {
 	if (pathname === '/') return variations.home
+	if (pathname.includes('guest-login')) return variations.login
+	if (pathname.includes('share')) return variations.login
 	if (pathname.includes('login')) return variations.login
 	if (pathname.includes('create-account')) return variations.createAccount
 	if (pathname.startsWith('/admin')) return variations.admin
