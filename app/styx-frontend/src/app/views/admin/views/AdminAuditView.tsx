@@ -14,7 +14,7 @@ import { useCallback, useState } from 'react'
 import { AdminGetAuditLogsApiResponse, useAdminGetAuditLogsQuery } from '@/api/adminUsersApi'
 
 import { Pagination } from '../../../../ui-lib/components/Pagination/Pagination'
-import { AdminUserEmail } from '../components/AdminUserEmail'
+import { AdminUserSummary } from '../components/AdminUserSummary'
 import { SearchInput } from '../components/SearchInput'
 
 const pageSize = 20
@@ -70,8 +70,8 @@ function AuditLogRow({ log, formatDate }: { log: AuditLog; formatDate: (date: st
 						variant="outlined"
 					/>
 				</TableCell>
-				<TableCell width={220}>
-					{log.user && <AdminUserEmail user={log.user} />}
+				<TableCell width={220} sx={{ py: 0.75 }}>
+					{log.user && <AdminUserSummary user={log.user} />}
 					{!log.user && <span>—</span>}
 				</TableCell>
 				<TableCell>
