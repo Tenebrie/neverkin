@@ -24,13 +24,15 @@ const RHEA_DEBOUNCE_DELAY = 2000
 const RHEA_FLUSH_RETRY_DELAY = 5000
 const RHEA_FLUSH_MAX_ATTEMPTS = 60
 
+export const YJS_ENTITY_TYPES = ['actor', 'event', 'article', 'node'] as const
+
 // Store metadata per document
 export type DocumentMetadata = {
 	docName: string
 	lastWritingUserId: string | null
 	worldId: string
 	entityId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
+	entityType: (typeof YJS_ENTITY_TYPES)[number]
 	isLoaded: boolean
 	isDirty: boolean
 	loadPromise: Promise<void> | null
@@ -93,7 +95,11 @@ export const YjsSyncService = {
 		documentMetadata.set(docName, metadata)
 
 		// Load initial state
-		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc })
+		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc }).then(() => {
+			if (metadata.isLoaded && documentMetadata.get(docName) === metadata) {
+				watchDocumentUpdates(doc, metadata)
+			}
+		})
 		let userAccessLevel: 'read' | 'write'
 		try {
 			userAccessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
@@ -102,14 +108,6 @@ export const YjsSyncService = {
 			await abandonConnection(metadata)
 			throw error
 		}
-
-		// Listen for updates
-		doc.on('update', (update: Uint8Array, origin: unknown) => {
-			handleDocumentUpdate(doc, metadata, update, origin).catch((error) => {
-				Logger.yjsError(docName, `Error while handling update, closing all connections:`, error)
-				closeDocumentConnections(doc, 'Failed to handle update')
-			})
-		})
 
 		Logger.yjsInfo(docName, `Document ready`)
 		return pendingConnection(doc, metadata, userAccessLevel)
@@ -287,6 +285,9 @@ export const YjsSyncService = {
 	}) {
 		const { contentHtml } = await RheaService.fetchDocumentState(userId, metadata)
 
+		// A fresh build owes nothing to updates from other lineages that arrived while loading
+		doc.store.pendingStructs = null
+		doc.store.pendingDs = null
 		doc.transact(() => {
 			if (contentHtml) {
 				htmlToYDoc(contentHtml, doc)
@@ -446,6 +447,15 @@ async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Prom
 		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
 		return 'failed'
 	}
+}
+
+function watchDocumentUpdates(doc: WSSharedDoc, metadata: DocumentMetadata) {
+	doc.on('update', (update: Uint8Array, origin: unknown) => {
+		handleDocumentUpdate(doc, metadata, update, origin).catch((error) => {
+			Logger.yjsError(metadata.docName, `Error while handling update, closing all connections:`, error)
+			closeDocumentConnections(doc, 'Failed to handle update')
+		})
+	})
 }
 
 async function handleDocumentUpdate(
