@@ -27,6 +27,11 @@ services:
             - environment
         volumes:
             - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
+        logging:
+            driver: json-file
+            options:
+                max-size: '50m'
+                max-file: '10'
     styx:
         image: tenebrie/timelines-styx:${VERSION}
         build:

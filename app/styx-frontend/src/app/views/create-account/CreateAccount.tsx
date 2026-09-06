@@ -11,7 +11,7 @@ import { z } from 'zod'
 import { useCreateAccountMutation } from '@/api/authApi'
 import { ApiErrorBanner } from '@/app/components/ApiErrorBanner'
 import { TenebrieLogo } from '@/app/components/TenebrieLogo'
-import { GoogleLoginButton } from '@/app/features/auth/components/GoogleLoginButton'
+import { getLandingOrigin, GoogleLoginButton } from '@/app/features/auth/components/GoogleLoginButton'
 import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
 import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
@@ -144,6 +144,12 @@ export const CreateAccount = () => {
 							>
 								<span>Register</span>
 							</Button>
+							<Typography variant="caption" color="text.secondary">
+								By registering you agree to the{' '}
+								<Link href={`${getLandingOrigin()}/privacy`} target="_blank" rel="noopener">
+									Privacy Policy
+								</Link>
+							</Typography>
 							<Stack spacing={1} alignItems="center">
 								<Link
 									component={NavLink}

@@ -225,9 +225,6 @@ router.post('/api/auth/login', async (ctx) => {
 	if (!user) {
 		AuditLogService.append(ctx, {
 			action: 'UserLoginFailed',
-			data: {
-				email: body.email,
-			},
 		})
 		throw new UnauthorizedError('Email or password do not match')
 	}

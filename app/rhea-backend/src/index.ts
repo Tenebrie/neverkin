@@ -35,6 +35,7 @@ import { WorldShareVisitRouter } from './routers/WorldShareVisitRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiArticleRouter } from './routers/WorldWikiArticleRouter.js'
 import { WorldWikiFolderRouter } from './routers/WorldWikiFolderRouter.js'
+import { AuditLogService } from './services/AuditLogService.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
 import { RedisService } from './services/RedisService.js'
 import { UserService } from './services/UserService.js'
@@ -160,5 +161,6 @@ if (!isRunningInTest()) {
 		UserService.cleanUpTestUsers()
 		CloudStorageService.cleanUpExpiredAssets()
 		CloudStorageService.cleanUpOrphanedAssets()
+		AuditLogService.cleanUpOldLogs()
 	}, 60000)
 }

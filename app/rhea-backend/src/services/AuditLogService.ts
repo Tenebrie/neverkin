@@ -185,11 +185,20 @@ export const AuditLogService = {
 			pageCount: Math.ceil(rowCount._count._all / actualSize),
 		}
 	},
+
+	cleanUpOldLogs: async () => {
+		return getPrismaClient().auditLog.deleteMany({
+			where: {
+				createdAt: { lt: new Date(Date.now() - AUDIT_LOG_RETENTION_DAYS * DAY_MS) },
+			},
+		})
+	},
 }
 
 const HOUR_MS = 3_600_000
 const DAY_MS = 24 * HOUR_MS
 const REGULAR_ACTIVE_DAYS = 7
+const AUDIT_LOG_RETENTION_DAYS = 60
 
 const COUNTED_ACTIONS = {
 	UserAuth: 'userAuthEvents',
