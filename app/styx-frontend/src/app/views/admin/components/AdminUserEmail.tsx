@@ -33,14 +33,14 @@ export function AdminUserEmail({ user, editable }: Props) {
 				</Link>
 				{emailRevealed && editable && <UserEmailPopoverButton user={user} />}
 				{!emailRevealed && (
-					<Tooltip title="Reveal email">
+					<Tooltip title="Reveal email" disableInteractive enterDelay={700}>
 						<IconButton size="small" onClick={() => setEmailRevealed(true)} sx={{ p: 0.25 }}>
 							<VisibilityIcon fontSize="small" />
 						</IconButton>
 					</Tooltip>
 				)}
 				{emailRevealed && !editable && (
-					<Tooltip title="Hide email">
+					<Tooltip title="Hide email" disableInteractive enterDelay={700}>
 						<IconButton size="small" onClick={() => setEmailRevealed(false)} sx={{ p: 0.25 }}>
 							<VisibilityOffIcon fontSize="small" />
 						</IconButton>
