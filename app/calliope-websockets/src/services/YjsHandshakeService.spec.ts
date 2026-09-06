@@ -1,8 +1,7 @@
+import { awarenessFrame, stateVector, syncStep1Frame, updateFrame } from '@src/test-utils/yjs.js'
 import { SocketBuffer } from '@src/utils/SocketBuffer.js'
 import { EventEmitter } from 'events'
-import * as encoding from 'lib0/encoding'
 import { describe, expect, it } from 'vitest'
-import * as syncProtocol from 'y-protocols/sync'
 import * as Y from 'yjs'
 
 import { YjsHandshakeService } from './YjsHandshakeService.js'
@@ -25,7 +24,7 @@ describe('YjsHandshakeService - decodeSyncStep1', () => {
 	it('returns null for a sync update frame', () => {
 		const doc = new Y.Doc()
 		doc.getText('t').insert(0, 'x')
-		expect(YjsHandshakeService.decodeSyncStep1(updateFrame(doc))).toBeNull()
+		expect(YjsHandshakeService.decodeSyncStep1(updateFrame(Y.encodeStateAsUpdate(doc)))).toBeNull()
 	})
 })
 
@@ -61,7 +60,7 @@ describe('YjsHandshakeService - readClientStateVector', () => {
 	it('leaves every frame in the buffer for replay, in order', async () => {
 		const { socket, buffer } = fakeSocket()
 		const doc = new Y.Doc()
-		const frames = [syncStep1Frame(doc), awarenessFrame(), updateFrame(doc)]
+		const frames = [syncStep1Frame(doc), awarenessFrame(), updateFrame(Y.encodeStateAsUpdate(doc))]
 		frames.forEach((frame) => socket.receive(frame))
 		await YjsHandshakeService.readClientStateVector(buffer, 50)
 
@@ -81,29 +80,4 @@ function fakeSocket() {
 		},
 	})
 	return { socket, buffer: new SocketBuffer(socket) }
-}
-
-function stateVector(doc: Y.Doc) {
-	return Y.decodeStateVector(Y.encodeStateVector(doc))
-}
-
-function syncStep1Frame(doc: Y.Doc) {
-	const encoder = encoding.createEncoder()
-	encoding.writeVarUint(encoder, 0)
-	syncProtocol.writeSyncStep1(encoder, doc)
-	return encoding.toUint8Array(encoder)
-}
-
-function updateFrame(doc: Y.Doc) {
-	const encoder = encoding.createEncoder()
-	encoding.writeVarUint(encoder, 0)
-	syncProtocol.writeUpdate(encoder, Y.encodeStateAsUpdate(doc))
-	return encoding.toUint8Array(encoder)
-}
-
-function awarenessFrame() {
-	const encoder = encoding.createEncoder()
-	encoding.writeVarUint(encoder, 1)
-	encoding.writeVarUint8Array(encoder, new Uint8Array([0]))
-	return encoding.toUint8Array(encoder)
 }

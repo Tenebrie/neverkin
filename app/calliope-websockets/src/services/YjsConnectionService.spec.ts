@@ -1,104 +1,81 @@
-import { closedWith, openSocketPair, SocketPair } from '@src/utils/testing/openSocketPair.js'
-import * as encoding from 'lib0/encoding'
-import { afterEach, beforeEach, describe, expect, it, vi } from 'vitest'
-import * as syncProtocol from 'y-protocols/sync'
+import { closedWith, setupSocketPairs, SocketPair } from '@src/test-utils/openSocketPair.js'
+import { setupMockRedis } from '@src/test-utils/setupMockRedis.js'
+import { setupMockRhea } from '@src/test-utils/setupMockRhea.js'
+import { randomDocument, syncOverSocket, syncStep1Frame, TestDocument } from '@src/test-utils/yjs.js'
+import { docs } from '@y/websocket-server/utils'
+import { beforeEach, describe, expect, it } from 'vitest'
 import * as Y from 'yjs'
 
 import { YjsConnectionService } from './YjsConnectionService.js'
-import { recordLastWritingUser, YjsSyncService } from './YjsSyncService.js'
+import { htmlToYDoc, yDocToHtml } from './YjsParserService.js'
 
-vi.mock('./YjsSyncService.js', () => ({
-	YjsSyncService: { setupDocumentListener: vi.fn() },
-	recordLastWritingUser: vi.fn(),
-}))
+setupMockRedis()
+const rhea = setupMockRhea()
+const openSocketPair = setupSocketPairs()
 
-const SERVER_LINEAGE = 42
-let pair: SocketPair
-let connection: ReturnType<typeof pendingConnection>
-
-beforeEach(async () => {
-	pair = await openSocketPair()
-	connection = pendingConnection()
-	vi.mocked(YjsSyncService.setupDocumentListener).mockResolvedValue(connection)
-})
-
-afterEach(async () => {
-	await pair.close()
-	vi.clearAllMocks()
+beforeEach(() => {
+	rhea.grantWrite('writer')
+	rhea.setContent('<p>Hello</p>')
 })
 
 describe('YjsConnectionService - connect', () => {
-	it('attaches a client of the same lineage and replays its frames', async () => {
-		pair.client.send(syncStep1Frame(clientDocOfLineage(SERVER_LINEAGE)))
+	it('syncs an empty client to the document', async () => {
+		const document = randomDocument()
+		const pair = await openSocketPair()
+		const client = new Y.Doc()
 
-		await connect()
+		await Promise.all([connect(pair, document), syncOverSocket(pair.client, client)])
 
-		expect(connection.attach).toHaveBeenCalledWith(pair.server, pair.req)
-		expect(connection.abandon).not.toHaveBeenCalled()
-		expect(recordLastWritingUser).toHaveBeenCalledWith('world-1:doc-1', 'user-1')
+		expect(yDocToHtml(client)).toBe('<p>Hello</p>')
 	})
 
-	it('attaches an empty client', async () => {
-		pair.client.send(syncStep1Frame(new Y.Doc()))
+	it('reattaches a client that synced from the same build', async () => {
+		const document = randomDocument()
+		const first = await openSocketPair()
+		const client = new Y.Doc()
+		await Promise.all([connect(first, document), syncOverSocket(first.client, client)])
+		await first.close()
 
-		await connect()
+		const second = await openSocketPair()
+		await Promise.all([connect(second, document), syncOverSocket(second.client, client)])
 
-		expect(connection.attach).toHaveBeenCalledOnce()
+		expect(second.client.readyState).toBe(second.client.OPEN)
 	})
 
-	it('declines a client of another lineage and abandons the document', async () => {
+	it('declines a client from another build and releases the document', async () => {
+		const document = randomDocument()
+		const pair = await openSocketPair()
+		const stale = new Y.Doc()
+		htmlToYDoc('<p>Hello</p>', stale)
 		const closed = closedWith(pair.client)
-		pair.client.send(syncStep1Frame(clientDocOfLineage(7)))
 
-		await connect()
+		const connecting = connect(pair, document)
+		pair.client.send(syncStep1Frame(stale))
+		await connecting
 
 		expect(await closed).toEqual({ code: 4409, reason: 'Document lineage changed' })
-		expect(connection.attach).not.toHaveBeenCalled()
-		expect(connection.abandon).toHaveBeenCalledOnce()
+		expect(docs.has(document.docName)).toBe(false)
 	})
 
-	it('abandons the document when the handshake throws', async () => {
+	it('releases the document when the handshake throws', async () => {
+		const document = randomDocument()
+		const pair = await openSocketPair()
+
+		const connecting = connect(pair, document)
 		pair.client.send(new Uint8Array([0, 0, 200, 1, 1, 1]))
+		await expect(connecting).rejects.toThrow()
 
-		await expect(connect()).rejects.toThrow()
-
-		expect(connection.attach).not.toHaveBeenCalled()
-		expect(connection.abandon).toHaveBeenCalledOnce()
+		expect(docs.has(document.docName)).toBe(false)
 	})
 })
 
-function connect() {
+function connect(pair: SocketPair, { worldId, entityId, entityType }: TestDocument) {
 	return YjsConnectionService.connect({
 		socket: pair.server,
 		req: pair.req,
-		userId: 'user-1',
-		worldId: 'world-1',
-		entityType: 'article',
-		documentId: 'doc-1',
+		userId: 'writer',
+		worldId,
+		entityType,
+		documentId: entityId,
 	})
-}
-
-function pendingConnection() {
-	return {
-		accessLevel: 'write' as const,
-		lineageId: SERVER_LINEAGE,
-		attach: vi.fn(() => true),
-		abandon: vi.fn(async () => {}),
-	}
-}
-
-function clientDocOfLineage(lineageId: number) {
-	const server = new Y.Doc()
-	server.clientID = lineageId
-	server.getMap<number>('meta').set('lineage', lineageId)
-	const client = new Y.Doc()
-	Y.applyUpdate(client, Y.encodeStateAsUpdate(server))
-	return client
-}
-
-function syncStep1Frame(doc: Y.Doc) {
-	const encoder = encoding.createEncoder()
-	encoding.writeVarUint(encoder, 0)
-	syncProtocol.writeSyncStep1(encoder, doc)
-	return encoding.toUint8Array(encoder)
 }

@@ -1,4 +1,5 @@
 import { IncomingMessage } from 'http'
+import { afterEach } from 'vitest'
 import { WebSocket, WebSocketServer } from 'ws'
 
 export type SocketPair = {
@@ -9,9 +10,30 @@ export type SocketPair = {
 }
 
 /**
- * A real server-side `ws` socket with a connected client, for tests that hand sockets to y-websocket-server.
+ * Real `ws` sockets for tests that hand a server-side socket to y-websocket-server.
+ * Every pair opened during a test is closed after it.
  */
-export async function openSocketPair(): Promise<SocketPair> {
+export function setupSocketPairs() {
+	const open: SocketPair[] = []
+
+	afterEach(async () => {
+		await Promise.all(open.splice(0).map((pair) => pair.close()))
+	})
+
+	return async (): Promise<SocketPair> => {
+		const pair = await openSocketPair()
+		open.push(pair)
+		return pair
+	}
+}
+
+export function closedWith(socket: WebSocket): Promise<{ code: number; reason: string }> {
+	return new Promise((resolve) =>
+		socket.once('close', (code, reason) => resolve({ code, reason: reason.toString() })),
+	)
+}
+
+async function openSocketPair(): Promise<SocketPair> {
 	const wss = new WebSocketServer({ port: 0 })
 	await new Promise<void>((resolve) => wss.once('listening', resolve))
 	const address = wss.address()
@@ -37,10 +59,4 @@ export async function openSocketPair(): Promise<SocketPair> {
 			await new Promise<void>((resolve) => wss.close(() => resolve()))
 		},
 	}
-}
-
-export function closedWith(socket: WebSocket): Promise<{ code: number; reason: string }> {
-	return new Promise((resolve) =>
-		socket.once('close', (code, reason) => resolve({ code, reason: reason.toString() })),
-	)
 }

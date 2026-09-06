@@ -1,3 +1,4 @@
+import { stateVector, syncFrom, typeInto } from '@src/test-utils/yjs.js'
 import { describe, expect, it } from 'vitest'
 import * as Y from 'yjs'
 
@@ -129,31 +130,4 @@ function buildServerDoc(html: string) {
 		YjsLineageService.markLineage(doc)
 	})
 	return doc
-}
-
-function syncFrom(server: Y.Doc) {
-	const client = new Y.Doc()
-	Y.applyUpdate(client, Y.encodeStateAsUpdate(server))
-	return client
-}
-
-function typeInto(doc: Y.Doc, text: string) {
-	const fragment = doc.getXmlFragment('default')
-	const paragraph = fragment.get(0)
-	if (paragraph instanceof Y.XmlElement) {
-		const textNode = paragraph.get(0)
-		if (textNode instanceof Y.XmlText) {
-			textNode.insert(textNode.length, text)
-			return
-		}
-		paragraph.insert(0, [new Y.XmlText(text)])
-		return
-	}
-	const newParagraph = new Y.XmlElement('paragraph')
-	newParagraph.insert(0, [new Y.XmlText(text)])
-	fragment.insert(0, [newParagraph])
-}
-
-function stateVector(doc: Y.Doc) {
-	return Y.decodeStateVector(Y.encodeStateVector(doc))
 }
