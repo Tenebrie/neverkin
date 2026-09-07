@@ -30,7 +30,7 @@
 		"zod": "^4.5.4"
 	},
 	"devDependencies": {
-		"@modelcontextprotocol/inspector": "^2.4.0",
+		"@modelcontextprotocol/inspector": "^2.5.0",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@types/node": "^25.6.2",
 		"@typescript-eslint/eslint-plugin": "^8.69.0",
@@ -44,7 +44,7 @@
 		"msw": "^2.15.0",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.9.6",
-		"tsc-alias": "^1.9.3",
+		"tsc-alias": "^1.9.4",
 		"tsx": "^4.23.13",
 		"typescript": "^6.0.3",
 		"vite": "^8.2.2",
