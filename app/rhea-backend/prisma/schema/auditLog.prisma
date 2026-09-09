@@ -25,7 +25,7 @@ enum AuditAction {
 }
 
 model AuditLog {
-    id        String   @id @unique @default(uuid())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
 
     user      User?   @relation(fields: [userId], references: [id], onDelete: SetNull)

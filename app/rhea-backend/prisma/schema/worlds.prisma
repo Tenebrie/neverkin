@@ -13,7 +13,7 @@ enum WorldAccessMode {
 }
 
 model World {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -38,10 +38,12 @@ model World {
   calendars           Calendar[]
   shareLinks          WorldShareLink[]
   assetReferences     AssetReference[]
+
+  @@index([ownerId])
 }
 
 model WorldEvent {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
@@ -69,10 +71,13 @@ model WorldEvent {
   parentFolder         WikiFolder? @relation("FolderEvent", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
   parentFolderPosition Float       @default(0)
+
+  @@index([worldId, parentFolderId])
+  @@index([worldEventTrackId])
 }
 
 model WorldEventDelta {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
   timestamp BigInt
@@ -83,10 +88,12 @@ model WorldEventDelta {
 
   worldEventId String
   worldEvent   WorldEvent @relation(fields: [worldEventId], references: [id], onDelete: Cascade)
+
+  @@index([worldEventId, timestamp])
 }
 
 model WorldEventTrack {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -98,10 +105,12 @@ model WorldEventTrack {
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+
+  @@index([worldId])
 }
 
 model WorldShareLink {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -114,4 +123,6 @@ model WorldShareLink {
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+
+  @@index([worldId])
 }

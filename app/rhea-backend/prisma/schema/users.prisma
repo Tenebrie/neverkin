@@ -11,7 +11,7 @@ enum CollaboratorAccess {
 }
 
 model User {
-  id                  String    @id @unique @default(uuid())
+  id                  String    @id @default(uuid())
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @default(now()) @updatedAt
   deletedAt           DateTime?
@@ -38,7 +38,6 @@ model User {
 
   auditLogs AuditLog[]
 
-  @@index([email])
 }
 
 model CollaboratingUser {
@@ -50,6 +49,8 @@ model CollaboratingUser {
   worldId String
 
   @@id([userId, worldId])
+
+  @@index([worldId])
 }
 
 enum FeatureFlag {
@@ -57,7 +58,7 @@ enum FeatureFlag {
 }
 
 model FeatureFlagEntry {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 

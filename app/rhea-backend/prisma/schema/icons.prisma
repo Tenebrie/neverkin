@@ -1,17 +1,21 @@
 model UserFavoriteIconSet {
-    id String @id @unique @default(uuid())
+    id String @id @default(uuid())
 
     iconSet String
     user    User   @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     userId String
+
+    @@index([userId])
 }
 
 model WorldCommonIconSet {
-    id String @id @unique @default(uuid())
+    id String @id @default(uuid())
 
     iconSet String
     world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
 
     worldId String
+
+    @@index([worldId])
 }
