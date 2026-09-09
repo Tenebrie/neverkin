@@ -38,7 +38,7 @@ export function WorldShareView() {
 			return
 		}
 		setSessionStorageItem('visitedShareLinkSlug', null)
-		navigate({ to: `/world/${result.response.world.id}/wiki` })
+		navigate({ to: '/world/$worldId/wiki', params: { worldId: result.response.world.id } })
 	}, [acceptInvitation, navigate, shareLinkSlug])
 
 	if (isLoading) {

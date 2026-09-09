@@ -21,7 +21,6 @@ export function HomeSectionWorldRowPin({ world }: Props) {
 
 	return (
 		<HomeSectionRowIconButton
-			tooltip={isPinned ? 'Unpin from top' : 'Pin to top'}
 			aria-label={`${isPinned ? 'Unpin' : 'Pin'} world "${world.name}"`}
 			active={isPinned}
 			onClick={() => dispatch(toggleWorldPin(world.id))}

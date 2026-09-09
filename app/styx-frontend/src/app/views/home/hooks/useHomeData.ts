@@ -19,10 +19,13 @@ export type SharedWorld = WorldBrief & { role: string }
 const byRecency = (a: { updatedAt: string }, b: { updatedAt: string }) =>
 	new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
 
-const pinnedFirst = <T extends WorldBrief>(worlds: T[], pinnedWorlds: string[]): T[] =>
-	[...worlds].sort(
-		(a, b) => Number(pinnedWorlds.includes(b.id)) - Number(pinnedWorlds.includes(a.id)) || byRecency(a, b),
-	)
+const pinnedFirst = <T extends WorldBrief>(worlds: T[], pinnedWorlds: string[]): T[] => {
+	const pinRank = (id: string) => {
+		const index = pinnedWorlds.indexOf(id)
+		return index === -1 ? pinnedWorlds.length : index
+	}
+	return [...worlds].sort((a, b) => pinRank(a.id) - pinRank(b.id) || byRecency(a, b))
+}
 
 export function useHomeData() {
 	const { ownedWorlds, contributableWorlds, visibleWorlds, isLoading: isWorldsLoading } = useWorldListData()

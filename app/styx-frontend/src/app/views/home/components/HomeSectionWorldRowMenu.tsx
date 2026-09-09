@@ -8,6 +8,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
 
 import { WorldBrief } from '@/api/types/worldTypes'
+import { NavigationLink } from '@/app/components/NavigationLink'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -19,14 +20,16 @@ type Props = {
 }
 
 export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
-	const popupState = usePopupState({ variant: 'popover', popupId: `world-row-menu-${world.id}` })
+	const popupState = usePopupState({
+		variant: 'popover',
+		popupId: `world-row-menu-${world.id}`,
+	})
 	const navigate = useStableNavigate()
 	const { open: openDeleteWorldModal } = useModal('deleteWorldModal')
 
 	return (
 		<>
 			<HomeSectionRowIconButton
-				tooltip="More actions"
 				aria-label={`More actions for world "${world.name}"`}
 				{...bindTrigger(popupState)}
 			>
@@ -38,23 +41,24 @@ export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
 				transformOrigin={{ vertical: 'top', horizontal: 'right' }}
 				slotProps={{ paper: { sx: { minWidth: 212 } } }}
 			>
-				<MenuItem
-					component="a"
-					href={`/world/${world.id}/wiki`}
+				<NavigationLink
+					to="/world/$worldId/wiki"
+					params={{ worldId: world.id }}
 					target="_blank"
 					rel="noreferrer"
-					onClick={popupState.close}
 				>
-					<ListItemIcon>
-						<OpenInNew fontSize="small" />
-					</ListItemIcon>
-					Open in new tab
-				</MenuItem>
+					<MenuItem onClick={popupState.close}>
+						<ListItemIcon>
+							<OpenInNew fontSize="small" />
+						</ListItemIcon>
+						Open in new tab
+					</MenuItem>
+				</NavigationLink>
 				{isOwned && (
 					<MenuItem
 						onClick={() => {
 							popupState.close()
-							navigate({ to: `/world/${world.id}/settings`, search: true })
+							navigate({ to: '/world/$worldId/settings', params: { worldId: world.id }, search: true })
 						}}
 					>
 						<ListItemIcon>

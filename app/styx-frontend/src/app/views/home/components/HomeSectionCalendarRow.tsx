@@ -10,7 +10,6 @@ import { DeleteCalendarButton } from '@/app/views/calendar/list/components/Delet
 
 import { HomeSectionRow } from './HomeSectionRow'
 import { HomeSectionRowActions } from './HomeSectionRowActions'
-import { homeSectionRowIconButtonSx } from './HomeSectionRowIconButton'
 
 type Props = {
 	calendar: CalendarBrief
@@ -39,7 +38,11 @@ export function HomeSectionCalendarRow({ calendar }: Props) {
 					<DeleteCalendarButton
 						calendarId={calendar.id}
 						calendarName={calendar.name}
-						slotProps={{ primaryButton: { sx: homeSectionRowIconButtonSx() } }}
+						slotProps={{
+							primaryButton: {
+								sx: { color: 'text.disabled', '&:hover': { color: 'text.primary' } },
+							},
+						}}
 					/>
 				</HomeSectionRowActions>
 			</HomeSectionRow>

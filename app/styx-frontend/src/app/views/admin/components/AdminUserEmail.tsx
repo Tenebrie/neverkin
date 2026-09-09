@@ -23,7 +23,7 @@ export function AdminUserEmail({ user, editable }: Props) {
 	return (
 		<>
 			<Stack gap={1} direction="row" alignItems="center">
-				<Link from="/admin" to={`/${user.id}`}>
+				<Link from="/admin" to={`${user.id}`}>
 					<b style={{ position: 'relative', display: 'inline-block' }}>
 						<span style={{ visibility: emailRevealed ? 'visible' : 'hidden' }}>{user.email}</span>
 						{!emailRevealed && (

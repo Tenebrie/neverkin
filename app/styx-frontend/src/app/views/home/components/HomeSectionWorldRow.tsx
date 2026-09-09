@@ -36,7 +36,7 @@ export function HomeSectionWorldRow({ world, role }: Props) {
 				time: parseInt(world.timeOrigin),
 			})}
 		>
-			<HomeSectionRow ariaLabel={`Load world "${world.name}"`} highlighted={isLastOpened}>
+			<HomeSectionRow ariaLabel={`Load world "${world.name}"`}>
 				<EntityInitialsTile name={world.name} color={getAccentColor(world.id)} />
 				<Stack flex={1} minWidth={0} gap={0.25}>
 					<Stack direction="row" alignItems="center" gap={1} minWidth={0}>

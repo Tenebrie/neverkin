@@ -30,7 +30,8 @@ export function WorldListItem({ world, showActions }: Props) {
 
 	const onEdit = (id: string) => {
 		navigate({
-			to: `/world/${id}/settings`,
+			to: '/world/$worldId/settings',
+			params: { worldId: id },
 			search: true,
 		})
 	}

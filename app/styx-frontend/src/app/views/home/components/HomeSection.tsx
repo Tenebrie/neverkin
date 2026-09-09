@@ -38,8 +38,6 @@ export function HomeSection({ label, count, action, children }: Props) {
 				sx={{
 					borderRadius: 2,
 					overflow: 'hidden',
-					// The separator belongs to the row's own box, so the rows stay contiguous and hover never
-					// falls into a gap. Rows sit inside a display:contents link, hence the child selector.
 					'& > :not(:first-of-type) > *': { borderTop: '1px solid', borderColor: 'divider' },
 				}}
 			>
