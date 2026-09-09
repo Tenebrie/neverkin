@@ -12,7 +12,7 @@ type Props = {
 
 export function HomeActivityCard({ activities }: Props) {
 	return (
-		<Paper variant="outlined" sx={{ borderRadius: 2, px: 2, py: 2 }}>
+		<Paper sx={{ borderRadius: 2, px: 2, py: 2 }}>
 			<Stack gap={1.5}>
 				<HomeSectionLabel>Recent activity</HomeSectionLabel>
 				{activities.length > 0 ? (
