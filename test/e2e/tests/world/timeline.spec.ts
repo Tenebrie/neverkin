@@ -19,7 +19,7 @@ test.describe('Timeline View', () => {
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.pressSequentially('Hello world', { delay: 100 })
 		await page.getByTestId('CreateEventModalConfirmButton').click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 		await expect(page.getByTestId('TimelineMarker')).toBeVisible()
 		// TODO: Update assertions for the new design (use world state?)
 		// await expect(page.getByTestId('TimelineMarker')).toHaveText('Hello world')
@@ -108,7 +108,7 @@ test.describe('Timeline View', () => {
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.pressSequentially('Event to nudge', { delay: 1 })
 		await page.getByTestId('CreateEventModalConfirmButton').click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 
 		// Select event
 		await page.getByTestId('TimelineMarker').click()
@@ -153,7 +153,7 @@ test.describe('Timeline View', () => {
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.pressSequentially('Event to nudge', { delay: 1 })
 		await page.getByTestId('CreateEventModalConfirmButton').click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 
 		// Resolve event
 		await page.getByTestId('TimelineMarker').click()
@@ -308,7 +308,7 @@ test.describe('Timeline View', () => {
 		const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		await textbox.pressSequentially('Event to nudge', { delay: 1 })
 		await page.getByTestId('CreateEventModalConfirmButton').click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 
 		// Check the event is in the right track
 		await expect(page.getByTestId('TimelineTrack').nth(2).getByTestId('TimelineMarker')).toBeVisible()

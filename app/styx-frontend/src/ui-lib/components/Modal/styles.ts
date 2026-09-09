@@ -15,12 +15,19 @@ export const ModalBackdrop = styled.div`
 	justify-content: center;
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
-	opacity: 0;
-	pointer-events: none;
+	opacity: 1;
+	pointer-events: all;
+	transition: opacity var(--modal-animation-duration, 0ms);
 
-	&.visible {
-		opacity: 1;
-		pointer-events: all;
+	/* Fades in on mount without needing a frame to flip a class in */
+	@starting-style {
+		opacity: 0;
+	}
+
+	/* Driven straight off the visible prop, so the overlay stops intercepting in the same commit */
+	&.closing {
+		opacity: 0;
+		pointer-events: none;
 	}
 `
 

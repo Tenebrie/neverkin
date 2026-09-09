@@ -1,4 +1,4 @@
-import React, { useCallback, useEffect, useMemo, useRef, useState } from 'react'
+import React, { CSSProperties, useCallback, useEffect, useMemo, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
@@ -22,11 +22,9 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 	)
 	const bodyRef = useRef<HTMLDivElement | null>(null)
 
-	const [isModalVisible, setIsModalVisible] = useState(false)
-	const [isModalRendered, setIsModalRendered] = useState(false)
-	const [modalRenderTimeout, setModalRenderTimeout] = useState<number | null>(null)
+	const [isModalRendered, setIsModalRendered] = useState(visible)
 
-	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), isModalVisible && ShortcutPriorities.Modal)
+	useShortcut(Shortcut.Escape, () => onClose('escapeKey'), visible && ShortcutPriorities.Modal)
 
 	const animationDuration = useMemo(() => {
 		if (reduceAnimations) {
@@ -35,30 +33,16 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 		return 0
 	}, [reduceAnimations])
 
+	// Stay mounted until the closing transition has run. The backdrop is already non-interactive by
+	// then, so a delayed timer can never leave a click-blocking overlay behind.
 	useEffect(() => {
-		requestAnimationFrame(() => {
-			setIsModalVisible(visible)
-		})
-	}, [visible])
-
-	useEffect(() => {
-		if (isModalVisible && !isModalRendered) {
+		if (visible) {
 			setIsModalRendered(true)
-			if (modalRenderTimeout) {
-				window.clearTimeout(modalRenderTimeout)
-			}
+			return
 		}
-	}, [isModalRendered, isModalVisible, modalRenderTimeout])
-
-	useEffect(() => {
-		if (!isModalVisible && isModalRendered) {
-			const timeout = window.setTimeout(() => {
-				setIsModalRendered(false)
-			}, animationDuration)
-			setModalRenderTimeout(timeout)
-			return () => window.clearTimeout(timeout)
-		}
-	}, [isModalRendered, isModalVisible, animationDuration])
+		const timeout = window.setTimeout(() => setIsModalRendered(false), animationDuration)
+		return () => window.clearTimeout(timeout)
+	}, [visible, animationDuration])
 
 	const theme = useCustomTheme()
 	const isClickingRef = useRef(false)
@@ -93,11 +77,11 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 	return (
 		<ModalBackdrop
 			data-testid="ModalBackdrop"
-			className={isModalVisible ? 'visible' : ''}
+			className={visible ? '' : 'closing'}
 			onMouseDown={onMouseDown}
 			onMouseUp={onMouseUp}
 			onMouseLeave={() => (isClickingRef.current = false)}
-			style={{ transition: animationDuration > 0 ? `opacity ${animationDuration}ms` : 'none' }}
+			style={{ '--modal-animation-duration': `${animationDuration}ms` } as CSSProperties}
 		>
 			<ModalContainer
 				ref={bodyRef}
