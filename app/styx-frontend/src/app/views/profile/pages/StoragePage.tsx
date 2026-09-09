@@ -22,8 +22,8 @@ import { useGetStorageStatusQuery } from '@/api/profileApi'
 import { Asset } from '@/api/types/assetTypes'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { formatBytes } from '@/app/utils/formatBytes'
+import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 
 export function StoragePage() {
 	return (

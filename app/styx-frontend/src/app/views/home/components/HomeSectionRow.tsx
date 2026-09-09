@@ -4,10 +4,11 @@ import { ReactNode } from 'react'
 type Props = {
 	ariaLabel: string
 	highlighted?: boolean
+	dense?: boolean
 	children: ReactNode
 }
 
-export function HomeSectionRow({ ariaLabel, highlighted, children }: Props) {
+export function HomeSectionRow({ ariaLabel, highlighted, dense, children }: Props) {
 	return (
 		<ButtonBase
 			component="div"
@@ -15,10 +16,9 @@ export function HomeSectionRow({ ariaLabel, highlighted, children }: Props) {
 			sx={{
 				position: 'relative',
 				width: '100%',
-				gap: 2,
-				p: 2,
 				justifyContent: 'flex-start',
 				textAlign: 'left',
+				...(dense ? { gap: 1.25, px: 0.5, py: 1, borderRadius: 1 } : { gap: 2, p: 2 }),
 				'&:hover:not(:has(.MuiIconButton-root:hover))': { bgcolor: 'action.hover' },
 				...(highlighted && {
 					'&::before': {

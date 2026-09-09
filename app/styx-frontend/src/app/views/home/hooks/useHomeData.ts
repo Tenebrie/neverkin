@@ -11,7 +11,7 @@ export type RecentActivity = {
 	id: string
 	name: string
 	type: 'world' | 'calendar'
-	updatedAt: Date
+	updatedAt: string
 }
 
 export type SharedWorld = WorldBrief & { role: string }
@@ -48,12 +48,7 @@ export function useHomeData() {
 			]
 				.sort(byRecency)
 				.slice(0, 10)
-				.map<RecentActivity>(({ id, name, type, updatedAt }) => ({
-					id,
-					name,
-					type,
-					updatedAt: new Date(updatedAt),
-				})),
+				.map<RecentActivity>(({ id, name, type, updatedAt }) => ({ id, name, type, updatedAt })),
 		[ownedWorlds, allSharedWorlds, calendars],
 	)
 

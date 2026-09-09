@@ -6,7 +6,7 @@ import { useMemo } from 'react'
 
 import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormatTimestamp'
 import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
+import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 

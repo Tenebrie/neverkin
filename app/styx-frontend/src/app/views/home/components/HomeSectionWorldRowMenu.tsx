@@ -2,7 +2,6 @@ import Delete from '@mui/icons-material/Delete'
 import MoreVert from '@mui/icons-material/MoreVert'
 import OpenInNew from '@mui/icons-material/OpenInNew'
 import Settings from '@mui/icons-material/Settings'
-import IconButton from '@mui/material/IconButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
@@ -11,7 +10,8 @@ import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/ho
 import { WorldBrief } from '@/api/types/worldTypes'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import { Tooltip } from '@/ui-lib/components/Tooltip'
+
+import { HomeSectionRowIconButton } from './HomeSectionRowIconButton'
 
 type Props = {
 	world: WorldBrief
@@ -23,25 +23,15 @@ export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
 	const navigate = useStableNavigate()
 	const { open: openDeleteWorldModal } = useModal('deleteWorldModal')
 
-	const trigger = bindTrigger(popupState)
-
 	return (
 		<>
-			<Tooltip title="More actions">
-				<IconButton
-					size="small"
-					aria-label={`More actions for world "${world.name}"`}
-					{...trigger}
-					onClick={(event) => {
-						event.preventDefault()
-						event.stopPropagation()
-						trigger.onClick(event)
-					}}
-					sx={{ color: 'text.disabled', '&:hover': { color: 'text.primary' } }}
-				>
-					<MoreVert fontSize="small" />
-				</IconButton>
-			</Tooltip>
+			<HomeSectionRowIconButton
+				tooltip="More actions"
+				aria-label={`More actions for world "${world.name}"`}
+				{...bindTrigger(popupState)}
+			>
+				<MoreVert fontSize="small" />
+			</HomeSectionRowIconButton>
 			<Menu
 				{...bindMenu(popupState)}
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

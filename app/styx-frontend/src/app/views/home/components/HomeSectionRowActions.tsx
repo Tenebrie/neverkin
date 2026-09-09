@@ -1,22 +1,17 @@
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
+import { HomeSectionRowTimestamp } from './HomeSectionRowTimestamp'
+
 type Props = {
-	timestamp: string
+	updatedAt: string
 	children: ReactNode
 }
 
-export function HomeSectionRowActions({ timestamp, children }: Props) {
+export function HomeSectionRowActions({ updatedAt, children }: Props) {
 	return (
-		<Stack direction="row" alignItems="center" gap={0.25} sx={{ flex: '0 0 auto' }}>
-			<Typography
-				variant="caption"
-				color="text.secondary"
-				sx={{ fontVariantNumeric: 'tabular-nums', mr: 0.75, whiteSpace: 'nowrap' }}
-			>
-				{timestamp}
-			</Typography>
+		<Stack direction="row" alignItems="center" gap={1} sx={{ flex: '0 0 auto' }}>
+			<HomeSectionRowTimestamp updatedAt={updatedAt} />
 			<Stack
 				direction="row"
 				gap={0.25}

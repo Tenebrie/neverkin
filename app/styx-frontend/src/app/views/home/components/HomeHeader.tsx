@@ -4,13 +4,12 @@ import Typography from '@mui/material/Typography'
 import { useSelector } from 'react-redux'
 
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
+import { pluralize } from '@/app/utils/pluralize'
 import { WorldListCreateNewButton } from '@/app/views/worldManagement/components/WorldList/WorldListCreateNewButton'
 
 type Props = {
 	totals: { owned: number; shared: number; calendars: number }
 }
-
-const pluralize = (count: number, noun: string) => `${count} ${noun}${count === 1 ? '' : 's'}`
 
 export function HomeHeader({ totals }: Props) {
 	const { user } = useSelector(getAuthState)

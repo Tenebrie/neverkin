@@ -7,10 +7,10 @@ import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 import { DeleteCalendarButton } from '@/app/views/calendar/list/components/DeleteCalendarButton'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 
 import { HomeSectionRow } from './HomeSectionRow'
 import { HomeSectionRowActions } from './HomeSectionRowActions'
+import { homeSectionRowIconButtonSx } from './HomeSectionRowIconButton'
 
 type Props = {
 	calendar: CalendarBrief
@@ -35,8 +35,12 @@ export function HomeSectionCalendarRow({ calendar }: Props) {
 						</Typography>
 					)}
 				</Stack>
-				<HomeSectionRowActions timestamp={formatTimeAgo(new Date(calendar.updatedAt))}>
-					<DeleteCalendarButton calendarId={calendar.id} calendarName={calendar.name} />
+				<HomeSectionRowActions updatedAt={calendar.updatedAt}>
+					<DeleteCalendarButton
+						calendarId={calendar.id}
+						calendarName={calendar.name}
+						slotProps={{ primaryButton: { sx: homeSectionRowIconButtonSx() } }}
+					/>
 				</HomeSectionRowActions>
 			</HomeSectionRow>
 		</NavigationLink>

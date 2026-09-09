@@ -1,13 +1,13 @@
 import Box from '@mui/material/Box'
-import ButtonBase from '@mui/material/ButtonBase'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 
 import type { RecentActivity } from '../hooks/useHomeData'
+import { HomeSectionRow } from './HomeSectionRow'
+import { HomeSectionRowTimestamp } from './HomeSectionRowTimestamp'
 
 type Props = {
 	activity: RecentActivity
@@ -21,19 +21,7 @@ export function HomeActivityCardItem({ activity }: Props) {
 
 	return (
 		<NavigationLink {...linkProps}>
-			<ButtonBase
-				component="div"
-				sx={{
-					width: '100%',
-					gap: 1.25,
-					px: 0.5,
-					py: 1,
-					borderRadius: 1,
-					justifyContent: 'flex-start',
-					textAlign: 'left',
-					'&:hover': { bgcolor: 'action.hover' },
-				}}
-			>
+			<HomeSectionRow dense ariaLabel={`Open ${activity.type} "${activity.name}"`}>
 				<Box
 					sx={{
 						width: 7,
@@ -51,14 +39,8 @@ export function HomeActivityCardItem({ activity }: Props) {
 						{activity.type === 'world' ? 'World' : 'Calendar'} updated
 					</Typography>
 				</Stack>
-				<Typography
-					variant="caption"
-					color="text.secondary"
-					sx={{ fontVariantNumeric: 'tabular-nums', flex: '0 0 auto' }}
-				>
-					{formatTimeAgo(activity.updatedAt)}
-				</Typography>
-			</ButtonBase>
+				<HomeSectionRowTimestamp updatedAt={activity.updatedAt} />
+			</HomeSectionRow>
 		</NavigationLink>
 	)
 }

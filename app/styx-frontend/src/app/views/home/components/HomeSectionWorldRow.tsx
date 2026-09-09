@@ -9,7 +9,6 @@ import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { getHomePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
 
 import { HomeSectionRow } from './HomeSectionRow'
 import { HomeSectionRowActions } from './HomeSectionRowActions'
@@ -58,7 +57,10 @@ export function HomeSectionWorldRow({ world, role }: Props) {
 					>
 						{world.description && (
 							<>
-								<Box component="span" sx={{ overflow: 'hidden', textOverflow: 'ellipsis', maxWidth: '46%' }}>
+								<Box
+									component="span"
+									sx={{ overflow: 'hidden', whiteSpace: 'nowrap', textOverflow: 'ellipsis' }}
+								>
 									{world.description}
 								</Box>
 								<Box component="span" sx={{ color: 'text.disabled' }}>
@@ -72,7 +74,7 @@ export function HomeSectionWorldRow({ world, role }: Props) {
 						</Stack>
 					</Stack>
 				</Stack>
-				<HomeSectionRowActions timestamp={formatTimeAgo(new Date(world.updatedAt))}>
+				<HomeSectionRowActions updatedAt={world.updatedAt}>
 					<HomeSectionWorldRowPin world={world} />
 					<HomeSectionWorldRowMenu world={world} isOwned={isOwned} />
 				</HomeSectionRowActions>
