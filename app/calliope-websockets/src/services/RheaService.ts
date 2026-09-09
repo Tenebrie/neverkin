@@ -1,5 +1,6 @@
 import type { paths } from '@neverkin/openapi-fetch'
 import { IMPERSONATED_USER_HEADER, SERVICE_AUTH_TOKEN_HEADER } from '@src/ts-shared/const/constants.js'
+import { PermanentFlushError } from '@src/utils/PermanentFlushError.js'
 import chalk from 'chalk'
 import createClient from 'openapi-fetch'
 
@@ -80,13 +81,12 @@ export const RheaService = {
 		contentRich: string
 	}) => {
 		if (contentRich.length >= 1_131_000) {
-			console.error(
+			throw new PermanentFlushError(
 				`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
 			)
-			throw new Error('Failed to flush document state to Rhea')
 		}
 
-		const response = await rheaClient['PUT']('/api/world/{worldId}/{entityType}/{entityId}/content', {
+		const result = await rheaClient['PUT']('/api/world/{worldId}/{entityType}/{entityId}/content', {
 			params: { path: { worldId, entityType, entityId } },
 			body: { content: contentRich },
 			headers: {
@@ -94,10 +94,14 @@ export const RheaService = {
 				[IMPERSONATED_USER_HEADER]: lastUserId,
 			},
 		})
+		// The spec declares no error responses, so `result` narrows to never once `error` is checked
+		const status = result.response.status
 
-		if (response.error) {
-			console.error(response)
-			throw new Error('Failed to flush document state to Rhea')
+		const isPermanent = status >= 400 && status < 500 && status !== 408 && status !== 429
+
+		if (result.error) {
+			const message = `Failed to flush document state to Rhea (${status})`
+			throw isPermanent ? new PermanentFlushError(message) : new Error(message)
 		}
 	},
 }

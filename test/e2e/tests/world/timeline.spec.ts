@@ -1,6 +1,7 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
 import { navigateToTimeline } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
+import { multiselectModifier } from '@tests/utils'
 
 test.describe('Timeline View', () => {
 	test.beforeEach(async ({ page }) => {
@@ -249,7 +250,7 @@ test.describe('Timeline View', () => {
 		await page
 			.getByTestId('TimelineMarker')
 			.nth(1)
-			.click({ modifiers: ['Control'] })
+			.click({ modifiers: [multiselectModifier] })
 
 		await page.keyboard.press('ArrowRight')
 		await page.keyboard.press('ArrowRight')

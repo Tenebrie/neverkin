@@ -1,5 +1,6 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
+import Home from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -21,7 +22,6 @@ import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { DocsNavigatorButton } from './DocsNavigatorButton'
 import { HamburgerMenu } from './HamburgerMenu'
-import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
@@ -70,7 +70,13 @@ export const BaseNavigator = () => {
 									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" iconOnly={isCompact} />
 								</Stack>
 								<Divider orientation="vertical" sx={{ height: '20px' }} />
-								<HomeNavigatorButton disabled={!user} iconOnly={isCompact} />
+								<NavigatorButton
+									route="/"
+									icon={<Home />}
+									label="Home"
+									disabled={!user}
+									iconOnly={isCompact}
+								/>
 							</>
 						)}
 						{!isNarrow && (

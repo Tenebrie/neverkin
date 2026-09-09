@@ -5,10 +5,9 @@ import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { useDeleteAccountMutation } from '@/api/authApi'
-import { authSlice } from '@/app/features/auth/AuthSlice'
+import { useClearSession } from '@/app/features/auth/hooks/useClearSession'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -22,8 +21,7 @@ export const DeleteAccountModal = () => {
 
 	const { isOpen, close } = useModal('deleteAccountModal')
 
-	const { clearUser } = authSlice.actions
-	const dispatch = useDispatch()
+	const clearSession = useClearSession()
 
 	useModalCleanup({
 		isOpen,
@@ -45,7 +43,7 @@ export const DeleteAccountModal = () => {
 		}
 
 		close()
-		dispatch(clearUser())
+		clearSession()
 		navigate({ from: '/', to: '/login' })
 	}
 

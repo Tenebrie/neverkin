@@ -404,7 +404,6 @@ test.describe('World Mindmap', () => {
 	})
 
 	test.afterEach(async ({ page }) => {
-		await page.waitForTimeout(3000)
 		await deleteAccount(page)
 	})
 })

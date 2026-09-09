@@ -1,4 +1,5 @@
 import { Logger } from '@src/utils/logger.js'
+import { PermanentFlushError } from '@src/utils/PermanentFlushError.js'
 import { retry } from '@src/utils/retry.js'
 import { docs, getYDoc, setPersistence, WSSharedDoc } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
@@ -350,7 +351,10 @@ export const YjsSyncService = {
 							return
 						}
 						const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-						if (!isLeader || (await flushDocumentToRhea(doc, metadata)) === 'failed') {
+						if (!isLeader) {
+							throw new Error('Flush failed')
+						}
+						if ((await flushDocumentToRhea(doc, metadata)) === 'failed') {
 							throw new Error('Flush failed')
 						}
 					},
@@ -386,7 +390,7 @@ export const YjsSyncService = {
 	},
 }
 
-type FlushResult = 'flushed' | 'skipped' | 'failed'
+type FlushResult = 'flushed' | 'skipped' | 'failed' | 'rejected'
 
 /**
  * Flush document state to Rhea
@@ -420,6 +424,11 @@ async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Prom
 		Logger.yjsInfo(docName, `Flushed to Rhea`)
 		return 'flushed'
 	} catch (error) {
+		// Rhea will never accept this document, so leave it clean and stop rather than retry into the void
+		if (error instanceof PermanentFlushError) {
+			Logger.yjsWarn(docName, `Rhea rejected the flush, discarding buffered content: ${error.message}`)
+			return 'rejected'
+		}
 		metadata.isDirty = true
 		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
 		return 'failed'

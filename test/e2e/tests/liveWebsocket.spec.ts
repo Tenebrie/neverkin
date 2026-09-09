@@ -37,7 +37,7 @@ test.describe('Live Websocket', () => {
 			}
 		})
 
-		await page.getByText(userData.username).click()
+		await page.getByTestId('UserDropdownButton').click()
 		await page.getByText('Logout').click()
 
 		await new Promise((resolve) => setTimeout(resolve, 2000))

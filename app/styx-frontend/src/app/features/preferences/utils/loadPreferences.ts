@@ -33,6 +33,13 @@ export const PreferencesStateSchema = z.object({
 			showDiscordLink: z.boolean().default(true),
 		})
 		.default({}),
+	home: z
+		.object({
+			// TODO: Move pins and the last opened world onto the user record so they follow the account across devices.
+			pinnedWorlds: z.array(z.string()).default([]),
+			lastOpenedWorldId: z.string().nullable().default(null),
+		})
+		.default({}),
 	iconSets: z
 		.object({
 			recent: z.array(z.string()).default([]),

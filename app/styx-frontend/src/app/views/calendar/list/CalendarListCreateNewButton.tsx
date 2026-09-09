@@ -7,9 +7,14 @@ import {
 	CalendarSelector,
 	useTemplateCalendars,
 } from '@/app/features/time/calendar/components/CalendarSelector'
+import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
-export function CalendarListCreateNewButton() {
+type Props = {
+	variant?: 'icon' | 'labelled'
+}
+
+export function CalendarListCreateNewButton({ variant = 'icon' }: Props) {
 	const [newCalendarName, setNewCalendarName] = useState('')
 	const [selectedTemplate, setSelectedTemplate] = useState<string | undefined>()
 	const calendarTemplates = useTemplateCalendars()
@@ -32,42 +37,55 @@ export function CalendarListCreateNewButton() {
 		}
 	}, [newCalendarName, createCalendar, selectedTemplate])
 
+	const sharedProps = {
+		tooltip: 'Create new calendar',
+		onConfirm: handleCreateCalendar,
+		confirmDisabled: !newCalendarName.trim() || isCreating,
+		popoverSx: {
+			minWidth: 300,
+		},
+		popoverBody: ({ close }: { close: () => void }) => (
+			<>
+				<Typography variant="subtitle2" fontWeight="bold">
+					New Calendar
+				</Typography>
+				<TextField
+					label="Name"
+					value={newCalendarName}
+					onChange={(e) => setNewCalendarName(e.target.value)}
+					onKeyDown={async (e) => {
+						if (e.key !== 'Enter') {
+							return
+						}
+						await handleCreateCalendar()
+						close()
+					}}
+					autoFocus
+					fullWidth
+					disabled={isCreating}
+				/>
+				<CalendarSelector
+					label="Template to copy"
+					value={selectedTemplate}
+					onChange={setSelectedTemplate}
+					allowEmpty
+				/>
+			</>
+		),
+	}
+
+	if (variant === 'icon') {
+		return <CreatePopoverIconButton {...sharedProps} />
+	}
+
 	return (
-		<CreatePopoverIconButton
-			tooltip="Create new calendar"
-			onConfirm={handleCreateCalendar}
-			confirmDisabled={!newCalendarName.trim() || isCreating}
-			popoverSx={{
-				minWidth: 300,
-			}}
-			popoverBody={({ close }) => (
-				<>
-					<Typography variant="subtitle2" fontWeight="bold">
-						New Calendar
-					</Typography>
-					<TextField
-						label="Name"
-						value={newCalendarName}
-						onChange={(e) => setNewCalendarName(e.target.value)}
-						onKeyDown={async (e) => {
-							if (e.key !== 'Enter') {
-								return
-							}
-							await handleCreateCalendar()
-							close()
-						}}
-						autoFocus
-						fullWidth
-						disabled={isCreating}
-					/>
-					<CalendarSelector
-						label="Template to copy"
-						value={selectedTemplate}
-						onChange={setSelectedTemplate}
-						allowEmpty
-					/>
-				</>
-			)}
+		<CreatePopoverButton
+			{...sharedProps}
+			tooltip="New calendar"
+			label="New calendar"
+			size="small"
+			buttonVariant="outlined"
+			disableTooltip
 		/>
 	)
 }

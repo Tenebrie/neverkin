@@ -31,8 +31,7 @@ test.describe('Guest user', () => {
 
 		await page.getByText('Login as a guest').click()
 
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await page.getByLabel('Create new world').click()
 		await page.getByLabel('Name').fill('Guest world')

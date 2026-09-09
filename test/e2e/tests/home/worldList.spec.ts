@@ -28,15 +28,13 @@ test.describe('World List View', () => {
 		await expect(page.getByText('My First World', { exact: true })).toBeVisible()
 
 		// Navigate to settings
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 		await page.getByLabel('Edit world "My First World" button').click()
 		await page.waitForURL(/\/world\/[a-f0-9-]+\/settings/)
 		await expect(page.getByRole('heading', { name: 'Settings' })).toBeVisible()
 
 		// Delete world
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 		await page.getByLabel('Delete world "My First World" button').click()
 		await expect(page.getByText('Delete world', { exact: true })).toBeVisible()
 
@@ -61,28 +59,23 @@ test.describe('World List View', () => {
 
 		await createAndOpenWorld('Earth World', 'Gregorian Calendar (Earth)')
 		await expect(page.getByText('January 01, 2026', { exact: true })).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await createAndOpenWorld('Martian World', 'Darian Calendar (Martian)')
 		await expect(page.getByText('01 Sagittarius 0000', { exact: true })).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await createAndOpenWorld('Golarion World', 'Golarion Calendar (Pathfinder)')
 		await expect(page.getByText('01 Abadius, 4726', { exact: true })).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await createAndOpenWorld('Quadrum World', 'Quadrum Calendar (RimWorld)')
 		await expect(page.getByText('Aprimay 01, 5500', { exact: true })).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await createAndOpenWorld('Exether World', 'Exether Calendar')
 		await expect(page.getByText('Frostmoot 01, 1178', { exact: true })).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 	})
 
 	test('create world with user template calendar', async ({ page }) => {
@@ -109,8 +102,7 @@ test.describe('World List View', () => {
 		await requestPromise
 
 		// Create a world with the new calendar
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to worlds').click()
+		await page.goto(makeUrl('/world'))
 
 		await page.getByLabel('Create new world').click()
 		await page.getByLabel('Name').fill('Custom Calendar World')
