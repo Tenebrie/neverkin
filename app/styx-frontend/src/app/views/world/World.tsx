@@ -6,7 +6,7 @@ import { Outlet } from '@tanstack/react-router'
 import { CreateColorModal } from '@/app/features/colors/CreateColorModal'
 import { ModalsRenderer } from '@/app/features/modals/ModalsRenderer'
 import { RichTextEditorWithFallback } from '@/app/features/richTextEditor/RichTextEditorWithFallback'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { ClientToCalliopeMessageType } from '@/ts-shared/ClientToCalliopeMessage'
 

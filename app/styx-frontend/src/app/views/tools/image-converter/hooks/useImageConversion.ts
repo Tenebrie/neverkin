@@ -1,7 +1,7 @@
 import { useState } from 'react'
 
 import { RequestImageConversionApiArg } from '@/api/otherApi'
-import { useErrorState } from '@/app/utils/useErrorState'
+import { useErrorState } from '@/app/hooks/useErrorState'
 
 import { useFileUpload } from '../../../../../api/hooks/fileUpload/useFileUpload'
 import { useGetPresignedDownloadUrl } from '../../../../../api/hooks/fileUpload/useGetPresignedDownloadUrl'

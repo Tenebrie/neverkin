@@ -16,13 +16,13 @@ import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
 import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { Info } from '@/ui-lib/components/Info/Info'
 
 import { AlreadyLoggedInAlert } from '../../features/auth/components/AlreadyLoggedInAlert'
 
-export const Login = () => {
+export function Login() {
 	const [login, loginState] = usePostLoginMutation()
 
 	const handleUserLogin = useHandleUserLogin()

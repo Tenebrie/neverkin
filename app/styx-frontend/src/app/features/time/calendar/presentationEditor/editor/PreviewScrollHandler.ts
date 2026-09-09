@@ -1,7 +1,7 @@
 import { useCallback, useRef } from 'react'
 
 import { useEventBusDispatch, useEventBusSubscribe } from '@/app/features/eventBus'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { TimelineState } from '@/app/views/world/views/timeline/utils/TimelineState'
 
 type Props = {

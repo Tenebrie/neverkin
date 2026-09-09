@@ -5,7 +5,7 @@ import throttle from 'lodash.throttle'
 import { useMemo, useState } from 'react'
 import styled from 'styled-components'
 
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 
 type Props = {
 	color: string

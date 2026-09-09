@@ -3,7 +3,7 @@ import Stack from '@mui/material/Stack'
 import { ShareWorldModal } from '@/app/views/world/views/settings/modals/ShareWorldModal'
 import { SettingsSuspense } from '@/app/views/world/views/settings/SettingsSuspense'
 
-export const Settings = () => {
+export function SettingsView() {
 	return (
 		<Stack
 			position="relative"

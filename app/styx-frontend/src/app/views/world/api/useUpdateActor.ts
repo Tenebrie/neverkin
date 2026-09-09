@@ -1,25 +1,27 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 
 import { UpdateActorApiArg, useUpdateActorMutation } from '@/api/actorListApi'
 import { useActorApiCache } from '@/api/hooks/useActorApiCache'
 import { ActorDetails } from '@/api/types/worldTypes'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
+import { RootState } from '@/app/store'
 import { ingestActor } from '@/app/utils/ingestEntity'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 export const useUpdateActor = () => {
 	const worldId = useSelector(getWorldIdState)
-	const { actors } = useSelector(getWorldState, (a, b) => a.actors === b.actors)
 	const [updateWorldActor, state] = useUpdateActorMutation()
 	const { updateCachedActor } = useActorApiCache()
+	const store = useStore<RootState>()
 
-	// const { updateActor } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
 		async (id: string, body: UpdateActorApiArg['body'], onBeforeSave?: (actor: ActorDetails) => void) => {
+			const oldIcon = store.getState().world.actors.find((e) => e.id === id)?.icon
+
 			const { response, error } = parseApiResponse(
 				await updateWorldActor({
 					worldId,
@@ -35,7 +37,6 @@ export const useUpdateActor = () => {
 			onBeforeSave?.(actor)
 
 			// Invalidate common icons query cache if icon has changed
-			const oldIcon = actors.find((e) => e.id === id)?.icon
 			if (body.icon !== undefined && body.icon !== oldIcon) {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
@@ -44,7 +45,7 @@ export const useUpdateActor = () => {
 
 			return actor
 		},
-		[dispatch, updateCachedActor, updateWorldActor, worldId, actors],
+		[dispatch, store, updateCachedActor, updateWorldActor, worldId],
 	)
 
 	return [perform, state] as const
