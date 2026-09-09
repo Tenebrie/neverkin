@@ -17,7 +17,6 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { AnnouncementView } from '../../announcements/AnnouncementView'
 import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
-import { GlobalSearch } from '../../globalSearch/GlobalSearch'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { DocsNavigatorButton } from './DocsNavigatorButton'
@@ -102,7 +101,6 @@ export const BaseNavigator = () => {
 				{!user && <LandingPageNavigatorButton icon={<TenebrieLogoInline />} label="Neverkin" />}
 			</Box>
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
-				<GlobalSearch />
 				<ThemeModeToggle />
 				{user && !isNarrow && <AnnouncementView />}
 				<Divider orientation="vertical" sx={{ height: '20px' }} />
