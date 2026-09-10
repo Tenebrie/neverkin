@@ -3,22 +3,22 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
 import type { RecentActivity } from '../hooks/useHomeData'
-import { HomeActivityCardItem } from './HomeActivityCardItem'
+import { HomeActivityListItem } from './HomeActivityListItem'
 import { HomeSectionLabel } from './HomeSectionLabel'
 
 type Props = {
 	activities: RecentActivity[]
 }
 
-export function HomeActivityCard({ activities }: Props) {
+export function HomeActivityList({ activities }: Props) {
 	return (
 		<Paper sx={{ borderRadius: 2, px: 2, py: 2 }}>
 			<Stack gap={1.5}>
 				<HomeSectionLabel>Recent activity</HomeSectionLabel>
 				{activities.length > 0 ? (
-					<Stack>
+					<Stack sx={{ mx: -1 }}>
 						{activities.map((activity) => (
-							<HomeActivityCardItem key={`${activity.type}-${activity.id}`} activity={activity} />
+							<HomeActivityListItem key={`${activity.type}-${activity.id}`} activity={activity} />
 						))}
 					</Stack>
 				) : (

@@ -16,9 +16,9 @@ export function HomeSectionEmptyState({ icon, title, description, action }: Prop
 	const { palette } = useTheme()
 
 	return (
-		<Stack direction="row" alignItems="center" gap={2} sx={{ px: 2, py: 2.5 }}>
+		<Stack direction="row" alignItems="center" gap={2} sx={{ p: 2 }}>
 			<EntityInitialsTile name={title} color={palette.primary.main} icon={icon} />
-			<Stack flex={1} minWidth={0}>
+			<Stack flex={1} minWidth={0} gap={0.25}>
 				<Typography variant="body1" fontWeight={600}>
 					{title}
 				</Typography>

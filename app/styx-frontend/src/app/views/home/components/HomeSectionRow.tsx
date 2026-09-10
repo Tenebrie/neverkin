@@ -3,11 +3,10 @@ import { ReactNode } from 'react'
 
 type Props = {
 	ariaLabel: string
-	dense?: boolean
 	children: ReactNode
 }
 
-export function HomeSectionRow({ ariaLabel, dense, children }: Props) {
+export function HomeSectionRow({ ariaLabel, children }: Props) {
 	return (
 		<ButtonBase
 			component="div"
@@ -17,7 +16,9 @@ export function HomeSectionRow({ ariaLabel, dense, children }: Props) {
 				width: '100%',
 				justifyContent: 'flex-start',
 				textAlign: 'left',
-				...(dense ? { gap: 1.25, px: 0.5, py: 1, borderRadius: 1 } : { gap: 2, p: 2 }),
+				gap: 2,
+				p: 2,
+				minHeight: 78,
 				'&:hover:not(:has(.MuiIconButton-root:hover))': { bgcolor: 'action.hover' },
 			}}
 		>

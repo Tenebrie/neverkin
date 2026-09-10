@@ -1,4 +1,5 @@
 import Box from '@mui/material/Box'
+import ButtonBase from '@mui/material/ButtonBase'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
@@ -6,14 +7,13 @@ import { NavigationLink } from '@/app/components/NavigationLink'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 
 import type { RecentActivity } from '../hooks/useHomeData'
-import { HomeSectionRow } from './HomeSectionRow'
 import { HomeSectionRowTimestamp } from './HomeSectionRowTimestamp'
 
 type Props = {
 	activity: RecentActivity
 }
 
-export function HomeActivityCardItem({ activity }: Props) {
+export function HomeActivityListItem({ activity }: Props) {
 	const linkProps =
 		activity.type === 'world'
 			? ({ to: '/world/$worldId/wiki', params: { worldId: activity.id } } as const)
@@ -21,7 +21,21 @@ export function HomeActivityCardItem({ activity }: Props) {
 
 	return (
 		<NavigationLink {...linkProps}>
-			<HomeSectionRow dense ariaLabel={`Open ${activity.type} "${activity.name}"`}>
+			<ButtonBase
+				component="div"
+				aria-label={`Open ${activity.type} "${activity.name}"`}
+				sx={{
+					position: 'relative',
+					width: '100%',
+					justifyContent: 'flex-start',
+					textAlign: 'left',
+					gap: 1.25,
+					px: 1.5,
+					py: 1,
+					borderRadius: 1,
+					'&:hover:not(:has(.MuiIconButton-root:hover))': { bgcolor: 'action.hover' },
+				}}
+			>
 				<Box
 					sx={{
 						width: 7,
@@ -40,7 +54,7 @@ export function HomeActivityCardItem({ activity }: Props) {
 					</Typography>
 				</Stack>
 				<HomeSectionRowTimestamp updatedAt={activity.updatedAt} />
-			</HomeSectionRow>
+			</ButtonBase>
 		</NavigationLink>
 	)
 }

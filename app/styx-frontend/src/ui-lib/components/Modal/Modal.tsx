@@ -33,8 +33,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 		return 0
 	}, [reduceAnimations])
 
-	// Stay mounted until the closing transition has run. The backdrop is already non-interactive by
-	// then, so a delayed timer can never leave a click-blocking overlay behind.
+	// Stay mounted until the closing transition has run.
 	useEffect(() => {
 		if (visible) {
 			setIsModalRendered(true)
@@ -85,6 +84,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 		>
 			<ModalContainer
 				ref={bodyRef}
+				tabIndex={-1}
 				$theme={theme}
 				onMouseDown={(e) => {
 					e.stopPropagation()

@@ -4,13 +4,12 @@ import Box from '@mui/material/Box'
 import CircularProgress from '@mui/material/CircularProgress'
 import Container from '@mui/material/Container'
 import Stack from '@mui/material/Stack'
-import Typography from '@mui/material/Typography'
 
 import { CalendarListCreateNewButton } from '@/app/views/calendar/list/CalendarListCreateNewButton'
 import { WorldListCreateNewButton } from '@/app/views/worldManagement/components/WorldList/WorldListCreateNewButton'
 import { DeleteWorldModal } from '@/app/views/worldManagement/modals/DeleteWorldModal'
 
-import { HomeActivityCard } from './components/HomeActivityCard'
+import { HomeActivityList } from './components/HomeActivityList'
 import { HomeHeader } from './components/HomeHeader'
 import { HomeSection } from './components/HomeSection'
 import { HomeSectionCalendarRow } from './components/HomeSectionCalendarRow'
@@ -42,17 +41,7 @@ export function HomeView() {
 					}}
 				>
 					<Stack gap={3} minWidth={0} pb="50vh">
-						<HomeSection
-							label="Your worlds"
-							count={totals.owned}
-							action={
-								totals.owned > 0 && (
-									<Typography variant="caption" color="text.secondary">
-										Sorted by last updated
-									</Typography>
-								)
-							}
-						>
+						<HomeSection label="Your worlds" count={totals.owned}>
 							{totals.owned === 0 ? (
 								<HomeSectionEmptyState
 									icon={<Public />}
@@ -88,7 +77,7 @@ export function HomeView() {
 						</HomeSection>
 					</Stack>
 					<Box sx={{ position: 'sticky', top: 22 }}>
-						<HomeActivityCard activities={recentActivity} />
+						<HomeActivityList activities={recentActivity} />
 					</Box>
 				</Box>
 			</Container>
