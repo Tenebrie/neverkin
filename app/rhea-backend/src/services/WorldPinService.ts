@@ -1,7 +1,5 @@
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
-import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
-
 export const WorldPinService = {
 	toggleWorldPin: async (params: { worldId: string; userId: string }) => {
 		return await getPrismaClient().$transaction(async (dbClient) => {
@@ -17,7 +15,6 @@ export const WorldPinService = {
 					where: { userId: params.userId, rank: { gt: existingPin.rank } },
 					data: { rank: { decrement: 2 } },
 				})
-				await makeTouchWorldQuery(params.worldId, dbClient)
 				return {
 					pinned: false,
 					rank: 0,
@@ -30,7 +27,6 @@ export const WorldPinService = {
 			await dbClient.userWorldPin.create({
 				data: { ...params, rank: pinCount * 2 },
 			})
-			await makeTouchWorldQuery(params.worldId, dbClient)
 			return {
 				pinned: true,
 				rank: pinCount * 2,
