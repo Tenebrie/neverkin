@@ -22,7 +22,7 @@ const injectedRtkApi = api
 				ListCalendarUnitFormatModesApiResponse,
 				ListCalendarUnitFormatModesApiArg
 			>({
-				query: () => ({ url: `/api/constants/ calendar-unit-format-modes` }),
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
 				providesTags: [],
 			}),
 			listImageGenerationModels: build.query<
