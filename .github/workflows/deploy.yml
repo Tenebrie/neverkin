@@ -222,11 +222,11 @@ jobs:
       - name: Backup Database (Backrest)
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh create"
 
-      - name: Deploy to DigitalOcean
-        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
-
       - name: Run migrations
         run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && ./scripts/stack-migrate.sh"
+
+      - name: Deploy to DigitalOcean
+        run: doctl compute ssh staging-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Update deployment status
         run: |
@@ -263,11 +263,11 @@ jobs:
       - name: Backup Database (Backrest)
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/backups.sh create"
 
-      - name: Deploy to DigitalOcean
-        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
-
       - name: Run migrations
         run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && ./scripts/stack-migrate.sh"
+
+      - name: Deploy to DigitalOcean
+        run: doctl compute ssh prod-manager-1 --ssh-command "cd timelines && VERSION=${{ needs.check-commits.outputs.version }} ./scripts/stack-update.sh"
 
       - name: Update deployment status
         run: |
