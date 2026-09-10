@@ -2,6 +2,8 @@ import Collaboration from '@tiptap/extension-collaboration'
 import { WebsocketProvider } from 'y-websocket'
 import * as Y from 'yjs'
 
+const DOCUMENT_RESET_CLOSE_CODE = 4001
+
 /**
  * Create Yjs WebSocket provider for real-time collaboration
  */
@@ -10,66 +12,36 @@ export function createCollaborationProvider({
 	worldId,
 	entityType,
 	documentId,
-	onReconnect,
+	onClosed,
 }: {
 	doc: Y.Doc
 	worldId: string
 	entityType: string
 	documentId: string
-	onReconnect: () => void
+	onClosed: () => void
 }) {
-	// Connect to Calliope WebSocket server
 	const provider = new WebsocketProvider(
 		`${window.location.protocol === 'https:' ? 'wss:' : 'ws:'}//${window.location.host}/live/yjs/${worldId}/${entityType}`,
 		documentId,
 		doc,
 		{
-			connect: false,
+			disableBc: true,
+			maxBackoffTime: 10_000,
+			shouldReconnect: (event) =>
+				event.code !== DOCUMENT_RESET_CLOSE_CODE && !(event.code >= 4400 && event.code < 4500),
 		},
 	)
 
-	const reconnectState = {
-		timeout: null as number | null,
-		reconnectCounter: 0,
-		shouldReconnect: true,
-	}
-	provider.on('status', (event: { status: string }) => {
-		if (event.status === 'connected' && reconnectState.timeout) {
-			window.clearTimeout(reconnectState.timeout)
-			reconnectState.reconnectCounter = 0
-			reconnectState.timeout = null
-			console.info('[yjs] Connection established!')
-		}
-
-		if (event.status === 'connecting' || event.status === 'disconnected') {
-			if (!reconnectState.shouldReconnect) {
-				return
-			}
-			if (reconnectState.timeout) {
-				window.clearTimeout(reconnectState.timeout)
-			}
-			reconnectState.reconnectCounter += 1
-			const delay = 500 * reconnectState.reconnectCounter + 500 + Math.random() * 1000
-			reconnectState.timeout = window.setTimeout(() => {
-				console.info(`[yjs] Waited ${Math.round(delay)}ms before reconnecting`)
-				onReconnect()
-			}, delay)
-		}
+	provider.on('status', (event) => {
+		console.info(`[yjs] Connection ${event.status}`)
+	})
+	provider.on('closed', (event) => {
+		console.info(`[yjs] Server closed the connection permanently (${event.code} ${event.reason})`)
+		onClosed()
 	})
 
 	console.info(`[yjs] Attempting connection to ${provider.url}...`)
-	provider.connect()
-	provider.shouldConnect = false
-
-	function disableReconnect() {
-		reconnectState.shouldReconnect = false
-		if (reconnectState.timeout) {
-			window.clearTimeout(reconnectState.timeout)
-			reconnectState.timeout = null
-		}
-	}
-
-	return { provider, disableReconnect }
+	return provider
 }
 
 /**
