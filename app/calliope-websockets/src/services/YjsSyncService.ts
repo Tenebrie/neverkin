@@ -1,11 +1,12 @@
 import { Logger } from '@src/utils/logger.js'
 import { retry } from '@src/utils/retry.js'
-import { docs, getYDoc, setPersistence, WSSharedDoc } from '@y/websocket-server/utils'
+import { docs, getYDoc, setPersistence, setupWSConnection, WSSharedDoc } from '@y/websocket-server/utils'
 import * as Y from 'yjs'
 
 import { persistenceLeaderService } from './PersistenceLeaderService.js'
 import { RedisService } from './RedisService.js'
 import { RheaService } from './RheaService.js'
+import { YjsLineageService } from './YjsLineageService.js'
 import { htmlToYDoc, yDocToHtml } from './YjsParserService.js'
 
 const attachedDocs = new WeakSet<Y.Doc>()
@@ -23,16 +24,20 @@ const RHEA_DEBOUNCE_DELAY = 2000
 const RHEA_FLUSH_RETRY_DELAY = 5000
 const RHEA_FLUSH_MAX_ATTEMPTS = 60
 
+export const YJS_ENTITY_TYPES = ['actor', 'event', 'article', 'node'] as const
+
 // Store metadata per document
 export type DocumentMetadata = {
 	docName: string
 	lastWritingUserId: string | null
 	worldId: string
 	entityId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
+	entityType: (typeof YJS_ENTITY_TYPES)[number]
 	isLoaded: boolean
 	isDirty: boolean
 	loadPromise: Promise<void> | null
+	lineageId: number | null
+	pendingConnections: number
 }
 const documentMetadata = new Map<string, DocumentMetadata>()
 
@@ -64,8 +69,14 @@ export const YjsSyncService = {
 				throw new Error(`Document metadata not found`)
 			}
 
-			const accessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
-			return { accessLevel }
+			metadata.pendingConnections++
+			try {
+				const accessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
+				return pendingConnection(doc, metadata, accessLevel)
+			} catch (error) {
+				await abandonConnection(metadata)
+				throw error
+			}
 		}
 		attachedDocs.add(doc)
 
@@ -78,31 +89,43 @@ export const YjsSyncService = {
 			isLoaded: false,
 			isDirty: false,
 			loadPromise: null,
+			lineageId: null,
+			pendingConnections: 1,
 		}
 		documentMetadata.set(docName, metadata)
 
 		// Load initial state
-		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc })
+		metadata.loadPromise = YjsSyncService.loadDocumentState({ userId, metadata, doc }).then(() => {
+			if (metadata.isLoaded && documentMetadata.get(docName) === metadata) {
+				watchDocumentUpdates(doc, metadata)
+			}
+		})
 		let userAccessLevel: 'read' | 'write'
 		try {
 			userAccessLevel = await YjsSyncService.handleConnection({ userId, worldId, metadata })
 		} catch (error) {
 			Logger.yjsError(docName, `Failed to load initial state:`, error)
-			documentMetadata.delete(docName)
-			attachedDocs.delete(doc)
+			await abandonConnection(metadata)
 			throw error
 		}
 
-		// Listen for updates
-		doc.on('update', (update: Uint8Array, origin: unknown) => {
-			handleDocumentUpdate(doc, metadata, update, origin).catch((error) => {
-				Logger.yjsError(docName, `Error while handling update, closing all connections:`, error)
-				closeDocumentConnections(doc, 'Failed to handle update')
-			})
-		})
-
 		Logger.yjsInfo(docName, `Document ready`)
-		return { accessLevel: userAccessLevel }
+		return pendingConnection(doc, metadata, userAccessLevel)
+	},
+
+	/**
+	 * Tear down a document that has nothing attached and nothing about to attach,
+	 * running the same final flush the persistence hook performs on last disconnect.
+	 */
+	async releaseUnusedDocument(docName: string) {
+		const doc = docs.get(docName)
+		const metadata = documentMetadata.get(docName)
+		if (!doc || doc.conns.size > 0 || (metadata && metadata.pendingConnections > 0)) {
+			return
+		}
+		docs.delete(docName)
+		await closeDocument(docName, doc)
+		doc.destroy()
 	},
 
 	loadDocumentState: async ({
@@ -125,23 +148,15 @@ export const YjsSyncService = {
 			const existingUpdates = await RedisService.getDocumentUpdates(metadata.docName)
 
 			if (existingUpdates.length > 0) {
-				// Redis has updates - apply them
 				Logger.yjsInfo(metadata.docName, `Applying ${existingUpdates.length} updates from Redis`)
-				let failedUpdates = 0
-				for (const update of existingUpdates) {
-					try {
-						Y.applyUpdate(doc, update, REDIS_ORIGIN)
-					} catch (err) {
-						Logger.yjsError(metadata.docName, `Error applying update from Redis:`, err)
-						failedUpdates++
-					}
-				}
-				const areDeltasApplied = doc.store.pendingStructs === null && doc.store.pendingDs === null
-				if (failedUpdates === 0 && areDeltasApplied) {
+				const lineageId = YjsLineageService.applyCachedUpdates(doc, existingUpdates, REDIS_ORIGIN)
+				if (lineageId !== undefined) {
+					metadata.lineageId = lineageId
 					metadata.isLoaded = true
 					metadata.isDirty = true
 					break // Success, exit retry loop
 				}
+				Logger.yjsWarn(metadata.docName, `Cached state is incomplete or unstamped, rebuilding from database`)
 			}
 
 			// Redis empty or invalid - try to acquire lock to fetch from database
@@ -152,8 +167,6 @@ export const YjsSyncService = {
 				Logger.yjsInfo(metadata.docName, `Acquired lock, fetching from database...`)
 				try {
 					await RedisService.deleteDocumentUpdates(metadata.docName)
-					doc.store.pendingStructs = null
-					doc.store.pendingDs = null
 					await YjsSyncService.initializeFromRheaState({ userId, doc, metadata })
 					metadata.isLoaded = true
 				} catch (err) {
@@ -272,14 +285,19 @@ export const YjsSyncService = {
 	}) {
 		const { contentHtml } = await RheaService.fetchDocumentState(userId, metadata)
 
-		if (contentHtml) {
-			doc.transact(() => {
+		// A fresh build owes nothing to updates from other lineages that arrived while loading
+		doc.store.pendingStructs = null
+		doc.store.pendingDs = null
+		doc.transact(() => {
+			if (contentHtml) {
 				htmlToYDoc(contentHtml, doc)
-			}, REDIS_ORIGIN)
-			Logger.yjsInfo(metadata.docName, `Loaded initial state from database`)
-		} else {
-			Logger.yjsInfo(metadata.docName, `No content in database`)
-		}
+			}
+			metadata.lineageId = YjsLineageService.markLineage(doc)
+		}, REDIS_ORIGIN)
+		Logger.yjsInfo(
+			metadata.docName,
+			contentHtml ? `Loaded initial state from database` : `No content in database`,
+		)
 
 		// Store the initial state to Redis so other instances get the same state.
 		const stateUpdate = Y.encodeStateAsUpdate(doc)
@@ -327,51 +345,7 @@ export const YjsSyncService = {
 	setupGlobalHooks() {
 		setPersistence({
 			bindState: () => {},
-			writeState: async (docName, doc) => {
-				attachedDocs.delete(doc)
-				Logger.yjsInfo(docName, `Document closing...`)
-
-				// Cancel pending Rhea save
-				const timer = rheaPersistenceTimers.get(docName)
-				if (timer) {
-					clearTimeout(timer)
-					rheaPersistenceTimers.delete(docName)
-				}
-
-				const metadata = documentMetadata.get(docName)
-				if (!metadata) {
-					Logger.yjsWarn(docName, `No metadata, skipping final flush`)
-					return
-				}
-
-				await retry(
-					async () => {
-						if (!metadata.isDirty || documentMetadata.get(docName) !== metadata) {
-							return
-						}
-						const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
-						if (!isLeader || (await flushDocumentToRhea(doc, metadata)) === 'failed') {
-							throw new Error('Flush failed')
-						}
-					},
-					RHEA_FLUSH_MAX_ATTEMPTS,
-					RHEA_FLUSH_RETRY_DELAY,
-				).catch(() => {
-					Logger.yjsError(docName, `Final flush failed after ${RHEA_FLUSH_MAX_ATTEMPTS} attempts, giving up`)
-				})
-
-				if (documentMetadata.get(docName) !== metadata) {
-					Logger.yjsInfo(docName, `A new session took over the document`)
-					return
-				}
-				documentMetadata.delete(docName)
-				try {
-					await persistenceLeaderService.release(docName)
-				} catch (error) {
-					Logger.yjsError(docName, `Failed to release leadership:`, error)
-				}
-				Logger.yjsInfo(docName, `Document closed`)
-			},
+			writeState: closeDocument,
 			provider: null,
 		})
 
@@ -387,6 +361,55 @@ export const YjsSyncService = {
 }
 
 type FlushResult = 'flushed' | 'skipped' | 'failed'
+
+/**
+ * Final flush and cleanup once a document has no connections left.
+ */
+async function closeDocument(docName: string, doc: WSSharedDoc) {
+	attachedDocs.delete(doc)
+	Logger.yjsInfo(docName, `Document closing...`)
+
+	// Cancel pending Rhea save
+	const timer = rheaPersistenceTimers.get(docName)
+	if (timer) {
+		clearTimeout(timer)
+		rheaPersistenceTimers.delete(docName)
+	}
+
+	const metadata = documentMetadata.get(docName)
+	if (!metadata) {
+		Logger.yjsWarn(docName, `No metadata, skipping final flush`)
+		return
+	}
+
+	await retry(
+		async () => {
+			if (!metadata.isDirty || documentMetadata.get(docName) !== metadata) {
+				return
+			}
+			const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
+			if (!isLeader || (await flushDocumentToRhea(doc, metadata)) === 'failed') {
+				throw new Error('Flush failed')
+			}
+		},
+		RHEA_FLUSH_MAX_ATTEMPTS,
+		RHEA_FLUSH_RETRY_DELAY,
+	).catch(() => {
+		Logger.yjsError(docName, `Final flush failed after ${RHEA_FLUSH_MAX_ATTEMPTS} attempts, giving up`)
+	})
+
+	if (documentMetadata.get(docName) !== metadata) {
+		Logger.yjsInfo(docName, `A new session took over the document`)
+		return
+	}
+	documentMetadata.delete(docName)
+	try {
+		await persistenceLeaderService.release(docName)
+	} catch (error) {
+		Logger.yjsError(docName, `Failed to release leadership:`, error)
+	}
+	Logger.yjsInfo(docName, `Document closed`)
+}
 
 /**
  * Flush document state to Rhea
@@ -424,6 +447,15 @@ async function flushDocumentToRhea(doc: Y.Doc, metadata: DocumentMetadata): Prom
 		Logger.yjsError(docName, `Failed to flush to Rhea:`, error)
 		return 'failed'
 	}
+}
+
+function watchDocumentUpdates(doc: WSSharedDoc, metadata: DocumentMetadata) {
+	doc.on('update', (update: Uint8Array, origin: unknown) => {
+		handleDocumentUpdate(doc, metadata, update, origin).catch((error) => {
+			Logger.yjsError(metadata.docName, `Error while handling update, closing all connections:`, error)
+			closeDocumentConnections(doc, 'Failed to handle update')
+		})
+	})
 }
 
 async function handleDocumentUpdate(
@@ -482,6 +514,36 @@ async function reseedDocumentState(docName: string, doc: Y.Doc) {
 	} finally {
 		await RedisService.releaseDocLock(docName)
 	}
+}
+
+/**
+ * A validated connection that has not attached yet. It keeps the document alive until it
+ * either attaches or is abandoned.
+ */
+function pendingConnection(doc: WSSharedDoc, metadata: DocumentMetadata, accessLevel: 'read' | 'write') {
+	return {
+		accessLevel,
+		lineageId: metadata.lineageId,
+		attach: (
+			socket: Parameters<typeof setupWSConnection>[0],
+			req: Parameters<typeof setupWSConnection>[1],
+		) => {
+			const isCurrent =
+				docs.get(metadata.docName) === doc && documentMetadata.get(metadata.docName) === metadata
+			if (!isCurrent) {
+				return false
+			}
+			setupWSConnection(socket, req, { docName: metadata.docName, gc: true })
+			metadata.pendingConnections--
+			return true
+		},
+		abandon: () => abandonConnection(metadata),
+	}
+}
+
+async function abandonConnection(metadata: DocumentMetadata) {
+	metadata.pendingConnections--
+	await YjsSyncService.releaseUnusedDocument(metadata.docName)
 }
 
 export function recordLastWritingUser(docName: string, userId: string) {

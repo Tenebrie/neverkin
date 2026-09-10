@@ -24,12 +24,11 @@ type ConnectionState = {
 	doc: Y.Doc
 	provider: WebsocketProvider
 	key: string
-	disableReconnect: () => void
 }
 
 export const useCollaboration = ({ entityType, documentId, enabled }: UseCollaborationParams) => {
 	const worldId = useSelector(getWorldIdState)
-	const [isReady, setIsReady] = useState(!enabled)
+	const [syncedDoc, setSyncedDoc] = useState<Y.Doc | null>(null)
 	const connectionRef = useRef<ConnectionState | null>(null)
 	const cleanupTimeoutRef = useRef<number | null>(null)
 	const [generation, setGeneration] = useState(0)
@@ -40,29 +39,24 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 	const [docState, setDocState] = useState<DocState>(() => createDocState(key))
 	if (docState.key !== key) {
 		setDocState(createDocState(key))
-		if (isReady) {
-			setIsReady(false)
-		}
 	}
 
-	const resetConnection = useCallback(() => {
+	const resetDocument = useCallback(() => {
 		if (connectionRef.current) {
 			destroyConnection(connectionRef.current)
 			connectionRef.current = null
-			setIsReady(false)
 		}
 		setGeneration((c) => c + 1)
 	}, [])
 
 	useEventBusSubscribe['calliope/documentReset']({
 		condition: (data) => data.entityId === documentId,
-		callback: resetConnection,
+		callback: resetDocument,
 	})
 
 	useEffect(() => {
 		const doc = docState.doc
 		if (!enabled || !doc) {
-			setIsReady(true)
 			return
 		}
 
@@ -82,25 +76,18 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 			destroyConnection(connectionRef.current)
 		}
 
-		// Create new connection
-		setIsReady(false)
-		const { provider, disableReconnect } = createCollaborationProvider({
+		const provider = createCollaborationProvider({
 			doc,
 			worldId,
 			entityType,
 			documentId,
-			onReconnect: resetConnection,
+			onClosed: resetDocument,
 		})
 
-		connectionRef.current = { doc, provider, key, disableReconnect }
-		provider.on('sync', (synced: boolean) => {
+		connectionRef.current = { doc, provider, key }
+		provider.on('sync', (synced) => {
 			if (synced) {
-				setIsReady(true)
-			}
-		})
-		provider.on('status', (data) => {
-			if (data.status === 'disconnected') {
-				setIsReady(false)
+				setSyncedDoc(doc)
 			}
 		})
 
@@ -112,18 +99,17 @@ export const useCollaboration = ({ entityType, documentId, enabled }: UseCollabo
 					if (connectionRef.current) {
 						destroyConnection(connectionRef.current)
 						connectionRef.current = null
-						setIsReady(false)
 					}
 				}, 50)
 			}
 		}
-	}, [key, enabled, worldId, entityType, documentId, resetConnection, docState])
+	}, [key, enabled, worldId, entityType, documentId, resetDocument, docState])
 
 	return {
 		doc: docState.doc,
 		provider: connectionRef.current?.provider ?? null,
 		extension: docState.extension,
-		isReady,
+		hasSynced: !enabled || (docState.doc !== null && syncedDoc === docState.doc),
 	}
 }
 
@@ -135,10 +121,8 @@ function createDocState(key: string): DocState {
 	return { key, doc, extension: createCollaborationExtension(doc) }
 }
 
-function destroyConnection({ doc, provider, disableReconnect }: ConnectionState) {
+function destroyConnection({ doc, provider }: ConnectionState) {
 	console.info('[yjs] Destroying document')
-	disableReconnect()
-	provider.disconnect()
 	provider.destroy()
 	doc.destroy()
 }
