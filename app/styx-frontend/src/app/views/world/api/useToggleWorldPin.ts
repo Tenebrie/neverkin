@@ -22,7 +22,6 @@ export function useToggleWorldPin() {
 						return
 					}
 
-					world.updatedAt = new Date().toISOString()
 					if (world.userPins.length > 0) {
 						world.userPins = []
 						return
