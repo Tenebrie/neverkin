@@ -1,4 +1,5 @@
 import Delete from '@mui/icons-material/Delete'
+import Logout from '@mui/icons-material/Logout'
 import MoreVert from '@mui/icons-material/MoreVert'
 import OpenInNew from '@mui/icons-material/OpenInNew'
 import Settings from '@mui/icons-material/Settings'
@@ -26,6 +27,7 @@ export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
 	})
 	const navigate = useStableNavigate()
 	const { open: openDeleteWorldModal } = useModal('deleteWorldModal')
+	const { open: openLeaveWorldModal } = useModal('leaveWorldModal')
 
 	return (
 		<>
@@ -78,7 +80,21 @@ export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
 						<ListItemIcon>
 							<Delete fontSize="small" sx={{ color: 'error.main' }} />
 						</ListItemIcon>
-						Delete world…
+						Delete world...
+					</MenuItem>
+				)}
+				{!isOwned && (
+					<MenuItem
+						onClick={() => {
+							popupState.close()
+							openLeaveWorldModal({ worldId: world.id, worldName: world.name })
+						}}
+						sx={{ color: 'error.main' }}
+					>
+						<ListItemIcon>
+							<Logout fontSize="small" sx={{ color: 'error.main' }} />
+						</ListItemIcon>
+						Leave world...
 					</MenuItem>
 				)}
 			</Menu>

@@ -43,5 +43,5 @@ export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
 export const ModalHeaderNative = styled.h2`
 	margin: none;
 	padding: none;
-	font-family: 'Roboto';
+	font-family: 'Inter';
 `

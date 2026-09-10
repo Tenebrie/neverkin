@@ -8,6 +8,7 @@ import Stack from '@mui/material/Stack'
 import { CalendarListCreateNewButton } from '@/app/views/calendar/list/CalendarListCreateNewButton'
 import { WorldListCreateNewButton } from '@/app/views/worldManagement/components/WorldList/WorldListCreateNewButton'
 import { DeleteWorldModal } from '@/app/views/worldManagement/modals/DeleteWorldModal'
+import { LeaveWorldModal } from '@/app/views/worldManagement/modals/LeaveWorldModal'
 
 import { HomeActivityList } from './components/HomeActivityList'
 import { HomeHeader } from './components/HomeHeader'
@@ -82,6 +83,7 @@ export function HomeView() {
 				</Box>
 			</Container>
 			<DeleteWorldModal />
+			<LeaveWorldModal />
 		</Stack>
 	)
 }

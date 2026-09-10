@@ -271,4 +271,26 @@ router.get('/api/world/:worldId/calendars', async (ctx) => {
 	return [...userCalendars, ...worldCalendars]
 })
 
+/**
+ * World unsubscribe
+ */
+router.post('/api/world/:worldId/collaboration/leave', async (ctx) => {
+	useApiEndpoint({
+		name: 'leaveWorldCollaboration',
+		description: 'Removes the current user from the world collaborators.',
+		tags: [worldListTag, worldDetailsTag],
+	})
+
+	const user = await useAuth(ctx, UserAuthenticator)
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: PathParam(StringValidator),
+	})
+
+	return await WorldShareService.removeCollaborator({
+		worldId,
+		userId: user.id,
+	})
+})
+
 export const WorldRouter = router

@@ -13,6 +13,14 @@ export const WorldService = {
 		})
 	},
 
+	findWorldByIdInternalOrThrow: async (worldId: string) => {
+		return getPrismaClient().world.findFirstOrThrow({
+			where: {
+				id: worldId,
+			},
+		})
+	},
+
 	createWorld: async (params: {
 		owner: User
 		name: string
