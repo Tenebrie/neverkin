@@ -6,6 +6,36 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
+				query: () => ({ url: `/api/constants/admin-levels` }),
+				providesTags: [],
+			}),
+			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
+				query: () => ({ url: `/api/constants/world-access-modes` }),
+				providesTags: [],
+			}),
+			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
+				query: () => ({ url: `/api/constants/calendar-templates` }),
+				providesTags: [],
+			}),
+			listCalendarUnitFormatModes: build.query<
+				ListCalendarUnitFormatModesApiResponse,
+				ListCalendarUnitFormatModesApiArg
+			>({
+				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+				providesTags: [],
+			}),
+			listImageGenerationModels: build.query<
+				ListImageGenerationModelsApiResponse,
+				ListImageGenerationModelsApiArg
+			>({
+				query: () => ({ url: `/api/constants/image-generation-models` }),
+				providesTags: [],
+			}),
+			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
+				query: () => ({ url: `/api/constants/feature-flags` }),
+				providesTags: [],
+			}),
 			sendContactFormMessage: build.mutation<SendContactFormMessageApiResponse, SendContactFormMessageApiArg>(
 				{
 					query: (queryArg) => ({ url: `/api/contact`, method: 'POST', body: queryArg.body }),
@@ -152,40 +182,42 @@ const injectedRtkApi = api
 					providesTags: [],
 				},
 			),
-			adminGetUserLevels: build.query<AdminGetUserLevelsApiResponse, AdminGetUserLevelsApiArg>({
-				query: () => ({ url: `/api/constants/admin-levels` }),
-				providesTags: [],
-			}),
-			listWorldAccessModes: build.query<ListWorldAccessModesApiResponse, ListWorldAccessModesApiArg>({
-				query: () => ({ url: `/api/constants/world-access-modes` }),
-				providesTags: [],
-			}),
-			listCalendarTemplates: build.query<ListCalendarTemplatesApiResponse, ListCalendarTemplatesApiArg>({
-				query: () => ({ url: `/api/constants/calendar-templates` }),
-				providesTags: [],
-			}),
-			listCalendarUnitFormatModes: build.query<
-				ListCalendarUnitFormatModesApiResponse,
-				ListCalendarUnitFormatModesApiArg
-			>({
-				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
-				providesTags: [],
-			}),
-			listImageGenerationModels: build.query<
-				ListImageGenerationModelsApiResponse,
-				ListImageGenerationModelsApiArg
-			>({
-				query: () => ({ url: `/api/constants/image-generation-models` }),
-				providesTags: [],
-			}),
-			listFeatureFlags: build.query<ListFeatureFlagsApiResponse, ListFeatureFlagsApiArg>({
-				query: () => ({ url: `/api/constants/feature-flags` }),
-				providesTags: [],
-			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as otherApi }
+export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
+export type AdminGetUserLevelsApiArg = void
+export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
+export type ListWorldAccessModesApiArg = void
+export type ListCalendarTemplatesApiResponse = /** status 200  */ {
+	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
+	templates: {
+		name: string
+		description: string
+		id: string
+	}[]
+}
+export type ListCalendarTemplatesApiArg = void
+export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
+	| 'Name'
+	| 'NameOneIndexed'
+	| 'Numeric'
+	| 'NumericOneIndexed'
+	| 'Hidden'
+)[]
+export type ListCalendarUnitFormatModesApiArg = void
+export type ListImageGenerationModelsApiResponse = /** status 200  */ {
+	models: {
+		id: string
+		name: string
+	}[]
+}
+export type ListImageGenerationModelsApiArg = void
+export type ListFeatureFlagsApiResponse = /** status 200  */ {
+	featureFlags: ('GlobalSearch' | 'MindmapRework')[]
+}
+export type ListFeatureFlagsApiArg = void
 export type SendContactFormMessageApiResponse = unknown
 export type SendContactFormMessageApiArg = {
 	body: {
@@ -316,10 +348,10 @@ export type RequestImageConversionApiArg = {
 	}
 }
 export type ListWorldShareLinksApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	accessMode: 'ReadOnly' | 'Editing'
-	worldId: string
 	expiresAt: null | string
 	label: null | string
 	slug: string
@@ -341,11 +373,11 @@ export type GenerateFreeWorldShareLinkApiArg = {
 	}
 }
 export type CreateWorldShareLinkApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	accessMode: 'ReadOnly' | 'Editing'
-	worldId: string
 	expiresAt?: null | string
 	label?: null | string
 	slug: string
@@ -447,39 +479,19 @@ export type GetUserWorldAccessLevelApiArg = {
 	/** Any string value with at least one character */
 	worldId: string
 }
-export type AdminGetUserLevelsApiResponse = /** status 200  */ ('Free' | 'Premium' | 'Admin')[]
-export type AdminGetUserLevelsApiArg = void
-export type ListWorldAccessModesApiResponse = /** status 200  */ ('Private' | 'PublicRead' | 'PublicEdit')[]
-export type ListWorldAccessModesApiArg = void
-export type ListCalendarTemplatesApiResponse = /** status 200  */ {
-	keys: ('earth_current' | 'martian' | 'pf2e_current' | 'rimworld' | 'exether')[]
-	templates: {
-		name: string
-		description: string
-		id: string
-	}[]
-}
-export type ListCalendarTemplatesApiArg = void
-export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
-	| 'Name'
-	| 'NameOneIndexed'
-	| 'Numeric'
-	| 'NumericOneIndexed'
-	| 'Hidden'
-)[]
-export type ListCalendarUnitFormatModesApiArg = void
-export type ListImageGenerationModelsApiResponse = /** status 200  */ {
-	models: {
-		id: string
-		name: string
-	}[]
-}
-export type ListImageGenerationModelsApiArg = void
-export type ListFeatureFlagsApiResponse = /** status 200  */ {
-	featureFlags: ('GlobalSearch' | 'MindmapRework')[]
-}
-export type ListFeatureFlagsApiArg = void
 export const {
+	useAdminGetUserLevelsQuery,
+	useLazyAdminGetUserLevelsQuery,
+	useListWorldAccessModesQuery,
+	useLazyListWorldAccessModesQuery,
+	useListCalendarTemplatesQuery,
+	useLazyListCalendarTemplatesQuery,
+	useListCalendarUnitFormatModesQuery,
+	useLazyListCalendarUnitFormatModesQuery,
+	useListImageGenerationModelsQuery,
+	useLazyListImageGenerationModelsQuery,
+	useListFeatureFlagsQuery,
+	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
 	useGetEntityContentQuery,
 	useLazyGetEntityContentQuery,
@@ -510,16 +522,4 @@ export const {
 	useLazyGetArticleBacklinksQuery,
 	useGetUserWorldAccessLevelQuery,
 	useLazyGetUserWorldAccessLevelQuery,
-	useAdminGetUserLevelsQuery,
-	useLazyAdminGetUserLevelsQuery,
-	useListWorldAccessModesQuery,
-	useLazyListWorldAccessModesQuery,
-	useListCalendarTemplatesQuery,
-	useLazyListCalendarTemplatesQuery,
-	useListCalendarUnitFormatModesQuery,
-	useLazyListCalendarUnitFormatModesQuery,
-	useListImageGenerationModelsQuery,
-	useLazyListImageGenerationModelsQuery,
-	useListFeatureFlagsQuery,
-	useLazyListFeatureFlagsQuery,
 } = injectedRtkApi

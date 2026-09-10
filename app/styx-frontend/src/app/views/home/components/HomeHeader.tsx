@@ -15,10 +15,12 @@ export function HomeHeader({ totals }: Props) {
 	const { user } = useSelector(getAuthState)
 
 	const stats = [
-		totals.owned > 0 ? `${pluralize(totals.owned, 'world')} of your own` : 'No worlds of your own yet',
-		`${totals.shared} shared with you`,
-		pluralize(totals.calendars, 'calendar'),
-	].join(' · ')
+		totals.owned > 0 ? `${pluralize(totals.owned, 'world')} of your own` : 'No worlds yet',
+		totals.shared > 0 ? `${totals.shared} shared with you` : '',
+		totals.calendars > 0 ? pluralize(totals.calendars, 'calendar') : '',
+	]
+		.filter(Boolean)
+		.join(' · ')
 
 	return (
 		<Stack direction="row" alignItems="center" gap={3} flexWrap="wrap" sx={{ mb: 4 }}>
@@ -30,9 +32,7 @@ export function HomeHeader({ totals }: Props) {
 					{stats}
 				</Typography>
 			</Box>
-			<Box sx={{ ml: 'auto' }}>
-				<WorldListCreateNewButton variant="labelled" />
-			</Box>
+			<Box sx={{ ml: 'auto' }}>{totals.owned > 0 && <WorldListCreateNewButton variant="labelled" />}</Box>
 		</Stack>
 	)
 }

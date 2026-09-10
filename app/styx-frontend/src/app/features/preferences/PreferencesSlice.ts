@@ -101,12 +101,6 @@ export const preferencesSlice = createSlice({
 		},
 
 		/* Home */
-		toggleWorldPin: (state, { payload }: PayloadAction<string>) => {
-			state.home.pinnedWorlds = state.home.pinnedWorlds.includes(payload)
-				? state.home.pinnedWorlds.filter((id) => id !== payload)
-				: [...state.home.pinnedWorlds, payload]
-			saveToLocalStorage(state)
-		},
 		setLastOpenedWorld: (state, { payload }: PayloadAction<string>) => {
 			state.home.lastOpenedWorldId = payload
 			saveToLocalStorage(state)

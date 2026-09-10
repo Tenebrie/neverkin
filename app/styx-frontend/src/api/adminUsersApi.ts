@@ -6,6 +6,14 @@ const injectedRtkApi = api
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			adminGetFeatureFlags: build.query<AdminGetFeatureFlagsApiResponse, AdminGetFeatureFlagsApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/feature-flags/${queryArg.userId}` }),
+				providesTags: ['adminUsers'],
+			}),
+			adminSetFeatureFlag: build.mutation<AdminSetFeatureFlagApiResponse, AdminSetFeatureFlagApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/feature-flags`, method: 'POST', body: queryArg.body }),
+				invalidatesTags: ['adminUsers'],
+			}),
 			adminGetDashboard: build.query<AdminGetDashboardApiResponse, AdminGetDashboardApiArg>({
 				query: () => ({ url: `/api/admin/dashboard` }),
 				providesTags: ['adminUsers'],
@@ -64,18 +72,22 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['adminUsers'],
 			}),
-			adminGetFeatureFlags: build.query<AdminGetFeatureFlagsApiResponse, AdminGetFeatureFlagsApiArg>({
-				query: (queryArg) => ({ url: `/api/admin/feature-flags/${queryArg.userId}` }),
-				providesTags: ['adminUsers'],
-			}),
-			adminSetFeatureFlag: build.mutation<AdminSetFeatureFlagApiResponse, AdminSetFeatureFlagApiArg>({
-				query: (queryArg) => ({ url: `/api/admin/feature-flags`, method: 'POST', body: queryArg.body }),
-				invalidatesTags: ['adminUsers'],
-			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as adminUsersApi }
+export type AdminGetFeatureFlagsApiResponse = /** status 200  */ string[]
+export type AdminGetFeatureFlagsApiArg = {
+	userId: string
+}
+export type AdminSetFeatureFlagApiResponse = unknown
+export type AdminSetFeatureFlagApiArg = {
+	body: {
+		flag: 'GlobalSearch' | 'MindmapRework'
+		userId: string
+		enable: boolean
+	}
+}
 export type AdminGetDashboardApiResponse = /** status 200  */ {
 	hourlyActivity: {
 		hour: string
@@ -121,19 +133,7 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			worlds: {
-				total: number
-				created: number[]
-			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			assets: {
-				total: number
-				created: number[]
-			}
-			events: {
+			nodes: {
 				total: number
 				created: number[]
 			}
@@ -141,7 +141,7 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			eventTracks: {
+			events: {
 				total: number
 				created: number[]
 			}
@@ -157,7 +157,19 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			nodes: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			worlds: {
+				total: number
+				created: number[]
+			}
+			assets: {
+				total: number
+				created: number[]
+			}
+			eventTracks: {
 				total: number
 				created: number[]
 			}
@@ -195,8 +207,8 @@ export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 		}
 		id: string
 		createdAt: string
-		requestIp: string
 		userId?: null | string
+		requestIp: string
 		action:
 			| 'UserAuth'
 			| 'UserCreateAccount'
@@ -351,19 +363,10 @@ export type AdminSetUserPasswordApiArg = {
 		password: string
 	}
 }
-export type AdminGetFeatureFlagsApiResponse = /** status 200  */ string[]
-export type AdminGetFeatureFlagsApiArg = {
-	userId: string
-}
-export type AdminSetFeatureFlagApiResponse = unknown
-export type AdminSetFeatureFlagApiArg = {
-	body: {
-		flag: 'GlobalSearch' | 'MindmapRework'
-		userId: string
-		enable: boolean
-	}
-}
 export const {
+	useAdminGetFeatureFlagsQuery,
+	useLazyAdminGetFeatureFlagsQuery,
+	useAdminSetFeatureFlagMutation,
 	useAdminGetDashboardQuery,
 	useLazyAdminGetDashboardQuery,
 	useAdminGetAuditLogsQuery,
@@ -375,7 +378,4 @@ export const {
 	useAdminDeleteUserMutation,
 	useAdminUpdateUserMutation,
 	useAdminSetUserPasswordMutation,
-	useAdminGetFeatureFlagsQuery,
-	useLazyAdminGetFeatureFlagsQuery,
-	useAdminSetFeatureFlagMutation,
 } = injectedRtkApi

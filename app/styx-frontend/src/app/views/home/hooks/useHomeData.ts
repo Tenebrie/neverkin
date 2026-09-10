@@ -1,9 +1,7 @@
 import { useMemo } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useListCalendarsQuery } from '@/api/calendarApi'
 import { WorldBrief } from '@/api/types/worldTypes'
-import { getHomePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
 import { useWorldListData } from '../../worldManagement/hooks/useWorldListData'
 
@@ -16,23 +14,11 @@ export type RecentActivity = {
 
 export type SharedWorld = WorldBrief & { role: string }
 
-const byRecency = (a: { updatedAt: string }, b: { updatedAt: string }) =>
-	new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
-
-const pinnedFirst = <T extends WorldBrief>(worlds: T[], pinnedWorlds: string[]): T[] => {
-	const pinRank = (id: string) => {
-		const index = pinnedWorlds.indexOf(id)
-		return index === -1 ? pinnedWorlds.length : index
-	}
-	return [...worlds].sort((a, b) => pinRank(a.id) - pinRank(b.id) || byRecency(a, b))
-}
-
 export function useHomeData() {
 	const { ownedWorlds, contributableWorlds, visibleWorlds, isLoading: isWorldsLoading } = useWorldListData()
 	const { data: calendars, isLoading: isCalendarsLoading } = useListCalendarsQuery(undefined, {
 		refetchOnMountOrArgChange: true,
 	})
-	const { pinnedWorlds } = useSelector(getHomePreferences)
 
 	const allSharedWorlds = useMemo<SharedWorld[]>(
 		() => [
@@ -55,11 +41,8 @@ export function useHomeData() {
 		[ownedWorlds, allSharedWorlds, calendars],
 	)
 
-	const sortedOwnedWorlds = useMemo(() => pinnedFirst(ownedWorlds, pinnedWorlds), [ownedWorlds, pinnedWorlds])
-	const sortedSharedWorlds = useMemo(
-		() => pinnedFirst(allSharedWorlds, pinnedWorlds),
-		[allSharedWorlds, pinnedWorlds],
-	)
+	const sortedOwnedWorlds = useMemo(() => pinnedFirst(ownedWorlds), [ownedWorlds])
+	const sortedSharedWorlds = useMemo(() => pinnedFirst(allSharedWorlds), [allSharedWorlds])
 	const sortedCalendars = useMemo(() => [...(calendars ?? [])].sort(byRecency), [calendars])
 
 	return {
@@ -74,4 +57,18 @@ export function useHomeData() {
 			calendars: calendars?.length ?? 0,
 		},
 	}
+}
+
+function byRecency(a: { updatedAt: string }, b: { updatedAt: string }) {
+	return new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime()
+}
+
+function pinnedFirst<T extends WorldBrief>(worlds: T[]): T[] {
+	const pinRank = (world: WorldBrief) => {
+		if (world.userPins.length === 0) {
+			return 10000
+		}
+		return world.userPins[0].rank
+	}
+	return [...worlds].sort((a, b) => pinRank(a) - pinRank(b) || byRecency(a, b))
 }

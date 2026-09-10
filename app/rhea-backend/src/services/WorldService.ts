@@ -103,6 +103,9 @@ export const WorldService = {
 			include: {
 				collaborators: true,
 				calendars: true,
+				userPins: {
+					where: { userId: params.owner.id },
+				},
 			},
 		})
 

@@ -121,10 +121,10 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			expiresAt?: null | string
 			ownerId: string
-			bucketKey: string
 			size: number
+			expiresAt?: null | string
+			bucketKey: string
 			originalFileName: string
 			originalFileExtension: string
 			contentType:

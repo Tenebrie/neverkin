@@ -408,6 +408,7 @@ export const ModelName = {
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
   FeatureFlagEntry: 'FeatureFlagEntry',
+  UserWorldPin: 'UserWorldPin',
   WikiArticle: 'WikiArticle',
   WikiFolder: 'WikiFolder',
   World: 'World',
@@ -430,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2210,6 +2211,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserWorldPin: {
+      payload: Prisma.$UserWorldPinPayload<ExtArgs>
+      fields: Prisma.UserWorldPinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserWorldPinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserWorldPinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        findFirst: {
+          args: Prisma.UserWorldPinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserWorldPinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        findMany: {
+          args: Prisma.UserWorldPinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        create: {
+          args: Prisma.UserWorldPinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        createMany: {
+          args: Prisma.UserWorldPinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserWorldPinCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        delete: {
+          args: Prisma.UserWorldPinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        update: {
+          args: Prisma.UserWorldPinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserWorldPinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserWorldPinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserWorldPinUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserWorldPinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        aggregate: {
+          args: Prisma.UserWorldPinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserWorldPin>
+        }
+        groupBy: {
+          args: Prisma.UserWorldPinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorldPinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserWorldPinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorldPinCountAggregateOutputType> | number
+        }
+      }
+    }
     WikiArticle: {
       payload: Prisma.$WikiArticlePayload<ExtArgs>
       fields: Prisma.WikiArticleFieldRefs
@@ -3118,6 +3193,16 @@ export const FeatureFlagEntryScalarFieldEnum = {
 export type FeatureFlagEntryScalarFieldEnum = (typeof FeatureFlagEntryScalarFieldEnum)[keyof typeof FeatureFlagEntryScalarFieldEnum]
 
 
+export const UserWorldPinScalarFieldEnum = {
+  createdAt: 'createdAt',
+  rank: 'rank',
+  userId: 'userId',
+  worldId: 'worldId'
+} as const
+
+export type UserWorldPinScalarFieldEnum = (typeof UserWorldPinScalarFieldEnum)[keyof typeof UserWorldPinScalarFieldEnum]
+
+
 export const WikiArticleScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3693,6 +3778,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   collaboratingUser?: Prisma.CollaboratingUserOmit
   featureFlagEntry?: Prisma.FeatureFlagEntryOmit
+  userWorldPin?: Prisma.UserWorldPinOmit
   wikiArticle?: Prisma.WikiArticleOmit
   wikiFolder?: Prisma.WikiFolderOmit
   world?: Prisma.WorldOmit

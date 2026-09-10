@@ -35,8 +35,6 @@ export const PreferencesStateSchema = z.object({
 		.default({}),
 	home: z
 		.object({
-			// TODO: Move pins and the last opened world onto the user record so they follow the account across devices.
-			pinnedWorlds: z.array(z.string()).default([]),
 			lastOpenedWorldId: z.string().nullable().default(null),
 		})
 		.default({}),

@@ -38,6 +38,7 @@ model World {
   calendars           Calendar[]
   shareLinks          WorldShareLink[]
   assetReferences     AssetReference[]
+  userPins            UserWorldPin[]
 
   @@index([ownerId])
 }

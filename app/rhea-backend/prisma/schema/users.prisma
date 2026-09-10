@@ -32,12 +32,12 @@ model User {
 
   assets           Asset[]
   favoriteIconSets UserFavoriteIconSet[]
+  worldPins        UserWorldPin[]
 
   avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
   avatarId String? @unique
 
   auditLogs AuditLog[]
-
 }
 
 model CollaboratingUser {
@@ -49,9 +49,8 @@ model CollaboratingUser {
   worldId String
 
   @@id([userId, worldId])
-
   @@index([worldId])
-}
+} 
 
 model FeatureFlagEntry {
   id        String   @id @default(uuid())
@@ -64,4 +63,18 @@ model FeatureFlagEntry {
   flag String
 
   @@index([userId, flag])
+}
+
+model UserWorldPin {
+  createdAt DateTime @default(now())
+  rank      Int      @default(0)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  userId  String
+  worldId String
+
+  @@id([userId, worldId])
+  @@index([worldId])
 }

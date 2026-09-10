@@ -109,62 +109,24 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				name: string
 				position: number
 				calendarId: string
-				unitId: string
 				formatString: string
 				subdivision: number
 				labeledIndices: number[]
+				unitId: string
 			}[]
 			id: string
 			name: string
-			scaleFactor: number
 			compression: number
+			scaleFactor: number
 			baselineUnitId?: null | string
 		}[]
+		description: string
 		id: string
 		updatedAt: string
 		name: string
-		description: string
 		position: number
 		originTime: string
 		dateFormat?: null | string
-	}[]
-	events: {
-		pages: {
-			id: string
-			name: string
-		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
-		}[]
-		deltaStates: {
-			id: string
-			createdAt: string
-			updatedAt: string
-			name?: null | string
-			description?: null | string
-			timestamp: string
-			descriptionRich?: null | string
-			worldEventId: string
-		}[]
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		worldId: string
-		icon: string
-		color: string
-		timestamp: string
-		revokedAt?: null | string
-		content: string
-		contentRich: string
-		worldEventTrackId?: null | string
-		parentFolderId?: null | string
-		parentFolderPosition: number
 	}[]
 	actors: {
 		pages: {
@@ -173,49 +135,87 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
+		title: string
 		icon: string
 		color: string
 		content: string
 		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
-		title: string
 	}[]
-	tags: {
+	events: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
+		deltaStates: {
+			description?: null | string
+			id: string
+			createdAt: string
+			updatedAt: string
+			name?: null | string
+			timestamp: string
+			descriptionRich?: null | string
+			worldEventId: string
+		}[]
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		icon: string
+		color: string
+		content: string
+		contentRich: string
+		parentFolderId?: null | string
+		parentFolderPosition: number
+		timestamp: string
+		revokedAt?: null | string
+		worldEventTrackId?: null | string
+	}[]
+	tags: {
+		mentions: {
+			targetId: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		}[]
+		mentionedIn: {
+			sourceId: string
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+		}[]
 		description: string
 		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
 		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
@@ -239,11 +239,11 @@ export type GetCommonWorldEventIconsApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	description: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
