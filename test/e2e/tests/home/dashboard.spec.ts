@@ -10,7 +10,7 @@ test.describe('Dashboard View', () => {
 	test('shows onboarding state for a new account', async ({ page }) => {
 		await navigateToDashboard(page)
 
-		await expect(page.getByText('No worlds of your own yet · 0 shared with you · 0 calendars')).toBeVisible()
+		await expect(page.getByText('No worlds yet', { exact: true })).toBeVisible()
 		await expect(page.getByText('Start a world of your own')).toBeVisible()
 		await expect(page.getByText('Define your own time')).toBeVisible()
 		await expect(page.getByText('No recent activity yet.')).toBeVisible()
@@ -29,7 +29,7 @@ test.describe('Dashboard View', () => {
 
 		await expect(page.getByLabel('Load world "Dashboard World"')).toBeVisible()
 		await expect(page.getByText('Start a world of your own')).not.toBeVisible()
-		await expect(page.getByText('1 world of your own · 0 shared with you · 0 calendars')).toBeVisible()
+		await expect(page.getByText('1 world of your own', { exact: true })).toBeVisible()
 		await expect(page.getByText('World description')).toBeVisible()
 
 		await page.getByLabel('Load world "Dashboard World"').click()
@@ -54,7 +54,7 @@ test.describe('Dashboard View', () => {
 
 		await expect(page.getByLabel('Load calendar "Dashboard Calendar"')).toBeVisible()
 		await expect(page.getByText('Define your own time')).not.toBeVisible()
-		await expect(page.getByText('No worlds of your own yet · 0 shared with you · 1 calendar')).toBeVisible()
+		await expect(page.getByText('No worlds yet · 1 calendar', { exact: true })).toBeVisible()
 	})
 
 	test.afterEach(async ({ page }) => {
