@@ -53,10 +53,6 @@ model CollaboratingUser {
   @@index([worldId])
 }
 
-enum FeatureFlag {
-  MindmapRework
-}
-
 model FeatureFlagEntry {
   id        String   @id @default(uuid())
   createdAt DateTime @default(now())
@@ -65,7 +61,7 @@ model FeatureFlagEntry {
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  flag FeatureFlag
+  flag String
 
   @@index([userId, flag])
 }

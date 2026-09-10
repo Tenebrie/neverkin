@@ -1,6 +1,5 @@
-import { FeatureFlag } from '@prisma/client'
 import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
-import { FeatureFlagService } from '@src/services/FeatureFlagService.js'
+import { AllFeatureFlags, FeatureFlagService } from '@src/services/FeatureFlagService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { Router, useApiEndpoint, useAuth, usePathParams, useRequestBody } from 'moonflower'
 import z from 'zod'
@@ -36,7 +35,7 @@ router.post('/api/admin/feature-flags', async (ctx) => {
 	})
 
 	const { flag, userId, enable } = useRequestBody(ctx, {
-		flag: z.enum(FeatureFlag),
+		flag: z.enum(AllFeatureFlags),
 		userId: z.string(),
 		enable: z.boolean(),
 	})

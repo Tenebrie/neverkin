@@ -317,7 +317,7 @@ export type WorldWhereUniqueInput = Prisma.AtLeast<{
   calendars?: Prisma.CalendarListRelationFilter
   shareLinks?: Prisma.WorldShareLinkListRelationFilter
   assetReferences?: Prisma.AssetReferenceListRelationFilter
-}, "id" | "id">
+}, "id">
 
 export type WorldOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

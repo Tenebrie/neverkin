@@ -288,7 +288,7 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   favoriteIconSets?: Prisma.UserFavoriteIconSetListRelationFilter
   avatar?: Prisma.XOR<Prisma.AssetNullableScalarRelationFilter, Prisma.AssetWhereInput> | null
   auditLogs?: Prisma.AuditLogListRelationFilter
-}, "id" | "id" | "email" | "avatarId">
+}, "id" | "email" | "avatarId">
 
 export type UserOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

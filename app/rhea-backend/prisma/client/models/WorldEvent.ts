@@ -360,7 +360,7 @@ export type WorldEventWhereUniqueInput = Prisma.AtLeast<{
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   track?: Prisma.XOR<Prisma.WorldEventTrackNullableScalarRelationFilter, Prisma.WorldEventTrackWhereInput> | null
   parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type WorldEventOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

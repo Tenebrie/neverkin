@@ -304,7 +304,7 @@ export type CalendarWhereUniqueInput = Prisma.AtLeast<{
   presentations?: Prisma.CalendarPresentationListRelationFilter
   world?: Prisma.XOR<Prisma.WorldNullableScalarRelationFilter, Prisma.WorldWhereInput> | null
   owner?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type CalendarOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

@@ -293,7 +293,7 @@ export type TagWhereUniqueInput = Prisma.AtLeast<{
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type TagOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

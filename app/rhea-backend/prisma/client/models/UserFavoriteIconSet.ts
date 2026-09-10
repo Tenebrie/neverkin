@@ -184,7 +184,7 @@ export type UserFavoriteIconSetWhereUniqueInput = Prisma.AtLeast<{
   iconSet?: Prisma.StringFilter<"UserFavoriteIconSet"> | string
   userId?: Prisma.StringFilter<"UserFavoriteIconSet"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type UserFavoriteIconSetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

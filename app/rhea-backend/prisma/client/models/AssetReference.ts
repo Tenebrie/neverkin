@@ -306,7 +306,7 @@ export type AssetReferenceWhereUniqueInput = Prisma.AtLeast<{
   holderNode?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id" | "assetId_holderId_pageId">
+}, "id" | "assetId_holderId_pageId">
 
 export type AssetReferenceOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

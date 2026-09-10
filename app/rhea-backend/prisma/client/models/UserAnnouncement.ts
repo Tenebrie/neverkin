@@ -224,7 +224,7 @@ export type UserAnnouncementWhereUniqueInput = Prisma.AtLeast<{
   description?: Prisma.StringFilter<"UserAnnouncement"> | string
   userId?: Prisma.StringFilter<"UserAnnouncement"> | string
   user?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type UserAnnouncementOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

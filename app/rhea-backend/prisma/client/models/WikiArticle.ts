@@ -316,7 +316,7 @@ export type WikiArticleWhereUniqueInput = Prisma.AtLeast<{
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type WikiArticleOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
