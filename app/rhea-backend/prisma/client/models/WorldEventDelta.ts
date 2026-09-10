@@ -268,7 +268,7 @@ export type WorldEventDeltaWhereUniqueInput = Prisma.AtLeast<{
   descriptionRich?: Prisma.StringNullableFilter<"WorldEventDelta"> | string | null
   worldEventId?: Prisma.StringFilter<"WorldEventDelta"> | string
   worldEvent?: Prisma.XOR<Prisma.WorldEventScalarRelationFilter, Prisma.WorldEventWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type WorldEventDeltaOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

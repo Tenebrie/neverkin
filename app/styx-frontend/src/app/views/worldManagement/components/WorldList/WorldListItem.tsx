@@ -12,7 +12,7 @@ import Typography from '@mui/material/Typography'
 import { WorldBrief } from '@/api/types/worldTypes'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
+import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
@@ -30,7 +30,8 @@ export function WorldListItem({ world, showActions }: Props) {
 
 	const onEdit = (id: string) => {
 		navigate({
-			to: `/world/${id}/settings`,
+			to: '/world/$worldId/settings',
+			params: { worldId: id },
 			search: true,
 		})
 	}

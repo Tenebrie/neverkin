@@ -5,7 +5,7 @@ import styled from 'styled-components'
 
 import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 import { getTimelinePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 
 const StyledDragger = styled.div`
 	width: 100%;

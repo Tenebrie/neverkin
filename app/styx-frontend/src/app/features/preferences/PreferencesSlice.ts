@@ -44,6 +44,7 @@ export const preferencesSlice = createSlice({
 			state['calendarEditor'] = value['calendarEditor']
 			state['colorMode'] = value['colorMode']
 			state['global'] = value['global']
+			state['home'] = value['home']
 			state['iconSets'] = value['iconSets']
 			state['outliner'] = value['outliner']
 			state['overview'] = value['overview']
@@ -96,6 +97,12 @@ export const preferencesSlice = createSlice({
 		},
 		setShowDiscordLink: (state, { payload }: PayloadAction<boolean>) => {
 			state.global.showDiscordLink = payload
+			saveToLocalStorage(state)
+		},
+
+		/* Home */
+		setLastOpenedWorld: (state, { payload }: PayloadAction<string>) => {
+			state.home.lastOpenedWorldId = payload
 			saveToLocalStorage(state)
 		},
 

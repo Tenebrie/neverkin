@@ -28,6 +28,7 @@ import { WorldBulkRouter } from './routers/WorldBulkActionRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
+import { WorldPinRouter } from './routers/WorldPinRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
 import { WorldShareRouter } from './routers/WorldShareRouter.js'
@@ -120,6 +121,8 @@ app
 	.use(WorldBulkRouter.allowedMethods())
 	.use(WorldColorRouter.routes())
 	.use(WorldColorRouter.allowedMethods())
+	.use(WorldPinRouter.routes())
+	.use(WorldPinRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
 	.use(WorldSearchRouter.allowedMethods())
 	.use(WorldShareRouter.routes())

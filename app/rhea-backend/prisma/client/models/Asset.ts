@@ -342,7 +342,7 @@ export type AssetWhereUniqueInput = Prisma.AtLeast<{
   owner?: Prisma.XOR<Prisma.UserScalarRelationFilter, Prisma.UserWhereInput>
   references?: Prisma.AssetReferenceListRelationFilter
   avatarOf?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type AssetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

@@ -140,6 +140,11 @@ export type CollaboratingUser = Prisma.CollaboratingUserModel
  */
 export type FeatureFlagEntry = Prisma.FeatureFlagEntryModel
 /**
+ * Model UserWorldPin
+ * 
+ */
+export type UserWorldPin = Prisma.UserWorldPinModel
+/**
  * Model WikiArticle
  * 
  */

@@ -326,7 +326,7 @@ export type ActorWhereUniqueInput = Prisma.AtLeast<{
   nodes?: Prisma.MindmapNodeListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
   parentFolder?: Prisma.XOR<Prisma.WikiFolderNullableScalarRelationFilter, Prisma.WikiFolderWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type ActorOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

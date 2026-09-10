@@ -278,7 +278,7 @@ export type WorldShareLinkWhereUniqueInput = Prisma.AtLeast<{
   usageCount?: Prisma.IntFilter<"WorldShareLink"> | number
   worldId?: Prisma.StringFilter<"WorldShareLink"> | string
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id" | "slug">
+}, "id" | "slug">
 
 export type WorldShareLinkOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

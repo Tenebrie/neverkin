@@ -8,21 +8,6 @@ import { ArticleListEntityGroupButton } from '../wiki/articleList/ArticleListEnt
 import { ArticleListHeader } from '../wiki/articleList/ArticleListHeader'
 import { Mindmap } from './Mindmap'
 
-// export const MindmapView = () => {
-// 	return (
-// 		<Stack direction="row" sx={{ width: '100%', height: '100%', overflowX: 'hidden' }}>
-// 			<Box width={1} height={1} position="relative" overflow="auto">
-// 				<Mindmap />
-// 			</Box>
-// 			<OutlinerDrawer />
-// 		</Stack>
-// 	)
-// }
-
-/**
- * TODO: Migrate to the new outliner design
- */
-
 export const MindmapView = () => {
 	return (
 		<Stack direction="row" sx={{ width: '100%', height: '100%', overflowX: 'hidden' }}>

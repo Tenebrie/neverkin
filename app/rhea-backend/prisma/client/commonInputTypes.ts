@@ -511,23 +511,6 @@ export type EnumCollaboratorAccessWithAggregatesFilter<$PrismaModel = never> = {
   _max?: Prisma.NestedEnumCollaboratorAccessFilter<$PrismaModel>
 }
 
-export type EnumFeatureFlagFilter<$PrismaModel = never> = {
-  equals?: $Enums.FeatureFlag | Prisma.EnumFeatureFlagFieldRefInput<$PrismaModel>
-  in?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel> | $Enums.FeatureFlag
-}
-
-export type EnumFeatureFlagWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.FeatureFlag | Prisma.EnumFeatureFlagFieldRefInput<$PrismaModel>
-  in?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFeatureFlagWithAggregatesFilter<$PrismaModel> | $Enums.FeatureFlag
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel>
-}
-
 export type EnumWorldCalendarTypeNullableFilter<$PrismaModel = never> = {
   equals?: $Enums.WorldCalendarType | Prisma.EnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
   in?: $Enums.WorldCalendarType[] | Prisma.ListEnumWorldCalendarTypeFieldRefInput<$PrismaModel> | null
@@ -1059,23 +1042,6 @@ export type NestedEnumCollaboratorAccessWithAggregatesFilter<$PrismaModel = neve
   _count?: Prisma.NestedIntFilter<$PrismaModel>
   _min?: Prisma.NestedEnumCollaboratorAccessFilter<$PrismaModel>
   _max?: Prisma.NestedEnumCollaboratorAccessFilter<$PrismaModel>
-}
-
-export type NestedEnumFeatureFlagFilter<$PrismaModel = never> = {
-  equals?: $Enums.FeatureFlag | Prisma.EnumFeatureFlagFieldRefInput<$PrismaModel>
-  in?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel> | $Enums.FeatureFlag
-}
-
-export type NestedEnumFeatureFlagWithAggregatesFilter<$PrismaModel = never> = {
-  equals?: $Enums.FeatureFlag | Prisma.EnumFeatureFlagFieldRefInput<$PrismaModel>
-  in?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  notIn?: $Enums.FeatureFlag[] | Prisma.ListEnumFeatureFlagFieldRefInput<$PrismaModel>
-  not?: Prisma.NestedEnumFeatureFlagWithAggregatesFilter<$PrismaModel> | $Enums.FeatureFlag
-  _count?: Prisma.NestedIntFilter<$PrismaModel>
-  _min?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel>
-  _max?: Prisma.NestedEnumFeatureFlagFilter<$PrismaModel>
 }
 
 export type NestedEnumWorldCalendarTypeNullableFilter<$PrismaModel = never> = {

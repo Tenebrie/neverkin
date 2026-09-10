@@ -49,7 +49,7 @@ export const DeleteWorldModal = () => {
 	}
 
 	const { largeLabel: shortcutLabel } = useShortcut(
-		Shortcut.CtrlEnter,
+		[Shortcut.Enter, Shortcut.CtrlEnter],
 		() => {
 			onConfirm()
 		},

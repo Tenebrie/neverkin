@@ -16,7 +16,6 @@ import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import useMediaQuery from '@mui/material/useMediaQuery'
 import { bindMenu, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import { useDispatch } from 'react-redux'
 
 import { usePostLogoutMutation } from '@/api/authApi'
 import { NavigationLink } from '@/app/components/NavigationLink'
@@ -24,7 +23,8 @@ import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { authSlice, User } from '../../AuthSlice'
+import { User } from '../../AuthSlice'
+import { useClearSession } from '../../hooks/useClearSession'
 
 type Props = {
 	user: User
@@ -43,8 +43,7 @@ export function UserDropdown({ user }: Props) {
 	const isSmallScreen = useMediaQuery(theme.breakpoints.down('md'))
 
 	const [logout] = usePostLogoutMutation()
-	const { clearUser } = authSlice.actions
-	const dispatch = useDispatch()
+	const clearSession = useClearSession()
 
 	const onLogout = async () => {
 		const result = parseApiResponse(await logout())
@@ -54,7 +53,7 @@ export function UserDropdown({ user }: Props) {
 		if (result.response.redirectTo === 'admin') {
 			navigate({ to: '/admin/users', reloadDocument: true })
 		} else {
-			dispatch(clearUser())
+			clearSession()
 			navigate({ to: '/login' })
 		}
 	}

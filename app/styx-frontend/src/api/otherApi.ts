@@ -211,7 +211,7 @@ export type ListImageGenerationModelsApiResponse = /** status 200  */ {
 }
 export type ListImageGenerationModelsApiArg = void
 export type ListFeatureFlagsApiResponse = /** status 200  */ {
-	featureFlags: 'MindmapRework'[]
+	featureFlags: ('GlobalSearch' | 'MindmapRework')[]
 }
 export type ListFeatureFlagsApiArg = void
 export type SendContactFormMessageApiResponse = unknown

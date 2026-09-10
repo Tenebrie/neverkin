@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
 
 import { useRequestImageGenerationMutation } from '@/api/imageGenerationApi'
-import { useErrorState } from '@/app/utils/useErrorState'
+import { useErrorState } from '@/app/hooks/useErrorState'
 
 export function useImageGeneration() {
 	const [requestGeneration, { isLoading: isGenerating }] = useRequestImageGenerationMutation()

@@ -49,9 +49,16 @@ export const WorldShareService = {
 		const link = await getPrismaClient().worldShareLink.findFirst({
 			where: {
 				slug,
-				expiresAt: {
-					gt: new Date(),
-				},
+				OR: [
+					{
+						expiresAt: {
+							gt: new Date(),
+						},
+					},
+					{
+						expiresAt: null,
+					},
+				],
 			},
 			select: {
 				accessMode: true,

@@ -4,6 +4,7 @@ import InputLabel from '@mui/material/InputLabel'
 import MenuItem from '@mui/material/MenuItem'
 import Select from '@mui/material/Select'
 import Stack from '@mui/material/Stack'
+import { useRouter } from '@tanstack/react-router'
 import { ReactNode, useCallback } from 'react'
 
 import { useListWorldAccessModesQuery } from '@/api/otherApi'
@@ -48,10 +49,11 @@ export const AccessModeSection = ({ world }: Props) => {
 		[setWorldAccessMode, world.id],
 	)
 
+	const router = useRouter()
 	const onCopyLink = useCallback(() => {
-		const link = window.location.origin + `/world/${world.id}`
-		navigator.clipboard.writeText(link)
-	}, [world])
+		const { href } = router.buildLocation({ to: '/world/$worldId', params: { worldId: world.id } })
+		navigator.clipboard.writeText(window.location.origin + href)
+	}, [router, world.id])
 
 	return (
 		<Stack gap={2}>

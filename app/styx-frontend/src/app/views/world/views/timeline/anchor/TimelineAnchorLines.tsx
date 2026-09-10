@@ -3,7 +3,7 @@ import { memo, useMemo } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 
 import { TimelineState } from '../utils/TimelineState'
 import { anchorSlotIds, useAnchorLines } from './hooks/useAnchorLines'

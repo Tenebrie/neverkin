@@ -3,8 +3,8 @@ import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useGenerateFreeWorldShareLinkMutation } from '@/api/otherApi'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 export function useShareSlug() {

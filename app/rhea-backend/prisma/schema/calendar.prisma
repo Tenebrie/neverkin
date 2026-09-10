@@ -1,5 +1,5 @@
 model Calendar {
-    id        String   @id @unique @default(uuid())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
     position  Int      @default(0)
@@ -20,6 +20,9 @@ model Calendar {
     owner   User?   @relation(fields: [ownerId], references: [id], onDelete: Cascade)
     worldId String?
     ownerId String?
+
+    @@index([worldId])
+    @@index([ownerId])
 }
 
 model CalendarUnit {

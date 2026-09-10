@@ -88,6 +88,11 @@ const modals = {
 		worldId: '' as string,
 		worldName: '' as string,
 	},
+	leaveWorldModal: {
+		isOpen: false as boolean,
+		worldId: '' as string,
+		worldName: '' as string,
+	},
 
 	/* WorldWiki */
 	bulkDeleteEntitiesModal: {

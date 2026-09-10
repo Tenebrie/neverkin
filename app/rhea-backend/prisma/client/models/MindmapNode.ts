@@ -362,7 +362,7 @@ export type MindmapNodeWhereUniqueInput = Prisma.AtLeast<{
   links?: Prisma.MindmapLinkListRelationFilter
   linkedBy?: Prisma.MindmapLinkListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type MindmapNodeOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

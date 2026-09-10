@@ -76,14 +76,14 @@ const injectedRtkApi = api
 		overrideExisting: false,
 	})
 export { injectedRtkApi as adminUsersApi }
-export type AdminGetFeatureFlagsApiResponse = /** status 200  */ 'MindmapRework'[]
+export type AdminGetFeatureFlagsApiResponse = /** status 200  */ string[]
 export type AdminGetFeatureFlagsApiArg = {
 	userId: string
 }
 export type AdminSetFeatureFlagApiResponse = unknown
 export type AdminSetFeatureFlagApiArg = {
 	body: {
-		flag: 'MindmapRework'
+		flag: 'GlobalSearch' | 'MindmapRework'
 		userId: string
 		enable: boolean
 	}
@@ -133,19 +133,7 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			worlds: {
-				total: number
-				created: number[]
-			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			assets: {
-				total: number
-				created: number[]
-			}
-			events: {
+			nodes: {
 				total: number
 				created: number[]
 			}
@@ -153,7 +141,7 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			eventTracks: {
+			events: {
 				total: number
 				created: number[]
 			}
@@ -169,7 +157,19 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			nodes: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			worlds: {
+				total: number
+				created: number[]
+			}
+			assets: {
+				total: number
+				created: number[]
+			}
+			eventTracks: {
 				total: number
 				created: number[]
 			}
@@ -207,8 +207,8 @@ export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 		}
 		id: string
 		createdAt: string
-		requestIp: string
 		userId?: null | string
+		requestIp: string
 		action:
 			| 'UserAuth'
 			| 'UserCreateAccount'
@@ -244,7 +244,7 @@ export type AdminGetAuditLogsApiArg = {
 }
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	users: {
-		featureFlags: 'MindmapRework'[]
+		featureFlags: string[]
 		id: string
 		createdAt: string
 		updatedAt: string

@@ -1,5 +1,5 @@
 model ContentPage {
-    id        String   @id @unique @default(uuid())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
@@ -22,4 +22,9 @@ model ContentPage {
 
 	mentions Mention[] @relation("PageMention")
     assetRefs AssetReference[] @relation("PageAssetReference")
+
+    @@index([parentActorId])
+    @@index([parentEventId])
+    @@index([parentArticleId])
+    @@index([parentNodeId])
 }

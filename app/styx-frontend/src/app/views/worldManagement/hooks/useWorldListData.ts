@@ -4,7 +4,7 @@ import { useCheckAuthenticationQuery } from '@/api/authApi'
 import { useGetWorldsQuery } from '@/api/worldListApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
-export const useWorldListData = () => {
+export function useWorldListData() {
 	const { user } = useSelector(getAuthState)
 	const { data: authData, isLoading: isAuthLoading } = useCheckAuthenticationQuery()
 	const isAuthenticated = !!user || !!authData?.authenticated

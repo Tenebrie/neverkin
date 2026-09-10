@@ -1,24 +1,25 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 
 import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
 import { UpdateArticleApiArg, useUpdateArticleMutation } from '@/api/otherApi'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
+import { RootState } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useListArticles } from './useListArticles'
-
 export function useUpdateArticle() {
 	const worldId = useSelector(getWorldIdState)
-	const { data: articles = [] } = useListArticles()
 	const [updateArticle, state] = useUpdateArticleMutation()
 	const { updateCachedArticle } = useWikiApiCache()
+	const store = useStore<RootState>()
 
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
 		async (id: string, body: UpdateArticleApiArg['body']) => {
+			const oldIcon = store.getState().wiki.articles.find((e) => e.id === id)?.icon
+
 			const { response, error } = parseApiResponse(
 				await updateArticle({
 					worldId,
@@ -31,7 +32,6 @@ export function useUpdateArticle() {
 			}
 
 			// Invalidate common icons query cache if icon has changed
-			const oldIcon = articles.find((e) => e.id === id)?.icon
 			if (body.icon !== undefined && body.icon !== oldIcon) {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
@@ -40,7 +40,7 @@ export function useUpdateArticle() {
 
 			return response
 		},
-		[articles, dispatch, updateArticle, updateCachedArticle, worldId],
+		[dispatch, store, updateArticle, updateCachedArticle, worldId],
 	)
 
 	return [perform, state] as const

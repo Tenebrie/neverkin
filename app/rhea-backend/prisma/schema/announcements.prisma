@@ -5,7 +5,7 @@ enum AnnouncementType {
 }
 
 model UserAnnouncement {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   timestamp DateTime @default(now())
 
   isUnread Boolean @default(true)
@@ -16,4 +16,6 @@ model UserAnnouncement {
 
   user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String
+
+  @@index([userId])
 }

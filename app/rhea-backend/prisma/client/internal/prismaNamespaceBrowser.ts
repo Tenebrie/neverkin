@@ -75,6 +75,7 @@ export const ModelName = {
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
   FeatureFlagEntry: 'FeatureFlagEntry',
+  UserWorldPin: 'UserWorldPin',
   WikiArticle: 'WikiArticle',
   WikiFolder: 'WikiFolder',
   World: 'World',
@@ -449,6 +450,16 @@ export const FeatureFlagEntryScalarFieldEnum = {
 } as const
 
 export type FeatureFlagEntryScalarFieldEnum = (typeof FeatureFlagEntryScalarFieldEnum)[keyof typeof FeatureFlagEntryScalarFieldEnum]
+
+
+export const UserWorldPinScalarFieldEnum = {
+  createdAt: 'createdAt',
+  rank: 'rank',
+  userId: 'userId',
+  worldId: 'worldId'
+} as const
+
+export type UserWorldPinScalarFieldEnum = (typeof UserWorldPinScalarFieldEnum)[keyof typeof UserWorldPinScalarFieldEnum]
 
 
 export const WikiArticleScalarFieldEnum = {

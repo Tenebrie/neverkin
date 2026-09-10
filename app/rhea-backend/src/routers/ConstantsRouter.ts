@@ -1,6 +1,7 @@
-import { CalendarUnitFormatMode, FeatureFlag, WorldAccessMode } from '@prisma/client'
+import { CalendarUnitFormatMode, WorldAccessMode } from '@prisma/client'
 import { PremiumAuthenticator } from '@src/middleware/auth/PremiumAuthenticator.js'
 import { CalendarTemplateService } from '@src/services/CalendarTemplateService.js'
+import { AllFeatureFlags } from '@src/services/FeatureFlagService.js'
 import { ImageGenerationService } from '@src/services/ImageGenerationService.js'
 import { keysOf } from '@src/utils/keysOf.js'
 import { Router, useApiEndpoint, useAuth } from 'moonflower'
@@ -72,7 +73,7 @@ router.get('/api/constants/feature-flags', async () => {
 	})
 
 	return {
-		featureFlags: keysOf(FeatureFlag),
+		featureFlags: AllFeatureFlags,
 	}
 })
 

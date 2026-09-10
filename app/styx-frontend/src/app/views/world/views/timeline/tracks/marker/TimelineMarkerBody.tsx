@@ -190,6 +190,7 @@ export function TimelineMarkerBodyComponent({ entity, selected }: Props) {
 				<MarkerTooltipSummonable>
 					<Paper
 						role="tooltip"
+						aria-hidden={!isHovered}
 						elevation={4}
 						sx={{
 							position: 'fixed',

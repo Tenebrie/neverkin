@@ -21,7 +21,7 @@ export function useHandleUserLogin() {
 			const visitedShareLinkSlug = getSessionStorageItem<string>('visitedShareLinkSlug')
 			if (visitedShareLinkSlug) {
 				removeSessionStorageItem('visitedShareLinkSlug')
-				navigate({ to: `/share/${visitedShareLinkSlug}` })
+				navigate({ to: '/share/$shareLinkSlug', params: { shareLinkSlug: visitedShareLinkSlug } })
 				return
 			}
 			navigate({ to: '/' })

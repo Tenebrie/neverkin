@@ -1,5 +1,5 @@
 model WikiArticle {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -22,10 +22,12 @@ model WikiArticle {
   parentFolder         WikiFolder? @relation("FolderArticle", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
   parentFolderPosition Float       @default(0)
+
+  @@index([worldId, parentFolderId])
 }
 
 model WikiFolder {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -47,4 +49,6 @@ model WikiFolder {
   actors   Actor[]       @relation("FolderActor")
   events   WorldEvent[]  @relation("FolderEvent")
   tags     Tag[]         @relation("FolderTag")
+
+  @@index([worldId, parentFolderId])
 }

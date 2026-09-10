@@ -184,7 +184,7 @@ export type WorldCommonIconSetWhereUniqueInput = Prisma.AtLeast<{
   iconSet?: Prisma.StringFilter<"WorldCommonIconSet"> | string
   worldId?: Prisma.StringFilter<"WorldCommonIconSet"> | string
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type WorldCommonIconSetOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

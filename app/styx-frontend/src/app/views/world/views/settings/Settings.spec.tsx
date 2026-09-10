@@ -18,7 +18,7 @@ import { mockRouter } from '@/router-utils/router.mock'
 import { renderWithProviders } from '@/test-utils/renderWithProviders'
 import { setupTestServer } from '@/test-utils/setupTestServer'
 
-import { Settings } from './SettingsView'
+import { SettingsView } from './SettingsView'
 
 const server = setupTestServer()
 
@@ -56,13 +56,13 @@ describe.skip('<Settings />', () => {
 		})
 
 		it('renders empty state for collaborators by default', async () => {
-			renderWithProviders(<Settings />, preloadedState)
+			renderWithProviders(<SettingsView />, preloadedState)
 
 			expect(await screen.findByText('No collaborators added')).toBeInTheDocument()
 		})
 
 		it("displays collaborator's email", async () => {
-			renderWithProviders(<Settings />, preloadedState)
+			renderWithProviders(<SettingsView />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',
@@ -89,7 +89,7 @@ describe.skip('<Settings />', () => {
 		it('invites a new collaborator', async () => {
 			const { user } = renderWithProviders(
 				<>
-					<Settings />
+					<SettingsView />
 				</>,
 				preloadedState,
 			)
@@ -118,7 +118,7 @@ describe.skip('<Settings />', () => {
 		it('invites a new collaborator with changed access level', async () => {
 			const { user } = renderWithProviders(
 				<>
-					<Settings />
+					<SettingsView />
 				</>,
 				preloadedState,
 			)
@@ -149,7 +149,7 @@ describe.skip('<Settings />', () => {
 		})
 
 		it('removes a collaborator', async () => {
-			const { user } = renderWithProviders(<Settings />, preloadedState)
+			const { user } = renderWithProviders(<SettingsView />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',
@@ -186,7 +186,7 @@ describe.skip('<Settings />', () => {
 		})
 
 		it('cancels removal request', async () => {
-			const { user } = renderWithProviders(<Settings />, preloadedState)
+			const { user } = renderWithProviders(<SettingsView />, preloadedState)
 
 			mockGetWorldBrief(server, {
 				worldId: 'world-1111',

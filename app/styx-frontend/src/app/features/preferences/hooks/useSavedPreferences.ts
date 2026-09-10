@@ -1,6 +1,6 @@
 import { useDispatch } from 'react-redux'
 
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 
 import { preferencesSlice } from '../PreferencesSlice'
 

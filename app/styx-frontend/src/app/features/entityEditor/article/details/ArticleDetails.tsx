@@ -5,7 +5,7 @@ import useEvent from 'react-use-event-hook'
 
 import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
-import { useEditArticle } from '@/app/views/world/api/useEditArticle'
+import { useUpdateArticle } from '@/app/views/world/api/useUpdateArticle'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { EntityEditorTabs } from '../../common/EntityEditorTabs'
@@ -20,10 +20,10 @@ type Props = {
 }
 
 export const ArticleDetails = ({ article, titleProps, isWikiTab, surface }: Props) => {
-	const [editArticle] = useEditArticle()
+	const [updateArticle] = useUpdateArticle()
 
 	const onSave = useEvent((name: string) => {
-		editArticle({ id: article.id, name })
+		updateArticle(article.id, { name })
 	})
 
 	const scrollbars = useBrowserSpecificScrollbars()

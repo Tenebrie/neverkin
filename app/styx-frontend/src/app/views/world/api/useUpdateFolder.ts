@@ -1,25 +1,26 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch, useSelector, useStore } from 'react-redux'
 
 import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
 import { UpdateArticleApiArg } from '@/api/otherApi'
 import { worldDetailsApi } from '@/api/worldDetailsApi'
 import { useUpdateFolderMutation } from '@/api/worldWikiFolderApi'
+import { RootState } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useListFolders } from './useListFolders'
-
 export function useUpdateFolder() {
 	const worldId = useSelector(getWorldIdState)
-	const { data: folders = [] } = useListFolders()
 	const [updateFolder, state] = useUpdateFolderMutation()
 	const { updateCachedFolder } = useWikiApiCache()
+	const store = useStore<RootState>()
 
 	const dispatch = useDispatch()
 
 	const perform = useCallback(
 		async (id: string, body: UpdateArticleApiArg['body']) => {
+			const oldIcon = store.getState().wiki.folders.find((e) => e.id === id)?.icon
+
 			const diff = updateCachedFolder({ ...body, id })
 
 			const { response, error } = parseApiResponse(
@@ -35,7 +36,6 @@ export function useUpdateFolder() {
 			}
 
 			// Invalidate common icons query cache if icon has changed
-			const oldIcon = folders.find((e) => e.id === id)?.icon
 			if (body.icon !== undefined && body.icon !== oldIcon) {
 				dispatch(worldDetailsApi.util.invalidateTags([{ type: 'worldCommonIcons' }]))
 			}
@@ -44,7 +44,7 @@ export function useUpdateFolder() {
 
 			return response
 		},
-		[folders, dispatch, updateFolder, updateCachedFolder, worldId],
+		[dispatch, store, updateFolder, updateCachedFolder, worldId],
 	)
 
 	return [perform, state] as const

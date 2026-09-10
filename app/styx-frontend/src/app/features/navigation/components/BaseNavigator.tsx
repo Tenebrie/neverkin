@@ -1,5 +1,6 @@
 import AdminPanelSettings from '@mui/icons-material/AdminPanelSettings'
 import Construction from '@mui/icons-material/Construction'
+import Home from '@mui/icons-material/Home'
 import PublicIcon from '@mui/icons-material/Public'
 import Box from '@mui/material/Box'
 import Divider from '@mui/material/Divider'
@@ -15,12 +16,13 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { AnnouncementView } from '../../announcements/AnnouncementView'
 import { getAuthState } from '../../auth/AuthSliceSelectors'
+import { useFeatureFlag } from '../../auth/hooks/useFeatureFlags'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
+import { GlobalSearch } from '../../globalSearch/GlobalSearch'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { DocsNavigatorButton } from './DocsNavigatorButton'
 import { HamburgerMenu } from './HamburgerMenu'
-import { HomeNavigatorButton } from './HomeNavigatorButton'
 import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
@@ -44,6 +46,7 @@ export const BaseNavigator = () => {
 	const muiTheme = useTheme()
 	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
 	const isCompact = useMediaQuery(muiTheme.breakpoints.down('lg'))
+	const globalSearchEnabled = useFeatureFlag('GlobalSearch')
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
 	const isGuestLoginRoute = useCheckRouteMatch('/guest-login')
@@ -69,7 +72,13 @@ export const BaseNavigator = () => {
 									<LastWorldNavigatorButton icon={<PublicIcon />} label="World" iconOnly={isCompact} />
 								</Stack>
 								<Divider orientation="vertical" sx={{ height: '20px' }} />
-								<HomeNavigatorButton disabled={!user} iconOnly={isCompact} />
+								<NavigatorButton
+									route="/"
+									icon={<Home />}
+									label="Home"
+									disabled={!user}
+									iconOnly={isCompact}
+								/>
 							</>
 						)}
 						{!isNarrow && (
@@ -95,6 +104,7 @@ export const BaseNavigator = () => {
 				{!user && <LandingPageNavigatorButton icon={<TenebrieLogoInline />} label="Neverkin" />}
 			</Box>
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
+				{globalSearchEnabled && <GlobalSearch />}
 				<ThemeModeToggle />
 				{user && !isNarrow && <AnnouncementView />}
 				<Divider orientation="vertical" sx={{ height: '20px' }} />

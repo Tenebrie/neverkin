@@ -1,5 +1,5 @@
 model Actor {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -23,4 +23,6 @@ model Actor {
   parentFolder         WikiFolder? @relation("FolderActor", fields: [parentFolderId], references: [id], onDelete: Cascade)
   parentFolderId       String?
   parentFolderPosition Float         @default(0)
+
+  @@index([worldId, parentFolderId])
 }

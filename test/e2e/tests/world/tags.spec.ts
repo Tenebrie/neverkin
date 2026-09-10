@@ -20,7 +20,7 @@ test.describe('World Tags', () => {
 		await textbox.pressSequentially('Hello', { delay: 10 })
 		await page.waitForTimeout(500)
 		await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 
 		// Open event
 		await page.getByTestId('TimelineMarker').click()
@@ -56,7 +56,7 @@ test.describe('World Tags', () => {
 		await page.getByLabel('Show actions').click()
 		await page.getByTestId('DeleteTagButton').click()
 		await page.getByTestId('ModalBackdrop').getByText('Confirm').click()
-		await page.waitForTimeout(500)
+		await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 
 		await expect(page.getByText('New Tag')).not.toBeVisible()
 		await expect(page.getByText('Tag with 0 mentions')).not.toBeVisible()

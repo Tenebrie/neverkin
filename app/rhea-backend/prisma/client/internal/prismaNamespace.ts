@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.9.1
- * Query Engine version: e922089b7d7502aff4249d5da3420f6fa55fc6ad
+ * Prisma Client JS version: 7.8.0
+ * Query Engine version: 3c6e192761c0362d496ed980de936e2f3cebcd3a
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.9.1",
-  engine: "e922089b7d7502aff4249d5da3420f6fa55fc6ad"
+  client: "7.8.0",
+  engine: "3c6e192761c0362d496ed980de936e2f3cebcd3a"
 }
 
 /**
@@ -156,19 +156,6 @@ export type Subset<T, U> = {
 };
 
 /**
- * Resolved type of the argument passed to the `PrismaClient` constructor.
- *
- * When called without a narrower options type (the common case), this resolves
- * to `PrismaClientOptions` directly, which produces a clear TypeScript error
- * message (`not assignable to parameter of type 'PrismaClientOptions'`) when
- * the argument is missing or incomplete. When the user supplies a narrower
- * options type (e.g. via a literal), it falls back to `Subset` to keep
- * filtering out unknown properties.
- */
-export type PrismaClientConstructorArgs<Options extends PrismaClientOptions> =
-  [PrismaClientOptions] extends [Options] ? PrismaClientOptions : Subset<Options, PrismaClientOptions>;
-
-/**
  * SelectSubset
  * @desc From `T` pick properties that exist in `U`. Simple version of Intersection.
  * Additionally, it validates, if both select and include are present. If the case, it errors.
@@ -200,7 +187,7 @@ type Without<T, U> = { [P in Exclude<keyof T, keyof U>]?: never };
 export type XOR<T, U> =
   T extends object ?
   U extends object ?
-    ((Without<T, U> & U) | (Without<U, T> & T)) & object
+    (Without<T, U> & U) | (Without<U, T> & T)
   : U : T
 
 
@@ -421,6 +408,7 @@ export const ModelName = {
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
   FeatureFlagEntry: 'FeatureFlagEntry',
+  UserWorldPin: 'UserWorldPin',
   WikiArticle: 'WikiArticle',
   WikiFolder: 'WikiFolder',
   World: 'World',
@@ -443,7 +431,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2223,6 +2211,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    UserWorldPin: {
+      payload: Prisma.$UserWorldPinPayload<ExtArgs>
+      fields: Prisma.UserWorldPinFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.UserWorldPinFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.UserWorldPinFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        findFirst: {
+          args: Prisma.UserWorldPinFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.UserWorldPinFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        findMany: {
+          args: Prisma.UserWorldPinFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        create: {
+          args: Prisma.UserWorldPinCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        createMany: {
+          args: Prisma.UserWorldPinCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.UserWorldPinCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        delete: {
+          args: Prisma.UserWorldPinDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        update: {
+          args: Prisma.UserWorldPinUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        deleteMany: {
+          args: Prisma.UserWorldPinDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.UserWorldPinUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.UserWorldPinUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>[]
+        }
+        upsert: {
+          args: Prisma.UserWorldPinUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$UserWorldPinPayload>
+        }
+        aggregate: {
+          args: Prisma.UserWorldPinAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateUserWorldPin>
+        }
+        groupBy: {
+          args: Prisma.UserWorldPinGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorldPinGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.UserWorldPinCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.UserWorldPinCountAggregateOutputType> | number
+        }
+      }
+    }
     WikiArticle: {
       payload: Prisma.$WikiArticlePayload<ExtArgs>
       fields: Prisma.WikiArticleFieldRefs
@@ -3131,6 +3193,16 @@ export const FeatureFlagEntryScalarFieldEnum = {
 export type FeatureFlagEntryScalarFieldEnum = (typeof FeatureFlagEntryScalarFieldEnum)[keyof typeof FeatureFlagEntryScalarFieldEnum]
 
 
+export const UserWorldPinScalarFieldEnum = {
+  createdAt: 'createdAt',
+  rank: 'rank',
+  userId: 'userId',
+  worldId: 'worldId'
+} as const
+
+export type UserWorldPinScalarFieldEnum = (typeof UserWorldPinScalarFieldEnum)[keyof typeof UserWorldPinScalarFieldEnum]
+
+
 export const WikiArticleScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3546,20 +3618,6 @@ export type ListEnumCollaboratorAccessFieldRefInput<$PrismaModel> = FieldRefInpu
 
 
 /**
- * Reference to a field of type 'FeatureFlag'
- */
-export type EnumFeatureFlagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureFlag'>
-    
-
-
-/**
- * Reference to a field of type 'FeatureFlag[]'
- */
-export type ListEnumFeatureFlagFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'FeatureFlag[]'>
-    
-
-
-/**
  * Reference to a field of type 'WorldCalendarType'
  */
 export type EnumWorldCalendarTypeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldCalendarType'>
@@ -3596,10 +3654,19 @@ export type BatchPayload = {
 export const defineExtension = runtime.Extensions.defineExtension as unknown as runtime.Types.Extensions.ExtendsHook<"define", TypeMapCb, runtime.Types.Extensions.DefaultArgs>
 export type DefaultPrismaClient = PrismaClient
 export type ErrorFormat = 'pretty' | 'colorless' | 'minimal'
-/**
- * Options common to all variants of `PrismaClientOptions`, regardless of whether you connect to your database through a driver adapter or through Prisma Accelerate.
- */
-export interface PrismaClientBaseOptions {
+export type PrismaClientOptions = ({
+  /**
+   * Instance of a Driver Adapter, e.g., like one provided by `@prisma/adapter-pg`.
+   */
+  adapter: runtime.SqlDriverAdapterFactory
+  accelerateUrl?: never
+} | {
+  /**
+   * Prisma Accelerate URL allowing the client to connect through Accelerate instead of a direct database.
+   */
+  accelerateUrl: string
+  adapter?: never
+}) & {
   /**
    * @default "colorless"
    */
@@ -3686,56 +3753,6 @@ export interface PrismaClientBaseOptions {
    */
   queryPlanCacheMaxSize?: number
 }
-
-/**
- * `PrismaClient` options for connecting to your database through Prisma Accelerate instead of a driver adapter.
- * 
- * Learn more: https://pris.ly/d/accelerate
- */
-export interface PrismaClientOptionsWithAccelerateUrl extends PrismaClientBaseOptions {
-  /**
-   * The Prisma Accelerate connection URL. Use this option to connect to your database through Prisma Accelerate instead of using a driver adapter to connect directly.
-   * 
-   * Learn more: https://pris.ly/d/accelerate
-   */
-  accelerateUrl: string
-  adapter?: never
-}
-
-/**
- * `PrismaClient` options for connecting to your database through a driver adapter. This is the common case in Prisma 7.
- * 
- * Learn more: https://pris.ly/d/driver-adapters
- */
-export interface PrismaClientOptionsWithAdapter extends PrismaClientBaseOptions {
-  /**
-   * A driver adapter that PrismaClient uses to connect to your database, such as the ones provided by `@prisma/adapter-pg`, `@prisma/adapter-libsql`, `@prisma/adapter-planetscale`, etc.
-   * 
-   * A driver adapter is **required** unless you connect to your database through Prisma Accelerate (in which case use `accelerateUrl` instead).
-   * 
-   * Learn more: https://pris.ly/d/driver-adapters
-   * 
-   * @example
-   * ```ts
-   * import { PrismaPg } from '@prisma/adapter-pg'
-   * import { PrismaClient } from './generated/prisma/client'
-   * 
-   * const adapter = new PrismaPg({ connectionString: process.env.DATABASE_URL })
-   * const prisma = new PrismaClient({ adapter })
-   * ```
-   */
-  adapter: runtime.SqlDriverAdapterFactory
-  accelerateUrl?: never
-}
-
-/**
- * Options passed to the `PrismaClient` constructor.
- * 
- * A driver adapter (or, alternatively, a Prisma Accelerate URL) is **required**. See {@link PrismaClientOptionsWithAdapter} and {@link PrismaClientOptionsWithAccelerateUrl} for the two variants. All other properties live in {@link PrismaClientBaseOptions} and are optional.
- * 
- * Learn more about driver adapters: https://pris.ly/d/driver-adapters
- */
-export type PrismaClientOptions = PrismaClientOptionsWithAccelerateUrl | PrismaClientOptionsWithAdapter
 export type GlobalOmitConfig = {
   actor?: Prisma.ActorOmit
   userAnnouncement?: Prisma.UserAnnouncementOmit
@@ -3761,6 +3778,7 @@ export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
   collaboratingUser?: Prisma.CollaboratingUserOmit
   featureFlagEntry?: Prisma.FeatureFlagEntryOmit
+  userWorldPin?: Prisma.UserWorldPinOmit
   wikiArticle?: Prisma.WikiArticleOmit
   wikiFolder?: Prisma.WikiFolderOmit
   world?: Prisma.WorldOmit

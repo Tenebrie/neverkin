@@ -1,5 +1,5 @@
 model Tag {
-    id        String   @id @unique @default(uuid())
+    id        String   @id @default(uuid())
     createdAt DateTime @default(now())
     updatedAt DateTime @default(now()) @updatedAt
 
@@ -19,4 +19,6 @@ model Tag {
     parentFolder         WikiFolder? @relation("FolderTag", fields: [parentFolderId], references: [id], onDelete: Cascade)
     parentFolderId       String?
     parentFolderPosition Float       @default(0)
+
+    @@index([worldId, parentFolderId])
 }
