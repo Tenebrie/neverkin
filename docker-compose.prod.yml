@@ -62,7 +62,8 @@ services:
         environment:
             NODE_ENV: production # Prod or staging
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
-        command: npm run prod
+        command: node dist/src/index.js
+        stop_grace_period: 30s
         deploy:
             replicas: 2
             update_config:
@@ -94,7 +95,7 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production # Prod or staging
-        command: npm run prod
+        command: node dist/index.js
         deploy:
             replicas: 2
             update_config:
