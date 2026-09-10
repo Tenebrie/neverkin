@@ -155,9 +155,14 @@ if (!isRunningInTest()) {
 	)
 
 	RedisService.initRedisConnection()
-	app.listen(3000)
+	const server = app.listen(3000)
 	console.info(`${chalk.greenBright('[Rhea]')} Listening on port ${chalk.blueBright('3000')}`)
 	HealthStatus.markRheaAsReady()
+
+	process.once('SIGTERM', () => {
+		console.info('Draining in-flight requests before shutdown...')
+		server.close(() => process.exit(0))
+	})
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()

@@ -76,7 +76,7 @@ export type EventParams = {
 		hoveredWireIds: Set<string>
 	}
 	'world/requestNavigation': NavigateOptions
-	'calliope/onReconnected': void
+	'calliope/onReconnected': { isReconnect: boolean }
 	'calliope/requestSendMessage': ClientToCalliopeMessage
 	'calliope/documentReset': { worldId: string; entityId: string }
 	'calliope/announcementReceived': void

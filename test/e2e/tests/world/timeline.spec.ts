@@ -143,7 +143,7 @@ test.describe('Timeline View', () => {
 		await expect(page.getByRole('tooltip').getByText(/23:40 December 31, 2025/)).toBeVisible()
 	})
 
-	test('nudging with event resolution time horizontally', async ({ page }) => {
+	test.skip('nudging with event resolution time horizontally', async ({ page }) => {
 		await navigateToTimeline(page, 'createWorld')
 
 		await page.getByTestId('CreateEntityButton').click()

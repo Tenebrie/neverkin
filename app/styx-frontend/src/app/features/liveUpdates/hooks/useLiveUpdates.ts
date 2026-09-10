@@ -99,8 +99,9 @@ export const useLiveUpdates = () => {
 					data: {},
 				}
 				socket.send(JSON.stringify(message))
+				const isReconnect = backoffLevel.current >= 0
 				backoffLevel.current = -1
-				notifyAboutReconnect()
+				notifyAboutReconnect({ isReconnect })
 			}
 
 			socket.onmessage = function (event) {

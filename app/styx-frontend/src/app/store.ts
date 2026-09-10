@@ -1,9 +1,11 @@
 import { combineReducers, configureStore } from '@reduxjs/toolkit'
+import { setupListeners } from '@reduxjs/toolkit/query'
 
 import { iconifyApi, IconifyApiReducer } from '@/api/iconify/iconifyApi'
 
 import { baseApi, BaseApiReducer } from '../api/base/baseApi'
 import { AuthReducer } from './features/auth/AuthSlice'
+import { globalEventBus } from './features/eventBus/eventBus'
 import { ModalsReducer } from './features/modals/ModalsSlice'
 import { PreferencesReducer } from './features/preferences/PreferencesSlice'
 import { CalendarEditorReducer } from './features/time/calendar/CalendarSlice'
@@ -42,6 +44,14 @@ export const generateStore = ({ preloadedState }: { preloadedState?: Partial<Roo
 
 export const store = generateStore()
 export const getGlobalStore = () => store
+
+setupListeners(store.dispatch, (dispatch, { onOnline }) =>
+	globalEventBus.on('calliope/onReconnected', ({ isReconnect }) => {
+		if (isReconnect) {
+			dispatch(onOnline())
+		}
+	}),
+)
 
 export type RootState = ReturnType<typeof rootReducer>
 export type AppDispatch = typeof store.dispatch
