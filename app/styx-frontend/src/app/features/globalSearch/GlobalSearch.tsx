@@ -3,14 +3,16 @@ import InputAdornment from '@mui/material/InputAdornment'
 import TextField from '@mui/material/TextField'
 
 export function GlobalSearch() {
-	// Input should fit the container and leave a bit of padding above and below
-
 	return (
 		<TextField
 			size="small"
 			variant="outlined"
 			placeholder="Search..."
-			sx={{ padding: '4px 0', maxWidth: 192 }}
+			sx={{
+				padding: '2px 0',
+				maxWidth: 192,
+				'& .MuiOutlinedInput-input': { padding: '6px 6px 6px 0px' },
+			}}
 			slotProps={{
 				input: {
 					startAdornment: (

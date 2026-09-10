@@ -16,7 +16,9 @@ import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
 import { AnnouncementView } from '../../announcements/AnnouncementView'
 import { getAuthState } from '../../auth/AuthSliceSelectors'
+import { useFeatureFlag } from '../../auth/hooks/useFeatureFlags'
 import { SmallProfile } from '../../auth/smallProfile/SmallProfile'
+import { GlobalSearch } from '../../globalSearch/GlobalSearch'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { DocsNavigatorButton } from './DocsNavigatorButton'
@@ -44,6 +46,7 @@ export const BaseNavigator = () => {
 	const muiTheme = useTheme()
 	const isNarrow = useMediaQuery(muiTheme.breakpoints.down('md'))
 	const isCompact = useMediaQuery(muiTheme.breakpoints.down('lg'))
+	const globalSearchEnabled = useFeatureFlag('GlobalSearch')
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
 	const isGuestLoginRoute = useCheckRouteMatch('/guest-login')
@@ -101,6 +104,7 @@ export const BaseNavigator = () => {
 				{!user && <LandingPageNavigatorButton icon={<TenebrieLogoInline />} label="Neverkin" />}
 			</Box>
 			<Stack direction="row" gap={2} alignItems="center" height={1}>
+				{globalSearchEnabled && <GlobalSearch />}
 				<ThemeModeToggle />
 				{user && !isNarrow && <AnnouncementView />}
 				<Divider orientation="vertical" sx={{ height: '20px' }} />
