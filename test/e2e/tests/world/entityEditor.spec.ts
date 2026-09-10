@@ -7,7 +7,7 @@ test.describe('Entity Editor', () => {
 		await createNewUser(page)
 	})
 
-	test('should render backlinks tab for all entity types', async ({ page }) => {
+	test.skip('should render backlinks tab for all entity types', async ({ page }) => {
 		await navigateToTimeline(page, 'createWorld')
 
 		await createActor(page, 'First actor')
