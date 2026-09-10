@@ -105,6 +105,12 @@ services:
         secrets:
             - jwt-secret
             - environment
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/calliope/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
     orpheus:
         image: tenebrie/timelines-orpheus:${VERSION}
         build:
@@ -124,6 +130,12 @@ services:
         secrets:
             - jwt-secret
             - environment
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3002/orpheus/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
     thetis:
         image: tenebrie/timelines-thetis:${VERSION}
         build:
