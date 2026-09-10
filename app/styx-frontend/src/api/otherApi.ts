@@ -22,7 +22,7 @@ const injectedRtkApi = api
 				ListCalendarUnitFormatModesApiResponse,
 				ListCalendarUnitFormatModesApiArg
 			>({
-				query: () => ({ url: `/api/constants/calendar-unit-format-modes` }),
+				query: () => ({ url: `/api/constants/ calendar-unit-format-modes` }),
 				providesTags: [],
 			}),
 			listImageGenerationModels: build.query<
@@ -200,11 +200,7 @@ export type ListCalendarTemplatesApiResponse = /** status 200  */ {
 }
 export type ListCalendarTemplatesApiArg = void
 export type ListCalendarUnitFormatModesApiResponse = /** status 200  */ (
-	| 'Name'
-	| 'NameOneIndexed'
-	| 'Numeric'
-	| 'NumericOneIndexed'
-	| 'Hidden'
+	'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 )[]
 export type ListCalendarUnitFormatModesApiArg = void
 export type ListImageGenerationModelsApiResponse = /** status 200  */ {

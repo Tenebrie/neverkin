@@ -7,9 +7,7 @@ export { Shortcut, ShortcutPriorities }
 
 export const useShortcut = (
 	shortcutOrArray:
-		| (typeof Shortcut)[keyof typeof Shortcut]
-		| (typeof Shortcut)[keyof typeof Shortcut][]
-		| undefined,
+		(typeof Shortcut)[keyof typeof Shortcut] | (typeof Shortcut)[keyof typeof Shortcut][] | undefined,
 	callback: () => void,
 	priority?: ShortcutPriority,
 ) => {
