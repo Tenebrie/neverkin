@@ -6,8 +6,8 @@ import Typography from '@mui/material/Typography'
 import { NavigationLink } from '@/app/components/NavigationLink'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 
-import type { RecentActivity } from '../hooks/useHomeData'
-import { HomeSectionRowTimestamp } from './HomeSectionRowTimestamp'
+import { RecentActivity } from '../hooks/useRecentActivity'
+import { HomeRowItemTimestamp } from './rowItem/HomeRowItemTimestamp'
 
 type Props = {
 	activity: RecentActivity
@@ -53,7 +53,7 @@ export function HomeActivityListItem({ activity }: Props) {
 						{activity.type === 'world' ? 'World' : 'Calendar'} updated
 					</Typography>
 				</Stack>
-				<HomeSectionRowTimestamp updatedAt={activity.updatedAt} />
+				<HomeRowItemTimestamp updatedAt={activity.updatedAt} />
 			</ButtonBase>
 		</NavigationLink>
 	)

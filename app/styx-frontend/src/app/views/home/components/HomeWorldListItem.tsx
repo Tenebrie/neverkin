@@ -10,43 +10,35 @@ import { NavigationLink } from '@/app/components/NavigationLink'
 import { getHomePreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 
-import { HomeSectionRow } from './HomeSectionRow'
-import { HomeSectionRowActions } from './HomeSectionRowActions'
-import { HomeSectionRowTag } from './HomeSectionRowTag'
-import { HomeSectionWorldRowMenu } from './HomeSectionWorldRowMenu'
-import { HomeSectionWorldRowPin } from './HomeSectionWorldRowPin'
+import { HomeSectionWorldRowMenu } from './HomeWorldListItemMenu'
+import { HomeWorldListItemPin } from './HomeWorldListItemPin'
+import { HomeRowItem } from './rowItem/HomeRowItem'
+import { HomeRowItemActions } from './rowItem/HomeRowItemActions'
+import { HomeRowItemTraitChip } from './rowItem/HomeRowItemTraitChip'
 
 type Props = {
 	world: WorldBrief
-	/** Access level shown for worlds owned by someone else. Absent means the world is the user's own. */
-	role?: string
+	owned?: boolean
+	readonly?: boolean
 }
 
-export function HomeSectionWorldRow({ world, role }: Props) {
+export function HomeWorldListItem({ world, owned, readonly }: Props) {
 	const { lastOpenedWorldId } = useSelector(getHomePreferences)
-	const isOwned = !role
 	const isLastOpened = world.id === lastOpenedWorldId
 
 	return (
-		<NavigationLink
-			to="/world/$worldId/wiki"
-			params={{ worldId: world.id }}
-			search={(prev) => ({
-				...prev,
-				time: parseInt(world.timeOrigin),
-			})}
-		>
-			<HomeSectionRow ariaLabel={`Load world "${world.name}"`}>
+		<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }}>
+			<HomeRowItem ariaLabel={`Load world "${world.name}"`}>
 				<EntityInitialsTile name={world.name} color={getAccentColor(world.id)} />
 				<Stack flex={1} minWidth={0} gap={0.25}>
 					<Stack direction="row" alignItems="center" gap={1} minWidth={0}>
 						<Typography variant="body1" fontWeight={600} noWrap sx={{ minWidth: 0 }}>
 							{world.name}
 						</Typography>
-						{isLastOpened && <HomeSectionRowTag label="Last opened" accent />}
-						{role && <HomeSectionRowTag label={role} />}
-						{isOwned && world.accessMode !== 'Private' && <HomeSectionRowTag label="Public" />}
-						{isOwned && world.collaborators.length > 0 && <HomeSectionRowTag label="Shared" />}
+						{isLastOpened && <HomeRowItemTraitChip label="Last opened" accent />}
+						{readonly && <HomeRowItemTraitChip label="Read-only" />}
+						{owned && world.accessMode !== 'Private' && <HomeRowItemTraitChip label="Public" />}
+						{owned && world.collaborators.length > 0 && <HomeRowItemTraitChip label="Shared" />}
 					</Stack>
 					<Stack
 						direction="row"
@@ -74,11 +66,11 @@ export function HomeSectionWorldRow({ world, role }: Props) {
 						</Stack>
 					</Stack>
 				</Stack>
-				<HomeSectionRowActions updatedAt={world.updatedAt}>
-					<HomeSectionWorldRowPin world={world} />
-					<HomeSectionWorldRowMenu world={world} isOwned={isOwned} />
-				</HomeSectionRowActions>
-			</HomeSectionRow>
+				<HomeRowItemActions updatedAt={world.updatedAt}>
+					<HomeWorldListItemPin world={world} />
+					<HomeSectionWorldRowMenu world={world} isOwned={owned ?? false} />
+				</HomeRowItemActions>
+			</HomeRowItem>
 		</NavigationLink>
 	)
 }

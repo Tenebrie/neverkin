@@ -5,7 +5,7 @@ type Props = {
 	accent?: boolean
 }
 
-export function HomeSectionRowTag({ label, accent }: Props) {
+export function HomeRowItemTraitChip({ label, accent }: Props) {
 	return (
 		<Chip
 			label={label}

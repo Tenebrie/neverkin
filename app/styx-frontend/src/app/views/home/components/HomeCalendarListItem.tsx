@@ -8,17 +8,17 @@ import { NavigationLink } from '@/app/components/NavigationLink'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 import { DeleteCalendarButton } from '@/app/views/calendar/list/components/DeleteCalendarButton'
 
-import { HomeSectionRow } from './HomeSectionRow'
-import { HomeSectionRowActions } from './HomeSectionRowActions'
+import { HomeRowItem } from './rowItem/HomeRowItem'
+import { HomeRowItemActions } from './rowItem/HomeRowItemActions'
 
 type Props = {
 	calendar: CalendarBrief
 }
 
-export function HomeSectionCalendarRow({ calendar }: Props) {
+export function HomeCalendarListItem({ calendar }: Props) {
 	return (
 		<NavigationLink to="/calendar/$calendarId" params={{ calendarId: calendar.id }}>
-			<HomeSectionRow ariaLabel={`Load calendar "${calendar.name}"`}>
+			<HomeRowItem ariaLabel={`Load calendar "${calendar.name}"`}>
 				<EntityInitialsTile
 					name={calendar.name}
 					color={getAccentColor(calendar.id)}
@@ -34,7 +34,7 @@ export function HomeSectionCalendarRow({ calendar }: Props) {
 						</Typography>
 					)}
 				</Stack>
-				<HomeSectionRowActions updatedAt={calendar.updatedAt}>
+				<HomeRowItemActions updatedAt={calendar.updatedAt}>
 					<DeleteCalendarButton
 						calendarId={calendar.id}
 						calendarName={calendar.name}
@@ -44,8 +44,8 @@ export function HomeSectionCalendarRow({ calendar }: Props) {
 							},
 						}}
 					/>
-				</HomeSectionRowActions>
-			</HomeSectionRow>
+				</HomeRowItemActions>
+			</HomeRowItem>
 		</NavigationLink>
 	)
 }

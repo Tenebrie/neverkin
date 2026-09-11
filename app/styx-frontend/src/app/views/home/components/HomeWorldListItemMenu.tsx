@@ -13,7 +13,7 @@ import { NavigationLink } from '@/app/components/NavigationLink'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { HomeSectionRowIconButton } from './HomeSectionRowIconButton'
+import { HomeRowItemIconButton } from './rowItem/HomeRowItemIconButton'
 
 type Props = {
 	world: WorldBrief
@@ -31,12 +31,12 @@ export function HomeSectionWorldRowMenu({ world, isOwned }: Props) {
 
 	return (
 		<>
-			<HomeSectionRowIconButton
+			<HomeRowItemIconButton
 				aria-label={`More actions for world "${world.name}"`}
 				{...bindTrigger(popupState)}
 			>
 				<MoreVert fontSize="small" />
-			</HomeSectionRowIconButton>
+			</HomeRowItemIconButton>
 			<Menu
 				{...bindMenu(popupState)}
 				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}

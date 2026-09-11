@@ -6,7 +6,7 @@ type Props = Omit<IconButtonProps, 'onClick'> & {
 	onClick: (event: MouseEvent<HTMLButtonElement>) => void
 }
 
-export function HomeSectionRowIconButton({ active, onClick, ...props }: Props) {
+export function HomeRowItemIconButton({ active, onClick, ...props }: Props) {
 	return (
 		<IconButton
 			size="small"
@@ -19,6 +19,7 @@ export function HomeSectionRowIconButton({ active, onClick, ...props }: Props) {
 			sx={{
 				color: active ? 'primary.main' : 'text.disabled',
 				'&:hover': { color: active ? 'primary.main' : 'text.primary' },
+				...props.sx,
 			}}
 		/>
 	)
