@@ -1,14 +1,21 @@
-import { CSSProperties, RefObject, useEffect, useRef } from 'react'
+import { CSSProperties, RefObject, useEffect, useLayoutEffect, useRef } from 'react'
+import { useSelector } from 'react-redux'
 import z from 'zod'
 
+import { useGetMindmapQuery } from '@/api/mindmapApi'
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
-import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
+import usePersistentStateRef, { persistentStateKey } from '@/app/hooks/usePersistentStateRef'
+import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
+import { NODE_FALLBACK_H, NODE_W } from '../workspace/mindmapWireUtils'
 import { useMindmapEdgeScroll } from './useMindmapEdgeScroll'
 
 const MIN_SCALE = 0.125
 const MAX_SCALE = 5
+const CAMERA_STORAGE_KEY = 'mindmap'
+const FIT_PADDING = 64
+const OUTLIER_DISTANCE_RATIO = 3
 
 // Safari reports trackpad pinches via proprietary gesture events instead of ctrl+wheel
 interface SafariGestureEvent extends Event {
@@ -25,7 +32,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 	const { registerUpdateFunction, clearUpdateFunction, updateMousePosition } = useMindmapEdgeScroll()
 
 	const [state, setState] = usePersistentStateRef(
-		'mindmap',
+		CAMERA_STORAGE_KEY,
 		z.object({
 			position: z.object({
 				x: z.number(),
@@ -39,6 +46,11 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		},
 		sessionStorage,
 	)
+	const needsInitialFocus = useRef(sessionStorage.getItem(persistentStateKey(CAMERA_STORAGE_KEY)) === null)
+	const fitBounds = useRef<(bounds: Bounds) => void>(undefined)
+
+	const worldId = useSelector(getWorldIdState)
+	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
 
 	const variables = useRef({
 		'--grid-offset-x': `${state.current.position.x}px`,
@@ -84,24 +96,40 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		})
 		resizeObserver.observe(element)
 
+		const apply = (transitionDuration: number) => {
+			element.style.setProperty('--grid-offset-x', `${navState.gridOffsetX}px`)
+			element.style.setProperty('--grid-offset-y', `${navState.gridOffsetY}px`)
+			element.style.setProperty('--grid-scale', navState.gridScale.toString())
+			element.style.setProperty('--transition-duration', `${transitionDuration}s`)
+
+			setState(() => ({
+				position: {
+					x: navState.gridOffsetX,
+					y: navState.gridOffsetY,
+				},
+				scale: navState.gridScale,
+			}))
+		}
 		const update = () =>
 			requestAnimationFrame(() => {
 				const gestureActive =
 					(navState.isDragging && navState.dragMode === 'pan') || touchState.mode !== 'none'
-				element.style.setProperty('--grid-offset-x', `${navState.gridOffsetX}px`)
-				element.style.setProperty('--grid-offset-y', `${navState.gridOffsetY}px`)
-				element.style.setProperty('--grid-scale', navState.gridScale.toString())
-				element.style.setProperty('--transition-duration', `${gestureActive ? 0.0 : 0.1}s`)
-
-				setState(() => ({
-					position: {
-						x: navState.gridOffsetX,
-						y: navState.gridOffsetY,
-					},
-					scale: navState.gridScale,
-				}))
+				apply(gestureActive ? 0 : 0.1)
 			})
 		update()
+
+		fitBounds.current = (bounds) => {
+			const { width, height } = navState.elementRect
+			const fitScale = Math.min(
+				1,
+				(width - 2 * FIT_PADDING) / (bounds.maxX - bounds.minX),
+				(height - 2 * FIT_PADDING) / (bounds.maxY - bounds.minY),
+			)
+			navState.gridScale = Math.max(MIN_SCALE, fitScale)
+			navState.gridOffsetX = width / 2 - ((bounds.minX + bounds.maxX) / 2) * navState.gridScale
+			navState.gridOffsetY = height / 2 - ((bounds.minY + bounds.maxY) / 2) * navState.gridScale
+			apply(0)
+		}
 
 		registerUpdateFunction((scroll) => {
 			navState.gridOffsetX += scroll.x
@@ -322,6 +350,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
+			fitBounds.current = undefined
 			clearUpdateFunction()
 			resizeObserver.disconnect()
 			element.removeEventListener('mousedown', handleMouseDown)
@@ -338,5 +367,42 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		}
 	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state])
 
+	useLayoutEffect(() => {
+		if (!data || !needsInitialFocus.current) {
+			return
+		}
+		needsInitialFocus.current = false
+		if (data.nodes.length === 0) {
+			return
+		}
+		const center = {
+			x: median(data.nodes.map((node) => node.positionX)),
+			y: median(data.nodes.map((node) => node.positionY)),
+		}
+		const distances = data.nodes.map((node) =>
+			Math.hypot(node.positionX - center.x, node.positionY - center.y),
+		)
+		const cutoff = OUTLIER_DISTANCE_RATIO * median(distances)
+		const bounds = data.nodes
+			.filter((_, index) => distances[index] <= cutoff)
+			.reduce(
+				(acc, node) => ({
+					minX: Math.min(acc.minX, node.positionX),
+					minY: Math.min(acc.minY, node.positionY),
+					maxX: Math.max(acc.maxX, node.positionX + NODE_W),
+					maxY: Math.max(acc.maxY, node.positionY + NODE_FALLBACK_H),
+				}),
+				{ minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
+			)
+		fitBounds.current?.(bounds)
+	}, [data])
+
 	return variables
+}
+
+type Bounds = { minX: number; minY: number; maxX: number; maxY: number }
+
+function median(values: number[]) {
+	const sorted = values.toSorted((a, b) => a - b)
+	return (sorted[Math.floor((sorted.length - 1) / 2)] + sorted[Math.ceil((sorted.length - 1) / 2)]) / 2
 }
