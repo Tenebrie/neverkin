@@ -10,7 +10,9 @@ import { memo, MouseEvent, useCallback, useMemo } from 'react'
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
+import { useIsMindmapView } from '@/app/views/world/hooks/useIsMindmapView'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
+import { useRevealInMindmap } from '@/app/views/world/views/mindmap/hooks/useRevealInMindmap'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -42,6 +44,7 @@ function ArticleListItemComponent({ article, ...props }: Props) {
 			match.routeId === '/world/$worldId/_world/wiki/_wiki/$articleId' &&
 			match.params.articleId === article.id,
 	)
+	const isMindmapView = useIsMindmapView()
 
 	return (
 		<ArticleListItemInner
@@ -49,6 +52,7 @@ function ArticleListItemComponent({ article, ...props }: Props) {
 			expanded={!collapsed}
 			toggleOpen={toggleOpen}
 			highlighted={highlighted}
+			isMindmapView={isMindmapView}
 			{...props}
 		/>
 	)
@@ -62,10 +66,12 @@ function ArticleListItemInnerComponent({
 	expanded,
 	toggleOpen,
 	highlighted,
+	isMindmapView,
 	onContextMenu,
 	isContextMenuOpen,
-}: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
+}: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean; isMindmapView: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const reveal = useRevealInMindmap(article)
 
 	const { isReadOnly } = useIsReadOnly()
 	const { isBulkSelecting, checked, onRowToggle, onShiftSelect } = useArticleBulkActions(article)
@@ -94,6 +100,8 @@ function ArticleListItemInnerComponent({
 
 			if (highlighted || article.type === 'folder') {
 				toggleOpen()
+			} else if (isMindmapView) {
+				reveal()
 			} else {
 				navigate({
 					to: '/world/$worldId/wiki/$articleId',
@@ -110,6 +118,8 @@ function ArticleListItemInnerComponent({
 			article.type,
 			article.id,
 			toggleOpen,
+			isMindmapView,
+			reveal,
 			navigate,
 		],
 	)

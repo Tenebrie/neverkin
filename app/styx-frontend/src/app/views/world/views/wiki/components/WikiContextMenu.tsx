@@ -1,6 +1,8 @@
+import AccountTreeIcon from '@mui/icons-material/AccountTreeRounded'
 import Check from '@mui/icons-material/Check'
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
+import WikiIcon from '@mui/icons-material/HistoryEduRounded'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -11,8 +13,13 @@ import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { useIsMindmapView } from '@/app/views/world/hooks/useIsMindmapView'
+import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapData'
+import { useRevealInMindmap } from '@/app/views/world/views/mindmap/hooks/useRevealInMindmap'
+import { getMindmapNodeParentId } from '@/app/views/world/views/mindmap/utils/getMindmapNodeParentId'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { WikiContextMenuColorPicker } from './WikiContextMenuColorPicker'
@@ -29,6 +36,11 @@ export function WikiContextMenu({ article, popupState }: Props) {
 
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
+
+	const isMindmapView = useIsMindmapView()
+	const reveal = useRevealInMindmap(article)
+	const canReveal = useMindmapData().nodes.some((node) => getMindmapNodeParentId(node) === article.id)
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
 	return (
 		<Menu {...bindMenu(popupState)} disableRestoreFocus disableEnforceFocus>
@@ -51,6 +63,36 @@ export function WikiContextMenu({ article, popupState }: Props) {
 							</MenuItem>
 							<Divider />
 						</>
+					)}
+					{canReveal && (!isMindmapView || article.type === 'folder') && (
+						<MenuItem
+							onClick={() => {
+								reveal()
+								popupState.close()
+							}}
+						>
+							<ListItemIcon>
+								<AccountTreeIcon />
+							</ListItemIcon>
+							<ListItemText>Reveal in Mindmap</ListItemText>
+						</MenuItem>
+					)}
+					{isMindmapView && article.type !== 'folder' && (
+						<MenuItem
+							onClick={() => {
+								navigate({
+									to: '/world/$worldId/wiki/$articleId',
+									params: { articleId: article.id },
+									search: true,
+								})
+								popupState.close()
+							}}
+						>
+							<ListItemIcon>
+								<WikiIcon />
+							</ListItemIcon>
+							<ListItemText>Edit in Wiki</ListItemText>
+						</MenuItem>
 					)}
 					<MenuItem
 						onClick={() => {
