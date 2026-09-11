@@ -1,16 +1,12 @@
-import Divider from '@mui/material/Divider'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { Outlet } from '@tanstack/react-router'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
-import { WikiOutlinerDrawer } from '@/app/views/world/components/WikiOutlinerDrawer'
 import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 
-import { ArticleList } from './articleList/ArticleList'
-import { ArticleListEntityGroupButton } from './articleList/ArticleListEntityGroupButton'
-import { ArticleListHeader } from './articleList/ArticleListHeader'
+import { ArticleListWithHeader } from './articleList/ArticleListWithHeader'
 
 export function Wiki() {
 	const theme = useCustomTheme()
@@ -19,26 +15,6 @@ export function Wiki() {
 
 	const showList = !isMobile || !isArticle
 	const showContent = !isMobile || isArticle
-
-	const articleList = (
-		<Stack
-			sx={{
-				width: '100%',
-				minWidth: 0,
-				height: '100%',
-			}}
-			data-testid="ArticleListWithHeader"
-		>
-			<Stack gap={1} height={1}>
-				<Stack gap={1}>
-					<ArticleListHeader />
-					<Divider />
-					<ArticleListEntityGroupButton />
-				</Stack>
-				<ArticleList parentId={null} depth={0} />
-			</Stack>
-		</Stack>
-	)
 
 	return (
 		<Stack
@@ -70,10 +46,9 @@ export function Wiki() {
 					}}
 					elevation={1}
 				>
-					{articleList}
+					<ArticleListWithHeader />
 				</Paper>
 			)}
-			{!isMobile && <WikiOutlinerDrawer>{articleList}</WikiOutlinerDrawer>}
 			{showContent && (
 				<Stack
 					sx={{

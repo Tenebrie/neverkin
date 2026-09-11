@@ -2,10 +2,9 @@ import { SxProps } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormatTimestamp'
-import { useWorldTime } from '@/app/features/time/hooks/useWorldTime'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
+import { ArticleListItemSecondaryEvent } from './ArticleListItemSecondaryEvent'
 
 type Props = {
 	entity: BoxedWikiEntity
@@ -13,11 +12,6 @@ type Props = {
 }
 
 export function ArticleListItemSecondary({ entity, highlighted }: Props) {
-	const { calendar } = useWorldTime()
-	const formatTimestamp = useFormatTimestamp({
-		calendar,
-	})
-
 	const theme = useCustomTheme()
 	const color = (() => {
 		if (highlighted && theme.mode === 'light') {
@@ -57,11 +51,7 @@ export function ArticleListItemSecondary({ entity, highlighted }: Props) {
 	}
 
 	if (entity.type === 'event') {
-		return (
-			<Typography variant="caption" sx={styles}>
-				{formatTimestamp({ timestamp: entity.entity.timestamp })}
-			</Typography>
-		)
+		return <ArticleListItemSecondaryEvent event={entity.entity} sx={styles} />
 	}
 
 	return null

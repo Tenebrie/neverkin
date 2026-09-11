@@ -13,12 +13,12 @@ import { bindMenu, PopupState } from 'material-ui-popup-state/hooks'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { useIsMindmapView } from '@/app/views/world/hooks/useIsMindmapView'
 import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapData'
 import { useRevealInMindmap } from '@/app/views/world/views/mindmap/hooks/useRevealInMindmap'
 import { getMindmapNodeParentId } from '@/app/views/world/views/mindmap/utils/getMindmapNodeParentId'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
@@ -37,7 +37,7 @@ export function WikiContextMenu({ article, popupState }: Props) {
 	const { setLastCheckedArticle, addToBulkSelection, removeFromBulkSelection } = wikiSlice.actions
 	const dispatch = useDispatch()
 
-	const isMindmapView = useIsMindmapView()
+	const isMindmapView = useCheckRouteMatch('/world/$worldId/mindmap')
 	const reveal = useRevealInMindmap(article)
 	const canReveal = useMindmapData().nodes.some((node) => getMindmapNodeParentId(node) === article.id)
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
