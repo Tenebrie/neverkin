@@ -96,6 +96,7 @@ services:
         environment:
             NODE_ENV: production # Prod or staging
         command: node dist/index.js
+        stop_grace_period: 30s
         deploy:
             replicas: 2
             update_config:

@@ -328,7 +328,9 @@ export const YjsSyncService = {
 				try {
 					const isLeader = await persistenceLeaderService.tryAcquireLeadership(docName)
 					if (isLeader) {
-						await flushDocumentToRhea(doc, metadata)
+						if ((await flushDocumentToRhea(doc, metadata)) !== 'failed') {
+							await persistenceLeaderService.release(docName)
+						}
 					} else {
 						// A peer instance owns persistence - give it the largest possible window
 						await RedisService.refreshDocumentTTL(docName)
