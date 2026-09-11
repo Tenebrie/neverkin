@@ -4,6 +4,7 @@ import Divider from '@mui/material/Divider'
 import IconButton from '@mui/material/IconButton'
 import Stack from '@mui/material/Stack'
 import Tooltip from '@mui/material/Tooltip'
+import { useEffect } from 'react'
 
 import { ActorDetails } from '@/app/features/entityEditor/actor/details/ActorDetails'
 import { ArticleDetails } from '@/app/features/entityEditor/article/details/ArticleDetails'
@@ -16,6 +17,7 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useCurrentArticle } from './hooks/useCurrentArticle'
 import { useScreenCenteredColumn, WIKI_COLUMN_MAX_WIDTH } from './hooks/useScreenCenteredColumn'
+import { useRecentlyOpened } from './landing/hooks/useRecentlyOpened'
 
 export function WikiArticleView() {
 	const { article } = useCurrentArticle()
@@ -28,6 +30,14 @@ export function WikiArticleView() {
 		article?.id,
 	)
 	const columnRef = useScreenCenteredColumn(!isMobile)
+
+	const { record } = useRecentlyOpened()
+	const articleId = article?.id
+	useEffect(() => {
+		if (articleId) {
+			record(articleId)
+		}
+	}, [articleId, record])
 
 	if (!article) {
 		return null
