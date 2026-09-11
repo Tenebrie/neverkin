@@ -107,6 +107,9 @@ const baseThemeOptions = ({ reduceAnimations }: Props): ThemeOptions => ({
 			},
 		},
 		MuiPopover: {
+			defaultProps: {
+				disableEnforceFocus: true,
+			},
 			styleOverrides: {
 				paper: {
 					...(reduceAnimations

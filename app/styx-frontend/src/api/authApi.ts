@@ -53,13 +53,13 @@ export type CheckAuthenticationApiResponse =
 				level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 				bio: string
 				avatarUrl?: string
-				featureFlags: 'MindmapRework'[]
+				featureFlags: string[]
 			}
 	  }
 export type CheckAuthenticationApiArg = void
 export type CreateAccountApiResponse = /** status 200  */ {
 	user: {
-		featureFlags: 'MindmapRework'[]
+		featureFlags: string[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -80,7 +80,7 @@ export type DeleteAccountApiResponse = unknown
 export type DeleteAccountApiArg = void
 export type CreateGuestAccountApiResponse = /** status 200  */ {
 	user: {
-		featureFlags: 'MindmapRework'[]
+		featureFlags: string[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -93,7 +93,7 @@ export type CreateGuestAccountApiResponse = /** status 200  */ {
 export type CreateGuestAccountApiArg = void
 export type LoginWithGoogleApiResponse = /** status 200  */ {
 	user: {
-		featureFlags: 'MindmapRework'[]
+		featureFlags: string[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -110,7 +110,7 @@ export type LoginWithGoogleApiArg = {
 }
 export type PostLoginApiResponse = /** status 200  */ {
 	user: {
-		featureFlags: 'MindmapRework'[]
+		featureFlags: string[]
 		avatarUrl?: string
 		id: string
 		email: string
@@ -121,8 +121,8 @@ export type PostLoginApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			size: number
 			ownerId: string
+			size: number
 			expiresAt?: null | string
 			bucketKey: string
 			originalFileName: string

@@ -2,6 +2,7 @@ import { useEffect } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useGetWorldInfoQuery } from '@/api/worldDetailsApi'
+import { preferencesSlice } from '@/app/features/preferences/PreferencesSlice'
 
 import { useListArticles } from '../api/useListArticles'
 import { useListFolders } from '../api/useListFolders'
@@ -26,7 +27,12 @@ export const useLoadWorldInfo = (worldId: string) => {
 
 	const { loadWorld, unloadWorld, setUnauthorized } = worldSlice.actions
 	const { loadArticles, loadFolders } = wikiSlice.actions
+	const { setLastOpenedWorld } = preferencesSlice.actions
 	const dispatch = useDispatch()
+
+	useEffect(() => {
+		dispatch(setLastOpenedWorld(worldId))
+	}, [dispatch, setLastOpenedWorld, worldId])
 
 	useEffect(() => {
 		if (error) {

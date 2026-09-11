@@ -6,8 +6,8 @@ export default defineConfig({
 		alias: [{ find: '@src', replacement: '/src' }],
 	},
 	test: {
-		globals: true,
 		environment: 'node',
 		testTimeout: 15000,
+		restoreMocks: true,
 	},
 })

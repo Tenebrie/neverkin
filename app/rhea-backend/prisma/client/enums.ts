@@ -140,13 +140,6 @@ export const CollaboratorAccess = {
 export type CollaboratorAccess = (typeof CollaboratorAccess)[keyof typeof CollaboratorAccess]
 
 
-export const FeatureFlag = {
-  MindmapRework: 'MindmapRework'
-} as const
-
-export type FeatureFlag = (typeof FeatureFlag)[keyof typeof FeatureFlag]
-
-
 export const WorldCalendarType = {
   COUNTUP: 'COUNTUP',
   EARTH: 'EARTH',

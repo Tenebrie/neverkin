@@ -1,11 +1,15 @@
 import { baseApi as api } from './base/baseApi'
-export const addTagTypes = ['worldList'] as const
+export const addTagTypes = ['worldList', 'worldDetails'] as const
 const injectedRtkApi = api
 	.enhanceEndpoints({
 		addTagTypes,
 	})
 	.injectEndpoints({
 		endpoints: (build) => ({
+			toggleWorldPin: build.mutation<ToggleWorldPinApiResponse, ToggleWorldPinApiArg>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/pin/toggle`, method: 'POST' }),
+				invalidatesTags: ['worldList'],
+			}),
 			getWorlds: build.query<GetWorldsApiResponse, GetWorldsApiArg>({
 				query: () => ({ url: `/api/worlds` }),
 				providesTags: ['worldList'],
@@ -18,90 +22,122 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}`, method: 'DELETE' }),
 				invalidatesTags: ['worldList'],
 			}),
+			leaveWorldCollaboration: build.mutation<
+				LeaveWorldCollaborationApiResponse,
+				LeaveWorldCollaborationApiArg
+			>({
+				query: (queryArg) => ({ url: `/api/world/${queryArg.worldId}/collaboration/leave`, method: 'POST' }),
+				invalidatesTags: ['worldList', 'worldDetails'],
+			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as worldListApi }
+export type ToggleWorldPinApiResponse = /** status 200  */ {
+	pinned: boolean
+	rank: number
+}
+export type ToggleWorldPinApiArg = {
+	worldId: string
+}
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
-		}[]
 		calendars: {
-			description: string
-			worldId?: null | string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
+			description: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
-		description: string
+		collaborators: {
+			userId: string
+			worldId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		userPins: {
+			createdAt: string
+			userId: string
+			worldId: string
+			rank: number
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
-		}[]
 		calendars: {
-			description: string
-			worldId?: null | string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
+			description: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
-		description: string
+		collaborators: {
+			userId: string
+			worldId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		userPins: {
+			createdAt: string
+			userId: string
+			worldId: string
+			rank: number
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
-		collaborators: {
-			worldId: string
-			userId: string
-			access: 'ReadOnly' | 'Editing'
-		}[]
 		calendars: {
-			description: string
-			worldId?: null | string
+			name: string
 			id: string
 			createdAt: string
 			updatedAt: string
-			name: string
+			description: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
+			worldId?: null | string
 		}[]
-		description: string
+		collaborators: {
+			userId: string
+			worldId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
+		userPins: {
+			createdAt: string
+			userId: string
+			worldId: string
+			rank: number
+		}[]
+		name: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		name: string
+		description: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -110,8 +146,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	id: string
 	name: string
+	id: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -122,11 +158,11 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
-	description: string
+	name: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	name: string
+	description: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
@@ -136,5 +172,16 @@ export type DeleteWorldApiArg = {
 	/** Any string value */
 	worldId: string
 }
-export const { useGetWorldsQuery, useLazyGetWorldsQuery, useCreateWorldMutation, useDeleteWorldMutation } =
-	injectedRtkApi
+export type LeaveWorldCollaborationApiResponse = unknown
+export type LeaveWorldCollaborationApiArg = {
+	/** Any string value */
+	worldId: string
+}
+export const {
+	useToggleWorldPinMutation,
+	useGetWorldsQuery,
+	useLazyGetWorldsQuery,
+	useCreateWorldMutation,
+	useDeleteWorldMutation,
+	useLeaveWorldCollaborationMutation,
+} = injectedRtkApi

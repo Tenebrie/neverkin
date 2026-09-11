@@ -51,6 +51,7 @@ const baseQueryWithRetry = retry(debugBaseQuery, {
 
 export const baseApi = createApi({
 	baseQuery: baseQueryWithRetry,
+	refetchOnReconnect: true,
 	endpoints: () => ({}),
 })
 

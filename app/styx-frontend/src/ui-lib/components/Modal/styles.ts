@@ -15,12 +15,17 @@ export const ModalBackdrop = styled.div`
 	justify-content: center;
 	background-color: rgba(0, 0, 0, 0.5);
 	z-index: 1000;
-	opacity: 0;
-	pointer-events: none;
+	opacity: 1;
+	pointer-events: all;
+	transition: opacity var(--modal-animation-duration, 0ms);
 
-	&.visible {
-		opacity: 1;
-		pointer-events: all;
+	@starting-style {
+		opacity: 0;
+	}
+
+	&.closing {
+		opacity: 0;
+		pointer-events: none;
 	}
 `
 
@@ -38,5 +43,5 @@ export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
 export const ModalHeaderNative = styled.h2`
 	margin: none;
 	padding: none;
-	font-family: 'Roboto';
+	font-family: 'Inter';
 `

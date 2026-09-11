@@ -332,7 +332,7 @@ export type MentionWhereUniqueInput = Prisma.AtLeast<{
   targetArticle?: Prisma.XOR<Prisma.WikiArticleNullableScalarRelationFilter, Prisma.WikiArticleWhereInput> | null
   targetTag?: Prisma.XOR<Prisma.TagNullableScalarRelationFilter, Prisma.TagWhereInput> | null
   page?: Prisma.XOR<Prisma.ContentPageNullableScalarRelationFilter, Prisma.ContentPageWhereInput> | null
-}, "id" | "id" | "sourceId_targetId_pageId">
+}, "id" | "sourceId_targetId_pageId">
 
 export type MentionOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

@@ -16,7 +16,7 @@ import {
 	useExpireWorldShareLinkMutation,
 } from '@/api/otherApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { formatTimeAgo } from '@/app/views/home/utils/formatTimeAgo'
+import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { ConfirmPopoverButton } from '@/ui-lib/components/PopoverButton/ConfirmPopoverButton'
 
 type Props = {

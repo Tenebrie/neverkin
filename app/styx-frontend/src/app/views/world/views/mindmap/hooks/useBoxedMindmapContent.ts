@@ -8,6 +8,7 @@ import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { boxActor, boxArticle, boxEvent, boxFolder, boxTag } from '../../wiki/utils/boxEntity'
 import { getWikiState } from '../../wiki/WikiSliceSelectors'
+import { getMindmapNodeParentId } from '../utils/getMindmapNodeParentId'
 
 /**
  * A node with no backing entity. It lives only on the mindmap, so it is boxed as its own parent.
@@ -98,12 +99,7 @@ export function useBoxedMindmapContent() {
 		const nodeById = new Map<string, BoxedMindmapNode>()
 
 		for (const node of data.nodes) {
-			const parentId =
-				node.parentActorId ??
-				node.parentArticleId ??
-				node.parentEventId ??
-				node.parentFolderId ??
-				node.parentTagId
+			const parentId = getMindmapNodeParentId(node)
 
 			const parent =
 				(node.parentActorId &&

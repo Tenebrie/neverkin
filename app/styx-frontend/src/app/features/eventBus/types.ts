@@ -75,8 +75,9 @@ export type EventParams = {
 		hoveredNodeIds: Set<string>
 		hoveredWireIds: Set<string>
 	}
+	'mindmap/camera/requestLookAt': { x: number; y: number; scale?: number }
 	'world/requestNavigation': NavigateOptions
-	'calliope/onReconnected': void
+	'calliope/onReconnected': { isReconnect: boolean }
 	'calliope/requestSendMessage': ClientToCalliopeMessage
 	'calliope/documentReset': { worldId: string; entityId: string }
 	'calliope/announcementReceived': void

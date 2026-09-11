@@ -10,6 +10,7 @@ export const getCalendarEditorPreferences = (state: RootState) => state.preferen
 export const getUserPreferences = createSelector([getRootPreferences], (state) => ({
 	colorMode: state.colorMode,
 }))
+export const getHomePreferences = (state: RootState) => state.preferences.home
 export const getIconSetPreferences = (state: RootState) => state.preferences.iconSets
 export const getOutlinerPreferences = (state: RootState) => state.preferences.outliner
 export const getOverviewPreferences = (state: RootState) => state.preferences.overview

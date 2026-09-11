@@ -1,5 +1,6 @@
 import { expect, Page } from '@playwright/test'
 import { makeUrl } from '@tests/utils'
+import { randomBytes } from 'crypto'
 
 import { withCreatedActor, withCreatedArticle, withCreatedEvent } from './withRequest'
 
@@ -17,6 +18,31 @@ export const createWorld = async (page: Page) => {
 		...worldData,
 		id: response.id,
 	}
+}
+
+export const shareWorldWith = async (
+	ownerPage: Page,
+	worldData: Awaited<ReturnType<typeof createWorld>>,
+	collaboratorPage: Page,
+	accessMode: 'ReadOnly' | 'Editing' = 'Editing',
+) => {
+	const slug = `playwright-${randomBytes(8).toString('hex')}`
+
+	const linkResponse = await ownerPage.request.post(makeUrl(`/api/world/${worldData.id}/share-link`), {
+		data: {
+			slug,
+			label: 'Playwright share link',
+			accessMode,
+			// A link without an expiry date is never matched by the backend, so one is always required here
+			expiresAt: new Date(Date.now() + 60 * 60 * 1000).toISOString(),
+		},
+	})
+	expect(linkResponse.ok()).toBeTruthy()
+
+	const acceptResponse = await collaboratorPage.request.post(makeUrl(`/api/share-link-visit/${slug}/accept`))
+	expect(acceptResponse.ok()).toBeTruthy()
+
+	return { world: worldData, slug }
 }
 
 export const navigateToDashboard = async (page: Page) => {

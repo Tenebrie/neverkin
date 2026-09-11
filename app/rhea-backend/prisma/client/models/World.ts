@@ -262,6 +262,7 @@ export type WorldWhereInput = {
   calendars?: Prisma.CalendarListRelationFilter
   shareLinks?: Prisma.WorldShareLinkListRelationFilter
   assetReferences?: Prisma.AssetReferenceListRelationFilter
+  userPins?: Prisma.UserWorldPinListRelationFilter
 }
 
 export type WorldOrderByWithRelationInput = {
@@ -288,6 +289,7 @@ export type WorldOrderByWithRelationInput = {
   calendars?: Prisma.CalendarOrderByRelationAggregateInput
   shareLinks?: Prisma.WorldShareLinkOrderByRelationAggregateInput
   assetReferences?: Prisma.AssetReferenceOrderByRelationAggregateInput
+  userPins?: Prisma.UserWorldPinOrderByRelationAggregateInput
 }
 
 export type WorldWhereUniqueInput = Prisma.AtLeast<{
@@ -317,7 +319,8 @@ export type WorldWhereUniqueInput = Prisma.AtLeast<{
   calendars?: Prisma.CalendarListRelationFilter
   shareLinks?: Prisma.WorldShareLinkListRelationFilter
   assetReferences?: Prisma.AssetReferenceListRelationFilter
-}, "id" | "id">
+  userPins?: Prisma.UserWorldPinListRelationFilter
+}, "id">
 
 export type WorldOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -374,6 +377,7 @@ export type WorldCreateInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateInput = {
@@ -399,6 +403,7 @@ export type WorldUncheckedCreateInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUpdateInput = {
@@ -424,6 +429,7 @@ export type WorldUpdateInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateInput = {
@@ -449,6 +455,7 @@ export type WorldUncheckedUpdateInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateManyInput = {
@@ -706,6 +713,20 @@ export type WorldUpdateOneRequiredWithoutCollaboratorsNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutCollaboratorsInput, Prisma.WorldUpdateWithoutCollaboratorsInput>, Prisma.WorldUncheckedUpdateWithoutCollaboratorsInput>
 }
 
+export type WorldCreateNestedOneWithoutUserPinsInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutUserPinsInput, Prisma.WorldUncheckedCreateWithoutUserPinsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutUserPinsInput
+  connect?: Prisma.WorldWhereUniqueInput
+}
+
+export type WorldUpdateOneRequiredWithoutUserPinsNestedInput = {
+  create?: Prisma.XOR<Prisma.WorldCreateWithoutUserPinsInput, Prisma.WorldUncheckedCreateWithoutUserPinsInput>
+  connectOrCreate?: Prisma.WorldCreateOrConnectWithoutUserPinsInput
+  upsert?: Prisma.WorldUpsertWithoutUserPinsInput
+  connect?: Prisma.WorldWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.WorldUpdateToOneWithWhereWithoutUserPinsInput, Prisma.WorldUpdateWithoutUserPinsInput>, Prisma.WorldUncheckedUpdateWithoutUserPinsInput>
+}
+
 export type WorldCreateNestedOneWithoutArticlesInput = {
   create?: Prisma.XOR<Prisma.WorldCreateWithoutArticlesInput, Prisma.WorldUncheckedCreateWithoutArticlesInput>
   connectOrCreate?: Prisma.WorldCreateOrConnectWithoutArticlesInput
@@ -806,6 +827,7 @@ export type WorldCreateWithoutActorsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutActorsInput = {
@@ -830,6 +852,7 @@ export type WorldUncheckedCreateWithoutActorsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutActorsInput = {
@@ -870,6 +893,7 @@ export type WorldUpdateWithoutActorsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutActorsInput = {
@@ -894,6 +918,7 @@ export type WorldUncheckedUpdateWithoutActorsInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutAssetReferencesInput = {
@@ -918,6 +943,7 @@ export type WorldCreateWithoutAssetReferencesInput = {
   savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutAssetReferencesInput = {
@@ -942,6 +968,7 @@ export type WorldUncheckedCreateWithoutAssetReferencesInput = {
   savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutAssetReferencesInput = {
@@ -982,6 +1009,7 @@ export type WorldUpdateWithoutAssetReferencesInput = {
   savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutAssetReferencesInput = {
@@ -1006,6 +1034,7 @@ export type WorldUncheckedUpdateWithoutAssetReferencesInput = {
   savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutCalendarsInput = {
@@ -1030,6 +1059,7 @@ export type WorldCreateWithoutCalendarsInput = {
   savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutCalendarsInput = {
@@ -1054,6 +1084,7 @@ export type WorldUncheckedCreateWithoutCalendarsInput = {
   savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutCalendarsInput = {
@@ -1094,6 +1125,7 @@ export type WorldUpdateWithoutCalendarsInput = {
   savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutCalendarsInput = {
@@ -1118,6 +1150,7 @@ export type WorldUncheckedUpdateWithoutCalendarsInput = {
   savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutSavedColorsInput = {
@@ -1142,6 +1175,7 @@ export type WorldCreateWithoutSavedColorsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutSavedColorsInput = {
@@ -1166,6 +1200,7 @@ export type WorldUncheckedCreateWithoutSavedColorsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutSavedColorsInput = {
@@ -1206,6 +1241,7 @@ export type WorldUpdateWithoutSavedColorsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutSavedColorsInput = {
@@ -1230,6 +1266,7 @@ export type WorldUncheckedUpdateWithoutSavedColorsInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutWorldCommonIconSetsInput = {
@@ -1254,6 +1291,7 @@ export type WorldCreateWithoutWorldCommonIconSetsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
@@ -1278,6 +1316,7 @@ export type WorldUncheckedCreateWithoutWorldCommonIconSetsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutWorldCommonIconSetsInput = {
@@ -1318,6 +1357,7 @@ export type WorldUpdateWithoutWorldCommonIconSetsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
@@ -1342,6 +1382,7 @@ export type WorldUncheckedUpdateWithoutWorldCommonIconSetsInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutMindmapNodesInput = {
@@ -1366,6 +1407,7 @@ export type WorldCreateWithoutMindmapNodesInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutMindmapNodesInput = {
@@ -1390,6 +1432,7 @@ export type WorldUncheckedCreateWithoutMindmapNodesInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutMindmapNodesInput = {
@@ -1430,6 +1473,7 @@ export type WorldUpdateWithoutMindmapNodesInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
@@ -1454,6 +1498,7 @@ export type WorldUncheckedUpdateWithoutMindmapNodesInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutTagsInput = {
@@ -1478,6 +1523,7 @@ export type WorldCreateWithoutTagsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutTagsInput = {
@@ -1502,6 +1548,7 @@ export type WorldUncheckedCreateWithoutTagsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutTagsInput = {
@@ -1542,6 +1589,7 @@ export type WorldUpdateWithoutTagsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutTagsInput = {
@@ -1566,6 +1614,7 @@ export type WorldUncheckedUpdateWithoutTagsInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutOwnerInput = {
@@ -1590,6 +1639,7 @@ export type WorldCreateWithoutOwnerInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutOwnerInput = {
@@ -1614,6 +1664,7 @@ export type WorldUncheckedCreateWithoutOwnerInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutOwnerInput = {
@@ -1679,6 +1730,7 @@ export type WorldCreateWithoutCollaboratorsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutCollaboratorsInput = {
@@ -1703,6 +1755,7 @@ export type WorldUncheckedCreateWithoutCollaboratorsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutCollaboratorsInput = {
@@ -1743,6 +1796,7 @@ export type WorldUpdateWithoutCollaboratorsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
@@ -1760,6 +1814,123 @@ export type WorldUncheckedUpdateWithoutCollaboratorsInput = {
   articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
   folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
   tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
+  shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
+  assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldCreateWithoutUserPinsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType | null
+  timeOrigin?: bigint | number
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagCreateNestedManyWithoutWorldInput
+  owner: Prisma.UserCreateNestedOneWithoutWorldsInput
+  collaborators?: Prisma.CollaboratingUserCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
+  shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
+  assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+}
+
+export type WorldUncheckedCreateWithoutUserPinsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  name: string
+  description?: string
+  calendar?: $Enums.WorldCalendarType | null
+  timeOrigin?: bigint | number
+  ownerId: string
+  accessMode?: $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedCreateNestedManyWithoutWorldInput
+  events?: Prisma.WorldEventUncheckedCreateNestedManyWithoutWorldInput
+  articles?: Prisma.WikiArticleUncheckedCreateNestedManyWithoutWorldInput
+  folders?: Prisma.WikiFolderUncheckedCreateNestedManyWithoutWorldInput
+  tags?: Prisma.TagUncheckedCreateNestedManyWithoutWorldInput
+  collaborators?: Prisma.CollaboratingUserUncheckedCreateNestedManyWithoutWorldInput
+  mindmapNodes?: Prisma.MindmapNodeUncheckedCreateNestedManyWithoutWorldInput
+  worldEventTracks?: Prisma.WorldEventTrackUncheckedCreateNestedManyWithoutWorldInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedCreateNestedManyWithoutWorldInput
+  savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
+  calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
+  shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
+  assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+}
+
+export type WorldCreateOrConnectWithoutUserPinsInput = {
+  where: Prisma.WorldWhereUniqueInput
+  create: Prisma.XOR<Prisma.WorldCreateWithoutUserPinsInput, Prisma.WorldUncheckedCreateWithoutUserPinsInput>
+}
+
+export type WorldUpsertWithoutUserPinsInput = {
+  update: Prisma.XOR<Prisma.WorldUpdateWithoutUserPinsInput, Prisma.WorldUncheckedUpdateWithoutUserPinsInput>
+  create: Prisma.XOR<Prisma.WorldCreateWithoutUserPinsInput, Prisma.WorldUncheckedCreateWithoutUserPinsInput>
+  where?: Prisma.WorldWhereInput
+}
+
+export type WorldUpdateToOneWithWhereWithoutUserPinsInput = {
+  where?: Prisma.WorldWhereInput
+  data: Prisma.XOR<Prisma.WorldUpdateWithoutUserPinsInput, Prisma.WorldUncheckedUpdateWithoutUserPinsInput>
+}
+
+export type WorldUpdateWithoutUserPinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUpdateManyWithoutWorldNestedInput
+  owner?: Prisma.UserUpdateOneRequiredWithoutWorldsNestedInput
+  collaborators?: Prisma.CollaboratingUserUpdateManyWithoutWorldNestedInput
+  mindmapNodes?: Prisma.MindmapNodeUpdateManyWithoutWorldNestedInput
+  worldEventTracks?: Prisma.WorldEventTrackUpdateManyWithoutWorldNestedInput
+  worldCommonIconSets?: Prisma.WorldCommonIconSetUpdateManyWithoutWorldNestedInput
+  savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
+  calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
+  shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
+  assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+}
+
+export type WorldUncheckedUpdateWithoutUserPinsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  description?: Prisma.StringFieldUpdateOperationsInput | string
+  calendar?: Prisma.NullableEnumWorldCalendarTypeFieldUpdateOperationsInput | $Enums.WorldCalendarType | null
+  timeOrigin?: Prisma.BigIntFieldUpdateOperationsInput | bigint | number
+  ownerId?: Prisma.StringFieldUpdateOperationsInput | string
+  accessMode?: Prisma.EnumWorldAccessModeFieldUpdateOperationsInput | $Enums.WorldAccessMode
+  actors?: Prisma.ActorUncheckedUpdateManyWithoutWorldNestedInput
+  events?: Prisma.WorldEventUncheckedUpdateManyWithoutWorldNestedInput
+  articles?: Prisma.WikiArticleUncheckedUpdateManyWithoutWorldNestedInput
+  folders?: Prisma.WikiFolderUncheckedUpdateManyWithoutWorldNestedInput
+  tags?: Prisma.TagUncheckedUpdateManyWithoutWorldNestedInput
+  collaborators?: Prisma.CollaboratingUserUncheckedUpdateManyWithoutWorldNestedInput
   mindmapNodes?: Prisma.MindmapNodeUncheckedUpdateManyWithoutWorldNestedInput
   worldEventTracks?: Prisma.WorldEventTrackUncheckedUpdateManyWithoutWorldNestedInput
   worldCommonIconSets?: Prisma.WorldCommonIconSetUncheckedUpdateManyWithoutWorldNestedInput
@@ -1791,6 +1962,7 @@ export type WorldCreateWithoutArticlesInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutArticlesInput = {
@@ -1815,6 +1987,7 @@ export type WorldUncheckedCreateWithoutArticlesInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutArticlesInput = {
@@ -1855,6 +2028,7 @@ export type WorldUpdateWithoutArticlesInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutArticlesInput = {
@@ -1879,6 +2053,7 @@ export type WorldUncheckedUpdateWithoutArticlesInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutFoldersInput = {
@@ -1903,6 +2078,7 @@ export type WorldCreateWithoutFoldersInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutFoldersInput = {
@@ -1927,6 +2103,7 @@ export type WorldUncheckedCreateWithoutFoldersInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutFoldersInput = {
@@ -1967,6 +2144,7 @@ export type WorldUpdateWithoutFoldersInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutFoldersInput = {
@@ -1991,6 +2169,7 @@ export type WorldUncheckedUpdateWithoutFoldersInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutEventsInput = {
@@ -2015,6 +2194,7 @@ export type WorldCreateWithoutEventsInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutEventsInput = {
@@ -2039,6 +2219,7 @@ export type WorldUncheckedCreateWithoutEventsInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutEventsInput = {
@@ -2079,6 +2260,7 @@ export type WorldUpdateWithoutEventsInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutEventsInput = {
@@ -2103,6 +2285,7 @@ export type WorldUncheckedUpdateWithoutEventsInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutWorldEventTracksInput = {
@@ -2127,6 +2310,7 @@ export type WorldCreateWithoutWorldEventTracksInput = {
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
@@ -2151,6 +2335,7 @@ export type WorldUncheckedCreateWithoutWorldEventTracksInput = {
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   shareLinks?: Prisma.WorldShareLinkUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutWorldEventTracksInput = {
@@ -2191,6 +2376,7 @@ export type WorldUpdateWithoutWorldEventTracksInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
@@ -2215,6 +2401,7 @@ export type WorldUncheckedUpdateWithoutWorldEventTracksInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateWithoutShareLinksInput = {
@@ -2239,6 +2426,7 @@ export type WorldCreateWithoutShareLinksInput = {
   savedColors?: Prisma.SavedColorCreateNestedManyWithoutWorldInput
   calendars?: Prisma.CalendarCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinCreateNestedManyWithoutWorldInput
 }
 
 export type WorldUncheckedCreateWithoutShareLinksInput = {
@@ -2263,6 +2451,7 @@ export type WorldUncheckedCreateWithoutShareLinksInput = {
   savedColors?: Prisma.SavedColorUncheckedCreateNestedManyWithoutWorldInput
   calendars?: Prisma.CalendarUncheckedCreateNestedManyWithoutWorldInput
   assetReferences?: Prisma.AssetReferenceUncheckedCreateNestedManyWithoutWorldInput
+  userPins?: Prisma.UserWorldPinUncheckedCreateNestedManyWithoutWorldInput
 }
 
 export type WorldCreateOrConnectWithoutShareLinksInput = {
@@ -2303,6 +2492,7 @@ export type WorldUpdateWithoutShareLinksInput = {
   savedColors?: Prisma.SavedColorUpdateManyWithoutWorldNestedInput
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutShareLinksInput = {
@@ -2327,6 +2517,7 @@ export type WorldUncheckedUpdateWithoutShareLinksInput = {
   savedColors?: Prisma.SavedColorUncheckedUpdateManyWithoutWorldNestedInput
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldCreateManyOwnerInput = {
@@ -2362,6 +2553,7 @@ export type WorldUpdateWithoutOwnerInput = {
   calendars?: Prisma.CalendarUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateWithoutOwnerInput = {
@@ -2386,6 +2578,7 @@ export type WorldUncheckedUpdateWithoutOwnerInput = {
   calendars?: Prisma.CalendarUncheckedUpdateManyWithoutWorldNestedInput
   shareLinks?: Prisma.WorldShareLinkUncheckedUpdateManyWithoutWorldNestedInput
   assetReferences?: Prisma.AssetReferenceUncheckedUpdateManyWithoutWorldNestedInput
+  userPins?: Prisma.UserWorldPinUncheckedUpdateManyWithoutWorldNestedInput
 }
 
 export type WorldUncheckedUpdateManyWithoutOwnerInput = {
@@ -2418,6 +2611,7 @@ export type WorldCountOutputType = {
   calendars: number
   shareLinks: number
   assetReferences: number
+  userPins: number
 }
 
 export type WorldCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2434,6 +2628,7 @@ export type WorldCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.
   calendars?: boolean | WorldCountOutputTypeCountCalendarsArgs
   shareLinks?: boolean | WorldCountOutputTypeCountShareLinksArgs
   assetReferences?: boolean | WorldCountOutputTypeCountAssetReferencesArgs
+  userPins?: boolean | WorldCountOutputTypeCountUserPinsArgs
 }
 
 /**
@@ -2537,6 +2732,13 @@ export type WorldCountOutputTypeCountAssetReferencesArgs<ExtArgs extends runtime
   where?: Prisma.AssetReferenceWhereInput
 }
 
+/**
+ * WorldCountOutputType without action
+ */
+export type WorldCountOutputTypeCountUserPinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.UserWorldPinWhereInput
+}
+
 
 export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -2562,6 +2764,7 @@ export type WorldSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = 
   calendars?: boolean | Prisma.World$calendarsArgs<ExtArgs>
   shareLinks?: boolean | Prisma.World$shareLinksArgs<ExtArgs>
   assetReferences?: boolean | Prisma.World$assetReferencesArgs<ExtArgs>
+  userPins?: boolean | Prisma.World$userPinsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["world"]>
 
@@ -2619,6 +2822,7 @@ export type WorldInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs =
   calendars?: boolean | Prisma.World$calendarsArgs<ExtArgs>
   shareLinks?: boolean | Prisma.World$shareLinksArgs<ExtArgs>
   assetReferences?: boolean | Prisma.World$assetReferencesArgs<ExtArgs>
+  userPins?: boolean | Prisma.World$userPinsArgs<ExtArgs>
   _count?: boolean | Prisma.WorldCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type WorldIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
@@ -2645,6 +2849,7 @@ export type $WorldPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs 
     calendars: Prisma.$CalendarPayload<ExtArgs>[]
     shareLinks: Prisma.$WorldShareLinkPayload<ExtArgs>[]
     assetReferences: Prisma.$AssetReferencePayload<ExtArgs>[]
+    userPins: Prisma.$UserWorldPinPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -3064,6 +3269,7 @@ export interface Prisma__WorldClient<T, Null = never, ExtArgs extends runtime.Ty
   calendars<T extends Prisma.World$calendarsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$calendarsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$CalendarPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   shareLinks<T extends Prisma.World$shareLinksArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$shareLinksArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldShareLinkPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   assetReferences<T extends Prisma.World$assetReferencesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$assetReferencesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$AssetReferencePayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
+  userPins<T extends Prisma.World$userPinsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.World$userPinsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$UserWorldPinPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -3812,6 +4018,30 @@ export type World$assetReferencesArgs<ExtArgs extends runtime.Types.Extensions.I
   take?: number
   skip?: number
   distinct?: Prisma.AssetReferenceScalarFieldEnum | Prisma.AssetReferenceScalarFieldEnum[]
+}
+
+/**
+ * World.userPins
+ */
+export type World$userPinsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the UserWorldPin
+   */
+  select?: Prisma.UserWorldPinSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the UserWorldPin
+   */
+  omit?: Prisma.UserWorldPinOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.UserWorldPinInclude<ExtArgs> | null
+  where?: Prisma.UserWorldPinWhereInput
+  orderBy?: Prisma.UserWorldPinOrderByWithRelationInput | Prisma.UserWorldPinOrderByWithRelationInput[]
+  cursor?: Prisma.UserWorldPinWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.UserWorldPinScalarFieldEnum | Prisma.UserWorldPinScalarFieldEnum[]
 }
 
 /**

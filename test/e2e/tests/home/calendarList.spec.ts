@@ -46,32 +46,27 @@ test.describe('Calendar List View', () => {
 		await createAndOpenCalendar('Earth Calendar', 'Gregorian Calendar (Earth)')
 		await expect(page.getByText('Earth Calendar')).toBeVisible()
 		await expect(page.getByText('00:00 January 01, 2026').first()).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to calendars').click()
+		await page.goto(makeUrl('/calendar'))
 
 		await createAndOpenCalendar('Martian Calendar', 'Darian Calendar (Martian)')
 		await expect(page.getByText('Martian Calendar')).toBeVisible()
 		await expect(page.getByText('00:00 01 Sagittarius 0000').first()).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to calendars').click()
+		await page.goto(makeUrl('/calendar'))
 
 		await createAndOpenCalendar('Golarion Calendar', 'Golarion Calendar (Pathfinder)')
 		await expect(page.getByText('Golarion Calendar')).toBeVisible()
 		await expect(page.getByText('00:00 Abadius 01, 4726').first()).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to calendars').click()
+		await page.goto(makeUrl('/calendar'))
 
 		await createAndOpenCalendar('Quadrum Calendar', 'Quadrum Calendar (RimWorld)')
 		await expect(page.getByText('Quadrum Calendar')).toBeVisible()
 		await expect(page.getByText('00:00 Aprimay 01, 5500').first()).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to calendars').click()
+		await page.goto(makeUrl('/calendar'))
 
 		await createAndOpenCalendar('Exether Calendar', 'Exether Calendar')
 		await expect(page.getByText('Exether Calendar')).toBeVisible()
 		await expect(page.getByText('00:00 Frostmoot 01, 1178').first()).toBeVisible()
-		await page.getByLabel('Home navigation menu').click()
-		await page.getByLabel('Navigate to calendars').click()
+		await page.goto(makeUrl('/calendar'))
 	})
 
 	test.afterEach(async ({ page }) => {

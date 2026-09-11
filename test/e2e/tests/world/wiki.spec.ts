@@ -449,8 +449,6 @@ test.describe('Wiki View', () => {
 	})
 
 	test.afterEach(async ({ page }) => {
-		// Flush the entity changes
-		await page.waitForTimeout(3000)
 		await deleteAccount(page)
 	})
 

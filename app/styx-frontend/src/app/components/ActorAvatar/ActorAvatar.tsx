@@ -5,6 +5,7 @@ import { useMemo } from 'react'
 import { Actor } from '@/api/types/worldTypes'
 import { getContrastTextColor } from '@/app/utils/colors/getContrastTextColor'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
+import { getInitials } from '@/app/utils/getInitials'
 
 type Props = {
 	actor: Actor
@@ -26,17 +27,9 @@ export const ActorAvatar = ({ actor, sx, fontSize, surroundingColor }: Props) =>
 		return adaptColor(actor.color, surroundingColor)
 	}, [actor.color, adaptColor, surroundingColor])
 
-	const initials = (() => {
-		const capitals = actor.name.replace(/[^A-Z]+/g, '')
-		if (capitals.length >= 2) {
-			return capitals.substring(0, 2)
-		}
-		return actor.name.substring(0, 2)
-	})()
-
 	return (
 		<Avatar sx={{ ...sx, color: getContrastTextColor(color), bgcolor: color }} style={{ fontSize }}>
-			{initials}
+			{getInitials(actor.name)}
 		</Avatar>
 	)
 }

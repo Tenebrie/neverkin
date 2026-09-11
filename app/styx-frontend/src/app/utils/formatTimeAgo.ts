@@ -1,3 +1,5 @@
+import { pluralize } from './pluralize'
+
 export function formatTimeAgo(date: Date): string {
 	const now = new Date()
 	const diffMs = now.getTime() - date.getTime()
@@ -14,11 +16,11 @@ export function formatTimeAgo(date: Date): string {
 	if (seconds <= 60) {
 		return past ? 'just now' : 'in a moment'
 	} else if (minutes <= 60) {
-		return `${minutes} minute${minutes === 1 ? '' : 's'} ${suffix}`
+		return `${pluralize(minutes, 'minute')} ${suffix}`
 	} else if (hours <= 24) {
-		return `${hours} hour${hours === 1 ? '' : 's'} ${suffix}`
+		return `${pluralize(hours, 'hour')} ${suffix}`
 	} else if (days <= 7) {
-		return `${days} day${days === 1 ? '' : 's'} ${suffix}`
+		return `${pluralize(days, 'day')} ${suffix}`
 	} else {
 		return date.toLocaleDateString(undefined, {
 			year: 'numeric',

@@ -1,5 +1,5 @@
 model MindmapNode {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -29,6 +29,13 @@ model MindmapNode {
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
+
+  @@index([worldId])
+  @@index([parentActorId])
+  @@index([parentArticleId])
+  @@index([parentEventId])
+  @@index([parentFolderId])
+  @@index([parentTagId])
 }
 
 enum MindmapLinkDirection {
@@ -38,7 +45,7 @@ enum MindmapLinkDirection {
 }
 
 model MindmapLink {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
@@ -50,4 +57,7 @@ model MindmapLink {
 
   direction MindmapLinkDirection @default(Normal)
   content   String               @default("")
+
+  @@index([sourceNodeId, targetNodeId])
+  @@index([targetNodeId])
 }

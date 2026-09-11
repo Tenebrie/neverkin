@@ -1,11 +1,11 @@
 import { createFileRoute } from '@tanstack/react-router'
 
-import { CurrentArticleDetails } from '@/app/views/world/views/wiki/Wiki'
+import { WikiArticleView } from '@/app/views/world/views/wiki/WikiArticleView'
 
 export const Route = createFileRoute('/world/$worldId/_world/wiki/_wiki/$articleId')({
 	component: RouteComponent,
 })
 
 function RouteComponent() {
-	return <CurrentArticleDetails />
+	return <WikiArticleView />
 }

@@ -59,7 +59,7 @@ export const EditEventModal = () => {
 		}
 		navigate({
 			from: '/world/$worldId',
-			to: `/world/$worldId/wiki/$articleId`,
+			to: '/world/$worldId/wiki/$articleId',
 			params: {
 				articleId: entityStack[entityStack.length - 1],
 			},

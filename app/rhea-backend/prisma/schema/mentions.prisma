@@ -7,7 +7,7 @@ enum MentionedEntity {
 }
 
 model Mention {
-  id String @id @unique @default(uuid())
+  id String @id @default(uuid())
 
   sourceId String
   targetId String
@@ -41,4 +41,15 @@ model Mention {
   page   ContentPage? @relation(fields: [pageId], references: [id], onDelete: Cascade, name: "PageMention")
 
   @@unique([sourceId, targetId, pageId])
+
+  @@index([sourceActorId])
+  @@index([sourceEventId])
+  @@index([sourceArticleId])
+  @@index([sourceTagId])
+  @@index([sourceNodeId])
+  @@index([targetActorId])
+  @@index([targetEventId])
+  @@index([targetArticleId])
+  @@index([targetTagId])
+  @@index([pageId])
 }

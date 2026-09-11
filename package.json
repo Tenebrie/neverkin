@@ -77,9 +77,9 @@
 	},
 	"author": "Tenebrie",
 	"bugs": {
-		"url": "https://github.com/tenebrie/timelines/issues"
+		"url": "https://github.com/tenebrie/neverkin/issues"
 	},
-	"homepage": "https://github.com/tenebrie/timelines#readme",
+	"homepage": "https://github.com/tenebrie/neverkin#readme",
 	"devDependencies": {
 		"@eslint-react/eslint-plugin": "^5.18.7",
 		"astro-eslint-parser": "^1.2.2",

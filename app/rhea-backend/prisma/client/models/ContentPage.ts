@@ -279,7 +279,7 @@ export type ContentPageWhereUniqueInput = Prisma.AtLeast<{
   parentNode?: Prisma.XOR<Prisma.MindmapNodeNullableScalarRelationFilter, Prisma.MindmapNodeWhereInput> | null
   mentions?: Prisma.MentionListRelationFilter
   assetRefs?: Prisma.AssetReferenceListRelationFilter
-}, "id" | "id">
+}, "id">
 
 export type ContentPageOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

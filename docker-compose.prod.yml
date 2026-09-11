@@ -27,6 +27,11 @@ services:
             - environment
         volumes:
             - /mnt/volume_secrets/certs:/etc/letsencrypt:cached
+        logging:
+            driver: json-file
+            options:
+                max-size: '50m'
+                max-file: '10'
     styx:
         image: tenebrie/timelines-styx:${VERSION}
         build:
@@ -57,7 +62,8 @@ services:
         environment:
             NODE_ENV: production # Prod or staging
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
-        command: npm run prod
+        command: node dist/src/index.js
+        stop_grace_period: 30s
         deploy:
             replicas: 2
             update_config:
@@ -89,7 +95,8 @@ services:
             dockerfile: ./app/calliope-websockets/Dockerfile.prod
         environment:
             NODE_ENV: production # Prod or staging
-        command: npm run prod
+        command: node dist/index.js
+        stop_grace_period: 30s
         deploy:
             replicas: 2
             update_config:
@@ -100,6 +107,12 @@ services:
         secrets:
             - jwt-secret
             - environment
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/calliope/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
     orpheus:
         image: tenebrie/timelines-orpheus:${VERSION}
         build:
@@ -119,6 +132,12 @@ services:
         secrets:
             - jwt-secret
             - environment
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3002/orpheus/health"]
+            interval: 10s
+            timeout: 10s
+            retries: 3
+            start_period: 30s
     thetis:
         image: tenebrie/timelines-thetis:${VERSION}
         build:

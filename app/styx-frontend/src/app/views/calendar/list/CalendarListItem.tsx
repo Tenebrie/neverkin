@@ -4,9 +4,8 @@ import Typography from '@mui/material/Typography'
 
 import { CalendarBrief } from '@/api/types/calendarTypes'
 import { NavigationLink } from '@/app/components/NavigationLink'
+import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { DeleteCalendarButton } from '@/app/views/calendar/list/components/DeleteCalendarButton'
-
-import { formatTimeAgo } from '../../home/utils/formatTimeAgo'
 
 type Props = {
 	calendar: CalendarBrief

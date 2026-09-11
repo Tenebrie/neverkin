@@ -21,3 +21,6 @@ export function makeUrl(path: string) {
 		return `${baseUrl}/${path}`
 	}
 }
+
+/** Matches `isMultiselectEvent` in the app: macOS multi-selects with Meta, other platforms with Control. */
+export const multiselectModifier = process.platform === 'darwin' ? 'Meta' : 'Control'

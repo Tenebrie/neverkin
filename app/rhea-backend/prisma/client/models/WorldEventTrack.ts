@@ -261,7 +261,7 @@ export type WorldEventTrackWhereUniqueInput = Prisma.AtLeast<{
   worldId?: Prisma.StringFilter<"WorldEventTrack"> | string
   events?: Prisma.WorldEventListRelationFilter
   world?: Prisma.XOR<Prisma.WorldScalarRelationFilter, Prisma.WorldWhereInput>
-}, "id" | "id">
+}, "id">
 
 export type WorldEventTrackOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

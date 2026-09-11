@@ -7,7 +7,7 @@ import { useSearch } from '@tanstack/react-router'
 import { memo, useCallback } from 'react'
 
 import { useDebouncedState } from '@/app/hooks/useDebouncedState'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 export const IconSearchInput = memo(IconSearchInputComponent)

@@ -1,6 +1,7 @@
-import { FeatureFlag } from '@prisma/client'
-
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+
+export const AllFeatureFlags = ['GlobalSearch', 'MindmapRework'] as const
+type FeatureFlag = (typeof AllFeatureFlags)[number]
 
 export const FeatureFlagService = {
 	listUserFeatureFlags: async (userId: string) => {

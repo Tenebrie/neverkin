@@ -50,6 +50,7 @@ export const mockWorldItemModel = (world: Partial<WorldItem> = {}): WorldItem =>
 	collaborators: [],
 	accessMode: 'Private',
 	calendars: [],
+	userPins: [],
 	...world,
 })
 

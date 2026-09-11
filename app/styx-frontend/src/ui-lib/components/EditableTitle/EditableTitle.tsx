@@ -75,7 +75,7 @@ export const EditableTitle = ({
 						sx={{ padding: '0 8px', flex: 1, minWidth: 0, justifyContent: 'flex-start' }}
 						onClick={onStartEdit}
 					>
-						<Typography variant="h6" noWrap sx={{ minWidth: 0 }}>
+						<Typography variant="h6" noWrap sx={{ minWidth: 0, minHeight: '1.74em' }}>
 							{displayValue ?? value}
 						</Typography>
 					</Button>

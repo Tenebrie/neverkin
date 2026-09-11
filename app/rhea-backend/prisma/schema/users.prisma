@@ -11,7 +11,7 @@ enum CollaboratorAccess {
 }
 
 model User {
-  id                  String    @id @unique @default(uuid())
+  id                  String    @id @default(uuid())
   createdAt           DateTime  @default(now())
   updatedAt           DateTime  @default(now()) @updatedAt
   deletedAt           DateTime?
@@ -32,13 +32,12 @@ model User {
 
   assets           Asset[]
   favoriteIconSets UserFavoriteIconSet[]
+  worldPins        UserWorldPin[]
 
   avatar   Asset?  @relation("UserAvatar", fields: [avatarId], references: [id])
   avatarId String? @unique
 
   auditLogs AuditLog[]
-
-  @@index([email])
 }
 
 model CollaboratingUser {
@@ -50,21 +49,32 @@ model CollaboratingUser {
   worldId String
 
   @@id([userId, worldId])
-}
-
-enum FeatureFlag {
-  MindmapRework
-}
+  @@index([worldId])
+} 
 
 model FeatureFlagEntry {
-  id        String   @id @unique @default(uuid())
+  id        String   @id @default(uuid())
   createdAt DateTime @default(now())
   updatedAt DateTime @default(now()) @updatedAt
 
   user   User?   @relation(fields: [userId], references: [id], onDelete: Cascade)
   userId String?
 
-  flag FeatureFlag
+  flag String
 
   @@index([userId, flag])
+}
+
+model UserWorldPin {
+  createdAt DateTime @default(now())
+  rank      Int      @default(0)
+
+  user  User  @relation(fields: [userId], references: [id], onDelete: Cascade)
+  world World @relation(fields: [worldId], references: [id], onDelete: Cascade)
+
+  userId  String
+  worldId String
+
+  @@id([userId, worldId])
+  @@index([worldId])
 }

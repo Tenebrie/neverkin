@@ -11,16 +11,12 @@ import TextField from '@mui/material/TextField'
 import Typography from '@mui/material/Typography'
 import { useState } from 'react'
 
-import {
-	AdminGetFeatureFlagsApiResponse,
-	useAdminGetFeatureFlagsQuery,
-	useAdminSetFeatureFlagMutation,
-} from '@/api/adminUsersApi'
-import { useListFeatureFlagsQuery } from '@/api/otherApi'
+import { useAdminGetFeatureFlagsQuery, useAdminSetFeatureFlagMutation } from '@/api/adminUsersApi'
+import { ListFeatureFlagsApiResponse, useListFeatureFlagsQuery } from '@/api/otherApi'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
-type FeatureFlag = AdminGetFeatureFlagsApiResponse[number]
+type FeatureFlag = ListFeatureFlagsApiResponse['featureFlags'][number]
 
 export const FeatureFlagModal = () => {
 	const { isOpen, targetUser, close } = useModal('featureFlagModal')
@@ -43,13 +39,17 @@ export const FeatureFlagModal = () => {
 	const availableFlags = (allFlags?.featureFlags ?? []).filter((flag) => !userFlags?.includes(flag))
 
 	const handleAdd = async () => {
-		if (!selectedFlag || !targetUser) return
+		if (!selectedFlag || !targetUser) {
+			return
+		}
 		await setFeatureFlag({ body: { flag: selectedFlag, userId: targetUser.id, enable: true } })
 		setSelectedFlag(null)
 	}
 
 	const handleRemove = async (flag: FeatureFlag) => {
-		if (!targetUser) return
+		if (!targetUser) {
+			return
+		}
 		await setFeatureFlag({ body: { flag, userId: targetUser.id, enable: false } })
 	}
 
@@ -80,7 +80,7 @@ export const FeatureFlagModal = () => {
 							<ListItem
 								key={flag}
 								secondaryAction={
-									<IconButton edge="end" size="small" onClick={() => handleRemove(flag)}>
+									<IconButton edge="end" size="small" onClick={() => handleRemove(flag as FeatureFlag)}>
 										<DeleteIcon fontSize="small" />
 									</IconButton>
 								}

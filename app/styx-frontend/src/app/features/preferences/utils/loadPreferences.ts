@@ -33,6 +33,11 @@ export const PreferencesStateSchema = z.object({
 			showDiscordLink: z.boolean().default(true),
 		})
 		.default({}),
+	home: z
+		.object({
+			lastOpenedWorldId: z.string().nullable().default(null),
+		})
+		.default({}),
 	iconSets: z
 		.object({
 			recent: z.array(z.string()).default([]),

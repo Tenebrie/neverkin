@@ -6,7 +6,7 @@ if [[ -z "$VERSION" ]]; then
   exit 1
 fi
 
-STACK_VERSION=14
+STACK_VERSION=16
 STACK_VERSION_FILE="/var/lib/timelines/stack-version"
 
 GATEKEEPER_VERSION=2

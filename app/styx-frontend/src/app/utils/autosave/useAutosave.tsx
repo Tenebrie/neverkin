@@ -4,7 +4,7 @@ import { ReactElement, useCallback, useEffect, useRef, useState } from 'react'
 
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 
-import { useEffectOnce } from '../useEffectOnce'
+import { useEffectOnce } from '../../hooks/useEffectOnce'
 import { AutosaveIcon } from './AutosaveIcon'
 import { SavingState } from './types'
 

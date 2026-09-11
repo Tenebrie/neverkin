@@ -5,7 +5,7 @@ import { memo, useRef, useState } from 'react'
 
 import { useEventBusDispatch } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 
 import { TimelineAnchor } from './anchor/TimelineAnchor'
 import { useTimelineContextMenu } from './components/TimelineContextMenu/hooks/useTimelineContextMenu'

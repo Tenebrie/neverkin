@@ -27,10 +27,10 @@ export function GoogleLoginButton() {
 }
 
 /**
- * Returns the base origin (without `app.` subdomain) for the Google Sign-In iframe.
+ * Returns the landing site origin (without `app.` subdomain).
  * e.g. `app.localhost` → `http://localhost`, `app.neverkin.com` → `https://neverkin.com`
  */
-function getGoogleSignInOrigin(): string {
+export function getLandingOrigin(): string {
 	const { protocol, hostname, port } = window.location
 	const baseHost = hostname.replace(/^app\./, '')
 	const portSuffix = port ? `:${port}` : ''
@@ -38,5 +38,5 @@ function getGoogleSignInOrigin(): string {
 }
 
 export function getGoogleSignInIframeSrc(): string {
-	return `${getGoogleSignInOrigin()}/google-signin.html`
+	return `${getLandingOrigin()}/google-signin.html`
 }

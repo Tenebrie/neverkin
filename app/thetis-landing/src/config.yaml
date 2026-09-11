@@ -59,10 +59,5 @@ apps:
     isRelatedPostsEnabled: false
     relatedPostsCount: 4
 
-analytics:
-  vendors:
-    googleAnalytics:
-      id: null
-
 ui:
   theme: 'dark:only'

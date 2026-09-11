@@ -299,7 +299,7 @@ export type WikiFolderWhereUniqueInput = Prisma.AtLeast<{
   actors?: Prisma.ActorListRelationFilter
   events?: Prisma.WorldEventListRelationFilter
   tags?: Prisma.TagListRelationFilter
-}, "id" | "id">
+}, "id">
 
 export type WikiFolderOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

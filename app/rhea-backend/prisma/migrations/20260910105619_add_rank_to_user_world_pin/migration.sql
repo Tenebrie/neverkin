@@ -1,0 +1,2 @@
+-- AlterTable
+ALTER TABLE "UserWorldPin" ADD COLUMN     "rank" INTEGER NOT NULL DEFAULT 0;

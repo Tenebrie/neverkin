@@ -6,7 +6,7 @@ import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { useGetCommonWorldEventIconsQuery } from '@/api/worldDetailsApi'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { IconCollection } from './components/IconCollection'

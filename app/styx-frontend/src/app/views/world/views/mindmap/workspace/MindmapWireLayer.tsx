@@ -3,8 +3,8 @@ import { Fragment, memo, useCallback, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { RootState } from '@/app/store'
-import { useEffectOnce } from '@/app/utils/useEffectOnce'
 
 import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
 import { MindmapWireGhost } from './MindmapWireGhost'

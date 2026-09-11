@@ -10,6 +10,7 @@ import unusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
 import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
+import noUntypedLocalPaths from './eslint-rules/no-untyped-local-paths.mjs'
 
 export default defineConfig(
 	{
@@ -64,11 +65,6 @@ export default defineConfig(
 			'mui-path-imports/mui-path-imports': 'error',
 			'@typescript-eslint/no-unused-vars': 'off',
 
-			// 'no-relative-import-paths/no-relative-import-paths': [
-			// 	'warn',
-			// 	{ allowSameFolder: true, rootDir: 'src', prefix: '@', allowedDepth: 2 },
-			// ],
-
 			'unused-imports/no-unused-vars': [
 				'warn',
 				{
@@ -81,17 +77,32 @@ export default defineConfig(
 		},
 	},
 	{
+		// Local paths go through the typed router
+		files: ['app/styx-frontend/src/**/*.{ts,tsx}'],
+		ignores: ['app/styx-frontend/src/api/**'],
+		plugins: {
+			neverkin: {
+				rules: {
+					'no-untyped-local-paths': noUntypedLocalPaths,
+				},
+			},
+		},
+		rules: {
+			'neverkin/no-untyped-local-paths': 'error',
+		},
+	},
+	{
 		// Custom rules for rhea-backend to enforce moonflower patterns
 		files: ['app/rhea-backend/src/routers/**/*.ts'],
 		plugins: {
-			timelines: {
+			neverkin: {
 				rules: {
 					'no-direct-context-access': noDirectContextAccess,
 				},
 			},
 		},
 		rules: {
-			'timelines/no-direct-context-access': 'warn',
+			'neverkin/no-direct-context-access': 'warn',
 		},
 	},
 	{

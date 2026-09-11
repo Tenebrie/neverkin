@@ -210,7 +210,7 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   action?: Prisma.EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
   data?: Prisma.JsonFilter<"AuditLog">
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type AuditLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder

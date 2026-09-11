@@ -29,7 +29,7 @@ export type FeatureFlagEntryMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
-  flag: $Enums.FeatureFlag | null
+  flag: string | null
 }
 
 export type FeatureFlagEntryMaxAggregateOutputType = {
@@ -37,7 +37,7 @@ export type FeatureFlagEntryMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   userId: string | null
-  flag: $Enums.FeatureFlag | null
+  flag: string | null
 }
 
 export type FeatureFlagEntryCountAggregateOutputType = {
@@ -152,7 +152,7 @@ export type FeatureFlagEntryGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   userId: string | null
-  flag: $Enums.FeatureFlag
+  flag: string
   _count: FeatureFlagEntryCountAggregateOutputType | null
   _min: FeatureFlagEntryMinAggregateOutputType | null
   _max: FeatureFlagEntryMaxAggregateOutputType | null
@@ -181,7 +181,7 @@ export type FeatureFlagEntryWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   userId?: Prisma.StringNullableFilter<"FeatureFlagEntry"> | string | null
-  flag?: Prisma.EnumFeatureFlagFilter<"FeatureFlagEntry"> | $Enums.FeatureFlag
+  flag?: Prisma.StringFilter<"FeatureFlagEntry"> | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -202,9 +202,9 @@ export type FeatureFlagEntryWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   userId?: Prisma.StringNullableFilter<"FeatureFlagEntry"> | string | null
-  flag?: Prisma.EnumFeatureFlagFilter<"FeatureFlagEntry"> | $Enums.FeatureFlag
+  flag?: Prisma.StringFilter<"FeatureFlagEntry"> | string
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id" | "id">
+}, "id">
 
 export type FeatureFlagEntryOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -225,14 +225,14 @@ export type FeatureFlagEntryScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"FeatureFlagEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"FeatureFlagEntry"> | Date | string
   userId?: Prisma.StringNullableWithAggregatesFilter<"FeatureFlagEntry"> | string | null
-  flag?: Prisma.EnumFeatureFlagWithAggregatesFilter<"FeatureFlagEntry"> | $Enums.FeatureFlag
+  flag?: Prisma.StringWithAggregatesFilter<"FeatureFlagEntry"> | string
 }
 
 export type FeatureFlagEntryCreateInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  flag: $Enums.FeatureFlag
+  flag: string
   user?: Prisma.UserCreateNestedOneWithoutFeatureFlagsInput
 }
 
@@ -241,14 +241,14 @@ export type FeatureFlagEntryUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   userId?: string | null
-  flag: $Enums.FeatureFlag
+  flag: string
 }
 
 export type FeatureFlagEntryUpdateInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
   user?: Prisma.UserUpdateOneWithoutFeatureFlagsNestedInput
 }
 
@@ -257,7 +257,7 @@ export type FeatureFlagEntryUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureFlagEntryCreateManyInput = {
@@ -265,14 +265,14 @@ export type FeatureFlagEntryCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   userId?: string | null
-  flag: $Enums.FeatureFlag
+  flag: string
 }
 
 export type FeatureFlagEntryUpdateManyMutationInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureFlagEntryUncheckedUpdateManyInput = {
@@ -280,7 +280,7 @@ export type FeatureFlagEntryUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   userId?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureFlagEntryListRelationFilter = {
@@ -359,22 +359,18 @@ export type FeatureFlagEntryUncheckedUpdateManyWithoutUserNestedInput = {
   deleteMany?: Prisma.FeatureFlagEntryScalarWhereInput | Prisma.FeatureFlagEntryScalarWhereInput[]
 }
 
-export type EnumFeatureFlagFieldUpdateOperationsInput = {
-  set?: $Enums.FeatureFlag
-}
-
 export type FeatureFlagEntryCreateWithoutUserInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  flag: $Enums.FeatureFlag
+  flag: string
 }
 
 export type FeatureFlagEntryUncheckedCreateWithoutUserInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  flag: $Enums.FeatureFlag
+  flag: string
 }
 
 export type FeatureFlagEntryCreateOrConnectWithoutUserInput = {
@@ -411,35 +407,35 @@ export type FeatureFlagEntryScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"FeatureFlagEntry"> | Date | string
   userId?: Prisma.StringNullableFilter<"FeatureFlagEntry"> | string | null
-  flag?: Prisma.EnumFeatureFlagFilter<"FeatureFlagEntry"> | $Enums.FeatureFlag
+  flag?: Prisma.StringFilter<"FeatureFlagEntry"> | string
 }
 
 export type FeatureFlagEntryCreateManyUserInput = {
   id?: string
   createdAt?: Date | string
   updatedAt?: Date | string
-  flag: $Enums.FeatureFlag
+  flag: string
 }
 
 export type FeatureFlagEntryUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureFlagEntryUncheckedUpdateWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 export type FeatureFlagEntryUncheckedUpdateManyWithoutUserInput = {
   id?: Prisma.StringFieldUpdateOperationsInput | string
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
-  flag?: Prisma.EnumFeatureFlagFieldUpdateOperationsInput | $Enums.FeatureFlag
+  flag?: Prisma.StringFieldUpdateOperationsInput | string
 }
 
 
@@ -500,7 +496,7 @@ export type $FeatureFlagEntryPayload<ExtArgs extends runtime.Types.Extensions.In
     createdAt: Date
     updatedAt: Date
     userId: string | null
-    flag: $Enums.FeatureFlag
+    flag: string
   }, ExtArgs["result"]["featureFlagEntry"]>
   composites: {}
 }
@@ -929,7 +925,7 @@ export interface FeatureFlagEntryFieldRefs {
   readonly createdAt: Prisma.FieldRef<"FeatureFlagEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"FeatureFlagEntry", 'DateTime'>
   readonly userId: Prisma.FieldRef<"FeatureFlagEntry", 'String'>
-  readonly flag: Prisma.FieldRef<"FeatureFlagEntry", 'FeatureFlag'>
+  readonly flag: Prisma.FieldRef<"FeatureFlagEntry", 'String'>
 }
     
 

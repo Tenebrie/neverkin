@@ -28,6 +28,7 @@ import { WorldBulkRouter } from './routers/WorldBulkActionRouter.js'
 import { WorldColorRouter } from './routers/WorldColorRouter.js'
 import { WorldEventRouter } from './routers/WorldEventRouter.js'
 import { WorldEventTrackRouter } from './routers/WorldEventTrackRouter.js'
+import { WorldPinRouter } from './routers/WorldPinRouter.js'
 import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
 import { WorldShareRouter } from './routers/WorldShareRouter.js'
@@ -35,6 +36,7 @@ import { WorldShareVisitRouter } from './routers/WorldShareVisitRouter.js'
 import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiArticleRouter } from './routers/WorldWikiArticleRouter.js'
 import { WorldWikiFolderRouter } from './routers/WorldWikiFolderRouter.js'
+import { AuditLogService } from './services/AuditLogService.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
 import { RedisService } from './services/RedisService.js'
 import { UserService } from './services/UserService.js'
@@ -119,6 +121,8 @@ app
 	.use(WorldBulkRouter.allowedMethods())
 	.use(WorldColorRouter.routes())
 	.use(WorldColorRouter.allowedMethods())
+	.use(WorldPinRouter.routes())
+	.use(WorldPinRouter.allowedMethods())
 	.use(WorldSearchRouter.routes())
 	.use(WorldSearchRouter.allowedMethods())
 	.use(WorldShareRouter.routes())
@@ -151,14 +155,20 @@ if (!isRunningInTest()) {
 	)
 
 	RedisService.initRedisConnection()
-	app.listen(3000)
+	const server = app.listen(3000)
 	console.info(`${chalk.greenBright('[Rhea]')} Listening on port ${chalk.blueBright('3000')}`)
 	HealthStatus.markRheaAsReady()
+
+	process.once('SIGTERM', () => {
+		console.info('Draining in-flight requests before shutdown...')
+		server.close(() => process.exit(0))
+	})
 
 	setInterval(() => {
 		UserService.cleanUpDeletedUsers()
 		UserService.cleanUpTestUsers()
 		CloudStorageService.cleanUpExpiredAssets()
 		CloudStorageService.cleanUpOrphanedAssets()
+		AuditLogService.cleanUpOldLogs()
 	}, 60000)
 }
