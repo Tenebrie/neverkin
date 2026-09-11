@@ -32,9 +32,9 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 
 	const { forceOpen } = useArticleCollapseControls({ id: folderId })
 
-	const types = ['folder', 'article', 'actor', 'event', 'tag'] as const
+	const types = ['article', 'actor', 'event', 'tag', 'folder'] as const
 	type Type = (typeof types)[number]
-	const [selectedType, setSelectedType] = useState<Type>('folder')
+	const [selectedType, setSelectedType] = useState<Type>('article')
 
 	const handleCreate = useCallback(async () => {
 		if (selectedType === 'folder') {
