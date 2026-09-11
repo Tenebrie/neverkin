@@ -36,7 +36,6 @@ export function HomeSection({ label, count, action, children }: Props) {
 			<Paper
 				variant="outlined"
 				sx={{
-					minHeight: 78,
 					borderRadius: 2,
 					overflow: 'hidden',
 					'& > :not(:first-of-type) > *': { borderTop: '1px solid', borderColor: 'divider' },

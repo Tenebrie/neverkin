@@ -5,21 +5,17 @@ import { pinnedWorldFirst } from '@/app/utils/sorting/pinnedWorldFirst'
 import { recentFirst } from '@/app/utils/sorting/recentFirst'
 import { sortPipe } from '@/app/utils/sorting/sortPipe'
 
-import { LoadingState } from '../../../../ui-lib/components/LoadingState'
 import { WorldListCreateNewButton } from '../../worldManagement/components/WorldList/WorldListCreateNewButton'
 import { useWorldListData } from '../../worldManagement/hooks/useWorldListData'
 import { HomeWorldListItem } from './HomeWorldListItem'
 import { HomeSection } from './section/HomeSection'
 import { HomeSectionEmptyState } from './section/HomeSectionEmptyState'
+import { HomeSectionLoadingState } from './section/HomeSectionLoadingState'
 
 export function HomeWorldList() {
 	const { isLoading } = useWorldListData()
 	if (isLoading) {
-		return (
-			<HomeSection label="Your worlds" count={0}>
-				<LoadingState />
-			</HomeSection>
-		)
+		return <HomeSectionLoadingState label="Your worlds" />
 	}
 
 	return (

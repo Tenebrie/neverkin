@@ -33,7 +33,7 @@ export function HomeHeader() {
 		<Stack direction="row" alignItems="center" gap={3} flexWrap="wrap" sx={{ mb: 4 }}>
 			<Box>
 				<Typography variant="h5" fontWeight={600}>
-					Welcome back, {user?.username.split(' ')[0]}
+					Welcome back{user ? ',' : ''} {user?.username.split(' ')[0]}
 				</Typography>
 				<Typography variant="body2" color="text.secondary" sx={{ mt: 0.5 }}>
 					{isReady ? stats : <>&nbsp;</>}

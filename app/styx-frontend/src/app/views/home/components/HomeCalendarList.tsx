@@ -3,12 +3,12 @@ import { useMemo } from 'react'
 
 import { recentFirst } from '@/app/utils/sorting/recentFirst'
 
-import { LoadingState } from '../../../../ui-lib/components/LoadingState'
 import { CalendarListCreateNewButton } from '../../calendar/list/CalendarListCreateNewButton'
 import { useCalendarListData } from '../hooks/useCalendarListData'
 import { HomeCalendarListItem } from './HomeCalendarListItem'
 import { HomeSection } from './section/HomeSection'
 import { HomeSectionEmptyState } from './section/HomeSectionEmptyState'
+import { HomeSectionLoadingState } from './section/HomeSectionLoadingState'
 
 export function HomeCalendarList() {
 	const { calendars, isLoading } = useCalendarListData()
@@ -18,11 +18,7 @@ export function HomeCalendarList() {
 	}, [calendars])
 
 	if (isLoading) {
-		return (
-			<HomeSection label="Calendars" count={0}>
-				<LoadingState />
-			</HomeSection>
-		)
+		return <HomeSectionLoadingState label="Calendars" />
 	}
 
 	if (!calendars || calendars.length === 0) {
