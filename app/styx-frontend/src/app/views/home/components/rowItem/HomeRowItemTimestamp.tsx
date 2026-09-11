@@ -6,7 +6,7 @@ type Props = {
 	updatedAt: string
 }
 
-export function HomeSectionRowTimestamp({ updatedAt }: Props) {
+export function HomeRowItemTimestamp({ updatedAt }: Props) {
 	const formattedTimeAgo = useTimeAgo(new Date(updatedAt))
 
 	return (

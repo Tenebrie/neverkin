@@ -11,7 +11,9 @@ import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
+import { useRevealInMindmap } from '@/app/views/world/views/mindmap/hooks/useRevealInMindmap'
 import { useArticleDragDrop } from '@/app/views/world/views/wiki/hooks/useArticleDragDrop'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useArticleBulkActions } from '../hooks/useArticleBulkActions'
@@ -36,12 +38,15 @@ export const ArticleListItem = memo(ArticleListItemComponent)
 function ArticleListItemComponent({ article, ...props }: Props) {
 	const { toggleOpen, collapsed } = useArticleCollapseControls(article)
 
-	const matches = useMatches()
-	const highlighted = matches.some(
-		(match) =>
-			match.routeId === '/world/$worldId/_world/wiki/_wiki/$articleId' &&
-			match.params.articleId === article.id,
-	)
+	const highlighted = useMatches({
+		select: (matches) =>
+			matches.some(
+				(match) =>
+					match.routeId === '/world/$worldId/_world/wiki/_wiki/$articleId' &&
+					match.params.articleId === article.id,
+			),
+	})
+	const isMindmapView = useCheckRouteMatch('/world/$worldId/mindmap')
 
 	return (
 		<ArticleListItemInner
@@ -49,6 +54,7 @@ function ArticleListItemComponent({ article, ...props }: Props) {
 			expanded={!collapsed}
 			toggleOpen={toggleOpen}
 			highlighted={highlighted}
+			isMindmapView={isMindmapView}
 			{...props}
 		/>
 	)
@@ -62,10 +68,12 @@ function ArticleListItemInnerComponent({
 	expanded,
 	toggleOpen,
 	highlighted,
+	isMindmapView,
 	onContextMenu,
 	isContextMenuOpen,
-}: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean }) {
+}: Props & { expanded: boolean; toggleOpen: () => void; highlighted: boolean; isMindmapView: boolean }) {
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const reveal = useRevealInMindmap(article)
 
 	const { isReadOnly } = useIsReadOnly()
 	const { isBulkSelecting, checked, onRowToggle, onShiftSelect } = useArticleBulkActions(article)
@@ -94,6 +102,8 @@ function ArticleListItemInnerComponent({
 
 			if (highlighted || article.type === 'folder') {
 				toggleOpen()
+			} else if (isMindmapView) {
+				reveal()
 			} else {
 				navigate({
 					to: '/world/$worldId/wiki/$articleId',
@@ -110,6 +120,8 @@ function ArticleListItemInnerComponent({
 			article.type,
 			article.id,
 			toggleOpen,
+			isMindmapView,
+			reveal,
 			navigate,
 		],
 	)

@@ -42,7 +42,7 @@ function ActorNodeContentStickyNoteComponent({ node, parent, onHeaderClick }: Pr
 					overflow: 'hidden',
 				}}
 			>
-				{parent.name}
+				{parent.name || <i>empty</i>}
 			</Typography>
 			<Box sx={{ position: 'absolute', top: 0, right: 0 }}>
 				<MindmapNodePort node={node} parent={parent} />

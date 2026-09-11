@@ -6,7 +6,7 @@ type Props = {
 	children: ReactNode
 }
 
-export function HomeSectionRow({ ariaLabel, children }: Props) {
+export function HomeRowItem({ ariaLabel, children }: Props) {
 	return (
 		<ButtonBase
 			component="div"

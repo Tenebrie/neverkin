@@ -11,7 +11,7 @@ import { CreatePopoverButton } from '@/ui-lib/components/PopoverButton/CreatePop
 import { CreatePopoverIconButton } from '@/ui-lib/components/PopoverButton/CreatePopoverIconButton'
 
 type Props = {
-	variant?: 'icon' | 'labelled'
+	variant?: 'icon' | 'outlined' | 'contained'
 }
 
 export function CalendarListCreateNewButton({ variant = 'icon' }: Props) {
@@ -84,7 +84,7 @@ export function CalendarListCreateNewButton({ variant = 'icon' }: Props) {
 			tooltip="New calendar"
 			label="New calendar"
 			size="small"
-			buttonVariant="outlined"
+			buttonVariant={variant}
 			disableTooltip
 		/>
 	)

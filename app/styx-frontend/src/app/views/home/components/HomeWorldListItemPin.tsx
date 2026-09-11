@@ -4,23 +4,23 @@ import PushPinOutlined from '@mui/icons-material/PushPinOutlined'
 import { WorldBrief } from '@/api/types/worldTypes'
 
 import { useToggleWorldPin } from '../../world/api/useToggleWorldPin'
-import { HomeSectionRowIconButton } from './HomeSectionRowIconButton'
+import { HomeRowItemIconButton } from './rowItem/HomeRowItemIconButton'
 
 type Props = {
 	world: WorldBrief
 }
 
-export function HomeSectionWorldRowPin({ world }: Props) {
+export function HomeWorldListItemPin({ world }: Props) {
 	const isPinned = world.userPins.length > 0
 	const [toggleWorldPin] = useToggleWorldPin()
 
 	return (
-		<HomeSectionRowIconButton
+		<HomeRowItemIconButton
 			aria-label={`${isPinned ? 'Unpin' : 'Pin'} world "${world.name}"`}
 			active={isPinned}
 			onClick={() => toggleWorldPin(world.id)}
 		>
 			{isPinned ? <PushPin fontSize="small" /> : <PushPinOutlined fontSize="small" />}
-		</HomeSectionRowIconButton>
+		</HomeRowItemIconButton>
 	)
 }
