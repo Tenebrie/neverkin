@@ -102,6 +102,44 @@ export const AuditLogService = {
 		}
 	},
 
+	withUserActivity: async <T extends { id: string }>({ users, days }: { users: T[]; days: number }) => {
+		const rows = await getPrismaClient().auditLog.findMany({
+			where: {
+				action: 'UserAuth',
+				userId: { in: users.map((user) => user.id) },
+				createdAt: { gte: new Date(Date.now() - days * DAY_MS) },
+			},
+			select: { createdAt: true, userId: true },
+		})
+
+		const activeDays = new Map<string, Set<number>>()
+		const lastActiveAt = new Map<string, Date>()
+		for (const row of rows) {
+			if (!row.userId) {
+				continue
+			}
+			activeDays.set(
+				row.userId,
+				(activeDays.get(row.userId) ?? new Set()).add(Math.floor(row.createdAt.getTime() / DAY_MS)),
+			)
+			if (row.createdAt > (lastActiveAt.get(row.userId) ?? 0)) {
+				lastActiveAt.set(row.userId, row.createdAt)
+			}
+		}
+
+		return users.map((user) => {
+			const days = activeDays.get(user.id)?.size ?? 0
+			return {
+				...user,
+				activity: {
+					activeDays: days,
+					regular: days >= REGULAR_ACTIVE_DAYS,
+					lastActiveAt: lastActiveAt.get(user.id)?.toISOString() ?? null,
+				},
+			}
+		})
+	},
+
 	append: async (
 		ctx: ParameterizedContext<DefaultState, DefaultContext & { user?: User }>,
 		params: Omit<AuditLogUncheckedCreateInput, 'requestIp' | 'id' | 'createdAt' | 'data'> & {

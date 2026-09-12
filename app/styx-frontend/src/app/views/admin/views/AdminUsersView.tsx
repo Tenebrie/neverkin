@@ -76,6 +76,7 @@ export function AdminUsersView() {
 							<TableCell width={250}>Email</TableCell>
 							<TableCell width={200}>Username</TableCell>
 							<TableCell width={82}>Level</TableCell>
+							<TableCell width={170}>Activity (30 Days)</TableCell>
 							<TableCell width={160}>Created At</TableCell>
 							<TableCell width={160}>Updated At</TableCell>
 						</TableRow>

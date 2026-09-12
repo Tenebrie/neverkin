@@ -2,6 +2,7 @@ import { UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
 import { UserSelect, UserUncheckedUpdateInput } from '../../prisma/client/models.js'
+import { AuditLogService } from './AuditLogService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
@@ -122,7 +123,7 @@ export const AdminService = {
 			},
 		})
 		return {
-			users: result.map(flattenFeatureFlags),
+			users: await AuditLogService.withUserActivity({ users: result.map(flattenFeatureFlags), days: 30 }),
 			page: actualPage,
 			size: actualSize,
 			pageCount: Math.ceil(rowCount._count.id / actualSize),

@@ -8276,6 +8276,11 @@ export interface operations {
                             bio: string;
                             level: "Guest" | "Free" | "Premium" | "Admin";
                             featureFlags: string[];
+                            activity: {
+                                activeDays: number;
+                                regular: boolean;
+                                lastActiveAt?: null | string;
+                            };
                         }[];
                         page: number;
                         size: number;
