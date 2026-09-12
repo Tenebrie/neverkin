@@ -4,18 +4,17 @@ import Login from '@mui/icons-material/Login'
 import PersonAdd from '@mui/icons-material/PersonAdd'
 import Shield from '@mui/icons-material/Shield'
 import Storage from '@mui/icons-material/Storage'
-import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
-import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { ReactNode } from 'react'
 
 import { AdminGetDashboardApiResponse, useAdminGetDashboardQuery } from '@/api/adminUsersApi'
 
 import { AdminDashboardContentCards } from '../components/AdminDashboardContentCards'
+import { AdminDashboardSection } from '../components/AdminDashboardSection'
 import { AdminDashboardStatCard, StatCardSeries } from '../components/AdminDashboardStatCard'
 import { AdminDashboardStorageCard } from '../components/AdminDashboardStorageCard'
 import { AdminDashboardUserActivityChart } from '../components/AdminDashboardUserActivityChart'
+import { dailySeries } from '../utils/dailySeries'
 
 export function AdminDashboardView() {
 	const { data, fulfilledTimeStamp } = useAdminGetDashboardQuery(undefined, {
@@ -28,13 +27,11 @@ export function AdminDashboardView() {
 
 	const { auditStats, fileSystemStats } = data
 
+	const Section = AdminDashboardSection
 	const StatCard = AdminDashboardStatCard
 	const StorageCard = AdminDashboardStorageCard
 
-	const series = (key: DailyStatKey, days = auditStats.daily.length): StatCardSeries =>
-		auditStats.daily
-			.slice(-days)
-			.map((day) => ({ label: dayFormat.format(new Date(day.day)), value: day[key] }))
+	const series = (key: DailyStatKey, days?: number) => dailySeries(auditStats.daily, key, days)
 	const hourlySeries: StatCardSeries = auditStats.hourly.map((entry) => ({
 		label: hourFormat.format(new Date(entry.hour)),
 		value: entry.dailyActiveUsers,
@@ -122,29 +119,4 @@ export function AdminDashboardView() {
 
 type DailyStatKey = Exclude<keyof AdminGetDashboardApiResponse['auditStats']['daily'][number], 'day'>
 
-const dayFormat = new Intl.DateTimeFormat(undefined, { month: 'short', day: 'numeric' })
 const hourFormat = new Intl.DateTimeFormat(undefined, { hour: '2-digit', minute: '2-digit' })
-
-function Section({ icon, title, children }: { icon: ReactNode; title: string; children: ReactNode }) {
-	const theme = useTheme()
-	return (
-		<Paper
-			variant="outlined"
-			sx={{
-				padding: 2.5,
-				borderRadius: 2,
-				background: theme.palette.background.default,
-			}}
-		>
-			<Stack direction="row" alignItems="center" gap={1} marginBottom={2}>
-				{icon}
-				<Typography variant="subtitle1" fontWeight={600}>
-					{title}
-				</Typography>
-			</Stack>
-			<Stack direction="row" gap={2} flexWrap="wrap">
-				{children}
-			</Stack>
-		</Paper>
-	)
-}

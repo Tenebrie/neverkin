@@ -1,11 +1,20 @@
 import { UserLevel } from '@prisma/client'
 import * as bcrypt from 'bcrypt'
 
-import { UserUncheckedUpdateInput } from '../../prisma/client/models.js'
+import { UserSelect, UserUncheckedUpdateInput } from '../../prisma/client/models.js'
+import { AuditLogService } from './AuditLogService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AdminService = {
-	listHourlyActivityStats: async ({ hours, excludeUserId }: { hours: number; excludeUserId: string }) => {
+	listHourlyActivityStats: async ({
+		hours,
+		userId,
+		excludeUserId,
+	}: {
+		hours: number
+		userId?: string
+		excludeUserId?: string
+	}) => {
 		const now = new Date()
 		const start = new Date(now)
 		start.setUTCMinutes(0, 0, 0)
@@ -14,7 +23,8 @@ export const AdminService = {
 		const rows = await getPrismaClient().auditLog.findMany({
 			where: {
 				createdAt: { gte: start },
-				OR: [{ userId: null }, { userId: { not: excludeUserId } }],
+				userId,
+				...(excludeUserId ? { OR: [{ userId: null }, { userId: { not: excludeUserId } }] } : {}),
 			},
 			select: { createdAt: true, action: true, userId: true },
 		})
@@ -34,7 +44,7 @@ export const AdminService = {
 		return buckets.map(({ hour, users, events }) => ({ hour, activeUsers: users.size, events }))
 	},
 
-	listContentStats: async ({ days }: { days: number }) => {
+	listContentStats: async ({ days, ownerId }: { days: number; ownerId?: string }) => {
 		const start = new Date()
 		start.setUTCHours(0, 0, 0, 0)
 		start.setUTCDate(start.getUTCDate() - (days - 1))
@@ -42,10 +52,7 @@ export const AdminService = {
 
 		const entries = await Promise.all(
 			Object.entries(contentModels()).map(async ([key, model]) => {
-				const [total, recent] = await Promise.all([
-					model.count(),
-					model.findMany({ where: { createdAt: { gte: start } }, select: { createdAt: true } }),
-				])
+				const [total, recent] = await Promise.all([model.total(ownerId), model.createdSince(start, ownerId)])
 				const created = Array.from({ length: days }, () => 0)
 				for (const row of recent) {
 					created[Math.floor((row.createdAt.getTime() - start.getTime()) / dayMs)] += 1
@@ -60,24 +67,23 @@ export const AdminService = {
 		}
 	},
 
-	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
+	listUsers: async ({
+		page,
+		size,
+		query,
+		sortField,
+		sortDirection,
+	}: {
+		page?: number
+		size?: number
+		query?: string
+		sortField?: 'email' | 'username' | 'level' | 'createdAt' | 'updatedAt'
+		sortDirection?: 'asc' | 'desc'
+	}) => {
 		const actualPage = page ?? 0
 		const actualSize = Math.min(size ?? 20, 100)
 		const result = await getPrismaClient().user.findMany({
-			select: {
-				id: true,
-				email: true,
-				level: true,
-				username: true,
-				bio: true,
-				createdAt: true,
-				updatedAt: true,
-				featureFlags: {
-					select: {
-						flag: true,
-					},
-				},
-			},
+			select: adminUserSelect,
 			where: {
 				...(query
 					? {
@@ -99,7 +105,9 @@ export const AdminService = {
 						}
 					: {}),
 			},
-			orderBy: [{ level: 'desc' }, { updatedAt: 'desc' }],
+			orderBy: sortField
+				? [{ [sortField]: sortDirection ?? 'asc' }, { id: 'asc' }]
+				: [{ level: 'desc' }, { updatedAt: 'desc' }],
 			skip: actualPage * actualSize,
 			take: actualSize,
 		})
@@ -129,14 +137,19 @@ export const AdminService = {
 			},
 		})
 		return {
-			users: result.map((user) => ({
-				...user,
-				featureFlags: user.featureFlags.map((entry) => entry.flag),
-			})),
+			users: await AuditLogService.withUserActivity({ users: result.map(flattenFeatureFlags), days: 30 }),
 			page: actualPage,
 			size: actualSize,
 			pageCount: Math.ceil(rowCount._count.id / actualSize),
 		}
+	},
+
+	getUser: async (userId: string) => {
+		const user = await getPrismaClient().user.findUnique({
+			where: { id: userId },
+			select: adminUserSelect,
+		})
+		return user ? flattenFeatureFlags(user) : null
 	},
 
 	getUserByEmailExact: async (email: string) => {
@@ -204,32 +217,79 @@ export const AdminService = {
 	},
 }
 
-type CreatedAtModel = {
-	count: () => Promise<number>
-	findMany: (args: {
-		where: { createdAt: { gte: Date } }
-		select: { createdAt: true }
-	}) => Promise<{ createdAt: Date }[]>
+const adminUserSelect = {
+	id: true,
+	email: true,
+	level: true,
+	username: true,
+	bio: true,
+	createdAt: true,
+	updatedAt: true,
+	featureFlags: {
+		select: {
+			flag: true,
+		},
+	},
+} satisfies UserSelect
+
+const flattenFeatureFlags = <T extends { featureFlags: { flag: string }[] }>(user: T) => ({
+	...user,
+	featureFlags: user.featureFlags.map((entry) => entry.flag),
+})
+
+type CreatedAtModel<W> = {
+	count: (args: { where: W }) => Promise<number>
+	findMany: (args: { where: W; select: { createdAt: true } }) => Promise<{ createdAt: Date }[]>
 }
 
-const asCreatedAtModels = <K extends string>(models: Record<K, CreatedAtModel>) => models
+const contentModel = <W>(model: CreatedAtModel<W>, ownedBy: (ownerId?: string) => W) => ({
+	total: (ownerId?: string) => model.count({ where: ownedBy(ownerId) }),
+	createdSince: (start: Date, ownerId?: string) =>
+		model.findMany({
+			where: { ...ownedBy(ownerId), createdAt: { gte: start } },
+			select: { createdAt: true },
+		}),
+})
+
+const ownedBy =
+	<W>(build: (ownerId: string) => W) =>
+	(ownerId?: string): Partial<W> =>
+		ownerId ? build(ownerId) : {}
 
 const contentModels = () => {
 	const prisma = getPrismaClient()
-	return asCreatedAtModels({
-		worlds: prisma.world,
-		actors: prisma.actor,
-		events: prisma.worldEvent,
-		eventTracks: prisma.worldEventTrack,
-		articles: prisma.wikiArticle,
-		folders: prisma.wikiFolder,
-		tags: prisma.tag,
-		nodes: prisma.mindmapNode,
-		links: prisma.mindmapLink,
-		calendars: prisma.calendar,
-		contentPages: prisma.contentPage,
-		assets: prisma.asset,
-	})
+	const ownedDirectly = ownedBy((ownerId) => ({ ownerId }))
+	const inOwnedWorld = ownedBy((ownerId) => ({ world: { ownerId } }))
+	return {
+		worlds: contentModel(prisma.world, ownedDirectly),
+		actors: contentModel(prisma.actor, inOwnedWorld),
+		events: contentModel(prisma.worldEvent, inOwnedWorld),
+		eventTracks: contentModel(prisma.worldEventTrack, inOwnedWorld),
+		articles: contentModel(prisma.wikiArticle, inOwnedWorld),
+		folders: contentModel(prisma.wikiFolder, inOwnedWorld),
+		tags: contentModel(prisma.tag, inOwnedWorld),
+		nodes: contentModel(prisma.mindmapNode, inOwnedWorld),
+		links: contentModel(
+			prisma.mindmapLink,
+			ownedBy((ownerId) => ({ sourceNode: { world: { ownerId } } })),
+		),
+		calendars: contentModel(
+			prisma.calendar,
+			ownedBy((ownerId) => ({ OR: [{ ownerId }, { world: { ownerId } }] })),
+		),
+		contentPages: contentModel(
+			prisma.contentPage,
+			ownedBy((ownerId) => ({
+				OR: [
+					{ parentActor: { world: { ownerId } } },
+					{ parentEvent: { world: { ownerId } } },
+					{ parentArticle: { world: { ownerId } } },
+					{ parentNode: { world: { ownerId } } },
+				],
+			})),
+		),
+		assets: contentModel(prisma.asset, ownedDirectly),
+	}
 }
 
 type ContentEntity = keyof ReturnType<typeof contentModels>

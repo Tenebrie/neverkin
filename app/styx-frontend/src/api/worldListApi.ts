@@ -42,102 +42,102 @@ export type ToggleWorldPinApiArg = {
 }
 export type GetWorldsApiResponse = /** status 200  */ {
 	ownedWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
-			name: string
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			description: string
+			name: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
-		}[]
-		collaborators: {
-			userId: string
-			worldId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		userPins: {
+			worldId: string
 			createdAt: string
 			userId: string
-			worldId: string
 			rank: number
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	contributableWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
-			name: string
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			description: string
+			name: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
-		}[]
-		collaborators: {
-			userId: string
-			worldId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		userPins: {
+			worldId: string
 			createdAt: string
 			userId: string
-			worldId: string
 			rank: number
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
 		accessMode: 'Private' | 'PublicRead' | 'PublicEdit'
 	}[]
 	visibleWorlds: {
+		collaborators: {
+			worldId: string
+			userId: string
+			access: 'ReadOnly' | 'Editing'
+		}[]
 		calendars: {
-			name: string
+			description: string
+			worldId?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			description: string
+			name: string
 			ownerId?: null | string
 			position: number
 			originTime: string
 			dateFormat?: null | string
-			worldId?: null | string
-		}[]
-		collaborators: {
-			userId: string
-			worldId: string
-			access: 'ReadOnly' | 'Editing'
 		}[]
 		userPins: {
+			worldId: string
 			createdAt: string
 			userId: string
-			worldId: string
 			rank: number
 		}[]
-		name: string
+		description: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
+		name: string
 		calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 		timeOrigin: string
 		ownerId: string
@@ -146,8 +146,8 @@ export type GetWorldsApiResponse = /** status 200  */ {
 }
 export type GetWorldsApiArg = void
 export type CreateWorldApiResponse = /** status 200  */ {
-	name: string
 	id: string
+	name: string
 }
 export type CreateWorldApiArg = {
 	body: {
@@ -158,11 +158,11 @@ export type CreateWorldApiArg = {
 	}
 }
 export type DeleteWorldApiResponse = /** status 200  */ {
-	name: string
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	description: string
+	name: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string

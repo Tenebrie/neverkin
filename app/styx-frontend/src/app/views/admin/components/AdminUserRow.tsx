@@ -4,6 +4,7 @@ import LoginIcon from '@mui/icons-material/Login'
 import MoreVertIcon from '@mui/icons-material/MoreVert'
 import PasswordIcon from '@mui/icons-material/Password'
 import Badge from '@mui/material/Badge'
+import Chip from '@mui/material/Chip'
 import IconButton from '@mui/material/IconButton'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -21,6 +22,7 @@ import { Info } from '@/ui-lib/components/Info/Info'
 
 import { useAdminImpersonateUser } from '../api/useAdminImpersonateUser'
 import { AdminUserEmail } from './AdminUserEmail'
+import { AdminUserTimestamp } from './AdminUserTimestamp'
 import { UserAccessLevelDropdown } from './UserAccessLevelDropdown'
 
 type Props = {
@@ -44,8 +46,27 @@ export function AdminUserRow({ user, isLoggedInUser, formatDate }: Props) {
 			<TableCell>
 				<UserAccessLevelDropdown user={user} />
 			</TableCell>
-			<TableCell>{formatDate(user.createdAt)}</TableCell>
-			<TableCell>{formatDate(user.updatedAt)}</TableCell>
+			<TableCell>
+				<Stack direction="row" alignItems="center" gap={1}>
+					<Tooltip
+						title={
+							user.activity.lastActiveAt
+								? `Last seen ${formatDate(user.activity.lastActiveAt)}`
+								: 'No activity in the last 30 days'
+						}
+						disableInteractive
+					>
+						<span>{user.activity.activeDays} days</span>
+					</Tooltip>
+					{user.activity.regular && <Chip label="Regular" size="small" color="primary" variant="outlined" />}
+				</Stack>
+			</TableCell>
+			<TableCell>
+				<AdminUserTimestamp date={user.createdAt} formatDate={formatDate} />
+			</TableCell>
+			<TableCell>
+				<AdminUserTimestamp date={user.updatedAt} formatDate={formatDate} />
+			</TableCell>
 		</TableRow>
 	)
 }

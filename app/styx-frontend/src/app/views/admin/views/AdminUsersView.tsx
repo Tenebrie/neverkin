@@ -4,10 +4,11 @@ import TableCell from '@mui/material/TableCell'
 import TableContainer from '@mui/material/TableContainer'
 import TableHead from '@mui/material/TableHead'
 import TableRow from '@mui/material/TableRow'
+import TableSortLabel from '@mui/material/TableSortLabel'
 import { useCallback, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
+import { AdminGetUsersApiArg, useAdminGetUsersQuery } from '@/api/adminUsersApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
 
 import { Pagination } from '../../../../ui-lib/components/Pagination/Pagination'
@@ -19,15 +20,38 @@ import { SetPasswordModal } from '../modals/SetPasswordModal'
 
 const pageSize = 18
 
+type SortField = NonNullable<AdminGetUsersApiArg['sortField']>
+type Sort = { field: SortField; direction: 'asc' | 'desc' }
+
+const columns: { label: string; width: number; sortField?: SortField }[] = [
+	{ label: 'Email', width: 250, sortField: 'email' },
+	{ label: 'Username', width: 200, sortField: 'username' },
+	{ label: 'Level', width: 82, sortField: 'level' },
+	{ label: 'Activity (30 Days)', width: 170 },
+	{ label: 'Created at', width: 160, sortField: 'createdAt' },
+	{ label: 'Updated at', width: 160, sortField: 'updatedAt' },
+]
+
 export function AdminUsersView() {
 	const [page, setPage] = useState(0)
 	const [query, setQuery] = useState('')
+	const [sort, setSort] = useState<Sort | null>(null)
 
 	const { data } = useAdminGetUsersQuery({
 		page,
 		size: pageSize,
 		query,
+		sortField: sort?.field,
+		sortDirection: sort?.direction,
 	})
+
+	const toggleSort = useCallback((field: SortField) => {
+		setSort((current) => ({
+			field,
+			direction: current && current.field === field && current.direction === 'asc' ? 'desc' : 'asc',
+		}))
+		setPage(0)
+	}, [])
 
 	const { user: loggedInUser } = useSelector(getAuthState)
 
@@ -73,11 +97,24 @@ export function AdminUsersView() {
 				<TableContainer component="table">
 					<TableHead>
 						<TableRow>
-							<TableCell width={250}>Email</TableCell>
-							<TableCell width={200}>Username</TableCell>
-							<TableCell width={82}>Level</TableCell>
-							<TableCell width={160}>Created At</TableCell>
-							<TableCell width={160}>Updated At</TableCell>
+							{columns.map(({ label, width, sortField }) => {
+								const direction = sort && sort.field === sortField ? sort.direction : undefined
+								return (
+									<TableCell key={label} width={width} sortDirection={direction ?? false}>
+										{sortField ? (
+											<TableSortLabel
+												active={!!direction}
+												direction={direction ?? 'asc'}
+												onClick={() => toggleSort(sortField)}
+											>
+												{label}
+											</TableSortLabel>
+										) : (
+											label
+										)}
+									</TableCell>
+								)
+							})}
 						</TableRow>
 					</TableHead>
 					<TableBody>
