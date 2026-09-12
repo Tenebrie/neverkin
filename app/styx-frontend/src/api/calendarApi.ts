@@ -135,9 +135,9 @@ export type CreateCalendarPresentationApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		position: number
 		calendarId: string
 		presentationId: string
-		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
@@ -166,9 +166,9 @@ export type UpdateCalendarPresentationApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		position: number
 		calendarId: string
 		presentationId: string
-		position: number
 		formatString: string
 		subdivision: number
 		labeledIndices: number[]
@@ -215,9 +215,9 @@ export type CreateCalendarPresentationUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	position: number
 	calendarId: string
 	presentationId: string
-	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -240,9 +240,9 @@ export type UpdateCalendarPresentationUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	position: number
 	calendarId: string
 	presentationId: string
-	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -266,9 +266,9 @@ export type DeleteCalendarPresentationUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	position: number
 	calendarId: string
 	presentationId: string
-	position: number
 	formatString: string
 	subdivision: number
 	labeledIndices: number[]
@@ -319,8 +319,8 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			calendarId: string
 			position: number
+			calendarId: string
 			label?: null | string
 			shortLabel?: null | string
 			repeats: number
@@ -331,8 +331,8 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			id: string
 			createdAt: string
 			updatedAt: string
-			calendarId: string
 			position: number
+			calendarId: string
 			label?: null | string
 			shortLabel?: null | string
 			repeats: number
@@ -343,8 +343,8 @@ export type GetCalendarApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
-		calendarId: string
 		position: number
+		calendarId: string
 		displayName?: null | string
 		displayNameShort?: null | string
 		displayNamePlural?: null | string
@@ -360,9 +360,9 @@ export type GetCalendarApiResponse = /** status 200  */ {
 			createdAt: string
 			updatedAt: string
 			name: string
+			position: number
 			calendarId: string
 			presentationId: string
-			position: number
 			formatString: string
 			subdivision: number
 			labeledIndices: number[]
@@ -433,8 +433,8 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 	units: {
 		children: {
 			id: string
-			calendarId: string
 			position: number
+			calendarId: string
 			label?: null | string
 			shortLabel?: null | string
 			repeats: number
@@ -443,8 +443,8 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		}[]
 		parents: {
 			id: string
-			calendarId: string
 			position: number
+			calendarId: string
 			label?: null | string
 			shortLabel?: null | string
 			repeats: number
@@ -463,23 +463,6 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		duration: string
 		treeDepth: number
 	}[]
-	presentations: {
-		units: {
-			id: string
-			name: string
-			calendarId: string
-			position: number
-			formatString: string
-			subdivision: number
-			labeledIndices: number[]
-			unitId: string
-		}[]
-		id: string
-		name: string
-		compression: number
-		scaleFactor: number
-		baselineUnitId?: null | string
-	}[]
 	seasons: {
 		intervals: {
 			id: string
@@ -494,6 +477,23 @@ export type GetCalendarPreviewApiResponse = /** status 200  */ {
 		name: string
 		position: number
 		formatShorthand?: null | string
+	}[]
+	presentations: {
+		units: {
+			id: string
+			name: string
+			position: number
+			calendarId: string
+			formatString: string
+			subdivision: number
+			labeledIndices: number[]
+			unitId: string
+		}[]
+		id: string
+		name: string
+		compression: number
+		scaleFactor: number
+		baselineUnitId?: null | string
 	}[]
 	description: string
 	id: string
@@ -512,8 +512,8 @@ export type CreateCalendarUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	position: number
+	calendarId: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -540,8 +540,8 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		calendarId: string
 		position: number
+		calendarId: string
 		label?: null | string
 		shortLabel?: null | string
 		repeats: number
@@ -552,8 +552,8 @@ export type UpdateCalendarUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	position: number
+	calendarId: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -589,8 +589,8 @@ export type DeleteCalendarUnitApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
-	calendarId: string
 	position: number
+	calendarId: string
 	displayName?: null | string
 	displayNameShort?: null | string
 	displayNamePlural?: null | string
@@ -607,16 +607,16 @@ export type DeleteCalendarUnitApiArg = {
 	unitId: string
 }
 export type ListWorldCalendarsApiResponse = /** status 200  */ {
-	name: string
+	description: string
+	worldId?: null | string
 	id: string
 	createdAt: string
 	updatedAt: string
-	description: string
+	name: string
 	ownerId?: null | string
 	position: number
 	originTime: string
 	dateFormat?: null | string
-	worldId?: null | string
 }[]
 export type ListWorldCalendarsApiArg = {
 	/** Any string value */

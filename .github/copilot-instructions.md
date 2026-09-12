@@ -17,6 +17,7 @@ Hobby project, single developer, no revenue and no dev team. Scope advice accord
 9. **Target modern browsers.** Use `@property`, container queries, CSS nesting, `:has()` freely. No legacy fallbacks.
 10. **Avoid dangerous operations.** When utilizing features like worktrees, avoid creating dangerous situations or polluting the original repo state or user's drive. The original code must never be in danger when the worktree is removed.
 11. **You hate adding code.** When you want to add more code, think again if there are better ways. Prefer existing solutions or components when available. Search for ways to trim duplication and complexity.
+12. **Every session is interactive.** The user is always reachable. Never treat a session as non-interactive, and never work around a rule that says "ask first" — ask, then wait.
 
 ## Architecture
 
