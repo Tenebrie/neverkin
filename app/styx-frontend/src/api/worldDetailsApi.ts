@@ -76,8 +76,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				parentUnitId: string
 				childUnitId: string
 			}[]
-			name: string
 			id: string
+			name: string
 			position: number
 			displayName: string
 			displayNameShort: string
@@ -98,15 +98,15 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				rightIndex: number
 				seasonId: string
 			}[]
-			name: string
 			id: string
+			name: string
 			position: number
 			formatShorthand?: null | string
 		}[]
 		presentations: {
 			units: {
-				name: string
 				id: string
+				name: string
 				position: number
 				calendarId: string
 				formatString: string
@@ -114,108 +114,108 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 				labeledIndices: number[]
 				unitId: string
 			}[]
-			name: string
 			id: string
+			name: string
 			compression: number
 			scaleFactor: number
 			baselineUnitId?: null | string
 		}[]
-		name: string
+		description: string
 		id: string
 		updatedAt: string
-		description: string
+		name: string
 		position: number
 		originTime: string
 		dateFormat?: null | string
 	}[]
 	actors: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
-		}[]
-		pages: {
-			name: string
-			id: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		name: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		worldId: string
-		content: string
-		contentRich: string
+		name: string
 		title: string
 		icon: string
 		color: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
 	events: {
+		pages: {
+			id: string
+			name: string
+		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
-		}[]
-		pages: {
-			name: string
-			id: string
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		deltaStates: {
-			name?: null | string
+			description?: null | string
 			id: string
 			createdAt: string
 			updatedAt: string
-			description?: null | string
+			name?: null | string
 			timestamp: string
 			descriptionRich?: null | string
 			worldEventId: string
 		}[]
-		name: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		worldId: string
-		content: string
-		contentRich: string
-		timestamp: string
+		name: string
 		icon: string
 		color: string
+		content: string
+		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
+		timestamp: string
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Tag' | 'Event' | 'Article' | 'Node'
+			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		name: string
+		description: string
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
-		description: string
-		worldId: string
+		name: string
 		color: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
 	}[]
-	name: string
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	description: string
+	name: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string
@@ -239,11 +239,11 @@ export type GetCommonWorldEventIconsApiArg = {
 	worldId: string
 }
 export type GetWorldBriefApiResponse = /** status 200  */ {
-	name: string
+	description: string
 	id: string
 	createdAt: string
 	updatedAt: string
-	description: string
+	name: string
 	calendar?: null | 'COUNTUP' | 'EARTH' | 'PF2E' | 'RIMWORLD' | 'EXETHER'
 	timeOrigin: string
 	ownerId: string

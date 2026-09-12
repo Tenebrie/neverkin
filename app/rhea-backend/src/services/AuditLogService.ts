@@ -5,7 +5,7 @@ import { AuditLogUncheckedCreateInput, AuditLogWhereInput } from '../../prisma/c
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
 export const AuditLogService = {
-	getStats: async ({ days }: { days: number }) => {
+	getStats: async ({ days, userId }: { days: number; userId?: string }) => {
 		const now = new Date()
 		const today = new Date(now)
 		today.setUTCHours(0, 0, 0, 0)
@@ -13,7 +13,7 @@ export const AuditLogService = {
 		const start = new Date(today.getTime() - (historyDays - 1) * DAY_MS)
 
 		const rows = await getPrismaClient().auditLog.findMany({
-			where: { createdAt: { gte: start } },
+			where: { createdAt: { gte: start }, userId },
 			select: { createdAt: true, action: true, userId: true },
 		})
 
@@ -21,6 +21,7 @@ export const AuditLogService = {
 		const counts = Array.from({ length: historyDays }, () => emptyDailyCounts())
 		const activeDays = new Map<string, Set<number>>()
 		const loginUsers = new Set<string>()
+		let lastActiveAt: Date | null = null
 
 		for (const row of rows) {
 			const day = counts[dayOf(row.createdAt)]
@@ -31,16 +32,20 @@ export const AuditLogService = {
 			}
 			if (row.action === 'UserAuth' && row.userId) {
 				activeDays.set(row.userId, (activeDays.get(row.userId) ?? new Set()).add(dayOf(row.createdAt)))
+				if (!lastActiveAt || row.createdAt > lastActiveAt) {
+					lastActiveAt = row.createdAt
+				}
 			}
 			if ((row.action === 'UserLoginWithPassword' || row.action === 'UserLoginWithGoogle') && row.userId) {
 				loginUsers.add(row.userId)
 			}
 		}
 
+		const activeDaysWithin = (from: number, to: number) =>
+			[...activeDays.values()].map((set) => [...set].filter((day) => day >= from && day <= to).length)
+
 		const usersActiveWithin = (from: number, to: number, minDays = 1) =>
-			[...activeDays.values()].filter(
-				(set) => [...set].filter((day) => day >= from && day <= to).length >= minDays,
-			).length
+			activeDaysWithin(from, to).filter((count) => count >= minDays).length
 
 		const usersActiveBetween = (from: Date, to: Date) =>
 			new Set(
@@ -90,6 +95,8 @@ export const AuditLogService = {
 			weeklyActiveUsers: usersActiveSince(new Date(now.getTime() - 7 * DAY_MS)),
 			monthlyActiveUsers: usersActiveSince(new Date(now.getTime() - days * DAY_MS)),
 			regulars: usersActiveWithin(lastDay - days + 1, lastDay, REGULAR_ACTIVE_DAYS),
+			activeUserDays: activeDaysWithin(lastDay - days + 1, lastDay).reduce((sum, count) => sum + count, 0),
+			lastActiveAt: lastActiveAt?.toISOString() ?? null,
 			hourly,
 			daily,
 		}

@@ -40,17 +40,9 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['adminUsers'],
 			}),
-			adminImpersonateUser: build.mutation<AdminImpersonateUserApiResponse, AdminImpersonateUserApiArg>({
-				query: (queryArg) => ({ url: `/api/admin/user/${queryArg.userId}/impersonate`, method: 'POST' }),
-				invalidatesTags: ['adminUsers'],
-			}),
-			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
-				query: (queryArg) => ({
-					url: `/api/admin/users/${queryArg.userId}/level`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['adminUsers'],
+			adminGetUser: build.query<AdminGetUserApiResponse, AdminGetUserApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}` }),
+				providesTags: ['adminUsers'],
 			}),
 			adminDeleteUser: build.mutation<AdminDeleteUserApiResponse, AdminDeleteUserApiArg>({
 				query: (queryArg) => ({ url: `/api/admin/users/${queryArg.userId}`, method: 'DELETE' }),
@@ -60,6 +52,18 @@ const injectedRtkApi = api
 				query: (queryArg) => ({
 					url: `/api/admin/users/${queryArg.userId}`,
 					method: 'PATCH',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['adminUsers'],
+			}),
+			adminImpersonateUser: build.mutation<AdminImpersonateUserApiResponse, AdminImpersonateUserApiArg>({
+				query: (queryArg) => ({ url: `/api/admin/user/${queryArg.userId}/impersonate`, method: 'POST' }),
+				invalidatesTags: ['adminUsers'],
+			}),
+			adminSetUserLevel: build.mutation<AdminSetUserLevelApiResponse, AdminSetUserLevelApiArg>({
+				query: (queryArg) => ({
+					url: `/api/admin/users/${queryArg.userId}/level`,
+					method: 'POST',
 					body: queryArg.body,
 				}),
 				invalidatesTags: ['adminUsers'],
@@ -100,6 +104,8 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 		weeklyActiveUsers: number
 		monthlyActiveUsers: number
 		regulars: number
+		activeUserDays: number
+		lastActiveAt?: null | string
 		hourly: {
 			hour: string
 			dailyActiveUsers: number
@@ -133,15 +139,23 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			nodes: {
+			worlds: {
 				total: number
 				created: number[]
 			}
-			actors: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			assets: {
 				total: number
 				created: number[]
 			}
 			events: {
+				total: number
+				created: number[]
+			}
+			actors: {
 				total: number
 				created: number[]
 			}
@@ -157,23 +171,15 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			worlds: {
-				total: number
-				created: number[]
-			}
-			assets: {
-				total: number
-				created: number[]
-			}
-			eventTracks: {
+			nodes: {
 				total: number
 				created: number[]
 			}
 			links: {
+				total: number
+				created: number[]
+			}
+			eventTracks: {
 				total: number
 				created: number[]
 			}
@@ -244,7 +250,6 @@ export type AdminGetAuditLogsApiArg = {
 }
 export type AdminGetUsersApiResponse = /** status 200  */ {
 	users: {
-		featureFlags: string[]
 		id: string
 		createdAt: string
 		updatedAt: string
@@ -252,6 +257,7 @@ export type AdminGetUsersApiResponse = /** status 200  */ {
 		username: string
 		bio: string
 		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+		featureFlags: string[]
 	}[]
 	page: number
 	size: number
@@ -265,44 +271,117 @@ export type AdminGetUsersApiArg = {
 	/** Any string value */
 	query?: string
 }
-export type AdminImpersonateUserApiResponse = /** status 200  */ {
+export type AdminGetUserApiResponse = /** status 200  */ {
 	user: {
 		id: string
 		createdAt: string
 		updatedAt: string
-		deletedAt?: null | string
-		deletionScheduledAt?: null | string
 		email: string
 		username: string
-		password: string
 		bio: string
 		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-		avatarId?: null | string
+		featureFlags: string[]
+	}
+	hourlyActivity: {
+		hour: string
+		activeUsers: number
+		events: number
+	}[]
+	auditStats: {
+		uniqueUserLogins: number
+		dailyActiveUsers: number
+		weeklyActiveUsers: number
+		monthlyActiveUsers: number
+		regulars: number
+		activeUserDays: number
+		lastActiveAt?: null | string
+		hourly: {
+			hour: string
+			dailyActiveUsers: number
+		}[]
+		daily: {
+			dailyActiveUsers: number
+			weeklyActiveUsers: number
+			monthlyActiveUsers: number
+			regulars: number
+			userAuthEvents: number
+			guestAccountsCreated: number
+			userAccountsCreated: number
+			passwordLogins: number
+			googleLogins: number
+			failedLogins: number
+			accountsDeleted: number
+			adminImpersonations: number
+			totalEvents: number
+			day: string
+		}[]
+		userAuthEvents: number
+		guestAccountsCreated: number
+		userAccountsCreated: number
+		passwordLogins: number
+		googleLogins: number
+		failedLogins: number
+		accountsDeleted: number
+		adminImpersonations: number
+		totalEvents: number
+	}
+	contentStats: {
+		days: string[]
+		entities: {
+			worlds: {
+				total: number
+				created: number[]
+			}
+			calendars: {
+				total: number
+				created: number[]
+			}
+			assets: {
+				total: number
+				created: number[]
+			}
+			events: {
+				total: number
+				created: number[]
+			}
+			actors: {
+				total: number
+				created: number[]
+			}
+			articles: {
+				total: number
+				created: number[]
+			}
+			folders: {
+				total: number
+				created: number[]
+			}
+			tags: {
+				total: number
+				created: number[]
+			}
+			nodes: {
+				total: number
+				created: number[]
+			}
+			links: {
+				total: number
+				created: number[]
+			}
+			eventTracks: {
+				total: number
+				created: number[]
+			}
+			contentPages: {
+				total: number
+				created: number[]
+			}
+		}
 	}
 }
-export type AdminImpersonateUserApiArg = {
+export type AdminGetUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
-}
-export type AdminSetUserLevelApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	deletedAt?: null | string
-	deletionScheduledAt?: null | string
-	email: string
-	username: string
-	password: string
-	bio: string
-	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	avatarId?: null | string
-}
-export type AdminSetUserLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	body: {
-		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	}
 }
 export type AdminDeleteUserApiResponse = /** status 200  */ {
 	id: string
@@ -343,6 +422,45 @@ export type AdminUpdateUserApiArg = {
 		bio?: string
 	}
 }
+export type AdminImpersonateUserApiResponse = /** status 200  */ {
+	user: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		deletedAt?: null | string
+		deletionScheduledAt?: null | string
+		email: string
+		username: string
+		password: string
+		bio: string
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+		avatarId?: null | string
+	}
+}
+export type AdminImpersonateUserApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+}
+export type AdminSetUserLevelApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	deletedAt?: null | string
+	deletionScheduledAt?: null | string
+	email: string
+	username: string
+	password: string
+	bio: string
+	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	avatarId?: null | string
+}
+export type AdminSetUserLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	body: {
+		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
+	}
+}
 export type AdminSetUserPasswordApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
@@ -373,9 +491,11 @@ export const {
 	useLazyAdminGetAuditLogsQuery,
 	useAdminGetUsersQuery,
 	useLazyAdminGetUsersQuery,
-	useAdminImpersonateUserMutation,
-	useAdminSetUserLevelMutation,
+	useAdminGetUserQuery,
+	useLazyAdminGetUserQuery,
 	useAdminDeleteUserMutation,
 	useAdminUpdateUserMutation,
+	useAdminImpersonateUserMutation,
+	useAdminSetUserLevelMutation,
 	useAdminSetUserPasswordMutation,
 } = injectedRtkApi
