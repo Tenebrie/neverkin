@@ -8252,6 +8252,8 @@ export interface operations {
                 size?: number;
                 /** @description Any string value */
                 query?: string;
+                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
+                sortDirection?: "asc" | "desc";
             };
             header?: never;
             path?: never;

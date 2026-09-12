@@ -67,7 +67,19 @@ export const AdminService = {
 		}
 	},
 
-	listUsers: async ({ page, size, query }: { page?: number; size?: number; query?: string }) => {
+	listUsers: async ({
+		page,
+		size,
+		query,
+		sortField,
+		sortDirection,
+	}: {
+		page?: number
+		size?: number
+		query?: string
+		sortField?: 'email' | 'username' | 'level' | 'createdAt' | 'updatedAt'
+		sortDirection?: 'asc' | 'desc'
+	}) => {
 		const actualPage = page ?? 0
 		const actualSize = Math.min(size ?? 20, 100)
 		const result = await getPrismaClient().user.findMany({
@@ -93,7 +105,9 @@ export const AdminService = {
 						}
 					: {}),
 			},
-			orderBy: [{ level: 'desc' }, { updatedAt: 'desc' }],
+			orderBy: sortField
+				? [{ [sortField]: sortDirection ?? 'asc' }, { id: 'asc' }]
+				: [{ level: 'desc' }, { updatedAt: 'desc' }],
 			skip: actualPage * actualSize,
 			take: actualSize,
 		})

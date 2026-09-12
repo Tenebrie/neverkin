@@ -22,6 +22,7 @@ import { Info } from '@/ui-lib/components/Info/Info'
 
 import { useAdminImpersonateUser } from '../api/useAdminImpersonateUser'
 import { AdminUserEmail } from './AdminUserEmail'
+import { AdminUserTimestamp } from './AdminUserTimestamp'
 import { UserAccessLevelDropdown } from './UserAccessLevelDropdown'
 
 type Props = {
@@ -60,8 +61,12 @@ export function AdminUserRow({ user, isLoggedInUser, formatDate }: Props) {
 					{user.activity.regular && <Chip label="Regular" size="small" color="primary" variant="outlined" />}
 				</Stack>
 			</TableCell>
-			<TableCell>{formatDate(user.createdAt)}</TableCell>
-			<TableCell>{formatDate(user.updatedAt)}</TableCell>
+			<TableCell>
+				<AdminUserTimestamp date={user.createdAt} formatDate={formatDate} />
+			</TableCell>
+			<TableCell>
+				<AdminUserTimestamp date={user.updatedAt} formatDate={formatDate} />
+			</TableCell>
 		</TableRow>
 	)
 }

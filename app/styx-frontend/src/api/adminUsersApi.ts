@@ -36,6 +36,8 @@ const injectedRtkApi = api
 						page: queryArg.page,
 						size: queryArg.size,
 						query: queryArg.query,
+						sortField: queryArg.sortField,
+						sortDirection: queryArg.sortDirection,
 					},
 				}),
 				providesTags: ['adminUsers'],
@@ -275,6 +277,8 @@ export type AdminGetUsersApiArg = {
 	size?: number
 	/** Any string value */
 	query?: string
+	sortField?: 'createdAt' | 'updatedAt' | 'email' | 'username' | 'level'
+	sortDirection?: 'asc' | 'desc'
 }
 export type AdminGetUserApiResponse = /** status 200  */ {
 	user: {

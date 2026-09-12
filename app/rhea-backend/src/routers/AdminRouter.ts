@@ -20,6 +20,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { adminUsersTag } from './utils/tags.js'
 import { UserLevelValidator } from './validators/UserLevelValidator.js'
@@ -80,16 +81,20 @@ router.get('/api/admin/users', async (ctx) => {
 		tags: [adminUsersTag],
 	})
 
-	const { page, size, query } = useQueryParams(ctx, {
+	const { page, size, query, sortField, sortDirection } = useQueryParams(ctx, {
 		page: OptionalParam(NumberValidator),
 		size: OptionalParam(NumberValidator),
 		query: OptionalParam(StringValidator),
+		sortField: z.enum(['email', 'username', 'level', 'createdAt', 'updatedAt']).optional(),
+		sortDirection: z.enum(['asc', 'desc']).optional(),
 	})
 
 	const users = await AdminService.listUsers({
 		page,
 		size,
 		query,
+		sortField,
+		sortDirection,
 	})
 
 	return users
