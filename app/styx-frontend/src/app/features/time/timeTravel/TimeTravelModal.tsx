@@ -10,6 +10,7 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { WorldCalendar } from '@/api/types/worldTypes'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
@@ -23,6 +24,7 @@ import { useMarkerTimeTravel } from './useMarkerTimeTravel'
 export const TimeTravelModal = () => {
 	const { isOpen, close, startingTime, markers } = useModal('timeTravelModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const isTimelineView = useCheckRouteMatch('/world/$worldId/timeline')
 
 	const { timeToLabel, calendar } = useWorldTime()
 	const { applySelector } = useTimeSelector({ rawTime: startingTime })
@@ -140,9 +142,9 @@ export const TimeTravelModal = () => {
 				error={!!error}
 			/>
 			<Typography>
-				<b>Travel to:</b> {displayedTargetTime}
+				<b>{isTimelineView ? 'Travel to:' : 'Move to:'}</b> {displayedTargetTime}
 			</Typography>
-			{markers.length > 0 && (
+			{markers.length > 0 && isTimelineView && (
 				<FormControlLabel
 					control={
 						<Checkbox

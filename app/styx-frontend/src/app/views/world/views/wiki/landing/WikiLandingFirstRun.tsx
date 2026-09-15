@@ -38,7 +38,7 @@ export function WikiLandingFirstRun() {
 		>
 			<Stack alignItems="center" textAlign="center" sx={{ maxWidth: 840, width: '100%' }}>
 				<Typography component="h1" variant="h5" fontWeight={600} letterSpacing="-0.02em">
-					{isReadOnly ? 'Nothing here yet.' : "Nothing here yet. That's the good part."}
+					Nothing here yet
 				</Typography>
 				<Typography
 					variant="body2"
@@ -63,21 +63,21 @@ export function WikiLandingFirstRun() {
 						<WikiLandingFirstRunDoor
 							type="actor"
 							title="Start with a person"
-							body="Name someone. Everything else — their house, their war, their grudge — grows out of a character sheet."
+							body="Who is crucial for your world? Who is the protagonist? And most importantly, who dunnit?"
 							buttonLabel="New character"
 							onClick={async () => openCreated(await createActor({ query: '' }))}
 						/>
 						<WikiLandingFirstRunDoor
 							type="event"
-							title="Start with a moment"
-							body="Put one dated event on the timeline and the calendar has a spine to hang the rest on."
+							title="Start with an event"
+							body="It's high noon somewhere in the world. When is yours?"
 							buttonLabel="New event"
 							onClick={async () => openCreated(await createEvent({ query: '' }))}
 						/>
 						<WikiLandingFirstRunDoor
 							type="article"
 							title="Start with a blank page"
-							body="No structure needed. Write, and mention things as you go — Neverkin files them for you."
+							body="Your magic system; your FTL travel rules; or mayhaps just some random notes to jot down?"
 							buttonLabel="New article"
 							onClick={async () => openCreated(await createArticle({ query: '' }))}
 						/>

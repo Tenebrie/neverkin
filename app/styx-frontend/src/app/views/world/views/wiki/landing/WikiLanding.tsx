@@ -9,15 +9,14 @@ import { useSelector } from 'react-redux'
 import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useMobileLayout } from '@/app/hooks/useMobileLayout'
-import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 import { HomeRowItemIconButton } from '@/app/views/home/components/rowItem/HomeRowItemIconButton'
 import { HomeSection } from '@/app/views/home/components/section/HomeSection'
 import { HomeSectionHeader } from '@/app/views/home/components/section/HomeSectionHeader'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { getWorldStateLoaded } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
+import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
 import { BoxedWikiEntity, useBoxedWikiContent } from '../hooks/useBoxedWikiContent'
 import { useScreenCenteredColumn, WIKI_COLUMN_MAX_WIDTH } from '../hooks/useScreenCenteredColumn'
 import { getWikiState, getWikiStateLoaded } from '../WikiSliceSelectors'
@@ -80,14 +79,7 @@ export function WikiLanding() {
 	const entityRow = (entity: BoxedWikiEntity, openedAt?: number) => (
 		<WikiLandingRow
 			key={entity.id}
-			icon={
-				<EntityInitialsTile
-					name={entity.name}
-					color={entity.color || getAccentColor(entity.id)}
-					size={28}
-					icon={<EntityIcon variant={entity.type} height={16} />}
-				/>
-			}
+			icon={<ArticleListItemIcon article={entity} highlighted={false} />}
 			label={entity.name}
 			meta={folderNameOf(entity)}
 			onClick={() => open(entity)}
