@@ -1,5 +1,11 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { createWikiArticle, createWikiFolder, createWorld, navigateToWiki } from '@fixtures/world'
+import {
+	createWikiArticle,
+	createWikiFolder,
+	createWorld,
+	navigateToWiki,
+	wikiListEntity,
+} from '@fixtures/world'
 import { expect, Locator, Page, test } from '@playwright/test'
 
 test.describe('Wiki View', () => {
@@ -21,7 +27,7 @@ test.describe('Wiki View', () => {
 			await createArticleViaUI(page, 'Testing article')
 
 			// Open article
-			await withYjsSocket(page, () => page.getByText('Testing article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Edit article
@@ -58,7 +64,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, world)
 
 			// Navigate to article A
-			await page.getByText('First article').click()
+			await wikiListEntity(page, 'First article').click()
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('')
@@ -69,7 +75,7 @@ test.describe('Wiki View', () => {
 			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Switch to article B
-			await withYjsSocket(page, () => page.getByText('Second article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Second article').click())
 			await expect(textbox).toHaveText('')
 
 			// Add mention
@@ -77,13 +83,11 @@ test.describe('Wiki View', () => {
 			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Switch back to article A
-			await withYjsSocket(page, () => page.getByText('First article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'First article').click())
 			await expect(textbox).toHaveText('Hello TestActor')
 
 			// Switch back to article B
-			await withYjsSocket(page, () =>
-				page.getByTestId('ArticleListWithHeader').getByText('Second article').click(),
-			)
+			await withYjsSocket(page, () => wikiListEntity(page, 'Second article').click())
 			await expect(textbox).toHaveText('Also hi UnrelatedActor')
 		})
 
@@ -97,7 +101,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, world)
 
 			// Navigate to article A
-			await page.getByText('First article').click()
+			await wikiListEntity(page, 'First article').click()
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
 			await expect(textbox).toHaveText('')
@@ -112,13 +116,11 @@ test.describe('Wiki View', () => {
 			await page.waitForTimeout(1000)
 
 			// Switch to article B
-			await withYjsSocket(page, () => page.getByText('Second article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Second article').click())
 			await expect(textbox).toHaveText('')
 
 			// Switch back to article A
-			await withYjsSocket(page, () =>
-				page.getByTestId('ArticleListWithHeader').getByText('First article').click(),
-			)
+			await withYjsSocket(page, () => wikiListEntity(page, 'First article').click())
 			await expect(textbox).toHaveText('Hello TestActorHello UnrelatedActor')
 
 			// Edit article
@@ -147,20 +149,20 @@ test.describe('Wiki View', () => {
 			)
 
 			// Drop an article onto the bottom half of a folder -> the article moves into it
-			await dragEntityIntoFolder(page, page.getByText('First article'), parentFolder)
+			await dragEntityIntoFolder(page, wikiListEntity(page, 'First article'), parentFolder)
 			await expect(parentFolder.getByTestId('ArticleListItem/First article/1')).toBeVisible()
 
 			// Nest a folder inside a folder
-			await dragEntityIntoFolder(page, page.getByText('Inner folder'), parentFolder)
+			await dragEntityIntoFolder(page, wikiListEntity(page, 'Inner folder'), parentFolder)
 			const innerFolder = parentFolder.getByTestId('ArticleListItem/Inner folder/1')
 			await expect(innerFolder).toBeVisible()
 
 			// Move an article into the nested folder
-			await dragEntityIntoFolder(page, page.getByText('Second article'), innerFolder)
+			await dragEntityIntoFolder(page, wikiListEntity(page, 'Second article'), innerFolder)
 			await expect(innerFolder.getByTestId('ArticleListItem/Second article/2')).toBeVisible()
 
 			// Move an article back to root by dropping onto the root list
-			await dragEntityToRoot(page, page.getByText('First article'))
+			await dragEntityToRoot(page, wikiListEntity(page, 'First article'))
 			await expect(page.getByTestId('ArticleListItem/First article/0')).toBeVisible()
 		})
 
@@ -228,7 +230,7 @@ test.describe('Wiki View', () => {
 			// Drop "Second article" onto the TOP half of "First article" -> it lands before it
 			await dragEntityOnto(
 				page,
-				page.getByText('Second article'),
+				wikiListEntity(page, 'Second article'),
 				page.getByTestId('ArticleListItem/First article/0'),
 				'top',
 			)
@@ -238,7 +240,7 @@ test.describe('Wiki View', () => {
 			// Drop "Second article" onto the BOTTOM half of "First article" -> it lands after it again
 			await dragEntityOnto(
 				page,
-				page.getByText('Second article'),
+				wikiListEntity(page, 'Second article'),
 				page.getByTestId('ArticleListItem/First article/0'),
 				'bottom',
 			)
@@ -267,8 +269,8 @@ test.describe('Wiki View', () => {
 			await expect(items.nth(3)).toHaveAttribute('data-testid', 'ArticleListItem/Delta article/0')
 
 			// Shift-click to select a contiguous stack of mixed types
-			await page.getByText('Alpha article').click({ modifiers: ['Shift'] })
-			await page.getByText('Gamma article').click({ modifiers: ['Shift'] })
+			await wikiListEntity(page, 'Alpha article').click({ modifiers: ['Shift'] })
+			await wikiListEntity(page, 'Gamma article').click({ modifiers: ['Shift'] })
 
 			await expect(page.getByTestId('ArticleListItem/Alpha article/0').getByRole('checkbox')).toBeChecked()
 			await expect(page.getByTestId('ArticleListItem/Beta folder/0').getByRole('checkbox')).toBeChecked()
@@ -280,7 +282,7 @@ test.describe('Wiki View', () => {
 			// Drag one member of the selection onto the bottom half of "Delta article" -> the whole stack follows
 			await dragEntityOnto(
 				page,
-				page.getByText('Beta folder'),
+				wikiListEntity(page, 'Beta folder'),
 				page.getByTestId('ArticleListItem/Delta article/0'),
 				'bottom',
 			)
@@ -299,7 +301,7 @@ test.describe('Wiki View', () => {
 
 			// Create article
 			await createArticleViaUI(page, 'Testing article')
-			await withYjsSocket(page, () => page.getByText('Testing article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Click into the editor
@@ -320,7 +322,7 @@ test.describe('Wiki View', () => {
 
 			// Create article
 			await createArticleViaUI(page, 'Testing article')
-			await withYjsSocket(page, () => page.getByText('Testing article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
 			// Click into the editor and type some text
@@ -348,7 +350,7 @@ test.describe('Wiki View', () => {
 
 			// Create and open an article
 			await createArticleViaUI(page, 'Testing article')
-			await withYjsSocket(page, () => page.getByText('Testing article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
@@ -394,7 +396,7 @@ test.describe('Wiki View', () => {
 
 			// Create and open an article
 			await createArticleViaUI(page, 'Testing article')
-			await withYjsSocket(page, () => page.getByText('Testing article').click())
+			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
