@@ -9,6 +9,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { useSelector } from 'react-redux'
 
 import { MindmapWireDirection } from '@/api/types/mindmapTypes'
+import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMindmapData } from '../api/useMindmapData'
@@ -46,6 +47,8 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 		}
 		onClose()
 	}, [currentWire, direction, label, onClose, updateMindmapWire])
+
+	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], handleClose, open && ShortcutPriorities.InputField)
 
 	return (
 		<Popover

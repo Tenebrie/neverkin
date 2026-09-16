@@ -58,10 +58,11 @@ export function MindmapNodeContextMenu() {
 				<ListItemIcon>
 					<Delete />
 				</ListItemIcon>
-				<ListItemText color="error">Delete node</ListItemText>
+				<ListItemText>Delete node</ListItemText>
 			</MenuItem>
 			{parent.type !== 'node' && (
 				<MenuItem
+					sx={{ color: 'error.main' }}
 					onClick={() => {
 						openBulkDeleteEntitiesModal({ articles: [parent.id] })
 						setOpen(false)
@@ -70,7 +71,7 @@ export function MindmapNodeContextMenu() {
 					<ListItemIcon>
 						<Delete />
 					</ListItemIcon>
-					<ListItemText>Delete parent {parent.type}</ListItemText>
+					<ListItemText>Delete {parent.type}</ListItemText>
 				</MenuItem>
 			)}
 		</Menu>
