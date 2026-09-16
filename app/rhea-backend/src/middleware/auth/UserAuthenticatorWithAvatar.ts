@@ -1,5 +1,6 @@
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { TokenService } from '@src/services/TokenService.js'
+import { UserActivityService } from '@src/services/UserActivityService.js'
 import { ParameterizedContext } from 'koa'
 import { useHeaderParams } from 'moonflower'
 import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
@@ -12,6 +13,12 @@ import { ImpersonatedUserAuthenticatorWithAvatar } from './ImpersonatedUserAuthe
 export { AUTH_COOKIE_NAME }
 
 export const UserAuthenticatorWithAvatar = async (ctx: ParameterizedContext) => {
+	const user = await resolveUser(ctx)
+	UserActivityService.recordActivity(ctx, user.id)
+	return user
+}
+
+async function resolveUser(ctx: ParameterizedContext) {
 	// If another service is impersonating a user
 	const { serviceAuthToken } = useHeaderParams(ctx, {
 		[SERVICE_AUTH_TOKEN_HEADER]: OptionalParam(NonEmptyStringValidator),
