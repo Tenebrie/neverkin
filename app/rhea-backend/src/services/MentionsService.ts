@@ -87,8 +87,19 @@ export const MentionsService = {
 		await (transaction ?? getPrismaClient()).mention.deleteMany({
 			where: {
 				OR: [
-					{ sourceArticleId: null, sourceEventId: null, sourceTagId: null, sourceActorId: null },
-					{ targetArticleId: null, targetEventId: null, targetTagId: null, targetActorId: null },
+					{
+						sourceArticleId: null,
+						sourceEventId: null,
+						sourceTagId: null,
+						sourceActorId: null,
+						sourceNodeId: null,
+					},
+					{
+						targetArticleId: null,
+						targetEventId: null,
+						targetTagId: null,
+						targetActorId: null,
+					},
 				],
 			},
 		})

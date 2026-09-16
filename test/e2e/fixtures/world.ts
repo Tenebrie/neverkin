@@ -190,3 +190,6 @@ export const navigateToWikiArticle = async (
 	await page.goto(makeUrl(`/world/${worldData.id}/wiki/${articleData.id}`))
 	return { worldData, articleData }
 }
+
+export const wikiListEntity = (page: Page, name: string) =>
+	page.getByTestId('ArticleListWithHeader').getByText(name)

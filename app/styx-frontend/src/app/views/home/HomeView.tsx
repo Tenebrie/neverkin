@@ -23,7 +23,7 @@ export function HomeView() {
 						alignItems: 'start',
 					}}
 				>
-					<Stack gap={3} minWidth={0} pb="50vh">
+					<Stack gap={3} minWidth={0} pb="35vh">
 						<HomeWorldList />
 						<HomeCalendarList />
 					</Stack>

@@ -86,6 +86,7 @@ export const AssetRefService = {
 				holderEventId: null,
 				holderTagId: null,
 				holderActorId: null,
+				holderNodeId: null,
 			},
 		})
 	},

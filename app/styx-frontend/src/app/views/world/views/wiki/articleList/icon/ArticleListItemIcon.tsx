@@ -1,10 +1,10 @@
+import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
+import { getAccentColor } from '@/app/utils/colors/getAccentColor'
+import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'
+import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
+
 import { BoxedWikiEntity } from '../../hooks/useBoxedWikiContent'
 import { ArticleListItemCollapse } from '../ArticleListItemCollapse'
-import { ArticleListItemActorIcon } from './ArticleListItemActorIcon'
-import { ArticleListItemArticleIcon } from './ArticleListItemArticleIcon'
-import { ArticleListItemEventIcon } from './ArticleListItemEventIcon'
-import { ArticleListItemFolderIcon } from './ArticleListItemFolderIcon'
-import { ArticleListItemTagIcon } from './ArticleListItemTagIcon'
 
 type Props = {
 	article: BoxedWikiEntity
@@ -12,23 +12,24 @@ type Props = {
 	folderCollapseIcon?: boolean
 }
 
-export function ArticleListItemIcon({ article, highlighted, folderCollapseIcon }: Props) {
+export function ArticleListItemIcon({ article, folderCollapseIcon }: Props) {
+	if (article.type === 'folder' && folderCollapseIcon) {
+		return <ArticleListItemCollapse entity={article} />
+	}
+
+	const icon =
+		article.type === 'event' ? (
+			<CustomEntityIcon icon={article.entity.icon} color="currentColor" height={16} />
+		) : (
+			<EntityIcon variant={article.type} height={16} />
+		)
+
 	return (
-		<>
-			{article.type === 'folder' && folderCollapseIcon && <ArticleListItemCollapse entity={article} />}
-			{article.type === 'folder' && !folderCollapseIcon && (
-				<ArticleListItemFolderIcon folder={article.entity} highlighted={highlighted} />
-			)}
-			{article.type === 'article' && (
-				<ArticleListItemArticleIcon article={article.entity} highlighted={highlighted} />
-			)}
-			{article.type === 'tag' && <ArticleListItemTagIcon tag={article.entity} highlighted={highlighted} />}
-			{article.type === 'actor' && (
-				<ArticleListItemActorIcon actor={article.entity} highlighted={highlighted} />
-			)}
-			{article.type === 'event' && (
-				<ArticleListItemEventIcon event={article.entity} highlighted={highlighted} />
-			)}
-		</>
+		<EntityInitialsTile
+			name={article.name}
+			color={article.color || getAccentColor(article.id)}
+			size={28}
+			icon={icon}
+		/>
 	)
 }

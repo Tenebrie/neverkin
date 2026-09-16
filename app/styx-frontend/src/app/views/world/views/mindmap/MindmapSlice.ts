@@ -19,6 +19,7 @@ export const mindmapSlice = createSlice({
 			const record = { key: payload.key, actorId: payload.actorId }
 			if (!payload.multiselect) {
 				state.selectedNodes = [record]
+				state.selectedWires = []
 				return
 			}
 
@@ -51,6 +52,7 @@ export const mindmapSlice = createSlice({
 		addWireToSelection: (state, { payload }: PayloadAction<{ wireId: string; multiselect: boolean }>) => {
 			if (!payload.multiselect) {
 				state.selectedWires = [payload.wireId]
+				state.selectedNodes = []
 				return
 			}
 

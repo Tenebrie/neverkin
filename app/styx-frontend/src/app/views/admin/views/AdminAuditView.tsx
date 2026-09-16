@@ -12,8 +12,8 @@ import Typography from '@mui/material/Typography'
 import { useCallback, useState } from 'react'
 
 import { AdminGetAuditLogsApiResponse, useAdminGetAuditLogsQuery } from '@/api/adminUsersApi'
+import { Pagination } from '@/ui-lib/components/Pagination/Pagination'
 
-import { Pagination } from '../../../../ui-lib/components/Pagination/Pagination'
 import { AdminUserSummary } from '../components/AdminUserSummary'
 import { SearchInput } from '../components/SearchInput'
 

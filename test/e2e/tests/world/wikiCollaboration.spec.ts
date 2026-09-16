@@ -1,5 +1,5 @@
 import { createNewUser, deleteAccount, loginAsUser } from '@fixtures/auth'
-import { navigateToWiki } from '@fixtures/world'
+import { navigateToWiki, wikiListEntity } from '@fixtures/world'
 import { expect, test } from '@playwright/test'
 
 test.describe('Wiki Collaboration', () => {
@@ -24,10 +24,10 @@ test.describe('Wiki Collaboration', () => {
 		await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
 
 		// Open article on both pages
-		await page.getByText('Testing article').click()
+		await wikiListEntity(page, 'Testing article').click()
 		await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
-		await secondaryPage.getByText('Testing article').click()
+		await wikiListEntity(secondaryPage, 'Testing article').click()
 
 		const baseTextbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 		const secondaryTextbox = secondaryPage.getByTestId('RichTextEditor').getByRole('textbox')

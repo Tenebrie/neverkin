@@ -419,6 +419,8 @@ function MindmapWireLineComponent({
 			{wire.content && (
 				<MindmapWireLabel
 					wire={wire}
+					onMouseDown={onMouseDown}
+					onMouseUp={onMouseUp}
 					onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 				/>
 			)}
