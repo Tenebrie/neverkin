@@ -84,14 +84,31 @@ jobs:
       - uses: crazy-max/ghaction-github-runtime@v4
         if: steps.check-container.outputs.missing == 'true'
 
-      - name: Build & Publish
+      - name: Build
         if: steps.check-container.outputs.missing == 'true'
-        run: |
-          docker compose -f docker-compose.common.yml -f docker-compose.prod.yml -f docker-compose.build.yml build ${{ matrix.service }}
-          docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
+        run: docker compose -f docker-compose.common.yml -f docker-compose.prod.yml -f docker-compose.build.yml build ${{ matrix.service }}
         env:
           VERSION: ${{ needs.check-commits.outputs.version }}
           COMPOSE_BAKE: true
+          ASSET_STORE_URL: ${{ vars.ASSET_STORE_URL }}
+
+      - name: Publish Static Assets
+        if: steps.check-container.outputs.missing == 'true' && matrix.service == 'styx' && vars.ASSET_STORE_URL != ''
+        run: |
+          docker create --name styx tenebrie/timelines-styx:${{ needs.check-commits.outputs.version }}
+          docker cp styx:/usr/share/nginx/html/static ./static
+          aws s3 sync ./static "${{ vars.ASSET_STORE_S3_URI }}/static" \
+            --endpoint-url "${{ vars.ASSET_STORE_S3_ENDPOINT }}" \
+            --acl public-read \
+            --cache-control "public, max-age=31536000, immutable"
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.ASSET_STORE_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.ASSET_STORE_SECRET_ACCESS_KEY }}
+          AWS_DEFAULT_REGION: us-east-1
+
+      - name: Publish
+        if: steps.check-container.outputs.missing == 'true'
+        run: docker push tenebrie/timelines-${{ matrix.service }}:${{ needs.check-commits.outputs.version }}
 
   create-release:
     name: Create Release

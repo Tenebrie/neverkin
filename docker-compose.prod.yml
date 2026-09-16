@@ -39,6 +39,7 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ${VERSION}
+                ASSET_STORE_URL: ${ASSET_STORE_URL:-}
         deploy:
             replicas: 2
             update_config:
@@ -49,11 +50,11 @@ services:
         secrets:
             - environment
         healthcheck:
-            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080"]
-            interval: 1m30s
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
+            interval: 1s
             timeout: 30s
-            retries: 2
-            start_period: 30s
+            retries: 25
+            start_period: 5s
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
         build:
@@ -151,11 +152,11 @@ services:
                 delay: 10s
                 failure_action: pause
         healthcheck:
-            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081"]
-            interval: 1m30s
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081/health"]
+            interval: 1s
             timeout: 30s
-            retries: 2
-            start_period: 30s
+            retries: 25
+            start_period: 5s
     rhea-postgres:
         deploy:
             placement:
@@ -207,7 +208,6 @@ services:
             retries: 3
             start_period: 30s
 
-# See docs/Creating New Cluster.md
 secrets:
     jwt-secret:
         external: true
