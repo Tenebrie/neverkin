@@ -28,10 +28,14 @@ RUN npm run build:ci
 # Production stage - use nginx to serve static files
 FROM nginx:alpine
 
+# Public URL under which the publish pipeline uploads this build's /static tree
+ARG ASSET_STORE_URL=""
+ENV ASSET_STORE_URL=${ASSET_STORE_URL}
+
 # Copy built static files to nginx
 COPY --from=builder /app/styx/build /usr/share/nginx/html
 
-# Copy custom nginx config for SPA routing
-COPY ./app/styx-frontend/nginx.conf /etc/nginx/conf.d/default.conf
+# nginx config, rendered with the environment at startup
+COPY ./app/styx-frontend/nginx.conf /etc/nginx/templates/default.conf.template
 
 EXPOSE 8080
