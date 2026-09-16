@@ -1,3 +1,4 @@
+export { EARTH, mockEarthCalendar, mockEarthCalendarUnits } from './api/mock/rheaModels.mock.js'
 export { EsotericDate } from './EsotericDate.js'
 export type { InputParsedTimestamp } from './types.js'
 export { formatTimestampUnits } from './utils/formatTimestampUnits.js'

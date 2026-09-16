@@ -22,16 +22,7 @@ export const useTimeSelector = ({ rawTime }: { rawTime: number }) => {
 						if (!curr) {
 							return acc
 						}
-						const setValue = (() => {
-							const isAboveZero = delta.set >= 0
-							const isOneIndexed =
-								delta.unit.formatMode === 'NameOneIndexed' || delta.unit.formatMode === 'NumericOneIndexed'
-							if (isAboveZero && isOneIndexed) {
-								return delta.set - 1
-							}
-							return delta.set
-						})()
-						newValue = newValue.step(delta.unit, setValue - curr.value)
+						newValue = newValue.step(delta.unit, delta.set - curr.value)
 					}
 					if (delta.add) {
 						newValue = newValue.step(delta.unit, delta.add)
