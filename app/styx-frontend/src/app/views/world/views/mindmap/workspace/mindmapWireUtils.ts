@@ -142,17 +142,12 @@ const wireRegistry = new Map<string, WireControlPoints>()
 export const nodePositions = new Map<string, { x: number; y: number; height: number }>()
 
 export function registerWire(id: string, ep: WireEndpoints): void {
-	const bias = computeBias(ep)
-	wireRegistry.set(id, {
-		x1: ep.x1,
-		y1: ep.y1,
-		cx1: ep.x1 + ep.nx1 * bias,
-		cy1: ep.y1 + ep.ny1 * bias,
-		cx2: ep.x2 + ep.nx2 * bias,
-		cy2: ep.y2 + ep.ny2 * bias,
-		x2: ep.x2,
-		y2: ep.y2,
-	})
+	wireRegistry.set(id, toControlPoints(ep))
+}
+
+export function getWireMidpoint(id: string): { x: number; y: number } | null {
+	const controlPoints = wireRegistry.get(id)
+	return controlPoints ? midpointOf(controlPoints) : null
 }
 
 export function unregisterWire(id: string): void {
@@ -189,35 +184,40 @@ export function getWiresInRect(
 	return result
 }
 
+export function buildPathD(ep: WireEndpoints) {
+	const { x1, y1, cx1, cy1, cx2, cy2, x2, y2 } = toControlPoints(ep)
+	return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
+}
+
+export function pathMidpoint(ep: WireEndpoints): { x: number; y: number } {
+	return midpointOf(toControlPoints(ep))
+}
+
 function computeBias(ep: WireEndpoints) {
 	const dist = Math.hypot(ep.x2 - ep.x1, ep.y2 - ep.y1)
 	return Math.min(Math.max(20, dist * 0.4), 400)
 }
 
-export function buildPathD(ep: WireEndpoints) {
-	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
+function toControlPoints(ep: WireEndpoints): WireControlPoints {
 	const bias = computeBias(ep)
-
-	const cx1 = x1 + nx1 * bias
-	const cy1 = y1 + ny1 * bias
-	const cx2 = x2 + nx2 * bias
-	const cy2 = y2 + ny2 * bias
-	return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
+	return {
+		x1: ep.x1,
+		y1: ep.y1,
+		cx1: ep.x1 + ep.nx1 * bias,
+		cy1: ep.y1 + ep.ny1 * bias,
+		cx2: ep.x2 + ep.nx2 * bias,
+		cy2: ep.y2 + ep.ny2 * bias,
+		x2: ep.x2,
+		y2: ep.y2,
+	}
 }
 
-export function pathMidpoint(ep: WireEndpoints): { x: number; y: number } {
-	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
-	const bias = computeBias(ep)
-
-	const cx1 = x1 + nx1 * bias
-	const cy1 = y1 + ny1 * bias
-	const cx2 = x2 + nx2 * bias
-	const cy2 = y2 + ny2 * bias
-
+function midpointOf(cp: WireControlPoints): { x: number; y: number } {
 	// Cubic bezier at t=0.5: B(0.5) = P0/8 + 3*P1/8 + 3*P2/8 + P3/8
-	const x = (x1 + 3 * cx1 + 3 * cx2 + x2) / 8
-	const y = (y1 + 3 * cy1 + 3 * cy2 + y2) / 8
-	return { x, y }
+	return {
+		x: (cp.x1 + 3 * cp.cx1 + 3 * cp.cx2 + cp.x2) / 8,
+		y: (cp.y1 + 3 * cp.cy1 + 3 * cp.cy2 + cp.y2) / 8,
+	}
 }
 
 export function arrowPath(x: number, y: number, nx: number, ny: number, size = 8): string {

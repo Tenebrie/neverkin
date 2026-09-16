@@ -1980,6 +1980,23 @@ export interface paths {
         patch: operations["updateMindmapWire"];
         trace?: never;
     };
+    "/api/world/{worldId}/mindmap/wires/{wireId}/split": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Inserts a plain node linked two endpoints of the wire */
+        post: operations["splitMindmapWire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -8166,10 +8183,10 @@ export interface operations {
                             updatedAt: string;
                             name: string;
                             worldId: string;
-                            content: string;
-                            contentRich: string;
                             positionX: number;
                             positionY: number;
+                            content: string;
+                            contentRich: string;
                             parentActorId?: null | string;
                             parentArticleId?: null | string;
                             parentEventId?: null | string;
@@ -8182,10 +8199,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             content: string;
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -8241,10 +8258,10 @@ export interface operations {
                         updatedAt: string;
                         name: string;
                         worldId: string;
-                        content: string;
-                        contentRich: string;
                         positionX: number;
                         positionY: number;
+                        content: string;
+                        contentRich: string;
                         parentActorId?: null | string;
                         parentArticleId?: null | string;
                         parentEventId?: null | string;
@@ -8322,10 +8339,10 @@ export interface operations {
                         updatedAt: string;
                         name: string;
                         worldId: string;
-                        content: string;
-                        contentRich: string;
                         positionX: number;
                         positionY: number;
+                        content: string;
+                        contentRich: string;
                         parentActorId?: null | string;
                         parentArticleId?: null | string;
                         parentEventId?: null | string;
@@ -8382,10 +8399,10 @@ export interface operations {
                         updatedAt: string;
                         name: string;
                         worldId: string;
-                        content: string;
-                        contentRich: string;
                         positionX: number;
                         positionY: number;
+                        content: string;
+                        contentRich: string;
                         parentActorId?: null | string;
                         parentArticleId?: null | string;
                         parentEventId?: null | string;
@@ -8433,10 +8450,10 @@ export interface operations {
                         updatedAt: string;
                         name: string;
                         worldId: string;
-                        content: string;
-                        contentRich: string;
                         positionX: number;
                         positionY: number;
+                        content: string;
+                        contentRich: string;
                         parentActorId?: null | string;
                         parentArticleId?: null | string;
                         parentEventId?: null | string;
@@ -8485,10 +8502,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             content: string;
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                         updated: {
                             id: string;
@@ -8496,10 +8513,10 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                             content: string;
                             sourceNodeId: string;
                             targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
                     };
                 };
@@ -8563,10 +8580,77 @@ export interface operations {
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
                         content: string;
                         sourceNodeId: string;
                         targetNodeId: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
+            };
+        };
+    };
+    splitMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        node: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            worldId: string;
+                            positionX: number;
+                            positionY: number;
+                            content: string;
+                            contentRich: string;
+                            parentActorId?: null | string;
+                            parentArticleId?: null | string;
+                            parentEventId?: null | string;
+                            parentFolderId?: null | string;
+                            parentTagId?: null | string;
+                        };
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                        }[];
                     };
                 };
             };

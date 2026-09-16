@@ -253,6 +253,36 @@ router.patch('/api/world/:worldId/mindmap/wires/:wireId', async (ctx) => {
 	return wire
 })
 
+router.post('/api/world/:worldId/mindmap/wires/:wireId/split', async (ctx) => {
+	useApiEndpoint({
+		name: 'splitMindmapWire',
+		description: 'Inserts a plain node linked two endpoints of the wire',
+		tags: [mindmapGroupTag, mindmapNodeTag, mindmapWireTag],
+	})
+
+	const { worldId, wireId } = usePathParams(ctx, {
+		worldId: z.string(),
+		wireId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		positionX: z.number(),
+		positionY: z.number(),
+		name: z.string(),
+		direction: z.enum(MindmapLinkDirection),
+	})
+
+	const { node, created } = await MindmapService.splitLink({ worldId, linkId: wireId }, params)
+
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created, updated: [] })
+	RedisService.notifyAboutMindmapWiresDelete(ctx, { worldId, wires: [wireId] })
+
+	return { node, wires: created }
+})
+
 router.delete('/api/world/:worldId/mindmap/wires', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteMindmapWires',

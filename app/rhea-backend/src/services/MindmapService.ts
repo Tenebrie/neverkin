@@ -1,4 +1,4 @@
-import { Prisma } from '@prisma/client'
+import { MindmapLinkDirection, Prisma } from '@prisma/client'
 
 import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
@@ -144,6 +144,35 @@ export const MindmapService = {
 		return getPrismaClient().mindmapLink.update({
 			where: { id: linkId },
 			data: params,
+		})
+	},
+	async splitLink(
+		{ worldId, linkId }: { worldId: string; linkId: string },
+		{
+			name,
+			direction,
+			...position
+		}: { name: string; direction: MindmapLinkDirection; positionX: number; positionY: number },
+	) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const link = await prisma.mindmapLink.findFirstOrThrow({
+				where: { id: linkId, sourceNode: { worldId } },
+			})
+
+			const node = await prisma.mindmapNode.create({
+				data: { worldId, name, ...position },
+			})
+
+			const created = await prisma.mindmapLink.createManyAndReturn({
+				data: [
+					{ sourceNodeId: link.sourceNodeId, targetNodeId: node.id, direction },
+					{ sourceNodeId: node.id, targetNodeId: link.targetNodeId, direction },
+				],
+			})
+
+			await prisma.mindmapLink.delete({ where: { id: link.id } })
+
+			return { node, created }
 		})
 	},
 	async deleteLinks(worldId: string, linkIds: string[]) {
