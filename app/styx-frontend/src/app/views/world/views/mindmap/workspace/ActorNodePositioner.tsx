@@ -139,6 +139,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	useEffect(
 		() => () => {
 			nodePositions.delete(node.id)
+			clearTimeout(hoverTimeoutRef.current ?? undefined)
 			dispatch(mindmapSlice.actions.removeNodeFromHover(node.id))
 		},
 		[dispatch, node.id],
@@ -154,14 +155,30 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 
 	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
 	const isDraggingRef = useRef(false)
+	const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
+
+	const setHovered = useEvent((isHovered: boolean, delay: number) => {
+		clearTimeout(hoverTimeoutRef.current ?? undefined)
+		hoverTimeoutRef.current = null
+
+		const action = isHovered
+			? addNodeToHover({ key: node.id, entityId: parent.id })
+			: removeNodeFromHover(node.id)
+
+		if (delay === 0) {
+			dispatch(action)
+		} else {
+			hoverTimeoutRef.current = setTimeout(() => dispatch(action), delay)
+		}
+	})
 
 	const setDragHover = useEvent((isDragging: boolean) => {
 		isDraggingRef.current = isDragging
 		ref.current?.setAttribute('data-dragging', String(isDragging))
 		if (isDragging) {
-			dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+			setHovered(true, 0)
 		} else if (!ref.current?.matches(':hover')) {
-			dispatch(removeNodeFromHover(node.id))
+			setHovered(false, 0)
 		}
 	})
 
@@ -169,14 +186,14 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		if (isDraggingRef.current) {
 			return
 		}
-		dispatch(addNodeToHover({ key: node.id, entityId: parent.id }))
+		setHovered(true, 100)
 	})
 
 	const handleMouseLeave = useEvent(() => {
 		if (isDraggingRef.current) {
 			return
 		}
-		dispatch(removeNodeFromHover(node.id))
+		setHovered(false, 0)
 	})
 
 	useEffect(() => {
