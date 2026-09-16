@@ -11,6 +11,7 @@ import { useBulkWikiMove } from '../../../api/useBulkWikiMove'
 import { useMoveArticle } from '../../../api/useMoveArticle'
 import { NewNodeGhost } from '../../mindmap/components/NewNodeGhost'
 import { getHoveredMindmapClickArea } from '../../mindmap/utils/getHoveredMindmapClickArea'
+import { getHoveredMindmapNode } from '../../mindmap/utils/getHoveredMindmapNode'
 import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
 import { getWikiState } from '../WikiSliceSelectors'
@@ -34,8 +35,18 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 			top: 'center',
 			left: 'center',
 		},
+		adjustPosition: (pos) => {
+			const hoveredNode = getHoveredMindmapNode()
+			if (!hoveredNode) {
+				return pos
+			}
+
+			// Snap onto the node being replaced
+			const rect = hoveredNode.getBoundingClientRect()
+			return { x: rect.left + rect.width / 2, y: rect.top + rect.height / 2 }
+		},
 		ghostFactory: () => {
-			if (getHoveredMindmapClickArea()) {
+			if (getHoveredMindmapClickArea() || getHoveredMindmapNode()) {
 				return <NewNodeGhost entityHandle={article} />
 			}
 

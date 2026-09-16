@@ -75,6 +75,9 @@ export type EventParams = {
 		hoveredNodeIds: Set<string>
 		hoveredWireIds: Set<string>
 	}
+	'mindmap/dropTarget/changed': {
+		target: HTMLElement | null
+	}
 	'mindmap/camera/requestLookAt': { x: number; y: number; scale?: number }
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': { isReconnect: boolean }

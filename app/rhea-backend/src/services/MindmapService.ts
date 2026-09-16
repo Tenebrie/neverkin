@@ -1,6 +1,9 @@
 import { Prisma } from '@prisma/client'
 
+import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { MentionsService } from './MentionsService.js'
 
 export const MindmapService = {
 	async getNodes(worldId: string) {
@@ -16,10 +19,49 @@ export const MindmapService = {
 			data,
 		})
 	},
-	async updateNode(nodeId: string, params: Prisma.MindmapNodeUpdateInput) {
+	async updateNode(
+		{ nodeId, worldId }: { nodeId: string; worldId: string },
+		params: Prisma.MindmapNodeUncheckedUpdateInput,
+	) {
 		return getPrismaClient().mindmapNode.update({
-			where: { id: nodeId },
+			where: { id: nodeId, worldId },
 			data: params,
+		})
+	},
+	async reparentNode(
+		{ nodeId, worldId }: { nodeId: string; worldId: string },
+		params: Prisma.MindmapNodeUncheckedUpdateInput,
+	) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const removedMentions = await prisma.mention.findMany({
+				where: { sourceNodeId: nodeId },
+			})
+
+			const node = await prisma.mindmapNode.update({
+				where: { id: nodeId, worldId },
+				data: {
+					...params,
+					name: '',
+					content: '',
+					contentRich: '',
+					mentions: { set: [] },
+					assetRefs: { set: [] },
+				},
+			})
+
+			await prisma.contentPage.deleteMany({
+				where: {
+					parentNodeId: nodeId,
+				},
+			})
+			await MentionsService.clearOrphanedMentions(prisma)
+			await AssetRefService.clearOrphanedReferences(prisma)
+			await makeTouchWorldQuery(worldId, prisma)
+
+			return {
+				node,
+				removedMentions,
+			}
 		})
 	},
 	async moveNodes(nodes: string[], deltaX: number, deltaY: number) {

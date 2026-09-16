@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box'
-import { memo, useEffect, useLayoutEffect, useRef } from 'react'
+import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
+import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
@@ -15,9 +16,11 @@ import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
+import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
+import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
 import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
@@ -34,6 +37,7 @@ export const ActorNodePositioner = memo(
 function ActorNodePositionerComponent({ parent, node }: Props) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 	const [moveMindmapNodes] = useMoveMindmapNodes()
+	const [reparentMindmapNode] = useReparentMindmapNode()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
@@ -92,6 +96,27 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		params: {
 			sourceNode: node,
 		},
+	})
+
+	useDragDropReceiver({
+		type: 'articleListItem',
+		receiverRef: ref,
+		onDrop: ({ params, targetPos }, { markHandled }) => {
+			markHandled()
+			if (params.article.id === parent.id) {
+				return
+			}
+
+			const fields = getMindmapDroppedNodeParams(params.article, targetPos)
+			if (fields) {
+				reparentMindmapNode(node.id, fields)
+			}
+		},
+	})
+
+	const [isDropTarget, setIsDropTarget] = useState(false)
+	useEventBusSubscribe['mindmap/dropTarget/changed']({
+		callback: ({ target }) => setIsDropTarget(target === ref.current),
 	})
 
 	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
@@ -410,6 +435,8 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			sx={{
 				pointerEvents: 'auto',
 				position: 'absolute',
+				// The drag ghost is snapped over this node and stands in for it
+				opacity: isDropTarget ? 0 : 1,
 				transform:
 					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',

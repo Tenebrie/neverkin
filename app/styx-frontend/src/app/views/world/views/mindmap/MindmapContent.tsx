@@ -2,11 +2,13 @@ import Box from '@mui/material/Box'
 import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
+import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
 
 import { MindmapEmptyState } from './components/MindmapEmptyState'
 import { useBoxedMindmapContent } from './hooks/useBoxedMindmapContent'
 import { getMindmapState } from './MindmapSliceSelectors'
+import { getHoveredMindmapNode } from './utils/getHoveredMindmapNode'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
@@ -20,6 +22,7 @@ export function MindmapContent() {
 	return (
 		<Box sx={{ zIndex: 1 }}>
 			<MindmapSelectionBridge />
+			<MindmapDropTargetBridge />
 			<MindmapWireLayer nodeLinks={nodeLinks} existingWires={existingWires} />
 			{actorsWithNodes.map((wrapper) => (
 				<ActorNodePositioner key={wrapper.id} parent={wrapper.parent} node={wrapper.node} />
@@ -49,6 +52,18 @@ function MindmapSelectionBridge() {
 			hoveredWireIds: new Set(hoveredWires),
 		})
 	}, [hoveredNodes, hoveredWires, selectedNodes, selectedWires])
+
+	return null
+}
+
+function MindmapDropTargetBridge() {
+	useDragDropBusSubscribe({
+		callback: (state) => {
+			dispatchGlobalEvent['mindmap/dropTarget/changed']({
+				target: state?.isHandled ? null : (getHoveredMindmapNode() ?? null),
+			})
+		},
+	})
 
 	return null
 }

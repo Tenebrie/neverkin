@@ -984,110 +984,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets the mindmap for the target world */
-        get: operations["getMindmap"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new node */
-        post: operations["createNode"];
-        /** @description Deletes the target nodes */
-        delete: operations["deleteNodes"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/{nodeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** @description Updates the target node */
-        patch: operations["updateNode"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves multiple nodes by a delta in a single transaction */
-        post: operations["moveMindmapNodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/wires": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
-        post: operations["createMindmapWires"];
-        /** @description Deletes specified mindmap wires */
-        delete: operations["deleteMindmapWires"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/wires/{wireId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        /** @description Updates the target mindmap wire */
-        patch: operations["updateMindmapWire"];
-        trace?: never;
-    };
     "/api/admin/notifications/broadcast": {
         parameters: {
             query?: never;
@@ -1497,6 +1393,162 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/worlds": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all worlds accessible for the current user. */
+        get: operations["getWorlds"];
+        put?: never;
+        /** @description Creates a new world (project). */
+        post: operations["createWorld"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns all information about a world. */
+        get: operations["getWorldInfo"];
+        put?: never;
+        post?: never;
+        /** @description Destroys a world owned by the current user. */
+        delete: operations["deleteWorld"];
+        options?: never;
+        head?: never;
+        /** @description Updates the world information. */
+        patch: operations["updateWorld"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/icons/events/common": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns commonly used event icons for a world. */
+        get: operations["getCommonWorldEventIcons"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/brief": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns summarized information about a world. */
+        get: operations["getWorldBrief"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/collaborators": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List the collaborating users */
+        get: operations["getWorldCollaborators"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/access": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Changes the world's access mode. */
+        post: operations["setWorldAccessMode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/share/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Removes the target user's access to this world. */
+        delete: operations["unshareWorld"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/calendars": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all calendars accessible for the current user in a given world. */
+        get: operations["listWorldCalendars"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/collaboration/leave": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Removes the current user from the world collaborators. */
+        post: operations["leaveWorldCollaboration"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/search/{query}": {
         parameters: {
             query?: never;
@@ -1807,52 +1859,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/worlds": {
+    "/api/world/{worldId}/mindmap": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Lists all worlds accessible for the current user. */
-        get: operations["getWorlds"];
-        put?: never;
-        /** @description Creates a new world (project). */
-        post: operations["createWorld"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns all information about a world. */
-        get: operations["getWorldInfo"];
-        put?: never;
-        post?: never;
-        /** @description Destroys a world owned by the current user. */
-        delete: operations["deleteWorld"];
-        options?: never;
-        head?: never;
-        /** @description Updates the world information. */
-        patch: operations["updateWorld"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/icons/events/common": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns commonly used event icons for a world. */
-        get: operations["getCommonWorldEventIcons"];
+        /** @description Gets the mindmap for the target world */
+        get: operations["getMindmap"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1861,41 +1876,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/brief": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns summarized information about a world. */
-        get: operations["getWorldBrief"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/collaborators": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description List the collaborating users */
-        get: operations["getWorldCollaborators"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/access": {
+    "/api/world/{worldId}/mindmap/nodes": {
         parameters: {
             query?: never;
             header?: never;
@@ -1904,15 +1885,16 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Changes the world's access mode. */
-        post: operations["setWorldAccessMode"];
-        delete?: never;
+        /** @description Creates a new node */
+        post: operations["createNode"];
+        /** @description Deletes the target nodes */
+        delete: operations["deleteNodes"];
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/share/{userId}": {
+    "/api/world/{worldId}/mindmap/nodes/{nodeId}": {
         parameters: {
             query?: never;
             header?: never;
@@ -1922,31 +1904,14 @@ export interface paths {
         get?: never;
         put?: never;
         post?: never;
-        /** @description Removes the target user's access to this world. */
-        delete: operations["unshareWorld"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/calendars": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all calendars accessible for the current user in a given world. */
-        get: operations["listWorldCalendars"];
-        put?: never;
-        post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        patch?: never;
+        /** @description Updates the target node */
+        patch: operations["updateNode"];
         trace?: never;
     };
-    "/api/world/{worldId}/collaboration/leave": {
+    "/api/world/{worldId}/mindmap/nodes/{nodeId}/reparent": {
         parameters: {
             query?: never;
             header?: never;
@@ -1955,12 +1920,64 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Removes the current user from the world collaborators. */
-        post: operations["leaveWorldCollaboration"];
+        /** @description Updates the target node parent */
+        post: operations["reparentNode"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves multiple nodes by a delta in a single transaction */
+        post: operations["moveMindmapNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
+        post: operations["createMindmapWires"];
+        /** @description Deletes specified mindmap wires */
+        delete: operations["deleteMindmapWires"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires/{wireId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Updates the target mindmap wire */
+        patch: operations["updateMindmapWire"];
         trace?: never;
     };
 }
@@ -3169,9 +3186,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -5244,377 +5261,6 @@ export interface operations {
             };
         };
     };
-    getMindmap: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        nodes: {
-                            worldId: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            content: string;
-                            contentRich: string;
-                            parentFolderId?: null | string;
-                            parentActorId?: null | string;
-                            parentEventId?: null | string;
-                            parentArticleId?: null | string;
-                            positionX: number;
-                            positionY: number;
-                            parentTagId?: null | string;
-                        }[];
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    createNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    id?: string;
-                    positionX: number;
-                    positionY: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    id?: string;
-                    positionX: number;
-                    positionY: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentActorId?: null | string;
-                        parentEventId?: null | string;
-                        parentArticleId?: null | string;
-                        positionX: number;
-                        positionY: number;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    deleteNodes: {
-        parameters: {
-            query: {
-                nodes: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        count: number;
-                    };
-                };
-            };
-        };
-    };
-    updateNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                    content?: string;
-                    contentRich?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                    content?: string;
-                    contentRich?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentActorId?: null | string;
-                        parentEventId?: null | string;
-                        parentArticleId?: null | string;
-                        positionX: number;
-                        positionY: number;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    moveMindmapNodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentActorId?: null | string;
-                        parentEventId?: null | string;
-                        parentArticleId?: null | string;
-                        positionX: number;
-                        positionY: number;
-                        parentTagId?: null | string;
-                    }[];
-                };
-            };
-        };
-    };
-    createMindmapWires: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-                "application/x-www-form-urlencoded": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        created: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                        }[];
-                        updated: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    deleteMindmapWires: {
-        parameters: {
-            query: {
-                wires: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string[];
-                };
-            };
-        };
-    };
-    updateMindmapWire: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                    };
-                };
-            };
-        };
-    };
     adminBroadcastNotification: {
         parameters: {
             query?: never;
@@ -6846,6 +6492,665 @@ export interface operations {
             };
         };
     };
+    getWorlds: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        ownedWorlds: {
+                            collaborators: {
+                                worldId: string;
+                                userId: string;
+                                access: "ReadOnly" | "Editing";
+                            }[];
+                            calendars: {
+                                description: string;
+                                worldId?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                ownerId?: null | string;
+                                position: number;
+                                /** Format: bigint */
+                                originTime: string;
+                                dateFormat?: null | string;
+                            }[];
+                            userPins: {
+                                worldId: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                userId: string;
+                                rank: number;
+                            }[];
+                            description: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            /** Format: bigint */
+                            timeOrigin: string;
+                            ownerId: string;
+                            accessMode: "Private" | "PublicRead" | "PublicEdit";
+                        }[];
+                        contributableWorlds: {
+                            collaborators: {
+                                worldId: string;
+                                userId: string;
+                                access: "ReadOnly" | "Editing";
+                            }[];
+                            calendars: {
+                                description: string;
+                                worldId?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                ownerId?: null | string;
+                                position: number;
+                                /** Format: bigint */
+                                originTime: string;
+                                dateFormat?: null | string;
+                            }[];
+                            userPins: {
+                                worldId: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                userId: string;
+                                rank: number;
+                            }[];
+                            description: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            /** Format: bigint */
+                            timeOrigin: string;
+                            ownerId: string;
+                            accessMode: "Private" | "PublicRead" | "PublicEdit";
+                        }[];
+                        visibleWorlds: {
+                            collaborators: {
+                                worldId: string;
+                                userId: string;
+                                access: "ReadOnly" | "Editing";
+                            }[];
+                            calendars: {
+                                description: string;
+                                worldId?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                ownerId?: null | string;
+                                position: number;
+                                /** Format: bigint */
+                                originTime: string;
+                                dateFormat?: null | string;
+                            }[];
+                            userPins: {
+                                worldId: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                userId: string;
+                                rank: number;
+                            }[];
+                            description: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                            /** Format: bigint */
+                            timeOrigin: string;
+                            ownerId: string;
+                            accessMode: "Private" | "PublicRead" | "PublicEdit";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    createWorld: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    description?: string;
+                    calendars?: string[];
+                    timeOrigin?: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    description?: string;
+                    calendars?: string[];
+                    timeOrigin?: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        name: string;
+                    };
+                };
+            };
+        };
+    };
+    getWorldInfo: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        isReadOnly: boolean;
+                        calendars: {
+                            units: {
+                                children: {
+                                    id: string;
+                                    calendarId: string;
+                                    position: number;
+                                    label?: null | string;
+                                    shortLabel?: null | string;
+                                    repeats: number;
+                                    parentUnitId: string;
+                                    childUnitId: string;
+                                }[];
+                                parents: {
+                                    id: string;
+                                    calendarId: string;
+                                    position: number;
+                                    label?: null | string;
+                                    shortLabel?: null | string;
+                                    repeats: number;
+                                    parentUnitId: string;
+                                    childUnitId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                position: number;
+                                displayName: string;
+                                displayNameShort: string;
+                                displayNamePlural: string;
+                                formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                formatShorthand?: null | string;
+                                negativeFormat: "MinusSign" | "AbsoluteValue";
+                                /** Format: bigint */
+                                duration: string;
+                                treeDepth: number;
+                            }[];
+                            presentations: {
+                                units: {
+                                    id: string;
+                                    name: string;
+                                    calendarId: string;
+                                    position: number;
+                                    formatString: string;
+                                    subdivision: number;
+                                    labeledIndices: number[];
+                                    unitId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                compression: number;
+                                scaleFactor: number;
+                                baselineUnitId?: null | string;
+                            }[];
+                            seasons: {
+                                intervals: {
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    calendarId: string;
+                                    leftIndex: number;
+                                    rightIndex: number;
+                                    seasonId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                position: number;
+                                formatShorthand?: null | string;
+                            }[];
+                            description: string;
+                            id: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            position: number;
+                            /** Format: bigint */
+                            originTime: string;
+                            dateFormat?: null | string;
+                        }[];
+                        actors: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            title: string;
+                            icon: string;
+                            color: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        events: {
+                            pages: {
+                                id: string;
+                                name: string;
+                            }[];
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            deltaStates: {
+                                description?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name?: null | string;
+                                /** Format: bigint */
+                                timestamp: string;
+                                descriptionRich?: null | string;
+                                worldEventId: string;
+                            }[];
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            icon: string;
+                            color: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                            /** Format: bigint */
+                            timestamp: string;
+                            revokedAt?: null | string;
+                            worldEventTrackId?: null | string;
+                        }[];
+                        tags: {
+                            mentions: {
+                                targetId: string;
+                                targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            mentionedIn: {
+                                sourceId: string;
+                                sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            }[];
+                            description: string;
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            color: string;
+                            parentFolderId?: null | string;
+                            parentFolderPosition: number;
+                        }[];
+                        description: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        /** Format: bigint */
+                        timeOrigin: string;
+                        ownerId: string;
+                        accessMode: "Private" | "PublicRead" | "PublicEdit";
+                    };
+                };
+            };
+        };
+    };
+    deleteWorld: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        /** Format: bigint */
+                        timeOrigin: string;
+                        ownerId: string;
+                        accessMode: "Private" | "PublicRead" | "PublicEdit";
+                    };
+                };
+            };
+        };
+    };
+    updateWorld: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    description?: string;
+                    calendars?: string[];
+                    timeOrigin?: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    description?: string;
+                    calendars?: string[];
+                    timeOrigin?: number;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getCommonWorldEventIcons: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        collections: {
+                            id: string;
+                            name: string;
+                            icons: string[];
+                            count: number;
+                            procedural: boolean;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    getWorldBrief: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                        /** Format: bigint */
+                        timeOrigin: string;
+                        ownerId: string;
+                        accessMode: "Private" | "PublicRead" | "PublicEdit";
+                    };
+                };
+            };
+        };
+    };
+    getWorldCollaborators: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        user: {
+                            id: string;
+                            email: string;
+                        };
+                        access: "ReadOnly" | "Editing";
+                    }[];
+                };
+            };
+        };
+    };
+    setWorldAccessMode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    access: "Private" | "PublicRead" | "PublicEdit";
+                };
+                "application/x-www-form-urlencoded": {
+                    access: "Private" | "PublicRead" | "PublicEdit";
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    unshareWorld: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listWorldCalendars: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description: string;
+                        worldId?: null | string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        ownerId?: null | string;
+                        position: number;
+                        /** Format: bigint */
+                        originTime: string;
+                        dateFormat?: null | string;
+                    }[];
+                };
+            };
+        };
+    };
+    leaveWorldCollaboration: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     searchWorld: {
         parameters: {
             query?: {
@@ -7836,192 +8141,11 @@ export interface operations {
             };
         };
     };
-    getWorlds: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        ownedWorlds: {
-                            calendars: {
-                                name: string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                description: string;
-                                ownerId?: null | string;
-                                position: number;
-                                /** Format: bigint */
-                                originTime: string;
-                                dateFormat?: null | string;
-                                worldId?: null | string;
-                            }[];
-                            collaborators: {
-                                userId: string;
-                                worldId: string;
-                                access: "ReadOnly" | "Editing";
-                            }[];
-                            userPins: {
-                                /** Format: date-time */
-                                createdAt: string;
-                                userId: string;
-                                worldId: string;
-                                rank: number;
-                            }[];
-                            name: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            description: string;
-                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                            /** Format: bigint */
-                            timeOrigin: string;
-                            ownerId: string;
-                            accessMode: "Private" | "PublicRead" | "PublicEdit";
-                        }[];
-                        contributableWorlds: {
-                            calendars: {
-                                name: string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                description: string;
-                                ownerId?: null | string;
-                                position: number;
-                                /** Format: bigint */
-                                originTime: string;
-                                dateFormat?: null | string;
-                                worldId?: null | string;
-                            }[];
-                            collaborators: {
-                                userId: string;
-                                worldId: string;
-                                access: "ReadOnly" | "Editing";
-                            }[];
-                            userPins: {
-                                /** Format: date-time */
-                                createdAt: string;
-                                userId: string;
-                                worldId: string;
-                                rank: number;
-                            }[];
-                            name: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            description: string;
-                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                            /** Format: bigint */
-                            timeOrigin: string;
-                            ownerId: string;
-                            accessMode: "Private" | "PublicRead" | "PublicEdit";
-                        }[];
-                        visibleWorlds: {
-                            calendars: {
-                                name: string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                description: string;
-                                ownerId?: null | string;
-                                position: number;
-                                /** Format: bigint */
-                                originTime: string;
-                                dateFormat?: null | string;
-                                worldId?: null | string;
-                            }[];
-                            collaborators: {
-                                userId: string;
-                                worldId: string;
-                                access: "ReadOnly" | "Editing";
-                            }[];
-                            userPins: {
-                                /** Format: date-time */
-                                createdAt: string;
-                                userId: string;
-                                worldId: string;
-                                rank: number;
-                            }[];
-                            name: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            description: string;
-                            calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                            /** Format: bigint */
-                            timeOrigin: string;
-                            ownerId: string;
-                            accessMode: "Private" | "PublicRead" | "PublicEdit";
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    createWorld: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    description?: string;
-                    calendars?: string[];
-                    timeOrigin?: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    description?: string;
-                    calendars?: string[];
-                    timeOrigin?: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        name: string;
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    getWorldInfo: {
+    getMindmap: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
                 worldId: string;
             };
             cookie?: never;
@@ -8034,237 +8158,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        isReadOnly: boolean;
-                        calendars: {
-                            units: {
-                                children: {
-                                    id: string;
-                                    position: number;
-                                    calendarId: string;
-                                    label?: null | string;
-                                    shortLabel?: null | string;
-                                    repeats: number;
-                                    parentUnitId: string;
-                                    childUnitId: string;
-                                }[];
-                                parents: {
-                                    id: string;
-                                    position: number;
-                                    calendarId: string;
-                                    label?: null | string;
-                                    shortLabel?: null | string;
-                                    repeats: number;
-                                    parentUnitId: string;
-                                    childUnitId: string;
-                                }[];
-                                name: string;
-                                id: string;
-                                position: number;
-                                displayName: string;
-                                displayNameShort: string;
-                                displayNamePlural: string;
-                                formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
-                                formatShorthand?: null | string;
-                                negativeFormat: "MinusSign" | "AbsoluteValue";
-                                /** Format: bigint */
-                                duration: string;
-                                treeDepth: number;
-                            }[];
-                            seasons: {
-                                intervals: {
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    calendarId: string;
-                                    leftIndex: number;
-                                    rightIndex: number;
-                                    seasonId: string;
-                                }[];
-                                name: string;
-                                id: string;
-                                position: number;
-                                formatShorthand?: null | string;
-                            }[];
-                            presentations: {
-                                units: {
-                                    name: string;
-                                    id: string;
-                                    position: number;
-                                    calendarId: string;
-                                    formatString: string;
-                                    subdivision: number;
-                                    labeledIndices: number[];
-                                    unitId: string;
-                                }[];
-                                name: string;
-                                id: string;
-                                compression: number;
-                                scaleFactor: number;
-                                baselineUnitId?: null | string;
-                            }[];
-                            name: string;
-                            id: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            description: string;
-                            position: number;
-                            /** Format: bigint */
-                            originTime: string;
-                            dateFormat?: null | string;
-                        }[];
-                        actors: {
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            pages: {
-                                name: string;
-                                id: string;
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            name: string;
+                        nodes: {
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
+                            name: string;
                             worldId: string;
                             content: string;
                             contentRich: string;
-                            title: string;
-                            icon: string;
-                            color: string;
+                            positionX: number;
+                            positionY: number;
+                            parentActorId?: null | string;
+                            parentArticleId?: null | string;
+                            parentEventId?: null | string;
                             parentFolderId?: null | string;
-                            parentFolderPosition: number;
+                            parentTagId?: null | string;
                         }[];
-                        events: {
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            pages: {
-                                name: string;
-                                id: string;
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            deltaStates: {
-                                name?: null | string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                description?: null | string;
-                                /** Format: bigint */
-                                timestamp: string;
-                                descriptionRich?: null | string;
-                                worldEventId: string;
-                            }[];
-                            name: string;
+                        wires: {
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            worldId: string;
                             content: string;
-                            contentRich: string;
-                            /** Format: bigint */
-                            timestamp: string;
-                            icon: string;
-                            color: string;
-                            parentFolderId?: null | string;
-                            parentFolderPosition: number;
-                            revokedAt?: null | string;
-                            worldEventTrackId?: null | string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
                         }[];
-                        tags: {
-                            mentions: {
-                                targetId: string;
-                                targetType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            mentionedIn: {
-                                sourceId: string;
-                                sourceType: "Actor" | "Tag" | "Event" | "Article" | "Node";
-                            }[];
-                            name: string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            description: string;
-                            worldId: string;
-                            color: string;
-                            parentFolderId?: null | string;
-                            parentFolderPosition: number;
-                        }[];
-                        name: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        description: string;
-                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                        /** Format: bigint */
-                        timeOrigin: string;
-                        ownerId: string;
-                        accessMode: "Private" | "PublicRead" | "PublicEdit";
                     };
                 };
             };
         };
     };
-    deleteWorld: {
+    createNode: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        name: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        description: string;
-                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                        /** Format: bigint */
-                        timeOrigin: string;
-                        ownerId: string;
-                        accessMode: "Private" | "PublicRead" | "PublicEdit";
-                    };
-                };
-            };
-        };
-    };
-    updateWorld: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
                 worldId: string;
             };
             cookie?: never;
@@ -8272,39 +8204,29 @@ export interface operations {
         requestBody?: {
             content: {
                 "application/json": {
+                    id?: string;
+                    positionX: number;
+                    positionY: number;
                     name?: string;
-                    description?: string;
-                    calendars?: string[];
-                    timeOrigin?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
                 };
                 "application/x-www-form-urlencoded": {
+                    id?: string;
+                    positionX: number;
+                    positionY: number;
                     name?: string;
-                    description?: string;
-                    calendars?: string[];
-                    timeOrigin?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
                 };
             };
         };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getCommonWorldEventIcons: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
         responses: {
             200: {
                 headers: {
@@ -8312,139 +8234,34 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        collections: {
-                            id: string;
-                            name: string;
-                            icons: string[];
-                            count: number;
-                            procedural: boolean;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    getWorldBrief: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        name: string;
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        description: string;
-                        calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                        /** Format: bigint */
-                        timeOrigin: string;
-                        ownerId: string;
-                        accessMode: "Private" | "PublicRead" | "PublicEdit";
-                    };
-                };
-            };
-        };
-    };
-    getWorldCollaborators: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            email: string;
-                        };
+                        name: string;
                         worldId: string;
-                        access: "ReadOnly" | "Editing";
-                    }[];
+                        content: string;
+                        contentRich: string;
+                        positionX: number;
+                        positionY: number;
+                        parentActorId?: null | string;
+                        parentArticleId?: null | string;
+                        parentEventId?: null | string;
+                        parentFolderId?: null | string;
+                        parentTagId?: null | string;
+                    };
                 };
             };
         };
     };
-    setWorldAccessMode: {
+    deleteNodes: {
         parameters: {
-            query?: never;
+            query: {
+                nodes: string[];
+            };
             header?: never;
             path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    access: "Private" | "PublicRead" | "PublicEdit";
-                };
-                "application/x-www-form-urlencoded": {
-                    access: "Private" | "PublicRead" | "PublicEdit";
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    unshareWorld: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    listWorldCalendars: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
                 worldId: string;
             };
             cookie?: never;
@@ -8457,41 +8274,301 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        name: string;
+                        count: number;
+                    };
+                };
+            };
+        };
+    };
+    updateNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    content?: string;
+                    contentRich?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    content?: string;
+                    contentRich?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
                         id: string;
                         /** Format: date-time */
                         createdAt: string;
                         /** Format: date-time */
                         updatedAt: string;
-                        description: string;
-                        ownerId?: null | string;
-                        position: number;
-                        /** Format: bigint */
-                        originTime: string;
-                        dateFormat?: null | string;
-                        worldId?: null | string;
+                        name: string;
+                        worldId: string;
+                        content: string;
+                        contentRich: string;
+                        positionX: number;
+                        positionY: number;
+                        parentActorId?: null | string;
+                        parentArticleId?: null | string;
+                        parentEventId?: null | string;
+                        parentFolderId?: null | string;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    reparentNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        worldId: string;
+                        content: string;
+                        contentRich: string;
+                        positionX: number;
+                        positionY: number;
+                        parentActorId?: null | string;
+                        parentArticleId?: null | string;
+                        parentEventId?: null | string;
+                        parentFolderId?: null | string;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    moveMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        worldId: string;
+                        content: string;
+                        contentRich: string;
+                        positionX: number;
+                        positionY: number;
+                        parentActorId?: null | string;
+                        parentArticleId?: null | string;
+                        parentEventId?: null | string;
+                        parentFolderId?: null | string;
+                        parentTagId?: null | string;
                     }[];
                 };
             };
         };
     };
-    leaveWorldCollaboration: {
+    createMindmapWires: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+                "application/x-www-form-urlencoded": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        created: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                        updated: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    deleteMindmapWires: {
+        parameters: {
+            query: {
+                wires: string[];
+            };
+            header?: never;
+            path: {
                 worldId: string;
             };
             cookie?: never;
         };
         requestBody?: never;
         responses: {
-            204: {
+            200: {
                 headers: {
                     [name: string]: unknown;
                 };
-                content?: never;
+                content: {
+                    "application/json": string[];
+                };
+            };
+        };
+    };
+    updateMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
             };
         };
     };

@@ -4,14 +4,8 @@ import { UserAuthMiddleware } from '@src/middleware/UserAuthMiddleware.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
-import {
-	BadRequestError,
-	Router,
-	useApiEndpoint,
-	usePathParams,
-	useQueryParams,
-	useRequestBody,
-} from 'moonflower'
+import { ValidationService } from '@src/services/ValidationService.js'
+import { Router, useApiEndpoint, usePathParams, useQueryParams, useRequestBody } from 'moonflower'
 import z from 'zod'
 
 import { mindmapGroupTag, mindmapNodeTag, mindmapWireTag } from './utils/tags.js'
@@ -62,50 +56,7 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 		parentTagId: z.string().optional(),
 	})
 
-	let owners = 0
-	if (params.parentActorId) {
-		owners += 1
-		await AuthorizationService.checkEntityWorldOwnership({
-			worldId,
-			entityId: params.parentActorId,
-			entityType: 'actor',
-		})
-	}
-	if (params.parentArticleId) {
-		owners += 1
-		await AuthorizationService.checkEntityWorldOwnership({
-			worldId,
-			entityId: params.parentArticleId,
-			entityType: 'article',
-		})
-	}
-	if (params.parentEventId) {
-		owners += 1
-		await AuthorizationService.checkEntityWorldOwnership({
-			worldId,
-			entityId: params.parentEventId,
-			entityType: 'event',
-		})
-	}
-	if (params.parentFolderId) {
-		owners += 1
-		await AuthorizationService.checkEntityWorldOwnership({
-			worldId,
-			entityId: params.parentFolderId,
-			entityType: 'folder',
-		})
-	}
-	if (params.parentTagId) {
-		owners += 1
-		await AuthorizationService.checkEntityWorldOwnership({
-			worldId,
-			entityId: params.parentTagId,
-			entityType: 'tag',
-		})
-	}
-	if (owners > 1) {
-		throw new BadRequestError("Node can't have multiple parents")
-	}
+	await ValidationService.checkIfNodeParentListIsValid({ worldId, params })
 
 	const node = await MindmapService.createNode({ worldId, ...params })
 	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
@@ -135,8 +86,61 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 		contentRich: z.string().optional(),
 	})
 
-	const node = await MindmapService.updateNode(nodeId, params)
+	const node = await MindmapService.updateNode(
+		{
+			nodeId,
+			worldId,
+		},
+		params,
+	)
 	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
+
+	return node
+})
+
+router.post('/api/world/:worldId/mindmap/nodes/:nodeId/reparent', async (ctx) => {
+	useApiEndpoint({
+		name: 'reparentNode',
+		description: 'Updates the target node parent',
+		tags: [mindmapGroupTag, mindmapNodeTag],
+	})
+
+	const { worldId, nodeId } = usePathParams(ctx, {
+		worldId: z.string(),
+		nodeId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		positionX: z.number().optional(),
+		positionY: z.number().optional(),
+		parentActorId: z.uuid().optional(),
+		parentArticleId: z.uuid().optional(),
+		parentEventId: z.uuid().optional(),
+		parentFolderId: z.uuid().optional(),
+		parentTagId: z.uuid().optional(),
+	})
+
+	await ValidationService.checkIfNodeParentListIsValid({ worldId, params })
+
+	const { node, removedMentions } = await MindmapService.reparentNode(
+		{
+			nodeId,
+			worldId,
+		},
+		{
+			positionX: params.positionX,
+			positionY: params.positionY,
+			parentActorId: params.parentActorId ?? null,
+			parentArticleId: params.parentArticleId ?? null,
+			parentEventId: params.parentEventId ?? null,
+			parentFolderId: params.parentFolderId ?? null,
+			parentTagId: params.parentTagId ?? null,
+		},
+	)
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
+	RedisService.notifyAboutUpdatedMentions(ctx, { worldId, mentions: removedMentions })
 
 	return node
 })

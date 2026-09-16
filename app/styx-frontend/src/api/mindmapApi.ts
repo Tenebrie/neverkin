@@ -36,6 +36,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
+			reparentNode: build.mutation<ReparentNodeApiResponse, ReparentNodeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/${queryArg.nodeId}/reparent`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 			moveMindmapNodes: build.mutation<MoveMindmapNodesApiResponse, MoveMindmapNodesApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/nodes/move`,
@@ -76,19 +84,19 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		worldId: string
 		content: string
 		contentRich: string
-		parentFolderId?: null | string
-		parentActorId?: null | string
-		parentEventId?: null | string
-		parentArticleId?: null | string
 		positionX: number
 		positionY: number
+		parentActorId?: null | string
+		parentArticleId?: null | string
+		parentEventId?: null | string
+		parentFolderId?: null | string
 		parentTagId?: null | string
 	}[]
 	wires: {
@@ -105,19 +113,19 @@ export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	content: string
 	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }
 export type CreateNodeApiArg = {
@@ -142,19 +150,19 @@ export type DeleteNodesApiArg = {
 	nodes: string[]
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	content: string
 	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }
 export type UpdateNodeApiArg = {
@@ -168,20 +176,49 @@ export type UpdateNodeApiArg = {
 		contentRich?: string
 	}
 }
-export type MoveMindmapNodesApiResponse = /** status 200  */ {
-	worldId: string
+export type ReparentNodeApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
+	worldId: string
 	content: string
 	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
 	positionX: number
 	positionY: number
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
+	parentTagId?: null | string
+}
+export type ReparentNodeApiArg = {
+	worldId: string
+	nodeId: string
+	body: {
+		positionX?: number
+		positionY?: number
+		parentActorId?: string
+		parentArticleId?: string
+		parentEventId?: string
+		parentFolderId?: string
+		parentTagId?: string
+	}
+}
+export type MoveMindmapNodesApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	worldId: string
+	content: string
+	contentRich: string
+	positionX: number
+	positionY: number
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }[]
 export type MoveMindmapNodesApiArg = {
@@ -249,6 +286,7 @@ export const {
 	useCreateNodeMutation,
 	useDeleteNodesMutation,
 	useUpdateNodeMutation,
+	useReparentNodeMutation,
 	useMoveMindmapNodesMutation,
 	useCreateMindmapWiresMutation,
 	useDeleteMindmapWiresMutation,
