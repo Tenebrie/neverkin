@@ -1,6 +1,5 @@
 import EditNoteIcon from '@mui/icons-material/EditNote'
 
-import { ENTITY_TYPE_LABEL } from '../../utils/entityTypeLabel'
 import { getEntityExcerpt } from '../../utils/getEntityExcerpt'
 import { WikiLintRule } from '../WikiLintRule'
 
@@ -14,7 +13,7 @@ export const emptyContent: WikiLintRule = {
 				key: `emptyContent:${entity.id}`,
 				entity,
 				label: entity.name,
-				message: `${ENTITY_TYPE_LABEL[entity.type].toLowerCase()} is still empty`,
+				message: `${entity.type} is still empty`,
 				action: 'Write it',
 			})),
 }

@@ -9,9 +9,9 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { WikiLandingFirstRunDoor } from './WikiLandingFirstRunDoor'
+import { WikiLandingEmptyStateAction } from './WikiLandingEmptyStateAction'
 
-export function WikiLandingFirstRun() {
+export function WikiLandingEmptyState() {
 	const { isReadOnly } = useIsReadOnly()
 	const theme = useCustomTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
@@ -60,21 +60,21 @@ export function WikiLandingFirstRun() {
 							width: '100%',
 						}}
 					>
-						<WikiLandingFirstRunDoor
+						<WikiLandingEmptyStateAction
 							type="actor"
 							title="Start with a person"
 							body="Who is crucial for your world? Who is the protagonist? And most importantly, who dunnit?"
 							buttonLabel="New character"
 							onClick={async () => openCreated(await createActor({ query: '' }))}
 						/>
-						<WikiLandingFirstRunDoor
+						<WikiLandingEmptyStateAction
 							type="event"
 							title="Start with an event"
 							body="It's high noon somewhere in the world. When is yours?"
 							buttonLabel="New event"
 							onClick={async () => openCreated(await createEvent({ query: '' }))}
 						/>
-						<WikiLandingFirstRunDoor
+						<WikiLandingEmptyStateAction
 							type="article"
 							title="Start with a blank page"
 							body="Your magic system; your FTL travel rules; or mayhaps just some random notes to jot down?"

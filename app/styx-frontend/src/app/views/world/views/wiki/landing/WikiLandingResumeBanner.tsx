@@ -4,26 +4,30 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { alpha, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
+import { capitalize } from '@mui/material/utils'
+import { useSelector } from 'react-redux'
 
 import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { useTimeAgo } from '@/app/hooks/useTimeAgo'
 import { HomeRowItemTraitChip } from '@/app/views/home/components/rowItem/HomeRowItemTraitChip'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
-import { ENTITY_TYPE_LABEL } from './utils/entityTypeLabel'
+import { getWikiState } from '../WikiSliceSelectors'
 import { getEntityExcerpt } from './utils/getEntityExcerpt'
 
 type Props = {
 	entity: BoxedWikiEntity
-	folderName: string | undefined
 	openedAt: number
-	onResume: () => void
 }
 
-export function WikiLandingResumeBanner({ entity, folderName, openedAt, onResume }: Props) {
+export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
+	const { folders } = useSelector(getWikiState, (a, b) => a.folders === b.folders)
 	const { palette } = useTheme()
+	const navigate = useStableNavigate({ from: '/world/$worldId' })
 	const openedAgo = useTimeAgo(new Date(openedAt))
 	const excerpt = getEntityExcerpt(entity)
+	const folderName = folders.find((folder) => folder.id === entity.entity.parentFolderId)?.name
 
 	return (
 		<Paper
@@ -46,7 +50,7 @@ export function WikiLandingResumeBanner({ entity, folderName, openedAt, onResume
 					flexWrap="wrap"
 					sx={{ typography: 'body2', color: 'text.secondary' }}
 				>
-					<HomeRowItemTraitChip label={ENTITY_TYPE_LABEL[entity.type]} accent />
+					<HomeRowItemTraitChip label={capitalize(entity.type)} accent />
 					{folderName && (
 						<>
 							<span>·</span>
@@ -70,7 +74,14 @@ export function WikiLandingResumeBanner({ entity, folderName, openedAt, onResume
 					</TruncatedTypography>
 				)}
 			</Stack>
-			<Button variant="contained" startIcon={<PlayArrowIcon />} onClick={onResume} sx={{ flexShrink: 0 }}>
+			<Button
+				variant="contained"
+				startIcon={<PlayArrowIcon />}
+				onClick={() =>
+					navigate({ to: '/world/$worldId/wiki/$articleId', params: { articleId: entity.id }, search: true })
+				}
+				sx={{ flexShrink: 0 }}
+			>
 				Resume
 			</Button>
 		</Paper>

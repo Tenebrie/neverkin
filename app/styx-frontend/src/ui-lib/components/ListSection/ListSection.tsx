@@ -3,7 +3,7 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { ReactNode } from 'react'
 
-import { HomeSectionHeader } from './HomeSectionHeader'
+import { ListSectionHeader } from './ListSectionHeader'
 
 type Props = {
 	label: string
@@ -12,11 +12,11 @@ type Props = {
 	children: ReactNode
 }
 
-export function HomeSection({ label, count, action, children }: Props) {
+export function ListSection({ label, count, action, children }: Props) {
 	return (
 		<Stack gap={1.5}>
 			<Stack direction="row" alignItems="center" gap={1} sx={{ px: 0.25, minHeight: 34 }}>
-				<HomeSectionHeader>{label}</HomeSectionHeader>
+				<ListSectionHeader>{label}</ListSectionHeader>
 				{count !== undefined && (
 					<Box
 						sx={{

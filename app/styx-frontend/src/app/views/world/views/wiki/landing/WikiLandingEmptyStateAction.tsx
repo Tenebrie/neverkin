@@ -16,7 +16,7 @@ type Props = {
 	onClick: () => void
 }
 
-export function WikiLandingFirstRunDoor({ type, title, body, buttonLabel, onClick }: Props) {
+export function WikiLandingEmptyStateAction({ type, title, body, buttonLabel, onClick }: Props) {
 	const { palette } = useTheme()
 
 	return (

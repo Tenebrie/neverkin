@@ -1,7 +1,6 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
 import { BoxedWikiEntity } from '../../../hooks/useBoxedWikiContent'
-import { ENTITY_TYPE_LABEL } from '../../utils/entityTypeLabel'
 import { WikiLintRule } from '../WikiLintRule'
 
 export const duplicateNames: WikiLintRule = {
@@ -23,7 +22,7 @@ export const duplicateNames: WikiLintRule = {
 				key: `duplicateNames:${key}`,
 				entity: group[0],
 				label: `${group[0].name} ×${group.length}`,
-				message: `${group.length} ${ENTITY_TYPE_LABEL[group[0].type].toLowerCase()}s share this name`,
+				message: `${group.length} ${group[0].type}s share this name`,
 				action: 'Compare',
 			}))
 	},

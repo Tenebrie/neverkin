@@ -9,8 +9,8 @@ import { useSelector } from 'react-redux'
 
 import { useAdminGetUsersQuery } from '@/api/adminUsersApi'
 import { getAuthState } from '@/app/features/auth/AuthSliceSelectors'
+import { Pagination } from '@/ui-lib/components/Pagination/Pagination'
 
-import { Pagination } from '../../../../ui-lib/components/Pagination/Pagination'
 import { AdminUserRow } from '../components/AdminUserRow'
 import { SearchInput } from '../components/SearchInput'
 import { DeleteUserModal } from '../modals/DeleteUserModal'
