@@ -8,21 +8,22 @@ type Props = {
 	name: string
 	color: string
 	icon?: ReactNode
+	size?: number
 }
 
 /**
  * Square tile standing in for an entity, tinted with its accent color. Shows the entity's initials
  * unless an icon is given.
  */
-export function EntityInitialsTile({ name, color, icon }: Props) {
+export function EntityInitialsTile({ name, color, icon, size = 38 }: Props) {
 	const { palette } = useTheme()
 	const isDark = palette.mode === 'dark'
 
 	return (
 		<Box
 			sx={{
-				width: 38,
-				height: 38,
+				width: size,
+				height: size,
 				flex: '0 0 auto',
 				borderRadius: 1.25,
 				display: 'grid',

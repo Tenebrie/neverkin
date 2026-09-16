@@ -114,6 +114,10 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 	const FOUR_HUNDRED_YEAR = 3 * HUNDRED_YEAR + 25 * FOUR_YEAR
 
 	const monthLengths = [28, 29, 30, 31]
+	// Prisma serves one relation row as both the parent's `children` and the child's
+	// `parents`, so the month's parent relations must be the very same objects.
+	const regularYearChildren = earthYearChildren('regular-year', false)
+	const leapYearChildren = earthYearChildren('leap-year', true)
 	const monthUnits = monthLengths.map((days) =>
 		mockCalendarUnit({
 			id: earthMonthUnitId(days),
@@ -125,10 +129,9 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			formatMode: 'Name',
 			position: 3,
 			children: [mockCalendarUnitChildRelation(earthMonthUnitId(days), 'day', days)],
-			parents: [
-				mockCalendarUnitParentRelation('regular-year', earthMonthUnitId(days), 1),
-				mockCalendarUnitParentRelation('leap-year', earthMonthUnitId(days), 1),
-			],
+			parents: [...regularYearChildren, ...leapYearChildren].filter(
+				(relation) => relation.childUnitId === earthMonthUnitId(days),
+			),
 		}),
 	)
 
@@ -137,6 +140,7 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			id: 'minute',
 			name: 'minute',
 			displayName: 'minute',
+			displayNameShort: 'min',
 			duration: MINUTE,
 			formatShorthand: 'm',
 			formatMode: 'Numeric',
@@ -148,6 +152,7 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			id: 'hour',
 			name: 'hour',
 			displayName: 'hour',
+			displayNameShort: 'hr',
 			duration: HOUR,
 			formatShorthand: 'h',
 			formatMode: 'Numeric',
@@ -159,6 +164,7 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			id: 'day',
 			name: 'day',
 			displayName: 'day',
+			displayNameShort: 'd',
 			duration: DAY,
 			formatShorthand: 'd',
 			formatMode: 'NumericOneIndexed',
@@ -173,11 +179,12 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			id: 'regular-year',
 			name: 'Regular year',
 			displayName: 'year',
+			displayNameShort: 'yr',
 			duration: REGULAR_YEAR,
 			formatShorthand: 'Y',
 			formatMode: 'NumericOneIndexed',
 			position: 4,
-			children: earthYearChildren('regular-year', false),
+			children: regularYearChildren,
 			parents: [
 				mockCalendarUnitParentRelation('four-year-cycle', 'regular-year', 3),
 				mockCalendarUnitParentRelation('hundred-year-cycle', 'regular-year', 4),
@@ -187,11 +194,12 @@ export function mockEarthCalendarUnits(): WorldCalendar['units'] {
 			id: 'leap-year',
 			name: 'Leap year',
 			displayName: 'year',
+			displayNameShort: 'yr',
 			duration: LEAP_YEAR,
 			formatShorthand: 'Y',
 			formatMode: 'NumericOneIndexed',
 			position: 4,
-			children: earthYearChildren('leap-year', true),
+			children: leapYearChildren,
 			parents: [mockCalendarUnitParentRelation('four-year-cycle', 'leap-year', 1)],
 		}),
 		mockCalendarUnit({

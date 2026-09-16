@@ -3,7 +3,7 @@ import { useSelector } from 'react-redux'
 import { useGetMindmapQuery } from '@/api/mindmapApi'
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
-import { WikiArticle } from '@/api/types/worldWikiTypes'
+import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
 import { store } from '@/app/store'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
@@ -26,6 +26,11 @@ type ResolvedMention =
 	| {
 			type: 'article'
 			entity: WikiArticle
+			node?: MindmapNode
+	  }
+	| {
+			type: 'folder'
+			entity: WikiFolder
 			node?: MindmapNode
 	  }
 	| {
@@ -55,7 +60,7 @@ export function useEntityResolver() {
 		}
 
 		const markers = store.getState().timeline.markers
-		const articles = store.getState().wiki.articles
+		const { articles, folders } = store.getState().wiki
 		const marker = markers.find((m) => m.key === entityId)
 		if (marker) {
 			const event = events.find((e) => e.id === marker.eventId)
@@ -97,6 +102,11 @@ export function useEntityResolver() {
 		const article = articles.find((a) => a.id === entityId)
 		if (article) {
 			return { type: 'article', entity: article }
+		}
+
+		const folder = folders.find((f) => f.id === entityId)
+		if (folder) {
+			return { type: 'folder', entity: folder }
 		}
 
 		const tag = tags.find((t) => t.id === entityId)

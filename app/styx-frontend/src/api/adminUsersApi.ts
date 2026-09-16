@@ -141,23 +141,15 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			worlds: {
-				total: number
-				created: number[]
-			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			assets: {
-				total: number
-				created: number[]
-			}
-			events: {
+			nodes: {
 				total: number
 				created: number[]
 			}
 			actors: {
+				total: number
+				created: number[]
+			}
+			events: {
 				total: number
 				created: number[]
 			}
@@ -173,7 +165,15 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			nodes: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			worlds: {
+				total: number
+				created: number[]
+			}
+			assets: {
 				total: number
 				created: number[]
 			}
@@ -337,23 +337,15 @@ export type AdminGetUserApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			worlds: {
-				total: number
-				created: number[]
-			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			assets: {
-				total: number
-				created: number[]
-			}
-			events: {
+			nodes: {
 				total: number
 				created: number[]
 			}
 			actors: {
+				total: number
+				created: number[]
+			}
+			events: {
 				total: number
 				created: number[]
 			}
@@ -369,7 +361,15 @@ export type AdminGetUserApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			nodes: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			worlds: {
+				total: number
+				created: number[]
+			}
+			assets: {
 				total: number
 				created: number[]
 			}

@@ -282,14 +282,12 @@ export const WikiArticleService = {
 				},
 			})
 
+			const updatedMentions = await prisma.mention.findMany({
+				where: { sourceArticleId: articleId },
+			})
+
 			await makeSortWikiArticlesQuery(worldId, prisma)
 			const world = await makeTouchWorldQuery(worldId, prisma)
-
-			const updatedMentions = await prisma.mention.findMany({
-				where: {
-					sourceArticleId: articleId,
-				},
-			})
 
 			return {
 				world,

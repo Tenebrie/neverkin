@@ -91,7 +91,7 @@ export type ListUserAssetsApiArg = {
 	offset?: number
 	limit?: number
 	sortField?: string
-	sortDirection?: 'desc' | 'asc'
+	sortDirection?: 'asc' | 'desc'
 }
 export type RequestPresignedUrlApiResponse = /** status 200  */ {
 	asset: {

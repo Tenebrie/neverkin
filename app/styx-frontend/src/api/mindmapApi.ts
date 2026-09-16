@@ -36,6 +36,14 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
+			reparentNode: build.mutation<ReparentNodeApiResponse, ReparentNodeApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/${queryArg.nodeId}/reparent`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 			moveMindmapNodes: build.mutation<MoveMindmapNodesApiResponse, MoveMindmapNodesApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/nodes/move`,
@@ -69,6 +77,14 @@ const injectedRtkApi = api
 					body: queryArg.body,
 				}),
 				invalidatesTags: [],
+			}),
+			splitMindmapWire: build.mutation<SplitMindmapWireApiResponse, SplitMindmapWireApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/wires/${queryArg.wireId}/split`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap', 'mindmapNode', 'mindmapWire'],
 			}),
 		}),
 		overrideExisting: false,
@@ -168,6 +184,35 @@ export type UpdateNodeApiArg = {
 		contentRich?: string
 	}
 }
+export type ReparentNodeApiResponse = /** status 200  */ {
+	worldId: string
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentFolderId?: null | string
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+	positionX: number
+	positionY: number
+	parentTagId?: null | string
+}
+export type ReparentNodeApiArg = {
+	worldId: string
+	nodeId: string
+	body: {
+		positionX?: number
+		positionY?: number
+		parentActorId?: string
+		parentArticleId?: string
+		parentEventId?: string
+		parentFolderId?: string
+		parentTagId?: string
+	}
+}
 export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -243,14 +288,53 @@ export type UpdateMindmapWireApiArg = {
 		content?: string
 	}
 }
+export type SplitMindmapWireApiResponse = /** status 200  */ {
+	node: {
+		worldId: string
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		content: string
+		contentRich: string
+		parentFolderId?: null | string
+		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
+		positionX: number
+		positionY: number
+		parentTagId?: null | string
+	}
+	wires: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		content: string
+		sourceNodeId: string
+		targetNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+	}[]
+}
+export type SplitMindmapWireApiArg = {
+	worldId: string
+	wireId: string
+	body: {
+		positionX: number
+		positionY: number
+		name: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+	}
+}
 export const {
 	useGetMindmapQuery,
 	useLazyGetMindmapQuery,
 	useCreateNodeMutation,
 	useDeleteNodesMutation,
 	useUpdateNodeMutation,
+	useReparentNodeMutation,
 	useMoveMindmapNodesMutation,
 	useCreateMindmapWiresMutation,
 	useDeleteMindmapWiresMutation,
 	useUpdateMindmapWireMutation,
+	useSplitMindmapWireMutation,
 } = injectedRtkApi

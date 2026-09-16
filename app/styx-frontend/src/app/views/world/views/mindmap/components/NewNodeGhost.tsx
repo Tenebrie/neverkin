@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
-import { getHoveredMindmapClickArea } from '../utils/getHoveredMindmapClickArea'
+import { getMindmapGridScale } from '../utils/getMindmapGridScale'
 import { ActorNodeContent } from '../workspace/ActorNodeContent'
 
 type Props = {
@@ -9,12 +9,10 @@ type Props = {
 }
 
 export function NewNodeGhost({ entityHandle }: Props) {
-	const hoveredMindmapClickArea = getHoveredMindmapClickArea()
-	if (!hoveredMindmapClickArea) {
+	const scale = getMindmapGridScale()
+	if (scale === null) {
 		return null
 	}
-	const style = getComputedStyle(hoveredMindmapClickArea)
-	const scale = parseFloat(style.getPropertyValue('--grid-scale'))
 	return (
 		<Box sx={{ transform: `scale(${scale})` }}>
 			<ActorNodeContent parent={entityHandle} />

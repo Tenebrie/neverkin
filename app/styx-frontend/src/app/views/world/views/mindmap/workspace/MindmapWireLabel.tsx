@@ -10,9 +10,11 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 type Props = {
 	wire: MindmapWire
 	onClick: (event: React.MouseEvent) => void
+	onMouseDown: (event: React.MouseEvent) => void
+	onMouseUp: (event: React.MouseEvent) => void
 }
 
-export function MindmapWireLabel({ wire, onClick }: Props) {
+export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Props) {
 	const theme = useCustomTheme()
 	const maxLabelLength = 24
 	const labelText = wire.content
@@ -33,6 +35,8 @@ export function MindmapWireLabel({ wire, onClick }: Props) {
 		<Box
 			ref={containerRef}
 			onClick={onClick}
+			onMouseDown={onMouseDown}
+			onMouseUp={onMouseUp}
 			sx={{
 				background: theme.custom.palette.background.timeline,
 				position: 'absolute',

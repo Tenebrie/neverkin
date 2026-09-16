@@ -1,3 +1,5 @@
+import { parseFormattedTimestamp } from '@neverkin/esoteric-date'
+
 import { WorldCalendar, WorldCalendarUnit } from '@/api/types/worldTypes'
 
 type TimeBucket = {
@@ -29,6 +31,11 @@ const parseNumber = (str: string) => {
 }
 
 export const parseTimeSelector = (calendar: WorldCalendar, timeSelector: string): TimeDelta[] => {
+	const asDate = matchDateFormat(calendar, timeSelector)
+	if (asDate) {
+		return asDate
+	}
+
 	const parts = timeSelector.split(' ')
 	const buckets = calendar.units
 		.filter((unit) => unit.formatShorthand && unit.formatMode !== 'Hidden')
@@ -100,7 +107,7 @@ export const parseTimeSelector = (calendar: WorldCalendar, timeSelector: string)
 				bucket: toTimeMatch.bucket,
 				priority: Number(toTimeMatch.unit.duration),
 				unit: toTimeMatch.unit,
-				set: parseNumber(num),
+				set: toInternalValue(toTimeMatch.unit, parseNumber(num)),
 				add: 0,
 				exact,
 			}
@@ -124,4 +131,39 @@ export const parseTimeSelector = (calendar: WorldCalendar, timeSelector: string)
 			add: 0,
 		}
 	})
+}
+
+/**
+ * A selector written the way the world formats its dates, whole or in part:
+ * `14:00 April 04, 2030` or just its leading `14:23`. Fields the selector doesn't
+ * cover keep their current value, like every other selector.
+ */
+function matchDateFormat(calendar: WorldCalendar, timeSelector: string): TimeDelta[] | null {
+	const formatted = timeSelector.trim()
+	if (!calendar.dateFormat || formatted.length === 0) {
+		return null
+	}
+
+	try {
+		const parsed = parseFormattedTimestamp({
+			allUnits: calendar.units,
+			formatted,
+			dateFormat: calendar.dateFormat,
+			allowPartial: true,
+		})
+		return [...parsed]
+			.flatMap<TimeDelta>(([unitId, entry]) => {
+				const unit = calendar.units.find((candidate) => candidate.id === unitId)
+				return unit ? [{ priority: Number(unit.duration), unit, set: entry.value, add: 0 }] : []
+			})
+			.sort((a, b) => b.priority - a.priority)
+	} catch {
+		return null
+	}
+}
+
+/** Deltas carry internal indices; only some format modes render a unit one-indexed. */
+function toInternalValue(unit: WorldCalendarUnit, displayed: number) {
+	const isOneIndexed = unit.formatMode === 'NameOneIndexed' || unit.formatMode === 'NumericOneIndexed'
+	return isOneIndexed && displayed >= 0 ? displayed - 1 : displayed
 }

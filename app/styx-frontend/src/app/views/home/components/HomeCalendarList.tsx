@@ -2,11 +2,11 @@ import CalendarMonth from '@mui/icons-material/CalendarMonth'
 import { useMemo } from 'react'
 
 import { recentFirst } from '@/app/utils/sorting/recentFirst'
+import { ListSection } from '@/ui-lib/components/ListSection/ListSection'
 
 import { CalendarListCreateNewButton } from '../../calendar/list/CalendarListCreateNewButton'
 import { useCalendarListData } from '../hooks/useCalendarListData'
 import { HomeCalendarListItem } from './HomeCalendarListItem'
-import { HomeSection } from './section/HomeSection'
 import { HomeSectionEmptyState } from './section/HomeSectionEmptyState'
 import { HomeSectionLoadingState } from './section/HomeSectionLoadingState'
 
@@ -34,7 +34,7 @@ export function HomeCalendarList() {
 	}
 
 	return (
-		<HomeSection
+		<ListSection
 			label="Calendars"
 			count={calendars.length}
 			action={<CalendarListCreateNewButton variant="outlined" />}
@@ -42,6 +42,6 @@ export function HomeCalendarList() {
 			{sortedCalendars.map((calendar) => (
 				<HomeCalendarListItem key={calendar.id} calendar={calendar} />
 			))}
-		</HomeSection>
+		</ListSection>
 	)
 }

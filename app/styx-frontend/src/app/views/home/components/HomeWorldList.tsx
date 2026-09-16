@@ -4,11 +4,11 @@ import { useMemo } from 'react'
 import { pinnedWorldFirst } from '@/app/utils/sorting/pinnedWorldFirst'
 import { recentFirst } from '@/app/utils/sorting/recentFirst'
 import { sortPipe } from '@/app/utils/sorting/sortPipe'
+import { ListSection } from '@/ui-lib/components/ListSection/ListSection'
 
 import { WorldListCreateNewButton } from '../../worldManagement/components/WorldList/WorldListCreateNewButton'
 import { useWorldListData } from '../../worldManagement/hooks/useWorldListData'
 import { HomeWorldListItem } from './HomeWorldListItem'
-import { HomeSection } from './section/HomeSection'
 import { HomeSectionEmptyState } from './section/HomeSectionEmptyState'
 import { HomeSectionLoadingState } from './section/HomeSectionLoadingState'
 
@@ -46,11 +46,11 @@ function OwnedWorldList() {
 	}
 
 	return (
-		<HomeSection label="Your worlds" count={ownedWorlds.length}>
+		<ListSection label="Your worlds" count={ownedWorlds.length}>
 			{sortedWorlds.map((world) => (
 				<HomeWorldListItem key={world.id} world={world} owned />
 			))}
-		</HomeSection>
+		</ListSection>
 	)
 }
 
@@ -66,7 +66,7 @@ function SharedWorldList() {
 	}
 
 	return (
-		<HomeSection label="Shared with you" count={sortedWorlds.length}>
+		<ListSection label="Shared with you" count={sortedWorlds.length}>
 			{sortedWorlds.map((world) => (
 				<HomeWorldListItem
 					key={world.id}
@@ -74,6 +74,6 @@ function SharedWorldList() {
 					readonly={visibleWorlds.some((w) => w.id === world.id)}
 				/>
 			))}
-		</HomeSection>
+		</ListSection>
 	)
 }

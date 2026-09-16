@@ -4,8 +4,7 @@ import Typography from '@mui/material/Typography'
 import { ReactNode } from 'react'
 
 import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
-
-import { HomeSection } from './HomeSection'
+import { ListSection } from '@/ui-lib/components/ListSection/ListSection'
 
 type Props = {
 	icon: ReactNode
@@ -19,7 +18,7 @@ export function HomeSectionEmptyState({ icon, title, cta, description, action }:
 	const { palette } = useTheme()
 
 	return (
-		<HomeSection label={title} count={0}>
+		<ListSection label={title} count={0}>
 			<Stack direction="row" alignItems="center" gap={2} sx={{ p: 2 }}>
 				<EntityInitialsTile name={cta} color={palette.primary.main} icon={icon} />
 				<Stack flex={1} minWidth={0} gap={0.25}>
@@ -32,6 +31,6 @@ export function HomeSectionEmptyState({ icon, title, cta, description, action }:
 				</Stack>
 				{action}
 			</Stack>
-		</HomeSection>
+		</ListSection>
 	)
 }

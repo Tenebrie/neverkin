@@ -2,6 +2,7 @@ import { WorldEvent } from '@prisma/client'
 import { definedProps } from '@src/utils/definedProps.js'
 import { BadRequestError } from 'moonflower'
 
+import { AuthorizationService } from './AuthorizationService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { WorldEventService } from './WorldEventService.js'
 
@@ -147,6 +148,65 @@ export const ValidationService = {
 			event.deltaStates.some((state) => state.timestamp === timestamp && !excludedDeltaIds.includes(state.id))
 		) {
 			throw new BadRequestError('Another delta state already exists at this timestamp.')
+		}
+	},
+
+	checkIfNodeParentListIsValid: async ({
+		worldId,
+		params,
+	}: {
+		worldId: string
+		params: {
+			parentActorId?: string
+			parentArticleId?: string
+			parentEventId?: string
+			parentFolderId?: string
+			parentTagId?: string
+		}
+	}) => {
+		let owners = 0
+		if (params.parentActorId) {
+			owners += 1
+			await AuthorizationService.checkEntityWorldOwnership({
+				worldId,
+				entityId: params.parentActorId,
+				entityType: 'actor',
+			})
+		}
+		if (params.parentArticleId) {
+			owners += 1
+			await AuthorizationService.checkEntityWorldOwnership({
+				worldId,
+				entityId: params.parentArticleId,
+				entityType: 'article',
+			})
+		}
+		if (params.parentEventId) {
+			owners += 1
+			await AuthorizationService.checkEntityWorldOwnership({
+				worldId,
+				entityId: params.parentEventId,
+				entityType: 'event',
+			})
+		}
+		if (params.parentFolderId) {
+			owners += 1
+			await AuthorizationService.checkEntityWorldOwnership({
+				worldId,
+				entityId: params.parentFolderId,
+				entityType: 'folder',
+			})
+		}
+		if (params.parentTagId) {
+			owners += 1
+			await AuthorizationService.checkEntityWorldOwnership({
+				worldId,
+				entityId: params.parentTagId,
+				entityType: 'tag',
+			})
+		}
+		if (owners > 1) {
+			throw new BadRequestError('Node must have at most 1 parent')
 		}
 	},
 }

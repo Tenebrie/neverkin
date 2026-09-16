@@ -1,7 +1,8 @@
+import OpenInNew from '@mui/icons-material/OpenInNew'
 import Button from '@mui/material/Button'
 import Checkbox from '@mui/material/Checkbox'
-import Divider from '@mui/material/Divider'
 import FormControlLabel from '@mui/material/FormControlLabel'
+import Link from '@mui/material/Link'
 import Stack from '@mui/material/Stack'
 import TextField from '@mui/material/TextField'
 import Tooltip from '@mui/material/Tooltip'
@@ -10,12 +11,13 @@ import { useCallback, useEffect, useRef, useState } from 'react'
 
 import { WorldCalendar } from '@/api/types/worldTypes'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useCheckRouteMatch } from '@/router-utils/hooks/useCheckRouteMatch'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 import { useEventBusDispatch } from '../../eventBus'
 import { useModal } from '../../modals/ModalsSlice'
-import { TimeTravelModalInfo } from '../../modals/renderers/TimeTravelModalInfo'
+import { getDocsUrl } from '../../navigation/utils/getDocsUrl'
 import { useTimeSelector } from '../hooks/useTimeSelector'
 import { useWorldTime } from '../hooks/useWorldTime'
 import { useMarkerTimeTravel } from './useMarkerTimeTravel'
@@ -23,6 +25,7 @@ import { useMarkerTimeTravel } from './useMarkerTimeTravel'
 export const TimeTravelModal = () => {
 	const { isOpen, close, startingTime, markers } = useModal('timeTravelModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+	const isTimelineView = useCheckRouteMatch('/world/$worldId/timeline')
 
 	const { timeToLabel, calendar } = useWorldTime()
 	const { applySelector } = useTimeSelector({ rawTime: startingTime })
@@ -138,11 +141,12 @@ export const TimeTravelModal = () => {
 				autoFocus
 				helperText={error}
 				error={!!error}
+				placeholder="I.e. '14:23' or 'March'"
 			/>
 			<Typography>
-				<b>Travel to:</b> {displayedTargetTime}
+				<b>{isTimelineView ? 'Travel to:' : 'Move to:'}</b> {displayedTargetTime}
 			</Typography>
-			{markers.length > 0 && (
+			{markers.length > 0 && isTimelineView && (
 				<FormControlLabel
 					control={
 						<Checkbox
@@ -153,19 +157,32 @@ export const TimeTravelModal = () => {
 					label="Move selected markers"
 				/>
 			)}
-			<Divider />
-			<TimeTravelModalInfo />
 			<ModalFooter>
-				<Stack direction="row-reverse" justifyContent="space-between" width="100%">
-					<Stack direction="row-reverse" spacing={2}>
-						<Tooltip title={shortcutLabel} arrow placement="top">
-							<Button variant="contained" color="primary" onClick={onConfirm}>
-								Confirm
+				<Stack direction="row" alignItems="center" justifyContent="space-between" width={1}>
+					<Link
+						href={getDocsUrl('/features/time-travel')}
+						target="_blank"
+						rel="noopener noreferrer"
+						sx={{
+							display: 'inline-flex',
+							alignItems: 'center',
+							gap: 0.5,
+							whiteSpace: 'nowrap',
+						}}
+					>
+						Documentation <OpenInNew sx={{ fontSize: 14, opacity: 0.6 }} />
+					</Link>
+					<Stack direction="row-reverse" justifyContent="space-between" width="100%">
+						<Stack direction="row-reverse" spacing={2}>
+							<Tooltip title={shortcutLabel} arrow placement="top">
+								<Button variant="contained" color="primary" onClick={onConfirm}>
+									Confirm
+								</Button>
+							</Tooltip>
+							<Button variant="outlined" onClick={close}>
+								Cancel
 							</Button>
-						</Tooltip>
-						<Button variant="outlined" onClick={close}>
-							Cancel
-						</Button>
+						</Stack>
 					</Stack>
 				</Stack>
 			</ModalFooter>

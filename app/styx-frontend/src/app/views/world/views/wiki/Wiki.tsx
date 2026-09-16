@@ -58,7 +58,7 @@ export function Wiki() {
 						height: '100%',
 					}}
 				>
-					{isArticle && <Outlet />}
+					<Outlet />
 				</Stack>
 			)}
 		</Stack>
