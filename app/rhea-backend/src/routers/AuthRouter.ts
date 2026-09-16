@@ -48,17 +48,6 @@ router.get('/api/auth/check', async (ctx) => {
 	const avatarUrl = user.avatar ? await CloudStorageService.getPresignedUrl(user.avatar) : undefined
 	const featureFlags = await FeatureFlagService.listUserFeatureFlags(user.id)
 
-	AuditLogService.append(
-		ctx,
-		{
-			action: 'UserAuth',
-			userId: user.id,
-		},
-		{
-			minimalGapSeconds: 3600, // Log once per hour
-		},
-	)
-
 	return {
 		authenticated: true,
 		sessionId,
