@@ -9,6 +9,7 @@ import {
 	BadRequestError,
 	EmailValidator,
 	NonEmptyStringValidator,
+	NotFoundError,
 	NumberValidator,
 	OptionalParam,
 	Router,
@@ -19,6 +20,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
+import z from 'zod'
 
 import { adminUsersTag } from './utils/tags.js'
 import { UserLevelValidator } from './validators/UserLevelValidator.js'
@@ -79,19 +81,51 @@ router.get('/api/admin/users', async (ctx) => {
 		tags: [adminUsersTag],
 	})
 
-	const { page, size, query } = useQueryParams(ctx, {
+	const { page, size, query, sortField, sortDirection } = useQueryParams(ctx, {
 		page: OptionalParam(NumberValidator),
 		size: OptionalParam(NumberValidator),
 		query: OptionalParam(StringValidator),
+		sortField: z.enum(['email', 'username', 'level', 'createdAt', 'updatedAt']).optional(),
+		sortDirection: z.enum(['asc', 'desc']).optional(),
 	})
 
 	const users = await AdminService.listUsers({
 		page,
 		size,
 		query,
+		sortField,
+		sortDirection,
 	})
 
 	return users
+})
+
+router.get('/api/admin/users/:userId', async (ctx) => {
+	useApiEndpoint({
+		name: 'adminGetUser',
+		description: 'Gets dashboard information for a single user',
+		tags: [adminUsersTag],
+	})
+
+	const { userId } = usePathParams(ctx, {
+		userId: NonEmptyStringValidator,
+	})
+
+	const user = await AdminService.getUser(userId)
+	if (!user) {
+		throw new NotFoundError('User with the provided ID does not exist')
+	}
+
+	const hourlyActivity = await AdminService.listHourlyActivityStats({ hours: 72, userId })
+	const auditStats = await AuditLogService.getStats({ days: 30, userId })
+	const contentStats = await AdminService.listContentStats({ days: 30, ownerId: userId })
+
+	return {
+		user,
+		hourlyActivity,
+		auditStats,
+		contentStats,
+	}
 })
 
 router.post('/api/admin/user/:userId/impersonate', async (ctx) => {

@@ -58,8 +58,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 		units: {
 			children: {
 				id: string
-				calendarId: string
 				position: number
+				calendarId: string
 				label?: null | string
 				shortLabel?: null | string
 				repeats: number
@@ -68,8 +68,8 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			}[]
 			parents: {
 				id: string
-				calendarId: string
 				position: number
+				calendarId: string
 				label?: null | string
 				shortLabel?: null | string
 				repeats: number
@@ -88,23 +88,6 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			duration: string
 			treeDepth: number
 		}[]
-		presentations: {
-			units: {
-				id: string
-				name: string
-				calendarId: string
-				position: number
-				formatString: string
-				subdivision: number
-				labeledIndices: number[]
-				unitId: string
-			}[]
-			id: string
-			name: string
-			compression: number
-			scaleFactor: number
-			baselineUnitId?: null | string
-		}[]
 		seasons: {
 			intervals: {
 				id: string
@@ -119,6 +102,23 @@ export type GetWorldInfoApiResponse = /** status 200  */ {
 			name: string
 			position: number
 			formatShorthand?: null | string
+		}[]
+		presentations: {
+			units: {
+				id: string
+				name: string
+				position: number
+				calendarId: string
+				formatString: string
+				subdivision: number
+				labeledIndices: number[]
+				unitId: string
+			}[]
+			id: string
+			name: string
+			compression: number
+			scaleFactor: number
+			baselineUnitId?: null | string
 		}[]
 		description: string
 		id: string

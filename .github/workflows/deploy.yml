@@ -36,7 +36,7 @@ jobs:
       - name: Generate Version Number (Staging)
         id: version
         if: ${{ github.ref_name == 'dev' }}
-        uses: paulhatch/semantic-version@v6.0.3
+        uses: paulhatch/semantic-version@v6.0.4
         with:
           major_pattern: 'major:'
           minor_pattern: 'feat:'

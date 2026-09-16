@@ -224,7 +224,7 @@ services:
             - "6379:6379"
 
     s3-minio:
-        image: minio/minio
+        image: quay.io/minio/minio:RELEASE.2025-09-07T16-13-09Z
         ports:
             - "9000:9000" # API
             - "9001:9001" # Console
@@ -245,7 +245,7 @@ services:
             - dev-minio
 
     s3-minio-setup:
-        image: minio/mc
+        image: quay.io/minio/mc:RELEASE.2025-08-13T08-35-41Z
         depends_on:
             s3-minio:
                 condition: service_healthy

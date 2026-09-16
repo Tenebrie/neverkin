@@ -59,7 +59,7 @@ export const UserAccessLevelDropdown = ({ user }: Props) => {
 				<Button
 					onClick={onEdit}
 					disabled={loggedInUser.id === user.id}
-					sx={{ width: '100%', paddingLeft: 1.8, justifyContent: 'flex-start' }}
+					sx={{ width: '100%', paddingLeft: 1, marginLeft: -1, justifyContent: 'flex-start' }}
 				>
 					{user.level}
 				</Button>

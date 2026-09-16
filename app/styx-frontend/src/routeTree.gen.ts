@@ -15,6 +15,7 @@ import { Route as CreateAccountRouteImport } from './routes/create-account'
 import { Route as GuestLoginRouteImport } from './routes/guest-login'
 import { Route as LoginRouteImport } from './routes/login'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as AdminUserIdRouteImport } from './routes/admin/$userId'
 import { Route as AdminAuditRouteImport } from './routes/admin/audit'
 import { Route as AdminNotificationsRouteImport } from './routes/admin/notifications'
 import { Route as AdminUsersRouteImport } from './routes/admin/users'
@@ -72,6 +73,11 @@ const LoginRoute = LoginRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/',
   path: '/',
+  getParentRoute: () => AdminRoute,
+} as any)
+const AdminUserIdRoute = AdminUserIdRouteImport.update({
+  id: '/$userId',
+  path: '/$userId',
   getParentRoute: () => AdminRoute,
 } as any)
 const AdminAuditRoute = AdminAuditRouteImport.update({
@@ -230,6 +236,7 @@ export interface FileRoutesByFullPath {
   '/create-account': typeof CreateAccountRoute
   '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
+  '/admin/$userId': typeof AdminUserIdRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -265,6 +272,7 @@ export interface FileRoutesByTo {
   '/create-account': typeof CreateAccountRoute
   '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
+  '/admin/$userId': typeof AdminUserIdRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -299,6 +307,7 @@ export interface FileRoutesById {
   '/create-account': typeof CreateAccountRoute
   '/guest-login': typeof GuestLoginRoute
   '/login': typeof LoginRoute
+  '/admin/$userId': typeof AdminUserIdRoute
   '/admin/audit': typeof AdminAuditRoute
   '/admin/notifications': typeof AdminNotificationsRoute
   '/admin/users': typeof AdminUsersRoute
@@ -337,6 +346,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/guest-login'
     | '/login'
+    | '/admin/$userId'
     | '/admin/audit'
     | '/admin/notifications'
     | '/admin/users'
@@ -372,6 +382,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/guest-login'
     | '/login'
+    | '/admin/$userId'
     | '/admin/audit'
     | '/admin/notifications'
     | '/admin/users'
@@ -405,6 +416,7 @@ export interface FileRouteTypes {
     | '/create-account'
     | '/guest-login'
     | '/login'
+    | '/admin/$userId'
     | '/admin/audit'
     | '/admin/notifications'
     | '/admin/users'
@@ -496,6 +508,13 @@ declare module '@tanstack/react-router' {
       path: '/'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof AdminRoute
+    }
+    '/admin/$userId': {
+      id: '/admin/$userId'
+      path: '/$userId'
+      fullPath: '/admin/$userId'
+      preLoaderRoute: typeof AdminUserIdRouteImport
       parentRoute: typeof AdminRoute
     }
     '/admin/audit': {
@@ -698,6 +717,7 @@ declare module '@tanstack/react-router' {
 }
 
 interface AdminRouteChildren {
+  AdminUserIdRoute: typeof AdminUserIdRoute
   AdminAuditRoute: typeof AdminAuditRoute
   AdminNotificationsRoute: typeof AdminNotificationsRoute
   AdminUsersRoute: typeof AdminUsersRoute
@@ -705,6 +725,7 @@ interface AdminRouteChildren {
 }
 
 const AdminRouteChildren: AdminRouteChildren = {
+  AdminUserIdRoute: AdminUserIdRoute,
   AdminAuditRoute: AdminAuditRoute,
   AdminNotificationsRoute: AdminNotificationsRoute,
   AdminUsersRoute: AdminUsersRoute,
