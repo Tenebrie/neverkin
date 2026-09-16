@@ -57,7 +57,7 @@ export function WikiLanding() {
 					minWidth: 0,
 					alignSelf: 'flex-start',
 					pt: isMobile ? 1.5 : 4,
-					pb: '50vh',
+					pb: '35vh',
 				}}
 			>
 				<WikiLandingHeader />

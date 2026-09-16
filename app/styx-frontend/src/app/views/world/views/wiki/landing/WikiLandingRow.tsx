@@ -5,7 +5,7 @@ import { ReactNode } from 'react'
 type Props = {
 	icon: ReactNode
 	label: string
-	meta?: string
+	meta?: ReactNode
 	children?: ReactNode
 	onClick: () => void
 }
@@ -32,7 +32,13 @@ export function WikiLandingRow({ icon, label, meta, children, onClick }: Props) 
 				<Typography variant="body2" fontWeight={600} noWrap sx={{ maxWidth: '44%' }}>
 					{label}
 				</Typography>
-				<Typography variant="body2" color="text.secondary" noWrap sx={{ flex: 1, minWidth: 0 }}>
+				<Typography
+					component="span"
+					variant="body2"
+					color="text.secondary"
+					noWrap
+					sx={{ flex: 1, minWidth: 0, display: 'flex', alignItems: 'center' }}
+				>
 					{meta}
 				</Typography>
 				{children}

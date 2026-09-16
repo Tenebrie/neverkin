@@ -1,3 +1,4 @@
+import AccessTimeIcon from '@mui/icons-material/AccessTime'
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
 import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
@@ -6,15 +7,14 @@ import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { alpha, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { useSelector } from 'react-redux'
 
 import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { useTimeAgo } from '@/app/hooks/useTimeAgo'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
-import { getWikiState } from '../WikiSliceSelectors'
 import { getEntityExcerpt } from './utils/getEntityExcerpt'
+import { WikiLandingFolderLabel } from './WikiLandingFolderLabel'
 
 type Props = {
 	entity: BoxedWikiEntity
@@ -22,12 +22,10 @@ type Props = {
 }
 
 export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
-	const { folders } = useSelector(getWikiState, (a, b) => a.folders === b.folders)
 	const { palette } = useTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 	const openedAgo = useTimeAgo(new Date(openedAt))
 	const excerpt = getEntityExcerpt(entity)
-	const folderName = folders.find((folder) => folder.id === entity.entity.parentFolderId)?.name
 
 	const open = () =>
 		navigate({ to: '/world/$worldId/wiki/$articleId', params: { articleId: entity.id }, search: true })
@@ -78,14 +76,13 @@ export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
 					>
 						{entity.type}
 					</Box>
-					{folderName && (
-						<>
-							<span>·</span>
-							<span>{folderName}</span>
-						</>
-					)}
+					{entity.entity.parentFolderId && <span>·</span>}
+					<WikiLandingFolderLabel folderId={entity.entity.parentFolderId} height={14} />
 					<span>·</span>
-					<span>opened {openedAgo}</span>
+					<Box component="span" sx={{ display: 'flex', alignItems: 'center', gap: 0.5 }}>
+						<AccessTimeIcon sx={{ fontSize: 14 }} />
+						opened {openedAgo}
+					</Box>
 				</Stack>
 				<Typography component="h3" variant="h6" fontWeight={600} letterSpacing="-0.01em" noWrap>
 					{entity.name}
