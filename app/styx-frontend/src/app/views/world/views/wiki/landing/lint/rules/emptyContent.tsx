@@ -14,6 +14,6 @@ export const emptyContent: WikiLintRule = {
 				entity,
 				label: entity.name,
 				message: `${entity.type} is still empty`,
-				action: 'Write it',
+				action: 'Write something',
 			})),
 }

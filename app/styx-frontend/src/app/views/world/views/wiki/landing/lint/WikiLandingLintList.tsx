@@ -1,10 +1,8 @@
-import CloseIcon from '@mui/icons-material/Close'
 import Box from '@mui/material/Box'
 import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 
 import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
-import { HomeRowItemIconButton } from '@/app/views/home/components/rowItem/HomeRowItemIconButton'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { ListSection } from '@/ui-lib/components/ListSection/ListSection'
@@ -23,7 +21,7 @@ export function WikiLandingLintList({ entities }: Props) {
 	const { isReadOnly } = useIsReadOnly()
 	const { palette } = useTheme()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const { threads, dismiss } = useLooseThreads(entities)
+	const { threads } = useLooseThreads(entities)
 
 	if (isReadOnly || threads.length === 0) {
 		return null
@@ -55,7 +53,7 @@ export function WikiLandingLintList({ entities }: Props) {
 					<Typography variant="caption" fontWeight={600} color="primary.main" noWrap>
 						{thread.action}
 					</Typography>
-					<HomeRowItemIconButton
+					{/* <HomeRowItemIconButton
 						className="dismiss-button"
 						aria-label="Dismiss"
 						onClick={() => dismiss(thread.key)}
@@ -67,7 +65,7 @@ export function WikiLandingLintList({ entities }: Props) {
 						}}
 					>
 						<CloseIcon sx={{ fontSize: 16 }} />
-					</HomeRowItemIconButton>
+					</HomeRowItemIconButton> */}
 				</WikiLandingRow>
 			))}
 		</ListSection>

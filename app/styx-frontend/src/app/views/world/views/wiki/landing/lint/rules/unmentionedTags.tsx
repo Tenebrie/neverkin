@@ -13,6 +13,6 @@ export const unmentionedTags: WikiLintRule = {
 				entity,
 				label: entity.name,
 				message: 'tag with no mentions anywhere in the world',
-				action: 'Find a home',
+				action: 'Delete it?',
 			})),
 }

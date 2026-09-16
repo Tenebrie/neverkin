@@ -1,15 +1,15 @@
 import PlayArrowIcon from '@mui/icons-material/PlayArrow'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import ButtonBase from '@mui/material/ButtonBase'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
 import { alpha, useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { capitalize } from '@mui/material/utils'
 import { useSelector } from 'react-redux'
 
 import { TruncatedTypography } from '@/app/components/TruncatedTypography'
 import { useTimeAgo } from '@/app/hooks/useTimeAgo'
-import { HomeRowItemTraitChip } from '@/app/views/home/components/rowItem/HomeRowItemTraitChip'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
@@ -29,17 +29,30 @@ export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
 	const excerpt = getEntityExcerpt(entity)
 	const folderName = folders.find((folder) => folder.id === entity.entity.parentFolderId)?.name
 
+	const open = () =>
+		navigate({ to: '/world/$worldId/wiki/$articleId', params: { articleId: entity.id }, search: true })
+
 	return (
-		<Paper
+		<ButtonBase
+			component={Paper}
 			variant="outlined"
+			aria-label={`Resume "${entity.name}"`}
+			onClick={open}
 			sx={{
 				display: 'flex',
 				alignItems: 'center',
+				textAlign: 'left',
+				width: '100%',
 				gap: 3,
 				p: 2.5,
 				borderRadius: 2,
+				border: '1px solid',
 				borderColor: alpha(palette.primary.main, 0.35),
 				background: `linear-gradient(100deg, ${alpha(palette.primary.main, 0.13)}, transparent 70%), ${palette.background.paper}`,
+				transition: 'border-color 0.16s',
+				'&:hover:not(:has(.MuiButton-root:hover)), &.Mui-focusVisible': {
+					borderColor: alpha(palette.primary.main, 0.7),
+				},
 			}}
 		>
 			<Stack flex={1} minWidth={0} gap={0.75}>
@@ -48,9 +61,23 @@ export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
 					alignItems="center"
 					gap={1}
 					flexWrap="wrap"
-					sx={{ typography: 'body2', color: 'text.secondary' }}
+					sx={{ typography: 'caption', color: 'text.secondary' }}
 				>
-					<HomeRowItemTraitChip label={capitalize(entity.type)} accent />
+					<Box
+						sx={{
+							px: 0.875,
+							py: 0.25,
+							borderRadius: 0.75,
+							bgcolor: alpha(palette.primary.main, 0.2),
+							color: 'primary.light',
+							fontSize: 11,
+							fontWeight: 700,
+							letterSpacing: '0.08em',
+							textTransform: 'uppercase',
+						}}
+					>
+						{entity.type}
+					</Box>
 					{folderName && (
 						<>
 							<span>·</span>
@@ -77,13 +104,15 @@ export function WikiLandingResumeBanner({ entity, openedAt }: Props) {
 			<Button
 				variant="contained"
 				startIcon={<PlayArrowIcon />}
-				onClick={() =>
-					navigate({ to: '/world/$worldId/wiki/$articleId', params: { articleId: entity.id }, search: true })
-				}
+				onClick={(event) => {
+					event.stopPropagation()
+					open()
+				}}
+				onMouseDown={(event) => event.stopPropagation()}
 				sx={{ flexShrink: 0 }}
 			>
 				Resume
 			</Button>
-		</Paper>
+		</ButtonBase>
 	)
 }
