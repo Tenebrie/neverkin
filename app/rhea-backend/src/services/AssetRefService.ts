@@ -34,7 +34,7 @@ export const AssetRefService = {
 				assetId,
 				worldId,
 
-				pageId: pageId,
+				pageId,
 
 				...holderColumn,
 			})),
@@ -43,6 +43,7 @@ export const AssetRefService = {
 		await client.assetReference.deleteMany({
 			where: {
 				...holderColumn,
+				worldId,
 				pageId,
 			},
 		})
@@ -76,6 +77,7 @@ export const AssetRefService = {
 
 	clearOrphanedReferences: async (transaction?: Prisma.TransactionClient) => {
 		await (transaction ?? getPrismaClient()).assetReference.deleteMany({
+			// eslint-disable-next-line neverkin/no-opaque-destructive-filter
 			where: {
 				holderArticleId: null,
 				holderEventId: null,

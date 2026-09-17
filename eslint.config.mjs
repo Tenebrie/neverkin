@@ -10,7 +10,16 @@ import unusedImports from 'eslint-plugin-unused-imports'
 import tseslint from 'typescript-eslint'
 
 import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
+import noOpaqueDestructiveFilter from './eslint-rules/no-opaque-destructive-filter.mjs'
 import noUntypedLocalPaths from './eslint-rules/no-untyped-local-paths.mjs'
+
+const neverkin = {
+	rules: {
+		'no-direct-context-access': noDirectContextAccess,
+		'no-opaque-destructive-filter': noOpaqueDestructiveFilter,
+		'no-untyped-local-paths': noUntypedLocalPaths,
+	},
+}
 
 export default defineConfig(
 	{
@@ -80,13 +89,7 @@ export default defineConfig(
 		// Local paths go through the typed router
 		files: ['app/styx-frontend/src/**/*.{ts,tsx}'],
 		ignores: ['app/styx-frontend/src/api/**'],
-		plugins: {
-			neverkin: {
-				rules: {
-					'no-untyped-local-paths': noUntypedLocalPaths,
-				},
-			},
-		},
+		plugins: { neverkin },
 		rules: {
 			'neverkin/no-untyped-local-paths': 'error',
 		},
@@ -94,15 +97,24 @@ export default defineConfig(
 	{
 		// Custom rules for rhea-backend to enforce moonflower patterns
 		files: ['app/rhea-backend/src/routers/**/*.ts'],
-		plugins: {
-			neverkin: {
-				rules: {
-					'no-direct-context-access': noDirectContextAccess,
-				},
+		plugins: { neverkin },
+		rules: {
+			'neverkin/no-direct-context-access': 'warn',
+		},
+	},
+	{
+		// A destructive filter that widens to every row is silent data loss.
+		// Needs type information: the filter's columns are read off the checked type.
+		files: ['app/rhea-backend/src/**/*.ts'],
+		plugins: { neverkin },
+		languageOptions: {
+			parserOptions: {
+				projectService: true,
+				tsconfigRootDir: import.meta.dirname,
 			},
 		},
 		rules: {
-			'neverkin/no-direct-context-access': 'warn',
+			'neverkin/no-opaque-destructive-filter': 'error',
 		},
 	},
 	{
