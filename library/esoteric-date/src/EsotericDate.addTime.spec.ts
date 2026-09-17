@@ -143,12 +143,12 @@ describe('EsotericDate.addTime', () => {
 			expect(result.getTimestamp()).toBe(25)
 		})
 
-		it('steps from subunit 9 (last subunit) overflows to next hour (no subunit in second batch)', () => {
+		it('steps from subunit 9 (last subunit) to subunit 0 of the next hour, skipping the minutes between', () => {
 			// Subunit 9 = offset 5*3 + 9*1 = 24
-			// +1 subunit → no more subunit in this hour or next → overflow to next hour = 34
+			// +1 subunit → next hour starts at 34, its first subunit follows 5 minutes = 34 + 15 = 49
 			const date = new EsotericDate(calendar, 24)
 			const result = date.step(subunit, 1)
-			expect(result.getTimestamp()).toBe(34)
+			expect(result.getTimestamp()).toBe(49)
 		})
 
 		it('steps through 8 minute slots per hour, +18 minutes = 2 full hours + 2 extra', () => {

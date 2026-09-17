@@ -1,7 +1,7 @@
 import { CalendarDraftUnit, CalendarUnit } from '@/api/types/calendarTypes'
 
-import { ParsedTimestamp } from '../types.js'
-import { parseTimestampSingleRoot } from './parseTimestampSingleRoot.js'
+import { getCalendarModel } from '../model/CalendarModel.js'
+import { parseTimestamp } from '../model/parseTimestamp.js'
 
 export function parseTimestampMultiRoot({
 	allUnits,
@@ -10,32 +10,5 @@ export function parseTimestampMultiRoot({
 	allUnits: CalendarDraftUnit[] | CalendarUnit[]
 	timestamp: number
 }) {
-	const roots = allUnits
-		.filter((u) => u.parents.length === 0)
-		.map((rootUnit) => {
-			const parsed = parseTimestampSingleRoot({
-				allUnits,
-				unit: rootUnit,
-				timestamp,
-				extraDuration: 0,
-				depth: 0,
-			})
-			return {
-				unit: rootUnit,
-				parsed,
-			}
-		})
-		.sort((a, b) => a.unit.position - b.unit.position)
-
-	const seenKeys = new Set<string>()
-	const combinedTimeMap: ParsedTimestamp = new Map()
-	for (const root of roots) {
-		for (const [key, value] of root.parsed.entries()) {
-			if (!combinedTimeMap.has(key) && value.formatShorthand && !seenKeys.has(value.formatShorthand)) {
-				combinedTimeMap.set(key, value)
-				seenKeys.add(value.formatShorthand)
-			}
-		}
-	}
-	return combinedTimeMap
+	return parseTimestamp(getCalendarModel(allUnits), timestamp)
 }
