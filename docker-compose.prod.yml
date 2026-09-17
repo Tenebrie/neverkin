@@ -51,10 +51,10 @@ services:
             - environment
         healthcheck:
             test: ["CMD", "wget", "-q", "--spider", "http://localhost:8080/health"]
-            interval: 1s
+            interval: 15s
             timeout: 30s
-            retries: 25
-            start_period: 5s
+            retries: 3
+            start_period: 30s
     rhea:
         image: tenebrie/timelines-rhea:${VERSION}
         build:
@@ -85,10 +85,10 @@ services:
             - imagen-google-api-key
         healthcheck:
             test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-            interval: 10s
-            timeout: 10s
+            interval: 15s
+            timeout: 30s
             retries: 3
-            start_period: 300s
+            start_period: 30s
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:
@@ -110,8 +110,8 @@ services:
             - environment
         healthcheck:
             test: ["CMD", "wget", "-q", "--spider", "http://localhost:3001/calliope/health"]
-            interval: 10s
-            timeout: 10s
+            interval: 15s
+            timeout: 30s
             retries: 3
             start_period: 30s
     orpheus:
@@ -135,10 +135,10 @@ services:
             - environment
         healthcheck:
             test: ["CMD", "wget", "-q", "--spider", "http://localhost:3002/orpheus/health"]
-            interval: 10s
-            timeout: 10s
+            interval: 30s
+            timeout: 30s
             retries: 3
-            start_period: 30s
+            start_period: 60s
     thetis:
         image: tenebrie/timelines-thetis:${VERSION}
         build:
@@ -153,10 +153,10 @@ services:
                 failure_action: pause
         healthcheck:
             test: ["CMD", "wget", "-q", "--spider", "http://localhost:8081/health"]
-            interval: 1s
+            interval: 15s
             timeout: 30s
-            retries: 25
-            start_period: 5s
+            retries: 3
+            start_period: 30s
     rhea-postgres:
         deploy:
             placement:
@@ -203,8 +203,8 @@ services:
             - rhea-postgres
         healthcheck:
             test: ["CMD", "wget", "-q", "--spider", "http://localhost:9898"]
-            interval: 30s
-            timeout: 10s
+            interval: 15s
+            timeout: 30s
             retries: 3
             start_period: 30s
 

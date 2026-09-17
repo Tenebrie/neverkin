@@ -41,31 +41,56 @@ export const BulkActionService = {
 		return await getPrismaClient().$transaction(async (prisma) => {
 			const articlePromise = (() => {
 				if (entityTypes.includes('article')) {
-					return prisma.wikiArticle.deleteMany({ where: { id: { in: entities } } })
+					return prisma.wikiArticle.deleteMany({
+						where: {
+							id: { in: entities },
+							worldId,
+						},
+					})
 				}
 				return null
 			})()
 			const actorPromise = (() => {
 				if (entityTypes.includes('actor')) {
-					return prisma.actor.deleteMany({ where: { id: { in: entities } } })
+					return prisma.actor.deleteMany({
+						where: {
+							id: { in: entities },
+							worldId,
+						},
+					})
 				}
 				return null
 			})()
 			const eventPromise = (() => {
 				if (entityTypes.includes('event')) {
-					return prisma.worldEvent.deleteMany({ where: { id: { in: entities } } })
+					return prisma.worldEvent.deleteMany({
+						where: {
+							id: { in: entities },
+							worldId,
+						},
+					})
 				}
 				return null
 			})()
 			const tagPromise = (() => {
 				if (entityTypes.includes('tag')) {
-					return prisma.tag.deleteMany({ where: { id: { in: entities } } })
+					return prisma.tag.deleteMany({
+						where: {
+							id: { in: entities },
+							worldId,
+						},
+					})
 				}
 				return null
 			})()
 			const folderPromise = (() => {
 				if (entityTypes.includes('folder')) {
-					return prisma.wikiFolder.deleteMany({ where: { id: { in: entities } } })
+					return prisma.wikiFolder.deleteMany({
+						where: {
+							id: { in: entities },
+							worldId,
+						},
+					})
 				}
 				return null
 			})()

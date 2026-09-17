@@ -351,6 +351,7 @@ export const WorldService = {
 					id: {
 						in: world.calendars.map((c) => c.id),
 					},
+					worldId,
 				},
 			})
 			await dbClient.world.update({

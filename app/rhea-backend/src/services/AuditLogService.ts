@@ -220,6 +220,7 @@ export const AuditLogService = {
 
 	cleanUpOldLogs: async () => {
 		return getPrismaClient().auditLog.deleteMany({
+			// eslint-disable-next-line neverkin/no-opaque-destructive-filter
 			where: {
 				createdAt: { lt: new Date(Date.now() - AUDIT_LOG_RETENTION_DAYS * DAY_MS) },
 			},
