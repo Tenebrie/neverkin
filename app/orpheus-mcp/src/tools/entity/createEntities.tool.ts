@@ -85,15 +85,14 @@ export function registerCreateEntitiesTool(server: McpServer) {
 					result.push(describeCreated(entity, worldData))
 				}
 
-				const withContent = entities.flatMap((entity, index) =>
-					entity.type !== 'tag' && entity.content
-						? [{ type: entity.type, name: entity.name, content: entity.content, id: createdIds[index] }]
-						: [],
-				)
-				if (withContent.length > 0) {
+				const hasContent = entities.some((entity) => entity.type !== 'tag' && entity.content)
+				if (hasContent) {
 					const refreshedWorld = await RheaService.getWorldDetails({ worldId, userId })
 					const refreshedArticles = await RheaService.getWorldArticles({ worldId, userId })
-					for (const entity of withContent) {
+					for (const [index, entity] of entities.entries()) {
+						if (entity.type === 'tag' || !entity.content) {
+							continue
+						}
 						const parsedContent = await resolveShorthandMentions({
 							content: entity.content,
 							worldData: refreshedWorld,
@@ -102,7 +101,7 @@ export function registerCreateEntitiesTool(server: McpServer) {
 						await RheaService.updateEntityContent({
 							entityType: entity.type,
 							worldId,
-							entityId: entity.id,
+							entityId: createdIds[index],
 							userId,
 							content: parsedContent,
 						})
@@ -208,14 +207,12 @@ async function createEntity({
 }
 
 function describeCreated(entity: EntityInput, worldData: WorldData) {
-	const detail = (() => {
-		if (entity.type === 'actor') {
-			return entity.title
-		}
-		if (entity.type === 'event') {
-			return formatTimestamp(resolveTimestamp(entity.timestamp, worldData), worldData)
-		}
-		return undefined
-	})()
-	return `Created ${entity.type}: ${entity.name}${detail ? ` (${detail})` : ''}`
+	if (entity.type === 'actor' && entity.title) {
+		return `Created actor: ${entity.name} (${entity.title})`
+	}
+	if (entity.type === 'event') {
+		const timestamp = formatTimestamp(resolveTimestamp(entity.timestamp, worldData), worldData)
+		return `Created event: ${entity.name} (${timestamp})`
+	}
+	return `Created ${entity.type}: ${entity.name}`
 }

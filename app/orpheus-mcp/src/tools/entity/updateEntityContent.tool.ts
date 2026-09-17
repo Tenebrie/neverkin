@@ -86,28 +86,29 @@ export function registerUpdateEntityContentTool(server: McpServer) {
 				})
 
 				const result: string[] = []
-				const page = pageName
-					? await findByNameOrCreate({
-							name: pageName,
-							entities: entity.pages,
-							onCreate: async () => {
-								const newPage = await RheaService.createEntityContentPage({
-									entityType: type,
-									worldId,
-									entityId: entity.id,
-									userId,
-									pageName,
-								})
-								result.push(`Page "${newPage.name}" has been created.`)
-								return newPage
-							},
-						})
-					: undefined
+				let page: (typeof entity.pages)[number] | undefined
+				if (pageName) {
+					page = await findByNameOrCreate({
+						name: pageName,
+						entities: entity.pages,
+						onCreate: async () => {
+							const newPage = await RheaService.createEntityContentPage({
+								entityType: type,
+								worldId,
+								entityId: entity.id,
+								userId,
+								pageName,
+							})
+							result.push(`Page "${newPage.name}" has been created.`)
+							return newPage
+						},
+					})
+				}
 
-				const content = await (async () => {
-					if (args.set !== undefined) {
-						return args.set
-					}
+				let content: string
+				if (args.set !== undefined) {
+					content = args.set
+				} else {
 					const current = await RheaService.getEntityContent({
 						entityType: type,
 						worldId,
@@ -115,11 +116,11 @@ export function registerUpdateEntityContentTool(server: McpServer) {
 						userId,
 						pageId: page?.id,
 					})
-					return replaceOnce({
+					content = replaceOnce({
 						content: toAgentReadableText({ content: current.contentHtml ?? '' }),
 						...args.replace,
 					})
-				})()
+				}
 
 				const parsedContent = await resolveShorthandMentions({
 					content,
