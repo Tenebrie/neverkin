@@ -64,9 +64,9 @@ export const MindmapService = {
 			}
 		})
 	},
-	async moveNodes(nodes: string[], deltaX: number, deltaY: number) {
+	async moveNodes(nodes: string[], deltaX: number, deltaY: number, worldId: string) {
 		return getPrismaClient().mindmapNode.updateManyAndReturn({
-			where: { id: { in: nodes } },
+			where: { id: { in: nodes }, worldId },
 			data: {
 				positionX: { increment: deltaX },
 				positionY: { increment: deltaY },

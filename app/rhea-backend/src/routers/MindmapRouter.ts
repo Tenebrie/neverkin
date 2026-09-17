@@ -164,7 +164,7 @@ router.post('/api/world/:worldId/mindmap/nodes/move', async (ctx) => {
 		deltaY: z.number(),
 	})
 
-	const nodes = await MindmapService.moveNodes(params.nodeIds, params.deltaX, params.deltaY)
+	const nodes = await MindmapService.moveNodes(params.nodeIds, params.deltaX, params.deltaY, worldId)
 	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes })
 
 	return nodes

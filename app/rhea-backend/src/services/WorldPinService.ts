@@ -12,7 +12,11 @@ export const WorldPinService = {
 					where: { userId_worldId: params },
 				})
 				await dbClient.userWorldPin.updateMany({
-					where: { userId: params.userId, rank: { gt: existingPin.rank } },
+					where: {
+						userId: params.userId,
+						rank: { gt: existingPin.rank },
+						worldId: params.worldId,
+					},
 					data: { rank: { decrement: 2 } },
 				})
 				return {

@@ -12,11 +12,12 @@ export const AssetService = {
 	},
 
 	isImage(asset: Asset): boolean {
-		return asset.contentType === 'ImageEmbed'
+		const imageTypes: AssetType[] = ['ImageEmbed', 'ImageGeneration']
+		return imageTypes.includes(asset.contentType)
 	},
 
 	isFinalizedImage(asset: Asset): boolean {
-		return asset.contentType === 'ImageEmbed' && asset.status === 'Finalized'
+		return this.isImage(asset) && asset.status === 'Finalized'
 	},
 
 	listUserAssets: async (
