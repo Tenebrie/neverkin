@@ -86,7 +86,7 @@ describe('update_event tool', () => {
 
 		const result = await client.callTool({
 			name: 'update_event',
-			arguments: { eventName: 'Battle', dateTime: '5000' },
+			arguments: { eventName: 'Battle', timestamp: '5000' },
 		})
 
 		const text = (result.content as Array<{ type: string; text: string }>)[0].text

@@ -239,6 +239,6 @@ describe('list_worlds tool', () => {
 		const allText = (result.content as Array<{ type: string; text: string }>).map((c) => c.text).join('\n')
 
 		expect(result.isError).toBeUndefined()
-		expect(allText).toContain('Calendar: Test Calendar :: DateTime format is "d"')
+		expect(allText).toContain('Calendar: Test Calendar :: Timestamp format is "d"')
 	})
 })

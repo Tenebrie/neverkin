@@ -5,21 +5,21 @@ type WorldDetails = Awaited<ReturnType<typeof RheaService.getWorldDetails>>
 type Calendar = WorldDetails['calendars'][number]
 type CalendarUnit = Calendar['units'][number]
 
-export function resolveDateTime<
+export function resolveTimestamp<
 	T extends string | undefined,
 	ReturnValue = T extends string ? number : undefined,
->(dateTime: T, worldData: WorldDetails): ReturnValue {
-	if (!dateTime) {
+>(timestamp: T, worldData: WorldDetails): ReturnValue {
+	if (!timestamp) {
 		return undefined as ReturnValue
 	}
 
 	try {
-		return new EsotericDate(worldData.calendars[0]).fromFormatted(dateTime).getTimestamp() as ReturnValue
+		return new EsotericDate(worldData.calendars[0]).fromFormatted(timestamp).getTimestamp() as ReturnValue
 	} catch (error) {
 		const calendar = worldData.calendars[0]
 		const unitDefinitions = formatUnitReminder(calendar, { prefix: '  ' })
 		throw new Error(
-			`Unable to parse dateTime: ${error}.\n- Expected format: ${worldData.calendars[0].dateFormat}.\n- Example: ${new EsotericDate(calendar).format()}\n- Available units:\n${unitDefinitions}`,
+			`Unable to parse timestamp: ${error}.\n- Expected format: ${worldData.calendars[0].dateFormat}.\n- Example: ${new EsotericDate(calendar).format()}\n- Available units:\n${unitDefinitions}`,
 		)
 	}
 }

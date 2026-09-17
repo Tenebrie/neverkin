@@ -114,7 +114,7 @@ function formatHeader(
 		lines.push(`Title: ${entity.title || '(None)'}`)
 	}
 	if (type === 'event') {
-		lines.push(`DateTime: ${formatTimestamp(entity.timestamp, worldData)}`)
+		lines.push(`Timestamp: ${formatTimestamp(entity.timestamp, worldData)}`)
 	}
 	lines.push(`Color: ${entity.color || '(None)'}`)
 	return lines.join('\n') + '\n'

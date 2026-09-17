@@ -5,8 +5,8 @@ import { checkEventDoesNotExist } from '@src/utils/findByName.js'
 import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
-import { resolveDateTime } from '@src/utils/resolveDateTime.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
+import { resolveTimestamp } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -14,9 +14,9 @@ const TOOL_NAME = 'create_event'
 
 const inputSchema = z.object({
 	name: z.string().describe('The name of the event'),
-	dateTime: z
+	timestamp: z
 		.string()
-		.describe('The date and time of the event. The format must match the current world precisely.'),
+		.describe("The timestamp of the event in the world calendar's date format. Must match it precisely."),
 	color: z.string().optional().describe('The color of the event in RGB hex format, e.g. #bf8a40 (optional)'),
 	description: z.string().optional().describe('The description of the event in HTML format (optional)'),
 })
@@ -45,7 +45,7 @@ export function registerCreateEventTool(server: McpServer) {
 
 				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { name, dateTime, color, description } = args
+				const { name, timestamp, color, description } = args
 
 				await checkEventDoesNotExist({ name, userId, sessionId })
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
@@ -65,7 +65,7 @@ export function registerCreateEventTool(server: McpServer) {
 					worldId,
 					userId,
 					name,
-					timestamp: resolveDateTime(dateTime, worldData),
+					timestamp: resolveTimestamp(timestamp, worldData),
 					color: normalizeColor(color),
 					contentRich: parsedDescription || '',
 				})

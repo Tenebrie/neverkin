@@ -5,7 +5,7 @@ import { findByName } from '@src/utils/findByName.js'
 import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
-import { resolveDateTime } from '@src/utils/resolveDateTime.js'
+import { resolveTimestamp } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -14,10 +14,12 @@ const TOOL_NAME = 'update_event'
 const inputSchema = z.object({
 	eventName: z.string().describe('The name of the event to update'),
 	name: z.string().optional().describe('The new name for the event (optional)'),
-	dateTime: z
+	timestamp: z
 		.string()
 		.optional()
-		.describe('The dateTime of the event (optional). The format must match the current world precisely.'),
+		.describe(
+			"The new timestamp of the event in the world calendar's date format (optional). Must match it precisely.",
+		),
 	color: z
 		.string()
 		.optional()
@@ -45,7 +47,7 @@ export function registerUpdateEventTool(server: McpServer) {
 
 				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { eventName, name, dateTime, color } = args
+				const { eventName, name, timestamp, color } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
@@ -55,7 +57,7 @@ export function registerUpdateEventTool(server: McpServer) {
 					eventId: event.id,
 					userId,
 					name,
-					timestamp: resolveDateTime(dateTime, worldData),
+					timestamp: resolveTimestamp(timestamp, worldData),
 					color: normalizeColor(color),
 				})
 

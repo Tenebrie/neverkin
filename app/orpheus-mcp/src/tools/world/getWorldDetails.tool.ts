@@ -3,7 +3,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
-import { formatUnitReminder } from '@src/utils/resolveDateTime.js'
+import { formatUnitReminder } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 
 const TOOL_NAME = 'get_world_details'

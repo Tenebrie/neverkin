@@ -72,7 +72,7 @@ describe('get_entity_details tool', () => {
 		expect(result.isError).toBeUndefined()
 		const text = getText(result)
 		expect(text).toContain('Event: Dragon Attack')
-		expect(text).toContain('DateTime: 1440')
+		expect(text).toContain('Timestamp: 1440')
 		expect(text).toContain('Color: #ff0000')
 		expect(text).not.toContain('Title:')
 		expect(text).toContain('<p>Attacked by @[Gandalf].</p>')
