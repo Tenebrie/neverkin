@@ -3,22 +3,28 @@ import { ContextService } from '@src/services/ContextService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
+import { CONTENT_ENTITY_TYPES, resolveEntityByName } from '@src/utils/resolveEntityByName.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
-const TOOL_NAME = 'delete_actor_content_page'
+const TOOL_NAME = 'delete_entity_content_page'
 
 const inputSchema = z.object({
-	actorName: z.string().describe('The name of the actor that owns the content page'),
+	entityName: z.string().describe('The name of the actor, event or article that owns the content page'),
+	entityType: z
+		.enum(CONTENT_ENTITY_TYPES)
+		.optional()
+		.describe('Only needed when the name is ambiguous across entity types.'),
 	pageName: z.string().describe('The name of the content page to delete'),
 })
 
-export function registerDeleteActorContentPageTool(server: McpServer) {
+export function registerDeleteEntityContentPageTool(server: McpServer) {
 	server.registerTool(
 		TOOL_NAME,
 		{
-			title: 'Delete Actor Content Page',
-			description: 'Delete a content page from an actor. This permanently removes the page and its content.',
+			title: 'Delete Entity Content Page',
+			description:
+				'Delete a content page from an actor, event or article. This permanently removes the page and its content.',
 			inputSchema,
 			annotations: {
 				destructiveHint: true,
@@ -31,27 +37,32 @@ export function registerDeleteActorContentPageTool(server: McpServer) {
 
 				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { actorName, pageName } = args
+				const { entityName, entityType, pageName } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
-				const actor = findByName({ name: actorName, entities: worldData.actors })
-
-				const page = findByName({ name: pageName, entities: actor.pages })
+				const articleData = await RheaService.getWorldArticles({ worldId, userId })
+				const { type, entity } = resolveEntityByName({
+					name: entityName,
+					types: entityType ? [entityType] : CONTENT_ENTITY_TYPES,
+					worldData,
+					articleData,
+				})
+				const page = findByName({ name: pageName, entities: entity.pages })
 
 				await RheaService.deleteEntityContentPage({
-					entityType: 'actor',
+					entityType: type,
 					worldId,
-					entityId: actor.id,
+					entityId: entity.id,
 					userId,
 					pageId: page.id,
 				})
 
-				Logger.toolSuccess(TOOL_NAME, `Deleted content page "${pageName}" from actor "${actorName}"`)
+				Logger.toolSuccess(TOOL_NAME, `Deleted content page "${page.name}" from ${type} "${entity.name}"`)
 				return {
 					content: [
 						{
 							type: 'text' as const,
-							text: `Content page "${pageName}" has been deleted from actor "${actor.name}".`,
+							text: `Content page "${page.name}" has been deleted from ${type} "${entity.name}".`,
 						},
 					],
 				}

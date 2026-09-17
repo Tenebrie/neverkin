@@ -11,9 +11,9 @@ const createMockWorldData = (data: {
 	tags?: { id: string; name: string }[]
 }): WorldData =>
 	({
-		actors: data.actors ?? [],
-		events: data.events ?? [],
-		tags: data.tags ?? [],
+		actors: withUpdatedAt(data.actors),
+		events: withUpdatedAt(data.events),
+		tags: withUpdatedAt(data.tags),
 	}) as unknown as WorldData
 
 const mockWorldData = createMockWorldData({
@@ -31,10 +31,10 @@ const mockWorldData = createMockWorldData({
 	],
 })
 
-const mockArticleData = [
+const mockArticleData = withUpdatedAt([
 	{ id: 'article-1', name: 'Lore Overview' },
 	{ id: 'article-2', name: 'Character Guide' },
-] as ArticleData
+]) as ArticleData
 
 describe('resolveShorthandMentions', () => {
 	it('resolves actor mention by exact name', async () => {
@@ -151,7 +151,7 @@ describe('resolveShorthandMentions', () => {
 				worldData: mockWorldData,
 				articleData: mockArticleData,
 			}),
-		).rejects.toThrow('Unable to resolve mention "@[Unknown Entity]"')
+		).rejects.toThrow('Unable to resolve "Unknown Entity"')
 	})
 
 	it('resolves complex content structure', async () => {
@@ -230,7 +230,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Ambiguous mention "@[Alice]": multiple entities found with exact name match')
+				).rejects.toThrow('Ambiguous name "Alice": multiple entities found with exact name match')
 			})
 		})
 
@@ -280,7 +280,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Ambiguous mention "@[John]": multiple entities found with fuzzy match')
+				).rejects.toThrow('Ambiguous name "John": multiple entities found with fuzzy match')
 			})
 		})
 
@@ -296,7 +296,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Unable to resolve mention "@[Zephyr]"')
+				).rejects.toThrow('Unable to resolve "Zephyr"')
 			})
 
 			it('throws error when entity exists but not as substring', async () => {
@@ -310,7 +310,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Unable to resolve mention "@[Bob]"')
+				).rejects.toThrow('Unable to resolve "Bob"')
 			})
 		})
 
@@ -327,7 +327,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Ambiguous mention "@[Phoenix]": multiple entities found with exact name match')
+				).rejects.toThrow('Ambiguous name "Phoenix": multiple entities found with exact name match')
 			})
 
 			it('throws error when fuzzy match hits across different entity types', async () => {
@@ -342,7 +342,7 @@ describe('resolveShorthandMentions', () => {
 						worldData,
 						articleData: [],
 					}),
-				).rejects.toThrow('Ambiguous mention "@[Phoenix]": multiple entities found with fuzzy match')
+				).rejects.toThrow('Ambiguous name "Phoenix": multiple entities found with fuzzy match')
 			})
 		})
 
@@ -384,3 +384,7 @@ describe('resolveShorthandMentions', () => {
 		})
 	})
 })
+
+function withUpdatedAt(entities: { id: string; name: string }[] = []) {
+	return entities.map((entity) => ({ ...entity, updatedAt: '2026-01-01T00:00:00.000Z' }))
+}

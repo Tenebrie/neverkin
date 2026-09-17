@@ -16,19 +16,24 @@ test.describe('MCP Actor Tools', () => {
 		const createWorldResult = await mcp.callTool('create_world', { name: 'Actor World' })
 		expect(createWorldResult.isError).toBeFalsy()
 
-		// Create an actor with title and description
-		const createResult = await mcp.callTool('create_actor', {
-			name: 'Gandalf',
-			title: 'The Grey',
-			description: '<p>A wandering wizard of great power.</p>',
+		// Create an actor with title and content
+		const createResult = await mcp.callTool('create_entities', {
+			entities: [
+				{
+					type: 'actor',
+					name: 'Gandalf',
+					title: 'The Grey',
+					content: '<p>A wandering wizard of great power.</p>',
+				},
+			],
 		})
 		expect(createResult.isError).toBeFalsy()
 		expect(createResult.content[0].text).toContain('Gandalf')
 		expect(createResult.content[0].text).toContain('The Grey')
 
 		// Read the actor back and verify content is persisted
-		const detailsResult = await mcp.callTool('get_actor_details', {
-			actorName: 'Gandalf',
+		const detailsResult = await mcp.callTool('get_entity_details', {
+			entityName: 'Gandalf',
 		})
 		expect(detailsResult.isError).toBeFalsy()
 		const detailsText = detailsResult.content[0].text

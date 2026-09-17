@@ -56,8 +56,8 @@ describe('readme tool', () => {
 		expect(allText).toContain('set_context')
 		expect(allText).toContain('get_world_details')
 		expect(allText).toContain('search_world')
-		expect(allText).toContain('get_actor_details')
-		expect(allText).toContain('update_actor_content')
+		expect(allText).toContain('get_entity_details')
+		expect(allText).toContain('update_entity_content')
 	})
 
 	it('does not return an error', async () => {

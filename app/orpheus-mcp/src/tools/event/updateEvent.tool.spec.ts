@@ -86,60 +86,11 @@ describe('update_event tool', () => {
 
 		const result = await client.callTool({
 			name: 'update_event',
-			arguments: { eventName: 'Battle', dateTime: '5000' },
+			arguments: { eventName: 'Battle', timestamp: '5000' },
 		})
 
 		const text = (result.content as Array<{ type: string; text: string }>)[0].text
 		expect(text).toContain('Timestamp: 5000')
-	})
-
-	it('updates event description', async () => {
-		generateEndpointMock(server, {
-			method: 'get',
-			path: '/api/world/world-456',
-			response: {
-				id: 'world-456',
-				name: 'Test World',
-				isReadOnly: false,
-				calendars: [mockNumericCalendar()],
-				events: [{ id: 'e1', name: 'Battle', timestamp: '100' }],
-				actors: [],
-				tags: [],
-			},
-		})
-
-		generateEndpointMock(server, {
-			method: 'patch',
-			path: '/api/world/world-456/event/e1',
-			response: {
-				id: 'e1',
-				name: 'Battle',
-				timestamp: '100',
-			},
-		})
-
-		generateEndpointMock(server, {
-			method: 'get',
-			path: '/api/world/world-456/wiki/articles',
-			response: [],
-		})
-
-		const contentMock = generateEndpointMock(server, {
-			method: 'put',
-			path: '/api/world/world-456/event/e1/content',
-			response: {},
-		})
-
-		const result = await client.callTool({
-			name: 'update_event',
-			arguments: {
-				eventName: 'Battle',
-				description: '<p>A fierce battle erupted.</p>',
-			},
-		})
-
-		expect(result.isError).toBeUndefined()
-		expect(contentMock.hasBeenCalled()).toBe(true)
 	})
 
 	it('updates an event color', async () => {

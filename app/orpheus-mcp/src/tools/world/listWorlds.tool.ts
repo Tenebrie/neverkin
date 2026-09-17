@@ -41,7 +41,7 @@ export function registerListWorldsTool(server: McpServer) {
 					id: w.id,
 					name: w.name,
 					accessMode: w.accessMode,
-					calendar: w.calendars[0].name + ' :: DateTime format is "' + w.calendars[0].dateFormat + '"',
+					calendar: w.calendars[0].name + ' :: Timestamp format is "' + w.calendars[0].dateFormat + '"',
 				}))
 
 				const worldList = worlds
