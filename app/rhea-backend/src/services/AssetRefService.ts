@@ -24,12 +24,7 @@ export const AssetRefService = {
 
 		const client = getPrismaClient(prisma)
 
-		const holderColumn = {
-			holderActorId: holderType === ReferenceHoldingEntity.Actor ? holderId : undefined,
-			holderEventId: holderType === ReferenceHoldingEntity.Event ? holderId : undefined,
-			holderArticleId: holderType === ReferenceHoldingEntity.Article ? holderId : undefined,
-			holderTagId: holderType === ReferenceHoldingEntity.Tag ? holderId : undefined,
-		}
+		const holderColumn = assetHolderColumn(holderType, holderId)
 
 		const data = dedupeReferences(
 			assets.map((assetId) => ({
@@ -90,6 +85,18 @@ export const AssetRefService = {
 			},
 		})
 	},
+}
+
+function assetHolderColumn(holderType: ReferenceHoldingEntity, holderId: string) {
+	const columns = {
+		[ReferenceHoldingEntity.Actor]: { holderActorId: holderId },
+		[ReferenceHoldingEntity.Event]: { holderEventId: holderId },
+		[ReferenceHoldingEntity.Article]: { holderArticleId: holderId },
+		[ReferenceHoldingEntity.Tag]: { holderTagId: holderId },
+		[ReferenceHoldingEntity.Node]: { holderNodeId: holderId },
+	} satisfies Record<ReferenceHoldingEntity, Prisma.AssetReferenceWhereInput>
+
+	return columns[holderType]
 }
 
 export function dedupeReferences<T extends Pick<AssetReference, 'holderId' | 'assetId'>>(
