@@ -30,6 +30,7 @@ export type AuditLogMinAggregateOutputType = {
   userId: string | null
   requestIp: string | null
   action: $Enums.AuditAction | null
+  dedupeKey: string | null
 }
 
 export type AuditLogMaxAggregateOutputType = {
@@ -38,6 +39,7 @@ export type AuditLogMaxAggregateOutputType = {
   userId: string | null
   requestIp: string | null
   action: $Enums.AuditAction | null
+  dedupeKey: string | null
 }
 
 export type AuditLogCountAggregateOutputType = {
@@ -47,6 +49,7 @@ export type AuditLogCountAggregateOutputType = {
   requestIp: number
   action: number
   data: number
+  dedupeKey: number
   _all: number
 }
 
@@ -57,6 +60,7 @@ export type AuditLogMinAggregateInputType = {
   userId?: true
   requestIp?: true
   action?: true
+  dedupeKey?: true
 }
 
 export type AuditLogMaxAggregateInputType = {
@@ -65,6 +69,7 @@ export type AuditLogMaxAggregateInputType = {
   userId?: true
   requestIp?: true
   action?: true
+  dedupeKey?: true
 }
 
 export type AuditLogCountAggregateInputType = {
@@ -74,6 +79,7 @@ export type AuditLogCountAggregateInputType = {
   requestIp?: true
   action?: true
   data?: true
+  dedupeKey?: true
   _all?: true
 }
 
@@ -156,6 +162,7 @@ export type AuditLogGroupByOutputType = {
   requestIp: string
   action: $Enums.AuditAction
   data: runtime.JsonValue
+  dedupeKey: string | null
   _count: AuditLogCountAggregateOutputType | null
   _min: AuditLogMinAggregateOutputType | null
   _max: AuditLogMaxAggregateOutputType | null
@@ -186,6 +193,7 @@ export type AuditLogWhereInput = {
   requestIp?: Prisma.StringFilter<"AuditLog"> | string
   action?: Prisma.EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
   data?: Prisma.JsonFilter<"AuditLog">
+  dedupeKey?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
 }
 
@@ -196,11 +204,13 @@ export type AuditLogOrderByWithRelationInput = {
   requestIp?: Prisma.SortOrder
   action?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrderInput | Prisma.SortOrder
   user?: Prisma.UserOrderByWithRelationInput
 }
 
 export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   id?: string
+  userId_action_dedupeKey?: Prisma.AuditLogUserIdActionDedupeKeyCompoundUniqueInput
   AND?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
   OR?: Prisma.AuditLogWhereInput[]
   NOT?: Prisma.AuditLogWhereInput | Prisma.AuditLogWhereInput[]
@@ -209,8 +219,9 @@ export type AuditLogWhereUniqueInput = Prisma.AtLeast<{
   requestIp?: Prisma.StringFilter<"AuditLog"> | string
   action?: Prisma.EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
   data?: Prisma.JsonFilter<"AuditLog">
+  dedupeKey?: Prisma.StringNullableFilter<"AuditLog"> | string | null
   user?: Prisma.XOR<Prisma.UserNullableScalarRelationFilter, Prisma.UserWhereInput> | null
-}, "id">
+}, "id" | "userId_action_dedupeKey">
 
 export type AuditLogOrderByWithAggregationInput = {
   id?: Prisma.SortOrder
@@ -219,6 +230,7 @@ export type AuditLogOrderByWithAggregationInput = {
   requestIp?: Prisma.SortOrder
   action?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrderInput | Prisma.SortOrder
   _count?: Prisma.AuditLogCountOrderByAggregateInput
   _max?: Prisma.AuditLogMaxOrderByAggregateInput
   _min?: Prisma.AuditLogMinOrderByAggregateInput
@@ -234,6 +246,7 @@ export type AuditLogScalarWhereWithAggregatesInput = {
   requestIp?: Prisma.StringWithAggregatesFilter<"AuditLog"> | string
   action?: Prisma.EnumAuditActionWithAggregatesFilter<"AuditLog"> | $Enums.AuditAction
   data?: Prisma.JsonWithAggregatesFilter<"AuditLog">
+  dedupeKey?: Prisma.StringNullableWithAggregatesFilter<"AuditLog"> | string | null
 }
 
 export type AuditLogCreateInput = {
@@ -242,6 +255,7 @@ export type AuditLogCreateInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
   user?: Prisma.UserCreateNestedOneWithoutAuditLogsInput
 }
 
@@ -252,6 +266,7 @@ export type AuditLogUncheckedCreateInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
 }
 
 export type AuditLogUpdateInput = {
@@ -260,6 +275,7 @@ export type AuditLogUpdateInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
   user?: Prisma.UserUpdateOneWithoutAuditLogsNestedInput
 }
 
@@ -270,6 +286,7 @@ export type AuditLogUncheckedUpdateInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogCreateManyInput = {
@@ -279,6 +296,7 @@ export type AuditLogCreateManyInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
 }
 
 export type AuditLogUpdateManyMutationInput = {
@@ -287,6 +305,7 @@ export type AuditLogUpdateManyMutationInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateManyInput = {
@@ -296,6 +315,13 @@ export type AuditLogUncheckedUpdateManyInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
+}
+
+export type AuditLogUserIdActionDedupeKeyCompoundUniqueInput = {
+  userId: string
+  action: $Enums.AuditAction
+  dedupeKey: string
 }
 
 export type AuditLogCountOrderByAggregateInput = {
@@ -305,6 +331,7 @@ export type AuditLogCountOrderByAggregateInput = {
   requestIp?: Prisma.SortOrder
   action?: Prisma.SortOrder
   data?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
 }
 
 export type AuditLogMaxOrderByAggregateInput = {
@@ -313,6 +340,7 @@ export type AuditLogMaxOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   requestIp?: Prisma.SortOrder
   action?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
 }
 
 export type AuditLogMinOrderByAggregateInput = {
@@ -321,6 +349,7 @@ export type AuditLogMinOrderByAggregateInput = {
   userId?: Prisma.SortOrder
   requestIp?: Prisma.SortOrder
   action?: Prisma.SortOrder
+  dedupeKey?: Prisma.SortOrder
 }
 
 export type AuditLogListRelationFilter = {
@@ -385,6 +414,7 @@ export type AuditLogCreateWithoutUserInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
 }
 
 export type AuditLogUncheckedCreateWithoutUserInput = {
@@ -393,6 +423,7 @@ export type AuditLogUncheckedCreateWithoutUserInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
 }
 
 export type AuditLogCreateOrConnectWithoutUserInput = {
@@ -431,6 +462,7 @@ export type AuditLogScalarWhereInput = {
   requestIp?: Prisma.StringFilter<"AuditLog"> | string
   action?: Prisma.EnumAuditActionFilter<"AuditLog"> | $Enums.AuditAction
   data?: Prisma.JsonFilter<"AuditLog">
+  dedupeKey?: Prisma.StringNullableFilter<"AuditLog"> | string | null
 }
 
 export type AuditLogCreateManyUserInput = {
@@ -439,6 +471,7 @@ export type AuditLogCreateManyUserInput = {
   requestIp: string
   action: $Enums.AuditAction
   data: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: string | null
 }
 
 export type AuditLogUpdateWithoutUserInput = {
@@ -447,6 +480,7 @@ export type AuditLogUpdateWithoutUserInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateWithoutUserInput = {
@@ -455,6 +489,7 @@ export type AuditLogUncheckedUpdateWithoutUserInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 export type AuditLogUncheckedUpdateManyWithoutUserInput = {
@@ -463,6 +498,7 @@ export type AuditLogUncheckedUpdateManyWithoutUserInput = {
   requestIp?: Prisma.StringFieldUpdateOperationsInput | string
   action?: Prisma.EnumAuditActionFieldUpdateOperationsInput | $Enums.AuditAction
   data?: Prisma.JsonNullValueInput | runtime.InputJsonValue
+  dedupeKey?: Prisma.NullableStringFieldUpdateOperationsInput | string | null
 }
 
 
@@ -474,6 +510,7 @@ export type AuditLogSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs
   requestIp?: boolean
   action?: boolean
   data?: boolean
+  dedupeKey?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -484,6 +521,7 @@ export type AuditLogSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Exte
   requestIp?: boolean
   action?: boolean
   data?: boolean
+  dedupeKey?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -494,6 +532,7 @@ export type AuditLogSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Exte
   requestIp?: boolean
   action?: boolean
   data?: boolean
+  dedupeKey?: boolean
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }, ExtArgs["result"]["auditLog"]>
 
@@ -504,9 +543,10 @@ export type AuditLogSelectScalar = {
   requestIp?: boolean
   action?: boolean
   data?: boolean
+  dedupeKey?: boolean
 }
 
-export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "userId" | "requestIp" | "action" | "data", ExtArgs["result"]["auditLog"]>
+export type AuditLogOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "userId" | "requestIp" | "action" | "data" | "dedupeKey", ExtArgs["result"]["auditLog"]>
 export type AuditLogInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   user?: boolean | Prisma.AuditLog$userArgs<ExtArgs>
 }
@@ -529,6 +569,7 @@ export type $AuditLogPayload<ExtArgs extends runtime.Types.Extensions.InternalAr
     requestIp: string
     action: $Enums.AuditAction
     data: runtime.JsonValue
+    dedupeKey: string | null
   }, ExtArgs["result"]["auditLog"]>
   composites: {}
 }
@@ -959,6 +1000,7 @@ export interface AuditLogFieldRefs {
   readonly requestIp: Prisma.FieldRef<"AuditLog", 'String'>
   readonly action: Prisma.FieldRef<"AuditLog", 'AuditAction'>
   readonly data: Prisma.FieldRef<"AuditLog", 'Json'>
+  readonly dedupeKey: Prisma.FieldRef<"AuditLog", 'String'>
 }
     
 

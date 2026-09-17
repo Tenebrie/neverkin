@@ -177,7 +177,8 @@ export const AuditLogScalarFieldEnum = {
   userId: 'userId',
   requestIp: 'requestIp',
   action: 'action',
-  data: 'data'
+  data: 'data',
+  dedupeKey: 'dedupeKey'
 } as const
 
 export type AuditLogScalarFieldEnum = (typeof AuditLogScalarFieldEnum)[keyof typeof AuditLogScalarFieldEnum]

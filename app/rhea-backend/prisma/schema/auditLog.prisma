@@ -33,8 +33,10 @@ model AuditLog {
     
     requestIp String
 
-    action AuditAction
-    data   Json
+    action    AuditAction
+    data      Json
+    dedupeKey String?
 
     @@index([userId, action, createdAt])
+    @@unique([userId, action, dedupeKey])
 }
