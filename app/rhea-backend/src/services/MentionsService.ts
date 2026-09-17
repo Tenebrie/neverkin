@@ -19,13 +19,7 @@ export const MentionsService = {
 
 		const client = getPrismaClient(prisma)
 
-		const sourceColumn = {
-			sourceActorId: sourceType === MentionedEntity.Actor ? sourceId : undefined,
-			sourceEventId: sourceType === MentionedEntity.Event ? sourceId : undefined,
-			sourceArticleId: sourceType === MentionedEntity.Article ? sourceId : undefined,
-			sourceTagId: sourceType === MentionedEntity.Tag ? sourceId : undefined,
-			sourceNodeId: sourceType === MentionedEntity.Node ? sourceId : undefined,
-		}
+		const sourceColumn = mentionSourceColumn(sourceType, sourceId)
 
 		const data = dedupeMentions(
 			mentions.map((mention) => ({
@@ -104,6 +98,18 @@ export const MentionsService = {
 			},
 		})
 	},
+}
+
+function mentionSourceColumn(sourceType: MentionedEntity, sourceId: string) {
+	const columns = {
+		[MentionedEntity.Actor]: { sourceActorId: sourceId },
+		[MentionedEntity.Event]: { sourceEventId: sourceId },
+		[MentionedEntity.Article]: { sourceArticleId: sourceId },
+		[MentionedEntity.Tag]: { sourceTagId: sourceId },
+		[MentionedEntity.Node]: { sourceNodeId: sourceId },
+	} satisfies Record<MentionedEntity, Prisma.MentionWhereInput>
+
+	return columns[sourceType]
 }
 
 export function dedupeMentions<T extends Pick<Mention, 'sourceId' | 'targetId'>>(mentions: T[]): T[] {

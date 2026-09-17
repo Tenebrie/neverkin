@@ -132,6 +132,7 @@ export const WorldEventService = {
 			getPrismaClient().worldEvent.deleteMany({
 				where: {
 					id: eventId,
+					worldId,
 				},
 			}),
 			makeTouchWorldQuery(worldId),

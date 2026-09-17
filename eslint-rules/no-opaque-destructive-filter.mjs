@@ -6,15 +6,18 @@
  * object catches that even when it is assembled by a spread, which hides the columns.
  *
  * Two invariants, both read off the types rather than the syntax:
- *   - the filter carries `worldId`, whenever the model has one;
- *   - at least one further column always reaches the query, so something besides the tenant
- *     key constrains it. A column written as `null` counts: that is an explicit `IS NULL`.
+ *   - the filter carries an owner column, whenever the model has one;
+ *   - at least one column always reaches the query, so the filter cannot evaporate. A column
+ *     written as `null` counts: that is an explicit `IS NULL`, not an absent constraint.
  */
 
 import ts from 'typescript'
 
 const DESTRUCTIVE_METHODS = new Set(['deleteMany', 'updateMany', 'updateManyAndReturn'])
-const TENANT_KEY = 'worldId'
+// Not every model hangs off a world: a calendar or a pin is owned by a user instead.
+const TENANT_KEYS = ['worldId', 'ownerId', 'userId']
+// Pinning the primary key enumerates the rows, so an owner column adds no bound on top.
+const PRIMARY_KEY = 'id'
 const VANISHES = ts.TypeFlags.Undefined | ts.TypeFlags.Any | ts.TypeFlags.Unknown
 
 export default {
@@ -22,15 +25,15 @@ export default {
 		type: 'problem',
 		docs: {
 			description:
-				'Require destructive Prisma queries to be scoped by worldId and by at least one column that cannot be null or undefined.',
+				'Require destructive Prisma queries to carry an owner column, unless they pin the primary key, and to keep at least one column that cannot be dropped as undefined.',
 			category: 'Possible Errors',
 			recommended: true,
 		},
 		messages: {
-			missingWorldId:
-				'Destructive {{method}} is not scoped by {{tenantKey}}. Add it to the filter so a defect cannot reach beyond one world.',
+			missingTenantKey:
+				'Destructive {{method}} is not scoped by an owner column ({{tenantKeys}}). Add one so a defect cannot reach beyond a single world or user.',
 			noSolidFilter:
-				'Destructive {{method}} has no guaranteed column besides {{tenantKey}} — every other filter here is optional, nullable or possibly undefined, so Prisma can drop them and match every row it can reach.',
+				'Destructive {{method}} has no column that always reaches the query — every filter here is optional or possibly undefined, so Prisma can drop them all and match every row.',
 		},
 		schema: [],
 		fixable: null,
@@ -51,7 +54,7 @@ export default {
 				}
 
 				const report = (messageId, target) =>
-					context.report({ node: target, messageId, data: { method, tenantKey: TENANT_KEY } })
+					context.report({ node: target, messageId, data: { method, tenantKeys: TENANT_KEYS.join(', ') } })
 
 				const options = node.arguments[0]
 				if (options?.type !== 'ObjectExpression') {
@@ -69,7 +72,7 @@ export default {
 					return
 				}
 
-				const modelHasTenantKey = hasTenantKey(services.esTreeNodeToTSNodeMap.get(node.callee), checker)
+				const ownerColumns = tenantKeysOfModel(services.esTreeNodeToTSNodeMap.get(node.callee), checker)
 
 				for (const variant of unionParts(checker.getTypeAtLocation(valueNode))) {
 					const solid = checker
@@ -77,10 +80,15 @@ export default {
 						.filter((property) => isGuaranteed(property, valueNode, checker))
 						.map((property) => property.name)
 
-					if (modelHasTenantKey && !solid.includes(TENANT_KEY)) {
-						report('missingWorldId', where)
+					const enumeratesRows = solid.includes(PRIMARY_KEY)
+					if (
+						!enumeratesRows &&
+						ownerColumns.length > 0 &&
+						!solid.some((name) => ownerColumns.includes(name))
+					) {
+						report('missingTenantKey', where)
 					}
-					if (!solid.some((name) => name !== TENANT_KEY)) {
+					if (solid.length === 0) {
 						report('noSolidFilter', where)
 					}
 				}
@@ -111,17 +119,16 @@ function unionParts(type) {
  * The contextual type of the filter is the argument's own type — Prisma infers `T` from it —
  * so the model's columns come from the declared constraint on that type parameter instead.
  */
-function hasTenantKey(calleeNode, checker) {
+function tenantKeysOfModel(calleeNode, checker) {
 	const signature = checker.getTypeAtLocation(calleeNode).getCallSignatures()[0]
 	const typeParameter = signature?.getTypeParameters()?.[0]
 	const args = typeParameter && checker.getBaseConstraintOfType(typeParameter)
 	const where = args && checker.getPropertyOfType(args, 'where')
 	if (!where) {
-		return false
+		return []
 	}
-	return unionParts(checker.getTypeOfSymbolAtLocation(where, calleeNode)).some(
-		(part) => !!checker.getPropertyOfType(part, TENANT_KEY),
-	)
+	const parts = unionParts(checker.getTypeOfSymbolAtLocation(where, calleeNode))
+	return TENANT_KEYS.filter((key) => parts.some((part) => !!checker.getPropertyOfType(part, key)))
 }
 
 /**
