@@ -1,8 +1,10 @@
-import { CalendarDraftUnit, CalendarUnit } from '@/api/types/calendarTypes'
-
+import {
+	AnyCalendarUnit as AnyUnit,
+	getCalendarModel,
+	isVisible,
+	unitBucket,
+} from '../model/CalendarModel.js'
 import { InputParsedTimestamp } from '../types.js'
-
-type AnyUnit = CalendarUnit | CalendarDraftUnit
 
 interface LabelTarget {
 	unitId: string
@@ -55,7 +57,7 @@ export function parseFormattedTimestamp({
 
 		segments.push({
 			literal: '',
-			slot: { unit, symbolCount, labels: isSymbolic ? labelTargets.get(bucketKey(unit)) : undefined },
+			slot: { unit, symbolCount, labels: isSymbolic ? labelTargets.get(unitBucket(unit)) : undefined },
 		})
 	}
 
@@ -225,33 +227,27 @@ function escapeRegExp(value: string): string {
 	return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&')
 }
 
-function bucketKey(unit: AnyUnit): string {
-	return unit.displayName ?? unit.name
-}
-
+/** Each label names the first instance of its relation, by ordinal of the child's bucket within the parent. */
 function buildLabelTargets(allUnits: AnyUnit[]): Map<string, Map<string, LabelTarget>> {
-	const unitById = new Map(allUnits.map((u) => [u.id, u]))
+	const model = getCalendarModel(allUnits)
 	const byBucket = new Map<string, Map<string, LabelTarget>>()
 
 	for (const parent of allUnits) {
-		const bucketCounter = new Map<string, number>()
-		for (const rel of parent.children) {
-			const child = unitById.get(rel.childUnitId)
-			if (!child || child.formatMode === 'Hidden') {
-				continue
+		parent.children.forEach((relation, relationIndex) => {
+			const child = model.unit(relation.childUnitId)
+			if (!child || !isVisible(child) || !relation.label) {
+				return
 			}
-			const key = bucketKey(child)
-			const start = bucketCounter.get(key) ?? 0
-			if (rel.label) {
-				let labels = byBucket.get(key)
-				if (!labels) {
-					labels = new Map()
-					byBucket.set(key, labels)
-				}
-				labels.set(rel.label.toLowerCase(), { unitId: child.id, value: start })
-			}
-			bucketCounter.set(key, start + rel.repeats)
-		}
+			const bucket = unitBucket(child)
+			const value = parent.children.slice(0, relationIndex).reduce((sum, earlier) => {
+				const earlierChild = model.unit(earlier.childUnitId)
+				return earlierChild ? sum + model.countOf(earlierChild, bucket) * earlier.repeats : sum
+			}, 0)
+
+			const labels = byBucket.get(bucket) ?? new Map<string, LabelTarget>()
+			labels.set(relation.label.toLowerCase(), { unitId: child.id, value })
+			byBucket.set(bucket, labels)
+		})
 	}
 
 	return byBucket

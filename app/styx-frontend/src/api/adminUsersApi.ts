@@ -237,6 +237,7 @@ export type AdminGetAuditLogsApiResponse = /** status 200  */ {
 			| 'AdminSetUserPassword'
 			| 'AdminDeleteUser'
 			| 'AdminBroadcastNotification'
+		dedupeKey?: null | string
 	}[]
 	page: number
 	size: number
