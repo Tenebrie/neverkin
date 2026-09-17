@@ -39,6 +39,7 @@ services:
             dockerfile: ./app/styx-frontend/Dockerfile.prod
             args:
                 VERSION: ${VERSION}
+                ASSET_STORE_URL: ${ASSET_STORE_URL:-}
         deploy:
             replicas: 2
             update_config:
@@ -207,7 +208,6 @@ services:
             retries: 3
             start_period: 30s
 
-# See docs/Creating New Cluster.md
 secrets:
     jwt-secret:
         external: true
