@@ -39,6 +39,7 @@ import { WorldWikiFolderRouter } from './routers/WorldWikiFolderRouter.js'
 import { AuditLogService } from './services/AuditLogService.js'
 import { CloudStorageService } from './services/CloudStorageService.js'
 import { RedisService } from './services/RedisService.js'
+import { UserActivityService } from './services/UserActivityService.js'
 import { UserService } from './services/UserService.js'
 import { isRunningInTest } from './utils/isRunningInTest.js'
 
@@ -164,11 +165,16 @@ if (!isRunningInTest()) {
 		server.close(() => process.exit(0))
 	})
 
-	setInterval(() => {
-		UserService.cleanUpDeletedUsers()
-		UserService.cleanUpTestUsers()
-		CloudStorageService.cleanUpExpiredAssets()
-		CloudStorageService.cleanUpOrphanedAssets()
-		AuditLogService.cleanUpOldLogs()
-	}, 60000)
+	process.on('unhandledRejection', (reason) => {
+		console.error(`${chalk.redBright('[Rhea]')} Unhandled rejection:`, reason)
+	})
+
+	setInterval(async () => {
+		UserActivityService.cleanUpRecentlySeen()
+		await UserService.cleanUpDeletedUsers()
+		await UserService.cleanUpTestUsers()
+		await CloudStorageService.cleanUpExpiredAssets()
+		await CloudStorageService.cleanUpOrphanedAssets()
+		await AuditLogService.cleanUpOldLogs()
+	}, 600000)
 }
