@@ -22,9 +22,9 @@ test.describe('multi-page actor mentions', () => {
 		// The source body mentions the target.
 		expect(
 			(
-				await mcp.callTool('update_actor_content', {
-					actorName: 'ZZ_Source2',
-					content: '<p>Linked to @[ZZ_Target2] here.</p>',
+				await mcp.callTool('update_entity_content', {
+					entityName: 'ZZ_Source2',
+					set: '<p>Linked to @[ZZ_Target2] here.</p>',
 				})
 			).isError,
 		).toBeFalsy()
@@ -32,21 +32,21 @@ test.describe('multi-page actor mentions', () => {
 		// A sub-page of the source independently mentions the same target.
 		expect(
 			(
-				await mcp.callTool('update_actor_content', {
-					actorName: 'ZZ_Source2',
+				await mcp.callTool('update_entity_content', {
+					entityName: 'ZZ_Source2',
 					pageName: 'SubPage',
-					content: '<p>Also linked to @[ZZ_Target2] from a page.</p>',
+					set: '<p>Also linked to @[ZZ_Target2] from a page.</p>',
 				})
 			).isError,
 		).toBeFalsy()
 
 		// Baseline: the target reports the source as a backlink...
-		const baselineTarget = await mcp.callTool('get_actor_details', { actorName: 'ZZ_Target2' })
+		const baselineTarget = await mcp.callTool('get_entity_details', { entityName: 'ZZ_Target2' })
 		expect(sectionStartingWith(baselineTarget, 'Mentioned in:')).toContain('ZZ_Source2')
 
 		// ...and the source lists the target exactly once despite two pages asserting it
 		// (dedup on read — the link is per-entity, not per-page).
-		const baselineSource = await mcp.callTool('get_actor_details', { actorName: 'ZZ_Source2' })
+		const baselineSource = await mcp.callTool('get_entity_details', { entityName: 'ZZ_Source2' })
 		const baselineMentions = sectionStartingWith(baselineSource, 'Mentions:')
 		expect(baselineMentions).toContain('ZZ_Target2')
 		expect(baselineMentions.match(/ZZ_Target2/g)?.length).toBe(1)
@@ -54,33 +54,33 @@ test.describe('multi-page actor mentions', () => {
 		// Remove the mention from the body only, leaving the sub-page untouched.
 		expect(
 			(
-				await mcp.callTool('update_actor_content', {
-					actorName: 'ZZ_Source2',
-					content: '<p>The body no longer links anyone.</p>',
+				await mcp.callTool('update_entity_content', {
+					entityName: 'ZZ_Source2',
+					set: '<p>The body no longer links anyone.</p>',
 				})
 			).isError,
 		).toBeFalsy()
 
 		// The link must survive: the sub-page still mentions the target.
-		const afterBodyEdit = await mcp.callTool('get_actor_details', { actorName: 'ZZ_Target2' })
+		const afterBodyEdit = await mcp.callTool('get_entity_details', { entityName: 'ZZ_Target2' })
 		expect(sectionStartingWith(afterBodyEdit, 'Mentioned in:')).toContain('ZZ_Source2')
 
 		// From the source side too, the union still reports the mention.
-		const sourceAfterBodyEdit = await mcp.callTool('get_actor_details', { actorName: 'ZZ_Source2' })
+		const sourceAfterBodyEdit = await mcp.callTool('get_entity_details', { entityName: 'ZZ_Source2' })
 		expect(sectionStartingWith(sourceAfterBodyEdit, 'Mentions:')).toContain('ZZ_Target2')
 
 		// Removing it from the sub-page as well finally drops the link.
 		expect(
 			(
-				await mcp.callTool('update_actor_content', {
-					actorName: 'ZZ_Source2',
+				await mcp.callTool('update_entity_content', {
+					entityName: 'ZZ_Source2',
 					pageName: 'SubPage',
-					content: '<p>The page no longer links anyone either.</p>',
+					set: '<p>The page no longer links anyone either.</p>',
 				})
 			).isError,
 		).toBeFalsy()
 
-		const afterAllRemoved = await mcp.callTool('get_actor_details', { actorName: 'ZZ_Target2' })
+		const afterAllRemoved = await mcp.callTool('get_entity_details', { entityName: 'ZZ_Target2' })
 		expect(sectionStartingWith(afterAllRemoved, 'Mentioned in:')).toContain('(None)')
 	})
 

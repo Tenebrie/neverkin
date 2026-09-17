@@ -19,7 +19,7 @@ export const generateEndpointMock = <ResponseT extends JsonBodyType = JsonBodyTy
 
 	const handler = http[method]('http://rhea:3000' + path, async ({ request }) => {
 		invocations.push({
-			jsonBody: request.method === 'POST' || request.method === 'PATCH' ? await request.json() : {},
+			jsonBody: ['POST', 'PUT', 'PATCH'].includes(request.method) ? await request.json() : {},
 			searchParams: Object.fromEntries(new URL(request.url).searchParams),
 		})
 

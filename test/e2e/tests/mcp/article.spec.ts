@@ -26,8 +26,8 @@ test.describe('MCP Article Tools', () => {
 		expect(createResult.content[0].text).toContain('Magic System')
 
 		// Read the article back and verify content is persisted
-		const detailsResult = await mcp.callTool('get_article_details', {
-			articleName: 'Magic System',
+		const detailsResult = await mcp.callTool('get_entity_details', {
+			entityName: 'Magic System',
 		})
 		expect(detailsResult.isError).toBeFalsy()
 		const detailsText = detailsResult.content[0].text

@@ -27,8 +27,8 @@ test.describe('MCP Event Tools', () => {
 		expect(createResult.content[0].text).toContain('The Great Battle')
 
 		// Read the event back and verify the date/time and content are persisted
-		const detailsResult = await mcp.callTool('get_event_details', {
-			eventName: 'The Great Battle',
+		const detailsResult = await mcp.callTool('get_entity_details', {
+			entityName: 'The Great Battle',
 		})
 		expect(detailsResult.isError).toBeFalsy()
 		const detailsText = detailsResult.content[0].text

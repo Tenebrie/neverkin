@@ -27,8 +27,8 @@ test.describe('MCP Actor Tools', () => {
 		expect(createResult.content[0].text).toContain('The Grey')
 
 		// Read the actor back and verify content is persisted
-		const detailsResult = await mcp.callTool('get_actor_details', {
-			actorName: 'Gandalf',
+		const detailsResult = await mcp.callTool('get_entity_details', {
+			entityName: 'Gandalf',
 		})
 		expect(detailsResult.isError).toBeFalsy()
 		const detailsText = detailsResult.content[0].text

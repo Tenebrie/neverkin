@@ -44,8 +44,8 @@ export function registerReadmeTool(server: McpServer) {
 					'',
 					'**Main tools:**',
 					'- `search_world`: Find string matches across names and descriptions.',
-					'- `get_actor_details`: Fetch details about a specific actor.',
-					'- `update_actor_content`: Update main content or pages for the actor.',
+					'- `get_entity_details`: Fetch details and content of an actor, event or article.',
+					'- `update_entity_content`: Set or edit main content or pages of an actor, event or article.',
 				],
 			]
 

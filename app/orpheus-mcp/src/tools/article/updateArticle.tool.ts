@@ -4,7 +4,6 @@ import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
-import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -17,10 +16,6 @@ const inputSchema = z.object({
 		.string()
 		.optional()
 		.describe('The new color for the article in RGB hex format, e.g. #bf8a40 (optional)'),
-	content: z
-		.string()
-		.optional()
-		.describe('The new content in HTML format (optional). If provided, fully replaces the old content.'),
 })
 
 export function registerUpdateArticleTool(server: McpServer) {
@@ -30,13 +25,7 @@ export function registerUpdateArticleTool(server: McpServer) {
 			title: 'Update Article',
 			description: [
 				'Update an existing wiki article by name. Find the article by name and update its properties.',
-
-				'To mention another entity in content, use the following syntax:',
-				'@[Entity Name]',
-				'It will be automatically resolved into an HTML tag.',
-
-				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
-				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+				'To update content, use update_entity_content.',
 			].join('\n'),
 			inputSchema,
 			annotations: {
@@ -50,7 +39,7 @@ export function registerUpdateArticleTool(server: McpServer) {
 
 				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { articleName, name, color, content } = args
+				const { articleName, name, color } = args
 
 				const articleData = await RheaService.getWorldArticles({ worldId, userId })
 				const article = findByName({ name: articleName, entities: articleData })
@@ -65,23 +54,6 @@ export function registerUpdateArticleTool(server: McpServer) {
 						color: normalizeColor(color),
 					})
 					updatedName = updatedArticle.name
-				}
-
-				if (content !== undefined) {
-					const worldData = await RheaService.getWorldDetails({ worldId, userId })
-					const parsedContent = await resolveShorthandMentions({
-						content,
-						worldData,
-						articleData,
-					})
-
-					await RheaService.updateEntityContent({
-						entityType: 'article',
-						worldId,
-						entityId: article.id,
-						userId,
-						content: parsedContent,
-					})
 				}
 
 				Logger.toolSuccess(TOOL_NAME, `Updated article "${updatedName}"`)

@@ -6,7 +6,6 @@ import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
 import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveDateTime } from '@src/utils/resolveDateTime.js'
-import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import z from 'zod'
 
@@ -23,12 +22,6 @@ const inputSchema = z.object({
 		.string()
 		.optional()
 		.describe('The new color for the event in RGB hex format, e.g. #bf8a40 (optional)'),
-	description: z
-		.string()
-		.optional()
-		.describe(
-			'The new description in HTML format (optional). If provided, fully replaces the old description.',
-		),
 })
 
 export function registerUpdateEventTool(server: McpServer) {
@@ -38,13 +31,7 @@ export function registerUpdateEventTool(server: McpServer) {
 			title: 'Update Event',
 			description: [
 				'Update an existing event by name. Find the event by name and update its properties.',
-
-				'To mention another entity in content, use the following syntax:',
-				'@[Entity Name]',
-				'It will be automatically resolved into an HTML tag.',
-
-				'Content is HTML. Use <p>, <ul>, <li>, <b> etc.',
-				'Mentions link entities together and show up in "Mentions" and "Mentioned in" fields.',
+				'To update content, use update_entity_content.',
 			].join('\n'),
 			inputSchema,
 			annotations: {
@@ -58,7 +45,7 @@ export function registerUpdateEventTool(server: McpServer) {
 
 				const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
 				const userId = await ContextService.getCurrentUserIdOrThrow(sessionId)
-				const { eventName, name, dateTime, color, description } = args
+				const { eventName, name, dateTime, color } = args
 
 				const worldData = await RheaService.getWorldDetails({ worldId, userId })
 				const event = findByName({ name: eventName, entities: worldData.events })
@@ -71,23 +58,6 @@ export function registerUpdateEventTool(server: McpServer) {
 					timestamp: resolveDateTime(dateTime, worldData),
 					color: normalizeColor(color),
 				})
-
-				if (description !== undefined) {
-					const articleData = await RheaService.getWorldArticles({ userId, worldId })
-					const parsedContent = await resolveShorthandMentions({
-						content: description,
-						worldData,
-						articleData,
-					})
-
-					await RheaService.updateEntityContent({
-						entityType: 'event',
-						worldId,
-						entityId: event.id,
-						userId,
-						content: parsedContent,
-					})
-				}
 
 				Logger.toolSuccess(TOOL_NAME, `Updated event "${updatedEvent.name}"`)
 				return {
