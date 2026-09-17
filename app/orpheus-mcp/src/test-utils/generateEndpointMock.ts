@@ -13,32 +13,41 @@ export type MockParams<ResponseT extends JsonBodyType> =
 
 export const generateEndpointMock = <ResponseT extends JsonBodyType = JsonBodyType>(
 	server: SetupServer,
-	{ method, path, ...params }: { method: HttpMethod; path: string } & MockParams<ResponseT>,
+	{
+		method,
+		path,
+		once,
+		...params
+	}: { method: HttpMethod; path: string; once?: boolean } & MockParams<ResponseT>,
 ) => {
 	let invocations: { jsonBody: unknown; searchParams: Record<string, string> }[] = []
 
-	const handler = http[method]('http://rhea:3000' + path, async ({ request }) => {
-		invocations.push({
-			jsonBody: ['POST', 'PUT', 'PATCH'].includes(request.method) ? await request.json() : {},
-			searchParams: Object.fromEntries(new URL(request.url).searchParams),
-		})
+	const handler = http[method](
+		'http://rhea:3000' + path,
+		async ({ request }) => {
+			invocations.push({
+				jsonBody: ['POST', 'PUT', 'PATCH'].includes(request.method) ? await request.json() : {},
+				searchParams: Object.fromEntries(new URL(request.url).searchParams),
+			})
 
-		const status = (() => {
+			const status = (() => {
+				if ('error' in params) {
+					return params.error.status
+				} else if ('response' in params) {
+					return 200
+				}
+				return 204
+			})()
+
 			if ('error' in params) {
-				return params.error.status
+				return HttpResponse.json(params.error, { status })
 			} else if ('response' in params) {
-				return 200
+				return HttpResponse.json(params.response, { status })
 			}
-			return 204
-		})()
-
-		if ('error' in params) {
-			return HttpResponse.json(params.error, { status })
-		} else if ('response' in params) {
-			return HttpResponse.json(params.response, { status })
-		}
-		return new HttpResponse(null, { status })
-	})
+			return new HttpResponse(null, { status })
+		},
+		{ once },
+	)
 	server.use(handler)
 
 	return {

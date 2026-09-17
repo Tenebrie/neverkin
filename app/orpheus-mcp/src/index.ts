@@ -6,21 +6,18 @@ import http from 'http'
 import { ContextService } from './services/ContextService.js'
 import { OAuthService } from './services/OAuthService.js'
 import { RedisService } from './services/RedisService.js'
-import { registerCreateActorTool } from './tools/actor/createActor.tool.js'
 import { registerDeleteActorTool } from './tools/actor/deleteActor.tool.js'
 import { registerUpdateActorTool } from './tools/actor/updateActor.tool.js'
-import { registerCreateArticleTool } from './tools/article/createArticle.tool.js'
 import { registerDeleteArticleTool } from './tools/article/deleteArticle.tool.js'
 import { registerUpdateArticleTool } from './tools/article/updateArticle.tool.js'
 import { registerReadmeTool } from './tools/context/readme.tool.js'
 import { registerSetContextTool } from './tools/context/setContext.tool.js'
+import { registerCreateEntitiesTool } from './tools/entity/createEntities.tool.js'
 import { registerDeleteEntityContentPageTool } from './tools/entity/deleteEntityContentPage.tool.js'
 import { registerGetEntityDetailsTool } from './tools/entity/getEntityDetails.tool.js'
 import { registerUpdateEntityContentTool } from './tools/entity/updateEntityContent.tool.js'
-import { registerCreateEventTool } from './tools/event/createEvent.tool.js'
 import { registerDeleteEventTool } from './tools/event/deleteEvent.tool.js'
 import { registerUpdateEventTool } from './tools/event/updateEvent.tool.js'
-import { registerCreateTagTool } from './tools/tag/createTag.tool.js'
 import { registerDeleteTagTool } from './tools/tag/deleteTag.tool.js'
 import { registerGetTagDetailsTool } from './tools/tag/getTagDetails.tool.js'
 import { registerUpdateTagTool } from './tools/tag/updateTag.tool.js'
@@ -56,29 +53,26 @@ function createServer() {
 	registerSearchWorldTool(server)
 	registerCreateWorldTool(server)
 
-	// Entity content tools (actor, event, article)
+	// Entity tools (actor, event, article, tag)
+	registerCreateEntitiesTool(server)
 	registerGetEntityDetailsTool(server)
 	registerUpdateEntityContentTool(server)
 	registerDeleteEntityContentPageTool(server)
 
 	// Actor tools
-	registerCreateActorTool(server)
 	registerUpdateActorTool(server)
 	registerDeleteActorTool(server)
 
 	// Event tools
-	registerCreateEventTool(server)
 	registerUpdateEventTool(server)
 	registerDeleteEventTool(server)
 
 	// Article tools
-	registerCreateArticleTool(server)
 	registerUpdateArticleTool(server)
 	registerDeleteArticleTool(server)
 
 	// Tag tools
 	registerGetTagDetailsTool(server)
-	registerCreateTagTool(server)
 	registerUpdateTagTool(server)
 	registerDeleteTagTool(server)
 

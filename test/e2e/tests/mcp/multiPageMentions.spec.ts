@@ -16,8 +16,16 @@ test.describe('multi-page actor mentions', () => {
 			result.content.find((part) => part.text.startsWith(prefix))?.text ?? ''
 
 		expect((await mcp.callTool('create_world', { name: 'Mention World' })).isError).toBeFalsy()
-		expect((await mcp.callTool('create_actor', { name: 'ZZ_Target2' })).isError).toBeFalsy()
-		expect((await mcp.callTool('create_actor', { name: 'ZZ_Source2' })).isError).toBeFalsy()
+		expect(
+			(
+				await mcp.callTool('create_entities', {
+					entities: [
+						{ type: 'actor', name: 'ZZ_Target2' },
+						{ type: 'actor', name: 'ZZ_Source2' },
+					],
+				})
+			).isError,
+		).toBeFalsy()
 
 		// The source body mentions the target.
 		expect(

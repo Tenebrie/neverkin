@@ -16,11 +16,16 @@ test.describe('MCP Actor Tools', () => {
 		const createWorldResult = await mcp.callTool('create_world', { name: 'Actor World' })
 		expect(createWorldResult.isError).toBeFalsy()
 
-		// Create an actor with title and description
-		const createResult = await mcp.callTool('create_actor', {
-			name: 'Gandalf',
-			title: 'The Grey',
-			description: '<p>A wandering wizard of great power.</p>',
+		// Create an actor with title and content
+		const createResult = await mcp.callTool('create_entities', {
+			entities: [
+				{
+					type: 'actor',
+					name: 'Gandalf',
+					title: 'The Grey',
+					content: '<p>A wandering wizard of great power.</p>',
+				},
+			],
 		})
 		expect(createResult.isError).toBeFalsy()
 		expect(createResult.content[0].text).toContain('Gandalf')

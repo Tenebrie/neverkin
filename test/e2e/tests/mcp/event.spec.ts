@@ -18,10 +18,15 @@ test.describe('MCP Event Tools', () => {
 
 		// Create an event with a date/time (in the world calendar's format) and description
 		const eventTimestamp = '14:40 June 15, 1999'
-		const createResult = await mcp.callTool('create_event', {
-			name: 'The Great Battle',
-			timestamp: eventTimestamp,
-			description: '<p>A decisive battle that changed the course of history.</p>',
+		const createResult = await mcp.callTool('create_entities', {
+			entities: [
+				{
+					type: 'event',
+					name: 'The Great Battle',
+					timestamp: eventTimestamp,
+					content: '<p>A decisive battle that changed the course of history.</p>',
+				},
+			],
 		})
 		expect(createResult.isError).toBeFalsy()
 		expect(createResult.content[0].text).toContain('The Great Battle')

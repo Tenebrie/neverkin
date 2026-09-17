@@ -18,9 +18,14 @@ test.describe('MCP Article Tools', () => {
 		expect(createWorldResult.content[0].text).toContain('Lore World')
 
 		// Create an article with content
-		const createResult = await mcp.callTool('create_article', {
-			name: 'Magic System',
-			content: '<p>Ancient knowledge of the arcane forces.</p>',
+		const createResult = await mcp.callTool('create_entities', {
+			entities: [
+				{
+					type: 'article',
+					name: 'Magic System',
+					content: '<p>Ancient knowledge of the arcane forces.</p>',
+				},
+			],
 		})
 		expect(createResult.isError).toBeFalsy()
 		expect(createResult.content[0].text).toContain('Magic System')
