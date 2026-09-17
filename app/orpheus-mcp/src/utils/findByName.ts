@@ -1,6 +1,3 @@
-import { ContextService } from '@src/services/ContextService.js'
-import { RheaService } from '@src/services/RheaService.js'
-
 export function nameMatchesFuzzy({ query, entityName }: { query: string; entityName: string }): boolean {
 	return entityName.trim().toLowerCase().includes(query.trim().toLowerCase())
 }
@@ -73,78 +70,4 @@ export async function findByNameOrCreate<T extends { name: string }>({
 	}
 
 	return matchingEntities[0]
-}
-
-export async function checkActorDoesNotExist({
-	name,
-	userId,
-	sessionId,
-}: {
-	name: string
-	userId: string
-	sessionId: string
-}) {
-	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
-	const worldData = await RheaService.getWorldDetails({ userId, worldId })
-	const matchingActor = worldData.actors.find((actor) =>
-		nameMatchesExactly({ query: name, entityName: actor.name }),
-	)
-	if (matchingActor) {
-		throw new Error(`Entity "${name}" already exists.`)
-	}
-}
-
-export async function checkArticleDoesNotExist({
-	name,
-	userId,
-	sessionId,
-}: {
-	name: string
-	userId: string
-	sessionId: string
-}) {
-	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
-	const articles = await RheaService.getWorldArticles({ userId, worldId })
-	const matchingArticle = articles.find((article) =>
-		nameMatchesExactly({ query: name, entityName: article.name }),
-	)
-	if (matchingArticle) {
-		throw new Error(`Article "${name}" already exists.`)
-	}
-}
-
-export async function checkEventDoesNotExist({
-	name,
-	userId,
-	sessionId,
-}: {
-	name: string
-	userId: string
-	sessionId: string
-}) {
-	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
-	const worldData = await RheaService.getWorldDetails({ userId, worldId })
-	const matchingEvent = worldData.events.find((event) =>
-		nameMatchesExactly({ query: name, entityName: event.name }),
-	)
-	if (matchingEvent) {
-		throw new Error(`Event "${name}" already exists.`)
-	}
-}
-
-export async function checkTagDoesNotExist({
-	name,
-	userId,
-	sessionId,
-}: {
-	name: string
-	userId: string
-	sessionId: string
-}) {
-	const worldId = await ContextService.getCurrentWorldOrThrow(sessionId)
-	const worldData = await RheaService.getWorldDetails({ userId, worldId })
-	const matchingTag = worldData.tags.find((tag) => nameMatchesExactly({ query: name, entityName: tag.name }))
-	if (matchingTag) {
-		throw new Error(`Tag "${name}" already exists.`)
-	}
 }

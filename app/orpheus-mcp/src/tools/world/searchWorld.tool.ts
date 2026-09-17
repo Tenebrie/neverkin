@@ -4,7 +4,7 @@ import { RheaService } from '@src/services/RheaService.js'
 import { findByName } from '@src/utils/findByName.js'
 import { formatTimestamp } from '@src/utils/formatTimestamp.js'
 import { Logger } from '@src/utils/Logger.js'
-import { resolveDateTime } from '@src/utils/resolveDateTime.js'
+import { resolveTimestamp } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import { toSummary } from '@src/utils/toSummary.js'
 import z from 'zod'
@@ -21,11 +21,15 @@ const inputSchema = z.object({
 	from: z
 		.string()
 		.optional()
-		.describe('DateTime string (events only). Will only search events after this date and time.'),
+		.describe(
+			"Timestamp in the world calendar's date format (events only). Will only search events after it.",
+		),
 	to: z
 		.string()
 		.optional()
-		.describe('DateTime string (events only). Will only search events before this date and time'),
+		.describe(
+			"Timestamp in the world calendar's date format (events only). Will only search events before it.",
+		),
 	before: z.string().optional().describe('Event name. Will only search events before this one.'),
 	after: z.string().optional().describe('Event name. Will only search events after this one.'),
 })
@@ -64,7 +68,7 @@ export function registerSearchWorldTool(server: McpServer) {
 						return Number(event.timestamp)
 					}
 					if (args.from) {
-						return resolveDateTime(args.from, worldData)
+						return resolveTimestamp(args.from, worldData)
 					}
 					return undefined
 				})()
@@ -74,7 +78,7 @@ export function registerSearchWorldTool(server: McpServer) {
 						return Number(event.timestamp)
 					}
 					if (args.to) {
-						return resolveDateTime(args.to, worldData)
+						return resolveTimestamp(args.to, worldData)
 					}
 					return undefined
 				})()

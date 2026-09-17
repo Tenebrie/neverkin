@@ -1,35 +1,8 @@
 import { RheaService } from '@src/services/RheaService.js'
 
-import { nameMatchesExactly, nameMatchesFuzzy } from './findByName.js'
+import { MENTIONABLE_ENTITY_TYPES, resolveEntityByName } from './resolveEntityByName.js'
 
-type MentionType = 'actor' | 'event' | 'tag' | 'article'
-
-type EntityWithId = { id: string; name: string }
-
-type MatchResult<T> = {
-	exact: T[]
-	fuzzy: T[]
-}
-
-function findEntitiesByName<T extends EntityWithId>({
-	name,
-	entities,
-}: {
-	name: string
-	entities: T[]
-}): MatchResult<T> {
-	const exactMatches = entities.filter((entity) =>
-		nameMatchesExactly({ query: name, entityName: entity.name }),
-	)
-	const fuzzyMatches = entities.filter((entity) => nameMatchesFuzzy({ query: name, entityName: entity.name }))
-
-	return {
-		exact: exactMatches,
-		fuzzy: fuzzyMatches,
-	}
-}
-
-function createMentionHtml({ type, id, name }: { type: MentionType; id: string; name: string }): string {
+function createMentionHtml({ type, id, name }: { type: string; id: string; name: string }): string {
 	const componentProps = JSON.stringify({ [type]: id })
 	const escapedProps = componentProps
 		.replace(/&/g, '&amp;')
@@ -78,58 +51,13 @@ export async function resolveShorthandMentions({
 	// Process matches in reverse order to preserve indices
 	for (let i = matches.length - 1; i >= 0; i--) {
 		const { fullMatch, entityName } = matches[i]
-
-		// Find matches in each entity type
-		const actorMatches = findEntitiesByName({ name: entityName, entities: worldData.actors })
-		const eventMatches = findEntitiesByName({ name: entityName, entities: worldData.events })
-		const tagMatches = findEntitiesByName({ name: entityName, entities: worldData.tags })
-		const articleMatches = findEntitiesByName({ name: entityName, entities: articleData })
-
-		// Collect all exact matches across entity types
-		const exactMatches: { type: MentionType; entity: EntityWithId }[] = []
-		for (const entity of actorMatches.exact) exactMatches.push({ type: 'actor', entity })
-		for (const entity of eventMatches.exact) exactMatches.push({ type: 'event', entity })
-		for (const entity of tagMatches.exact) exactMatches.push({ type: 'tag', entity })
-		for (const entity of articleMatches.exact) exactMatches.push({ type: 'article', entity })
-
-		// If we have exact matches, use them (priority over fuzzy)
-		if (exactMatches.length === 1) {
-			const { type, entity } = exactMatches[0]
-			const htmlMention = createMentionHtml({ type, id: entity.id, name: entity.name })
-			result = result.replace(fullMatch, htmlMention)
-			continue
-		}
-
-		if (exactMatches.length > 1) {
-			throw new Error(
-				`Ambiguous mention "@[${entityName}]": multiple entities found with exact name match: ${exactMatches.map((e) => `${e.type} "${e.entity.name}"`).join(', ')}. Please use a more specific name.`,
-			)
-		}
-
-		// No exact matches, try fuzzy matches
-		const fuzzyMatches: { type: MentionType; entity: EntityWithId }[] = []
-		for (const entity of actorMatches.fuzzy) fuzzyMatches.push({ type: 'actor', entity })
-		for (const entity of eventMatches.fuzzy) fuzzyMatches.push({ type: 'event', entity })
-		for (const entity of tagMatches.fuzzy) fuzzyMatches.push({ type: 'tag', entity })
-		for (const entity of articleMatches.fuzzy) fuzzyMatches.push({ type: 'article', entity })
-
-		if (fuzzyMatches.length === 1) {
-			const { type, entity } = fuzzyMatches[0]
-			const htmlMention = createMentionHtml({ type, id: entity.id, name: entity.name })
-			result = result.replace(fullMatch, htmlMention)
-			continue
-		}
-
-		if (fuzzyMatches.length > 1) {
-			throw new Error(
-				`Ambiguous mention "@[${entityName}]": multiple entities found with fuzzy match: ${fuzzyMatches.map((e) => `${e.type} "${e.entity.name}"`).join(', ')}. Please use a more specific name.`,
-			)
-		}
-
-		// No matches found at all
-		throw new Error(
-			`Unable to resolve mention "@[${entityName}]": no matching entity found in actors, events, tags, or articles.`,
-		)
+		const { type, entity } = resolveEntityByName({
+			name: entityName,
+			types: MENTIONABLE_ENTITY_TYPES,
+			worldData,
+			articleData,
+		})
+		result = result.replace(fullMatch, createMentionHtml({ type, id: entity.id, name: entity.name }))
 	}
 
 	return result
