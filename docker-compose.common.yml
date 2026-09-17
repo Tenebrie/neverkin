@@ -69,9 +69,9 @@ services:
             - backend-rhea-db
         healthcheck:
             test: [ "CMD-SHELL", "pg_isready -U docker -d db" ]
-            interval: 5s
-            timeout: 5s
-            retries: 5
+            interval: 15s
+            timeout: 30s
+            retries: 3
             start_period: 30s
     redis:
         image: redis:8-alpine
