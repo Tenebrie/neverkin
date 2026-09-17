@@ -2477,6 +2477,7 @@ export interface operations {
                             userId?: null | string;
                             requestIp: string;
                             action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
+                            dedupeKey?: null | string;
                         }[];
                         page: number;
                         size: number;

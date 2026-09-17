@@ -151,32 +151,19 @@ export const AuditLogService = {
 	) => {
 		const requestIp = ctx.request.ip
 		const userId = params.userId ?? ctx.user?.id
+		const dedupeKey = options.minimalGapSeconds
+			? String(Math.floor(Date.now() / (options.minimalGapSeconds * 1000)))
+			: null
 
-		if (userId && options.minimalGapSeconds) {
-			const lastEvent = await getPrismaClient().auditLog.findFirst({
-				where: {
-					userId,
-					action: params.action,
-					createdAt: {
-						gte: new Date(Date.now() - options.minimalGapSeconds * 1000),
-					},
-				},
-				select: {
-					id: true,
-				},
-			})
-			if (lastEvent) {
-				return
-			}
-		}
-
-		await getPrismaClient().auditLog.create({
+		await getPrismaClient().auditLog.createMany({
 			data: {
 				...params,
 				data: params.data ?? {},
 				userId,
 				requestIp,
+				dedupeKey,
 			},
+			skipDuplicates: true,
 		})
 	},
 

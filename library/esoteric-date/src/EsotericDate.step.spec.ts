@@ -1,10 +1,12 @@
 import { describe, expect, it } from 'vitest'
 
 import {
+	EARTH,
 	mockCalendar,
 	mockCalendarUnit,
 	mockCalendarUnitChildRelation,
 	mockCalendarUnitParentRelation,
+	mockEarthCalendar,
 } from '@/api/mock/rheaModels.mock'
 import { CalendarUnit } from '@/api/types/calendarTypes'
 import { WorldCalendar } from '@/api/types/worldTypes'
@@ -1265,5 +1267,108 @@ describe('EsotericDate.step — with originTime (simulating Earth 2023)', () => 
 			}
 		}
 		expect(log, `Step-by-1 drift detected:\n${log.join('\n')}`).toEqual([])
+	})
+})
+
+describe('large step amounts (must not recurse once per parent-cycle crossing)', () => {
+	describe('root is the immediate parent (Hour → Minute)', () => {
+		const minute = mockCalendarUnit({
+			id: 'minute',
+			name: 'Minute',
+			duration: 1,
+			formatShorthand: 'm',
+			position: 0,
+			parents: [mockCalendarUnitParentRelation('hour', 'minute', 60)],
+		})
+		const hour = mockCalendarUnit({
+			id: 'hour',
+			name: 'Hour',
+			duration: 60,
+			formatShorthand: 'h',
+			position: 1,
+			children: [mockCalendarUnitChildRelation('hour', 'minute', 60)],
+		})
+		const calendar = makeCalendar([minute, hour])
+
+		it('step(Minute, ±1e6)', () => {
+			expect(new EsotericDate(calendar, 0).step(minute, 1_000_000).getTimestamp()).toBe(1_000_000)
+			expect(new EsotericDate(calendar, 0).step(minute, -1_000_000).getTimestamp()).toBe(-1_000_000)
+			expect(new EsotericDate(calendar, 17).step(minute, 1_000_000).getTimestamp()).toBe(1_000_017)
+		})
+
+		it('step(Hour, ±1e6)', () => {
+			expect(new EsotericDate(calendar, 0).step(hour, 1_000_000).getTimestamp()).toBe(60_000_000)
+			expect(new EsotericDate(calendar, 5).step(hour, -1_000_000).getTimestamp()).toBe(-60_000_000 + 5)
+		})
+	})
+
+	describe('Earth calendar (target unit nested several levels below the root cycle)', () => {
+		const calendar = mockEarthCalendar()
+		const unit = (id: string) => calendar.units.find((u) => u.id === id)!
+		const minute = unit('minute')
+		const hour = unit('hour')
+		const day = unit('day')
+		const month = unit('31-day-month')
+		const year = unit('regular-year')
+
+		it('step(Minute, ±1e6)', () => {
+			expect(new EsotericDate(calendar, 0).step(minute, 1_000_000).getTimestamp()).toBe(1_000_000)
+			expect(new EsotericDate(calendar, 0).step(minute, -1_000_000).getTimestamp()).toBe(-1_000_000)
+		})
+
+		it('step(Hour, ±1e5 and ±1e6)', () => {
+			expect(new EsotericDate(calendar, 0).step(hour, 100_000).getTimestamp()).toBe(100_000 * EARTH.HOUR)
+			expect(new EsotericDate(calendar, 0).step(hour, -100_000).getTimestamp()).toBe(-100_000 * EARTH.HOUR)
+			expect(new EsotericDate(calendar, 0).step(hour, 1_000_000).getTimestamp()).toBe(1_000_000 * EARTH.HOUR)
+		})
+
+		it('step(Day, ±1e5 and ±1e6) preserves the time of day', () => {
+			const start = 5 * EARTH.HOUR + 7
+			expect(new EsotericDate(calendar, start).step(day, 100_000).getTimestamp()).toBe(
+				100_000 * EARTH.DAY + start,
+			)
+			expect(new EsotericDate(calendar, start).step(day, -100_000).getTimestamp()).toBe(
+				-100_000 * EARTH.DAY + start,
+			)
+			expect(new EsotericDate(calendar, start).step(day, 1_000_000).getTimestamp()).toBe(
+				1_000_000 * EARTH.DAY + start,
+			)
+		})
+
+		it('step(Month, 12n) equals step(Year, n) from the start of a year', () => {
+			for (const years of [100, 1_000, 10_000]) {
+				const viaMonths = new EsotericDate(calendar, 0).step(month, 12 * years)
+				const viaYears = new EsotericDate(calendar, 0).step(year, years)
+				expect(viaMonths.getTimestamp(), `years=${years}`).toBe(viaYears.getTimestamp())
+				expect(viaMonths.get(year)?.value, `years=${years}`).toBe(years)
+			}
+		})
+
+		it('step(Month, -12n) equals step(Year, -n) from the start of a year', () => {
+			for (const years of [100, 1_000, 10_000]) {
+				const viaMonths = new EsotericDate(calendar, 0).step(month, -12 * years)
+				const viaYears = new EsotericDate(calendar, 0).step(year, -years)
+				expect(viaMonths.getTimestamp(), `years=${years}`).toBe(viaYears.getTimestamp())
+			}
+		})
+
+		it('step(Year, ±1e6) stays cheap and exact', () => {
+			expect(new EsotericDate(calendar, 0).step(year, 1_000_000).get(year)?.value).toBe(1_000_000)
+			expect(new EsotericDate(calendar, 0).step(year, -1_000_000).get(year)?.value).toBe(-1_000_000)
+		})
+
+		it('large forward and backward steps are symmetric', () => {
+			const start = 3 * EARTH.DAY + 11 * EARTH.HOUR + 42
+			for (const [u, n] of [
+				[minute, 1_000_000],
+				[hour, 100_000],
+				[day, 100_000],
+				[month, 10_000],
+				[year, 100_000],
+			] as const) {
+				const there = new EsotericDate(calendar, start).step(u, n)
+				expect(there.step(u, -n).getTimestamp(), `${u.name} ±${n}`).toBe(start)
+			}
+		})
 	})
 })
