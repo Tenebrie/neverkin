@@ -75,7 +75,7 @@ type WorldFingerprint = {
 	actorNames: string[]
 	eventNames: string[]
 	articleNames: string[]
-	mindmapNodeIds: string[]
+	mindmapNodes: string[]
 	mindmapLinkPairs: string[]
 }
 
@@ -88,7 +88,9 @@ function fingerprintWorlds(data: ExportUserDataInlineApiResponse): WorldFingerpr
 			actorNames: world.actors.map((a) => a.name).sort(),
 			eventNames: world.events.map((e) => e.name).sort(),
 			articleNames: world.articles.map((a) => a.name).sort(),
-			mindmapNodeIds: world.mindmapNodes.map((n) => n.id).sort(),
+			mindmapNodes: world.mindmapNodes
+				.map((n) => `${n.id}:${n.parentActorId ?? n.parentArticleId ?? 'plain'}:${n.name}`)
+				.sort(),
 			mindmapLinkPairs: world.mindmapNodes
 				.flatMap((n) => n.links.map((l) => `${l.sourceNodeId}->${l.targetNodeId}`))
 				.sort(),
@@ -104,7 +106,7 @@ async function seedWorld(page: Page, name: string) {
 	await createEvent(page, world.id, { name: `${name} Founding`, contentRich: '{}', timestamp: '0' })
 	await createEvent(page, world.id, { name: `${name} Battle`, contentRich: '{}', timestamp: '1000' })
 
-	await createArticle(page, world.id, { name: `${name} Lore` })
+	const lore = await createArticle(page, world.id, { name: `${name} Lore` })
 	await createArticle(page, world.id, { name: `${name} History` })
 
 	const heroNode = await createMindmapNode(page, world.id, {
@@ -117,8 +119,21 @@ async function seedWorld(page: Page, name: string) {
 		positionY: 100,
 		parentActorId: villain.id,
 	})
+	const loreNode = await createMindmapNode(page, world.id, {
+		positionX: 200,
+		positionY: 200,
+		parentArticleId: lore.id,
+	})
+	const plainNode = await createMindmapNode(page, world.id, {
+		positionX: 300,
+		positionY: 300,
+		name: `${name} Note`,
+	})
 	await createMindmapWires(page, world.id, {
-		wires: [{ sourceNodeId: heroNode.id, targetNodeId: villainNode.id }],
+		wires: [
+			{ sourceNodeId: heroNode.id, targetNodeId: villainNode.id },
+			{ sourceNodeId: loreNode.id, targetNodeId: plainNode.id },
+		],
 	})
 
 	return world
@@ -162,8 +177,9 @@ test.describe('Data export/import', () => {
 			expect(world.actorNames).toHaveLength(2)
 			expect(world.eventNames).toHaveLength(2)
 			expect(world.articleNames).toHaveLength(2)
-			expect(world.mindmapNodeIds).toHaveLength(2)
-			expect(world.mindmapLinkPairs).toHaveLength(1)
+			expect(world.mindmapNodes).toHaveLength(4)
+			expect(world.mindmapNodes.filter((n) => n.includes(':plain:'))).toHaveLength(1)
+			expect(world.mindmapLinkPairs).toHaveLength(2)
 		}
 
 		// Trigger the UI export — the click resolves a presigned URL and starts a download
