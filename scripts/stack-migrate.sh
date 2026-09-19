@@ -5,3 +5,5 @@ docker run --rm --network "container:${POSTGRES}" \
   -e DATABASE_URL=postgresql://docker:docker@localhost:5432/db?schema=public \
   tenebrie/timelines-rhea:${VERSION} \
   sh -c "npx prisma migrate deploy && node dist/prisma/seed.js"
+
+docker image rm tenebrie/timelines-rhea:${VERSION}
