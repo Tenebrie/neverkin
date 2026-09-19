@@ -16,6 +16,7 @@ export const mentionedEntitySchema = z.union([
 	z.literal('Event'),
 	z.literal('Article'),
 	z.literal('Tag'),
+	z.literal('Node'),
 ])
 
 export const mindmapLinkDirectionSchema = z.union([
@@ -39,7 +40,7 @@ export const worldCalendarTypeSchema = z.union([
 ])
 
 export const exportedUserDataSchema = z.object({
-	version: z.literal(3),
+	version: z.literal(4),
 	user: z.object({
 		id: z.string(),
 		calendars: z.array(
@@ -290,6 +291,7 @@ export const exportedUserDataSchema = z.object({
 										parentActorId: z.string().nullable(),
 										parentEventId: z.string().nullable(),
 										parentArticleId: z.string().nullable(),
+										parentNodeId: z.string().nullable(),
 									}),
 								),
 								mentions: z.array(
@@ -304,6 +306,7 @@ export const exportedUserDataSchema = z.object({
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
 										sourceTagId: z.string().nullable(),
+										sourceNodeId: z.string().nullable(),
 										targetActorId: z.string().nullable(),
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
@@ -373,6 +376,7 @@ export const exportedUserDataSchema = z.object({
 										parentActorId: z.string().nullable(),
 										parentEventId: z.string().nullable(),
 										parentArticleId: z.string().nullable(),
+										parentNodeId: z.string().nullable(),
 									}),
 								),
 								mentions: z.array(
@@ -387,6 +391,7 @@ export const exportedUserDataSchema = z.object({
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
 										sourceTagId: z.string().nullable(),
+										sourceNodeId: z.string().nullable(),
 										targetActorId: z.string().nullable(),
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
@@ -426,6 +431,7 @@ export const exportedUserDataSchema = z.object({
 										parentActorId: z.string().nullable(),
 										parentEventId: z.string().nullable(),
 										parentArticleId: z.string().nullable(),
+										parentNodeId: z.string().nullable(),
 									}),
 								),
 								mentions: z.array(
@@ -440,6 +446,7 @@ export const exportedUserDataSchema = z.object({
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
 										sourceTagId: z.string().nullable(),
+										sourceNodeId: z.string().nullable(),
 										targetActorId: z.string().nullable(),
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
@@ -478,6 +485,7 @@ export const exportedUserDataSchema = z.object({
 										sourceEventId: z.string().nullable(),
 										sourceArticleId: z.string().nullable(),
 										sourceTagId: z.string().nullable(),
+										sourceNodeId: z.string().nullable(),
 										targetActorId: z.string().nullable(),
 										targetEventId: z.string().nullable(),
 										targetArticleId: z.string().nullable(),
@@ -502,6 +510,40 @@ export const exportedUserDataSchema = z.object({
 					mindmapNodes: z.array(
 						z
 							.object({
+								pages: z.array(
+									z.object({
+										id: z.string(),
+										createdAt: z.date(),
+										updatedAt: z.date(),
+										name: z.string(),
+										content: z.string(),
+										contentRich: z.string(),
+										parentType: mentionedEntitySchema,
+										parentActorId: z.string().nullable(),
+										parentEventId: z.string().nullable(),
+										parentArticleId: z.string().nullable(),
+										parentNodeId: z.string().nullable(),
+									}),
+								),
+								mentions: z.array(
+									z.object({
+										id: z.string(),
+										pageId: z.string().nullable(),
+										sourceId: z.string(),
+										targetId: z.string(),
+										sourceType: mentionedEntitySchema,
+										targetType: mentionedEntitySchema,
+										sourceActorId: z.string().nullable(),
+										sourceEventId: z.string().nullable(),
+										sourceArticleId: z.string().nullable(),
+										sourceTagId: z.string().nullable(),
+										sourceNodeId: z.string().nullable(),
+										targetActorId: z.string().nullable(),
+										targetEventId: z.string().nullable(),
+										targetArticleId: z.string().nullable(),
+										targetTagId: z.string().nullable(),
+									}),
+								),
 								links: z.array(
 									z.object({
 										id: z.string(),
@@ -519,10 +561,17 @@ export const exportedUserDataSchema = z.object({
 									id: z.string(),
 									createdAt: z.date(),
 									updatedAt: z.date(),
+									name: z.string(),
+									content: z.string(),
+									contentRich: z.string(),
 									worldId: z.string(),
+									parentFolderId: z.string().nullable(),
 									parentActorId: z.string().nullable(),
+									parentEventId: z.string().nullable(),
+									parentArticleId: z.string().nullable(),
 									positionX: z.number(),
 									positionY: z.number(),
+									parentTagId: z.string().nullable(),
 								}),
 							),
 					),

@@ -163,7 +163,13 @@ const makePage = (id = 'page-1', overrides: Record<string, unknown> = {}) =>
 		...overrides,
 	}) satisfies ExportedWorld['articles'][number]['pages'][number]
 
-const makeMindmapNode = (worldId: string, id = 'node-1', links: ReturnType<typeof makeMindmapLink>[] = []) =>
+const makeMindmapNode = (
+	worldId: string,
+	id = 'node-1',
+	links: ReturnType<typeof makeMindmapLink>[] = [],
+	mentions: ReturnType<typeof makeMention>[] = [],
+	pages: ReturnType<typeof makePage>[] = [],
+) =>
 	({
 		id,
 		createdAt: now,
@@ -180,6 +186,8 @@ const makeMindmapNode = (worldId: string, id = 'node-1', links: ReturnType<typeo
 		parentFolderId: null as string | null,
 		parentTagId: null as string | null,
 		links,
+		mentions,
+		pages,
 	}) satisfies ExportedWorld['mindmapNodes'][number]
 
 const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') =>
@@ -339,7 +347,7 @@ const makeExportData = (
 	calendars = [makeCalendar({ ownerId: userId })],
 ) =>
 	({
-		version: 3 as const,
+		version: 4 as const,
 		user: { id: userId, worlds, calendars },
 	}) satisfies ExportedData
 
@@ -922,14 +930,100 @@ describe('DataMigrationService', () => {
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow()
 		})
 
-		it('rejects mindmapNode with parentActorId pointing outside the world', async () => {
+		for (const key of [
+			'parentActorId',
+			'parentArticleId',
+			'parentEventId',
+			'parentFolderId',
+			'parentTagId',
+		] as const) {
+			it(`rejects mindmapNode with ${key} pointing outside the world`, async () => {
+				const world = makeWorld(userId)
+				const node = makeMindmapNode(world.id, 'node-1')
+				node[key] = 'nonexistent'
+				world.mindmapNodes = [node]
+				const data = makeExportData(userId, [world])
+				const prisma = makePrisma()
+				await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+					'references a parent outside its world',
+				)
+			})
+		}
+
+		it('accepts mindmapNode whose parents are all inside the world', async () => {
 			const world = makeWorld(userId)
-			const node = makeMindmapNode(world.id, 'node-1')
-			node.parentActorId = 'nonexistent-actor'
+			world.articles = [makeArticle(world.id, 'article-1')]
+			world.tags = [makeTag(world.id, 'tag-1')]
+			world.folders = [makeFolder(world.id, 'folder-1')]
+			world.events = [makeEvent(world.id, 'event-1')]
+			const articleNode = makeMindmapNode(world.id, 'node-1')
+			articleNode.parentArticleId = 'article-1'
+			const tagNode = makeMindmapNode(world.id, 'node-2')
+			tagNode.parentTagId = 'tag-1'
+			const folderNode = makeMindmapNode(world.id, 'node-3')
+			folderNode.parentFolderId = 'folder-1'
+			const eventNode = makeMindmapNode(world.id, 'node-4')
+			eventNode.parentEventId = 'event-1'
+			world.mindmapNodes = [articleNode, tagNode, folderNode, eventNode]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
+		})
+
+		it('rejects node mention with target outside the world', async () => {
+			const world = makeWorld(userId)
+			const node = makeMindmapNode(
+				world.id,
+				'node-1',
+				[],
+				[
+					makeMention('node-1', 'nonexistent', {
+						sourceType: 'Node',
+						sourceActorId: null,
+						sourceNodeId: 'node-1',
+						targetEventId: 'nonexistent',
+					}),
+				],
+			)
 			world.mindmapNodes = [node]
 			const data = makeExportData(userId, [world])
 			const prisma = makePrisma()
-			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'references entity outside the world',
+			)
+		})
+
+		it('accepts node mention targeting an entity inside the world', async () => {
+			const world = makeWorld(userId)
+			world.events = [makeEvent(world.id, 'event-1')]
+			const node = makeMindmapNode(
+				world.id,
+				'node-1',
+				[],
+				[
+					makeMention('node-1', 'event-1', {
+						sourceType: 'Node',
+						sourceActorId: null,
+						sourceNodeId: 'node-1',
+					}),
+				],
+			)
+			world.mindmapNodes = [node]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).resolves.not.toThrow()
+		})
+
+		it('rejects node page attributed to a different node', async () => {
+			const world = makeWorld(userId)
+			const page = makePage('page-1', { parentType: 'Node', parentNodeId: 'other-node' })
+			const node = makeMindmapNode(world.id, 'node-1', [], [], [page])
+			world.mindmapNodes = [node, makeMindmapNode(world.id, 'other-node')]
+			const data = makeExportData(userId, [world])
+			const prisma = makePrisma()
+			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
+				'is not attributed correctly',
+			)
 		})
 
 		it('uses ctx.user.id (not data.user.id) for the foreign-ownership lookup', async () => {
@@ -1002,12 +1096,12 @@ describe('DataMigrationService', () => {
 			expect(result.isValid).toBe(false)
 		})
 
-		it('version check in code is unreachable because schema enforces version: 3', async () => {
+		it('version check in code is unreachable because schema enforces version: 4', async () => {
 			const prisma = makePrisma()
 			const result = await DataMigrationService.validateUserData(
 				ctx,
 				JSON.stringify({
-					version: 2,
+					version: 3,
 					user: { id: 'u', worlds: [], calendars: [] },
 				}),
 				prisma,
@@ -1051,6 +1145,31 @@ describe('DataMigrationService', () => {
 
 			expect(tx.mindmapLink.createMany).toHaveBeenCalledWith({
 				data: [expect.objectContaining({ id: 'l1', sourceNodeId: 'n1', targetNodeId: 'n2' })],
+			})
+		})
+
+		it('inserts mindmap node pages and mentions alongside other entities', async () => {
+			const world = makeWorld(userId)
+			world.events = [makeEvent(world.id, 'event-1')]
+			const page = makePage('node-page-1', { parentType: 'Node', parentNodeId: 'n1' })
+			const mention = makeMention('n1', 'event-1', {
+				sourceType: 'Node',
+				sourceActorId: null,
+				sourceNodeId: 'n1',
+				pageId: 'node-page-1',
+			})
+			world.mindmapNodes = [makeMindmapNode(world.id, 'n1', [], [mention], [page])]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			const insertedNode = tx.mindmapNode.createMany.mock.calls[0][0].data[0]
+			expect(insertedNode).not.toHaveProperty('pages')
+			expect(insertedNode).not.toHaveProperty('mentions')
+			expect(tx.contentPage.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: 'node-page-1', parentNodeId: 'n1' })],
+			})
+			expect(tx.mention.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: mention.id, sourceNodeId: 'n1', pageId: 'node-page-1' })],
 			})
 		})
 

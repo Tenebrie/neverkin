@@ -5,7 +5,7 @@ import { TransactionClient } from '../../prisma/client/internal/prismaNamespace.
 import { exportedUserDataSchema } from './DataMigrationService.schema.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 
-const CURRENT_VERSION = 3
+const CURRENT_VERSION = 4
 
 export const DataMigrationService = {
 	exportUserData: async (ctx: { user: { id: string } }) => {
@@ -83,6 +83,8 @@ export const DataMigrationService = {
 							mindmapNodes: {
 								include: {
 									links: true,
+									mentions: true,
+									pages: true,
 								},
 							},
 							worldCommonIconSets: true,
@@ -234,14 +236,17 @@ export const DataMigrationService = {
 				...world.events.map((e) => e.id),
 				...world.articles.map((a) => a.id),
 				...world.tags.map((t) => t.id),
+				...world.mindmapNodes.map((n) => n.id),
 			])
 			const validArticlePageIds = new Set<string>(world.articles.flatMap((a) => a.pages.map((p) => p.id)))
 			const validActorPageIds = new Set<string>(world.actors.flatMap((a) => a.pages.map((p) => p.id)))
 			const validEventPageIds = new Set<string>(world.events.flatMap((e) => (e.pages ?? []).map((p) => p.id)))
+			const validNodePageIds = new Set<string>(world.mindmapNodes.flatMap((n) => n.pages.map((p) => p.id)))
 			const validPageIds = new Set<string>([
 				...validArticlePageIds,
 				...validActorPageIds,
 				...validEventPageIds,
+				...validNodePageIds,
 			])
 
 			const allWorldMentions = [
@@ -249,6 +254,7 @@ export const DataMigrationService = {
 				...world.events.flatMap((e) => e.mentions),
 				...world.articles.flatMap((a) => a.mentions),
 				...world.tags.flatMap((t) => t.mentions),
+				...world.mindmapNodes.flatMap((n) => n.mentions),
 			]
 
 			for (const m of allWorldMentions) {
@@ -259,6 +265,7 @@ export const DataMigrationService = {
 					m.sourceEventId,
 					m.sourceArticleId,
 					m.sourceTagId,
+					m.sourceNodeId,
 					m.targetActorId,
 					m.targetEventId,
 					m.targetArticleId,
@@ -281,9 +288,10 @@ export const DataMigrationService = {
 				...world.actors.flatMap((a) => a.pages),
 				...world.events.flatMap((e) => e.pages ?? []),
 				...world.articles.flatMap((a) => a.pages),
+				...world.mindmapNodes.flatMap((n) => n.pages),
 			]
 			for (const p of allWorldPages) {
-				const refs = [p.parentActorId, p.parentEventId, p.parentArticleId].filter(
+				const refs = [p.parentActorId, p.parentEventId, p.parentArticleId, p.parentNodeId].filter(
 					(id): id is string => id !== null && id !== undefined,
 				)
 
@@ -357,6 +365,13 @@ export const DataMigrationService = {
 					}
 				}
 			}
+			for (const node of world.mindmapNodes) {
+				for (const page of node.pages) {
+					if (!page.parentNodeId || page.parentNodeId !== node.id) {
+						throw new BadRequestError(`Node page ${page.id} is not attributed correctly`)
+					}
+				}
+			}
 		}
 
 		for (const world of worlds) {
@@ -369,10 +384,19 @@ export const DataMigrationService = {
 		}
 
 		for (const world of worlds) {
-			const actorIds = new Set(world.actors.map((a) => a.id))
+			const nodeParents = [
+				{ key: 'parentActorId', ids: new Set(world.actors.map((a) => a.id)) },
+				{ key: 'parentArticleId', ids: new Set(world.articles.map((a) => a.id)) },
+				{ key: 'parentEventId', ids: new Set(world.events.map((e) => e.id)) },
+				{ key: 'parentFolderId', ids: new Set(world.folders.map((f) => f.id)) },
+				{ key: 'parentTagId', ids: new Set(world.tags.map((t) => t.id)) },
+			] as const
 			for (const node of world.mindmapNodes) {
-				if (node.parentActorId && !actorIds.has(node.parentActorId)) {
-					throw new BadRequestError(`MindmapNode ${node.id} references an actor outside its world`)
+				for (const { key, ids } of nodeParents) {
+					const parentId = node[key]
+					if (parentId && !ids.has(parentId)) {
+						throw new BadRequestError(`MindmapNode ${node.id} references a parent outside its world`)
+					}
 				}
 			}
 		}
@@ -436,6 +460,7 @@ export const DataMigrationService = {
 					...w.events.flatMap((e) => e.mentions),
 					...w.articles.flatMap((a) => a.mentions),
 					...w.tags.flatMap((t) => t.mentions),
+					...w.mindmapNodes.flatMap((n) => n.mentions),
 				])
 				const allActors = perWorldActors.flat()
 				const allArticles = perWorldArticles.flat()
@@ -552,6 +577,7 @@ export const DataMigrationService = {
 						...allActors.flatMap((a) => a.pages),
 						...allEvents.flatMap((e) => e.pages),
 						...allArticles.flatMap((a) => a.pages),
+						...allMindmapNodes.flatMap((n) => n.pages),
 					],
 				})
 
