@@ -426,7 +426,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			onMouseUp={onMouseUp}
 			style={
 				{
-					willChange: 'transform',
 					'--node-x': `${node.positionX}px`,
 					'--node-y': `${node.positionY}px`,
 				} as React.CSSProperties

@@ -55,7 +55,11 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 		<Box
 			sx={{
 				position: 'absolute',
-				inset: 0,
+				top: 0,
+				left: 0,
+				// Wires reach past this box and are painted by its overflow, so its size only has to be non-zero
+				width: '100vw',
+				height: '100vh',
 				pointerEvents: 'none',
 				overflow: 'visible',
 			}}

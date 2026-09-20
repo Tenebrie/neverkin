@@ -1,3 +1,5 @@
+import { CANVAS_ORIGIN } from './mindmapCanvas'
+
 type Props = {
 	screenX: number
 	screenY: number
@@ -5,19 +7,15 @@ type Props = {
 
 export function getMindmapGridPosition({ screenX, screenY }: Props) {
 	const grid = document.querySelector<HTMLElement>('[data-mindmap-grid]')
-	const camera = document.querySelector<HTMLElement>('[data-mindmap-camera]')
-	if (!grid || !camera) {
+	if (!grid) {
 		return null
 	}
 
 	const boundingBox = grid.getBoundingClientRect()
-	const style = getComputedStyle(camera)
-	const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x'))
-	const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y'))
-	const scale = parseFloat(style.getPropertyValue('--grid-scale'))
+	const scale = parseFloat(getComputedStyle(grid).getPropertyValue('--grid-scale'))
 
 	return {
-		x: (screenX - boundingBox.x - offsetX) / scale,
-		y: (screenY - boundingBox.y - offsetY) / scale,
+		x: (screenX - boundingBox.x + grid.scrollLeft) / scale - CANVAS_ORIGIN,
+		y: (screenY - boundingBox.y + grid.scrollTop) / scale - CANVAS_ORIGIN,
 	}
 }
