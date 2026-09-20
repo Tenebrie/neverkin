@@ -65,8 +65,7 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				<g
 					ref={svgGroupRef}
 					style={{
-						willChange: 'transform',
-						transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
+						transform: 'scale(var(--grid-scale))',
 						transformOrigin: '0 0',
 						// transition: 'transform var(--transition-duration) ease-out',
 					}}

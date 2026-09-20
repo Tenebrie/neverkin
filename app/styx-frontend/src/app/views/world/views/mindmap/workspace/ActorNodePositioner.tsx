@@ -258,6 +258,8 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
 			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
+			window.addEventListener('mousemove', handleMouseMove)
+			window.addEventListener('mouseup', handleMouseUp)
 		}
 
 		const handleMouseClick = (event: MouseEvent) => {
@@ -276,10 +278,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
-			if (!mouseState.isButtonDown) {
-				return
-			}
-
 			mouseState.deltaX += event.movementX
 			mouseState.deltaY += event.movementY
 
@@ -363,13 +361,13 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.deltaY = 0
 			setDragHover(false)
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+			window.removeEventListener('mousemove', handleMouseMove)
+			window.removeEventListener('mouseup', handleMouseUp)
 		}
 
 		element.addEventListener('mousedown', handleMouseDown)
 		element.addEventListener('click', handleMouseClick)
 		element.addEventListener('wheel', handleMouseWheel)
-		window.addEventListener('mousemove', handleMouseMove)
-		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
 			element.removeEventListener('mousedown', handleMouseDown)
@@ -428,6 +426,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			onMouseUp={onMouseUp}
 			style={
 				{
+					willChange: 'transform',
 					'--node-x': `${node.positionX}px`,
 					'--node-y': `${node.positionY}px`,
 				} as React.CSSProperties
@@ -438,7 +437,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				// The drag ghost is snapped over this node and stands in for it
 				opacity: isDropTarget ? 0 : 1,
 				transform:
-					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
+					'translate(calc(var(--node-x) * var(--grid-scale)), calc(var(--node-y) * var(--grid-scale))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				'&:hover, &[data-dragging="true"]': {
 					zIndex: 10,

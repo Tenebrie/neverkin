@@ -1,4 +1,4 @@
-import { CSSProperties, RefObject, useLayoutEffect, useRef } from 'react'
+import { RefObject, useLayoutEffect } from 'react'
 import z from 'zod'
 
 import { DragDropState } from '@/app/features/dragDrop/DragDropState'
@@ -24,7 +24,13 @@ function isGestureEvent(event: Event): event is SafariGestureEvent {
 	return 'scale' in event && 'clientX' in event
 }
 
-export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
+type Props = {
+	gridRef: RefObject<HTMLDivElement | null>
+	cameraRef: RefObject<HTMLDivElement | null>
+	backgroundRef: RefObject<HTMLDivElement | null>
+}
+
+export function useMindmapNavigation({ gridRef, cameraRef, backgroundRef }: Props) {
 	const { registerUpdateFunction, clearUpdateFunction, updateMousePosition } = useMindmapEdgeScroll()
 	const bus = useEventBusContext()
 
@@ -45,16 +51,9 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		defaultCamera,
 		sessionStorage,
 	)
-	const variables = useRef({
-		'--grid-offset-x': `${state.current.position.x}px`,
-		'--grid-offset-y': `${state.current.position.y}px`,
-		'--grid-scale': state.current.scale,
-		transition:
-			'--grid-offset-x var(--transition-duration) ease-out, --grid-offset-y var(--transition-duration) ease-out, --grid-scale var(--transition-duration) ease-out',
-	} as CSSProperties)
 
 	useLayoutEffect(() => {
-		const element = ref.current
+		const element = gridRef.current
 		if (!element) {
 			return
 		}
@@ -90,10 +89,12 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		resizeObserver.observe(element)
 
 		const apply = (transitionDuration: number) => {
-			element.style.setProperty('--grid-offset-x', `${navState.gridOffsetX}px`)
-			element.style.setProperty('--grid-offset-y', `${navState.gridOffsetY}px`)
 			element.style.setProperty('--grid-scale', navState.gridScale.toString())
 			element.style.setProperty('--transition-duration', `${transitionDuration}s`)
+			for (const target of [cameraRef.current, backgroundRef.current]) {
+				target?.style.setProperty('--grid-offset-x', `${navState.gridOffsetX}px`)
+				target?.style.setProperty('--grid-offset-y', `${navState.gridOffsetY}px`)
+			}
 
 			setState(() => ({
 				worldId,
@@ -110,7 +111,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 					(navState.isDragging && navState.dragMode === 'pan') || touchState.mode !== 'none'
 				apply(gestureActive ? 0 : 0.1)
 			})
-		update()
+		apply(0)
 
 		registerUpdateFunction((scroll) => {
 			navState.gridOffsetX += scroll.x
@@ -354,11 +355,20 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state, worldId, bus])
+	}, [
+		gridRef,
+		cameraRef,
+		backgroundRef,
+		registerUpdateFunction,
+		setState,
+		clearUpdateFunction,
+		updateMousePosition,
+		state,
+		worldId,
+		bus,
+	])
 
-	useMindmapInitialFocus(ref, !state.current.worldId)
-
-	return variables
+	useMindmapInitialFocus(gridRef, !state.current.worldId)
 }
 
 function clampScale(scale: number) {

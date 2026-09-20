@@ -44,8 +44,8 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 				padding: '4px 8px',
 				left: 0,
 				top: 0,
-				transform: `translate( 
-					calc(var(--label-position-x) * var(--grid-scale) + var(--grid-offset-x) - 50%), calc(var(--label-position-y) * var(--grid-scale) + var(--grid-offset-y) - 50%)
+				transform: `translate(
+					calc(var(--label-position-x) * var(--grid-scale) - 50%), calc(var(--label-position-y) * var(--grid-scale) - 50%)
 					) scale(var(--grid-scale))`,
 
 				'--node-border-width': 'calc(1px / var(--grid-scale))',

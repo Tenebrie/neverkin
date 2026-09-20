@@ -52,13 +52,13 @@ a {
 
 @property --grid-offset-x {
   syntax: '<length>';
-  inherits: true;
+  inherits: false;
   initial-value: 0;
 }
 
 @property --grid-offset-y {
   syntax: '<length>';
-  inherits: true;
+  inherits: false;
   initial-value: 0;
 }
 

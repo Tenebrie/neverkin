@@ -5,12 +5,13 @@ type Props = {
 
 export function getMindmapGridPosition({ screenX, screenY }: Props) {
 	const grid = document.querySelector<HTMLElement>('[data-mindmap-grid]')
-	if (!grid) {
+	const camera = document.querySelector<HTMLElement>('[data-mindmap-camera]')
+	if (!grid || !camera) {
 		return null
 	}
 
 	const boundingBox = grid.getBoundingClientRect()
-	const style = getComputedStyle(grid)
+	const style = getComputedStyle(camera)
 	const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x'))
 	const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y'))
 	const scale = parseFloat(style.getPropertyValue('--grid-scale'))

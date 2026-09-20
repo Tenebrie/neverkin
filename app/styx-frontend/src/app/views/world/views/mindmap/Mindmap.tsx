@@ -15,8 +15,10 @@ export function Mindmap() {
 	const gridSpacing = 64
 	const dotSize = 2
 
-	const ref = useRef<HTMLDivElement>(null)
-	const variables = useMindmapNavigation(ref)
+	const gridRef = useRef<HTMLDivElement>(null)
+	const cameraRef = useRef<HTMLDivElement>(null)
+	const backgroundRef = useRef<HTMLDivElement>(null)
+	useMindmapNavigation({ gridRef, cameraRef, backgroundRef })
 
 	const theme = useTheme()
 	const dotColor = theme.palette.divider
@@ -24,20 +26,21 @@ export function Mindmap() {
 	return (
 		<Stack sx={{ width: '100%', height: '100%' }}>
 			<Box
-				ref={ref}
+				ref={gridRef}
 				data-testid="MindmapGrid"
 				data-mindmap-grid
-				style={variables.current}
 				sx={{
 					position: 'absolute',
 					width: '100%',
 					height: '100%',
 					overflow: 'clip',
 					touchAction: 'none',
+					transition: '--grid-scale var(--transition-duration) ease-out',
 				}}
 			>
 				<MindmapClickArea />
 				<Box
+					ref={backgroundRef}
 					sx={{
 						position: 'absolute',
 						width: '100%',
@@ -46,6 +49,8 @@ export function Mindmap() {
 						backgroundPosition: 'var(--grid-offset-x) var(--grid-offset-y)',
 						backgroundImage: `radial-gradient(circle, ${dotColor} calc(${dotSize}px * var(--grid-scale)), transparent calc(${dotSize}px * var(--grid-scale)))`,
 						backgroundSize: `calc(${gridSpacing}px * var(--grid-scale)) calc(${gridSpacing}px * var(--grid-scale))`,
+						transition:
+							'--grid-offset-x var(--transition-duration) ease-out, --grid-offset-y var(--transition-duration) ease-out',
 						// transition:
 						// 	'background-position var(--transition-duration) ease-out, background-size var(--transition-duration) ease-out',
 					}}
@@ -59,7 +64,7 @@ export function Mindmap() {
 						zIndex: 2,
 					}}
 				>
-					<MindmapContent />
+					<MindmapContent cameraRef={cameraRef} />
 				</Box>
 			</Box>
 			<MindmapHotkeys />
