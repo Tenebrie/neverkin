@@ -40,9 +40,9 @@
 		"zod": "^3.24.1"
 	},
 	"devDependencies": {
-		"@types/node": "^26.5.1",
-		"jsdom": "^30.0.1",
+		"@types/node": "^26.6.1",
+		"jsdom": "^30.1.0",
 		"typescript": "^6.0.3",
-		"vitest": "^5.0.0"
+		"vitest": "^5.0.1"
 	}
 }
