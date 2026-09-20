@@ -64,8 +64,6 @@ function MindmapWireLineComponent({
 	const gradientRef = useRef<SVGLinearGradientElement>(null)
 	const srcPortRef = useRef<SVGGElement>(null)
 	const tgtPortRef = useRef<SVGGElement>(null)
-	const srcArrowRef = useRef<SVGPathElement>(null)
-	const tgtArrowRef = useRef<SVGPathElement>(null)
 	const visibleGroupRef = useRef<SVGGElement>(null)
 
 	const gradientId = `link-gradient-${source.node.id}-${target.node.id}`
@@ -80,9 +78,21 @@ function MindmapWireLineComponent({
 	const showSourceArrow = wire.direction === 'Reversed' || wire.direction === 'TwoWay'
 	const showTargetArrow = wire.direction === 'Normal' || wire.direction === 'TwoWay'
 
+	/** Arrows ride along in the wire's own path so they don't each cost a paint item of their own */
+	const buildStrokeD = (ep: WireEndpoints) => {
+		const parts = [buildPathD(ep)]
+		if (showSourceArrow) {
+			parts.push(arrowPath(ep.x1, ep.y1, -ep.nx1, -ep.ny1, ARROW_SIZE))
+		}
+		if (showTargetArrow) {
+			parts.push(arrowPath(ep.x2, ep.y2, -ep.nx2, -ep.ny2, ARROW_SIZE))
+		}
+		return parts.join(' ')
+	}
+
 	const updateDom = (ep: WireEndpoints) => {
 		const d = buildPathD(ep)
-		pathRef.current?.setAttribute('d', d)
+		pathRef.current?.setAttribute('d', buildStrokeD(ep))
 		glowPathRef.current?.setAttribute('d', d)
 		hitPathRef.current?.setAttribute('d', d)
 		gradientRef.current?.setAttribute('x1', String(ep.x1))
@@ -91,12 +101,6 @@ function MindmapWireLineComponent({
 		gradientRef.current?.setAttribute('y2', String(ep.y2))
 		srcPortRef.current?.setAttribute('transform', `translate(${ep.x1}, ${ep.y1})`)
 		tgtPortRef.current?.setAttribute('transform', `translate(${ep.x2}, ${ep.y2})`)
-		if (showSourceArrow) {
-			srcArrowRef.current?.setAttribute('d', arrowPath(ep.x1, ep.y1, -ep.nx1, -ep.ny1, ARROW_SIZE))
-		}
-		if (showTargetArrow) {
-			tgtArrowRef.current?.setAttribute('d', arrowPath(ep.x2, ep.y2, -ep.nx2, -ep.ny2, ARROW_SIZE))
-		}
 		const mid = pathMidpoint(ep)
 		containerRef.current?.setAttribute(
 			'style',
@@ -141,7 +145,7 @@ function MindmapWireLineComponent({
 	})
 
 	const ep = resolveEndpoints()
-	const { x1, y1, x2, y2, nx1, ny1, nx2, ny2 } = ep
+	const { x1, y1, x2, y2 } = ep
 
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
@@ -276,6 +280,7 @@ function MindmapWireLineComponent({
 		<Box
 			ref={containerRef}
 			sx={{
+				contentVisibility: 'auto',
 				opacity,
 				zIndex: 100,
 				transition: 'opacity 0.2s',
@@ -319,10 +324,12 @@ function MindmapWireLineComponent({
 						<path
 							ref={pathRef}
 							data-mindmap-wire={wire.id}
-							d={buildPathD(ep)}
+							d={buildStrokeD(ep)}
 							fill="none"
 							pointerEvents="none"
 							strokeWidth={2}
+							strokeLinecap="round"
+							strokeLinejoin="round"
 							style={{ stroke: `url(#${gradientId})` }}
 						/>
 						{!showSourceArrow && (
@@ -355,30 +362,6 @@ function MindmapWireLineComponent({
 								/>
 							</g>
 						)}
-						{showSourceArrow && (
-							<path
-								ref={srcArrowRef}
-								d={arrowPath(x1, y1, -nx1, -ny1, ARROW_SIZE)}
-								fill="none"
-								strokeWidth={2}
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								pointerEvents="none"
-								style={{ stroke: targetColor, transition: SHAPE_TRANSITION }}
-							/>
-						)}
-						{showTargetArrow && (
-							<path
-								ref={tgtArrowRef}
-								d={arrowPath(x2, y2, -nx2, -ny2, ARROW_SIZE)}
-								fill="none"
-								strokeWidth={2}
-								strokeLinecap="round"
-								strokeLinejoin="round"
-								pointerEvents="none"
-								style={{ stroke: targetColor, transition: SHAPE_TRANSITION }}
-							/>
-						)}
 					</g>
 					{/* Invisible fat hit area for pointer events */}
 					<path
@@ -386,9 +369,9 @@ function MindmapWireLineComponent({
 						ref={hitPathRef}
 						d={buildPathD(ep)}
 						fill="none"
-						stroke="transparent"
+						stroke="none"
 						strokeWidth={16}
-						pointerEvents="auto"
+						pointerEvents="stroke"
 						style={{ cursor: 'pointer' }}
 						onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 						onMouseEnter={() => {
