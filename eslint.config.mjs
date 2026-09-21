@@ -11,12 +11,16 @@ import tseslint from 'typescript-eslint'
 
 import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
 import noOpaqueDestructiveFilter from './eslint-rules/no-opaque-destructive-filter.mjs'
+import noTransactionEscape from './eslint-rules/no-transaction-escape.mjs'
+import noUnknownApiPath from './eslint-rules/no-unknown-api-path.mjs'
 import noUntypedLocalPaths from './eslint-rules/no-untyped-local-paths.mjs'
 
 const neverkin = {
 	rules: {
 		'no-direct-context-access': noDirectContextAccess,
 		'no-opaque-destructive-filter': noOpaqueDestructiveFilter,
+		'no-transaction-escape': noTransactionEscape,
+		'no-unknown-api-path': noUnknownApiPath,
 		'no-untyped-local-paths': noUntypedLocalPaths,
 	},
 }
@@ -115,6 +119,14 @@ export default defineConfig(
 		},
 		rules: {
 			'neverkin/no-opaque-destructive-filter': 'error',
+			'neverkin/no-transaction-escape': 'error',
+		},
+	},
+	{
+		files: ['app/rhea-backend/src/**/*.spec.ts'],
+		plugins: { neverkin },
+		rules: {
+			'neverkin/no-unknown-api-path': 'error',
 		},
 	},
 	{

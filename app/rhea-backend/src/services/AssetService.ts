@@ -132,7 +132,7 @@ export const AssetService = {
 				throw new BadRequestError('Target asset is not valid')
 			}
 
-			return await getPrismaClient().user.update({
+			return await prisma.user.update({
 				where: {
 					id: userId,
 				},
