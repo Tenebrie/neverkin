@@ -1,9 +1,9 @@
-import { CollaboratingUser, User, World } from '@prisma/client'
+import { CollaboratingUser, MindmapLink, MindmapNode, User, World } from '@prisma/client'
 import { BaselineActor, BaselineArticle, BaselineTag, BaselineWorldEvent } from '@src/services/types.js'
 import { randomUUID } from 'crypto'
 
 export const mockUser = (data?: Partial<User>): User => ({
-	id: 'user-1111',
+	id: randomUUID(),
 	email: 'admin@localhost',
 	level: 'Free',
 	username: 'admin',
@@ -11,7 +11,7 @@ export const mockUser = (data?: Partial<User>): User => ({
 	createdAt: new Date(0),
 	updatedAt: new Date(0),
 	bio: 'bio',
-	avatarId: 'avatar-1111',
+	avatarId: null,
 	deletedAt: null,
 	deletionScheduledAt: null,
 	...data,
@@ -109,6 +109,35 @@ export const mockTag = (data?: Partial<BaselineTag>): BaselineTag => ({
 	mentionedIn: [],
 	parentFolderId: null,
 	parentFolderPosition: 0,
+	...data,
+})
+
+export const mockMindmapNode = (data?: Partial<MindmapNode>): MindmapNode => ({
+	id: randomUUID(),
+	createdAt: new Date(0),
+	updatedAt: new Date(0),
+	content: '',
+	contentRich: '',
+	parentFolderId: null,
+	parentActorId: null,
+	parentArticleId: null,
+	parentEventId: null,
+	parentTagId: null,
+	worldId: 'world-1111',
+	name: 'Test Node',
+	positionX: 0,
+	positionY: 0,
+	...data,
+})
+
+export const mockMindmapLink = (data?: Partial<MindmapLink>): MindmapLink => ({
+	id: randomUUID(),
+	createdAt: new Date(0),
+	updatedAt: new Date(0),
+	sourceNodeId: 'unknown-node-1111',
+	targetNodeId: 'unknown-node-2222',
+	direction: 'Normal',
+	content: '',
 	...data,
 })
 

@@ -25,7 +25,6 @@ const tags = [
 	'worldDetails',
 	'worldCollaborators',
 	'worldSearch',
-	'worldThumbnail',
 ]
 
 const tagMatcher = (pattern) => {

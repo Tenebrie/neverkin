@@ -1,6 +1,6 @@
 import { CollaboratingUser, User, World } from '@prisma/client'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
-import request from 'supertest'
+import request, { Response, Test } from 'supertest'
 import { beforeEach, vi } from 'vitest'
 
 import { app } from '../index.js'
@@ -8,14 +8,9 @@ import { withUserAuth } from './auth.js'
 import { mockCollaboratingUser, mockUser, mockWorld } from './mock.js'
 import { mockPrismaClient } from './utils/prismaMock.js'
 
-export const makeRequest = () => request(app.callback())
-export const sendGet = (...args: Parameters<ReturnType<typeof request>['get']>) => makeRequest().get(...args)
-export const sendPost = (...args: Parameters<ReturnType<typeof request>['post']>) =>
-	makeRequest().post(...args)
-export const sendPatch = (...args: Parameters<ReturnType<typeof request>['patch']>) =>
-	makeRequest().patch(...args)
-export const sendDelete = (...args: Parameters<ReturnType<typeof request>['delete']>) =>
-	makeRequest().delete(...args)
+beforeEach(() => {
+	vi.restoreAllMocks()
+})
 
 export const withWorld = (world?: Partial<World>) => {
 	mockPrismaClient({ world: mockWorld(world) })
@@ -69,6 +64,28 @@ export const requestBuilder = {
 	withWorldWriteAccess,
 }
 
-beforeEach(() => {
-	vi.restoreAllMocks()
-})
+export function makeRequest() {
+	return request(app.callback())
+}
+export function sendGet(...args: Parameters<ReturnType<typeof request>['get']>) {
+	return lazyRequest(() => makeRequest().get(...args))
+}
+export function sendPost(...args: Parameters<ReturnType<typeof request>['post']>) {
+	return lazyRequest(() => makeRequest().post(...args))
+}
+export function sendPatch(...args: Parameters<ReturnType<typeof request>['patch']>) {
+	return lazyRequest(() => makeRequest().patch(...args))
+}
+export function sendDelete(...args: Parameters<ReturnType<typeof request>['delete']>) {
+	return lazyRequest(() => makeRequest().delete(...args))
+}
+
+function lazyRequest(make: () => Test) {
+	return {
+		send: (body: string | object) => make().send(body),
+		set: (field: string, value: string) => make().set(field, value),
+		query: (value: string | object) => make().query(value),
+		then: (onFulfilled: (value: Response) => void, onRejected: (error: Error) => void) =>
+			make().then(onFulfilled, onRejected),
+	}
+}
