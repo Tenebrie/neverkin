@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { useDispatch, useSelector, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
@@ -61,7 +61,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		return thingsSelected > 1 && state.mindmap.selectedNodes.some((n) => n.key === node.id)
 	})
 
-	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
+	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
@@ -421,6 +421,11 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		},
 	})
 
+	const onHeaderClick = useCallback(
+		(e: React.MouseEvent) => triggerClick(e, { multiselect: isMultiselectEvent(e) }),
+		[triggerClick],
+	)
+
 	return (
 		<Box
 			ref={(element: HTMLDivElement | null) => {
@@ -454,12 +459,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				},
 			}}
 		>
-			<ActorNode
-				parent={parent}
-				node={node}
-				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
-				onContentClick={onContentClick}
-			/>
+			<ActorNode parent={parent} node={node} onHeaderClick={onHeaderClick} onContentClick={onContentClick} />
 			{linkingGhost}
 		</Box>
 	)

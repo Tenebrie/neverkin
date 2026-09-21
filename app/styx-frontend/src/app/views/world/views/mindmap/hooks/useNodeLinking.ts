@@ -1,7 +1,7 @@
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useSelector, useStore } from 'react-redux'
 
-import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { mindmapApi } from '@/api/mindmapApi'
 
 import { getWorldIdState } from '../../../WorldSliceSelectors'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
@@ -9,18 +9,24 @@ import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 
 export function useNodeLinking() {
 	const worldId = useSelector(getWorldIdState)
-	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+	const store = useStore<MindmapApiState>()
 
 	const [createMindmapWires] = useCreateMindmapWires()
 	const [deleteMindmapWires] = useDeleteMindmapWires()
 
+	const getWires = useCallback(
+		() => mindmapApi.endpoints.getMindmap.select({ worldId })(store.getState()).data?.wires,
+		[store, worldId],
+	)
+
 	const createLink = useCallback(
 		({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
-			if (!data) {
+			const wires = getWires()
+			if (!wires) {
 				return
 			}
 
-			const existingLink = data.wires.find(
+			const existingLink = wires.find(
 				(link) =>
 					(link.sourceNodeId === sourceId && link.targetNodeId === targetId) ||
 					(link.sourceNodeId === targetId && link.targetNodeId === sourceId),
@@ -36,12 +42,13 @@ export function useNodeLinking() {
 			])
 			return newLink
 		},
-		[createMindmapWires, data, deleteMindmapWires],
+		[createMindmapWires, deleteMindmapWires, getWires],
 	)
 
 	const createLinks = useCallback(
 		(newPairs: { sourceNodeId: string; targetNodeId: string }[]) => {
-			if (!data) {
+			const wires = getWires()
+			if (!wires) {
 				return
 			}
 
@@ -49,7 +56,7 @@ export function useNodeLinking() {
 
 			const existingLinks = validPairs
 				.map(({ sourceNodeId, targetNodeId }) =>
-					data.wires.find((link) => {
+					wires.find((link) => {
 						const isMatching =
 							link.sourceNodeId === sourceNodeId &&
 							link.targetNodeId === targetNodeId &&
@@ -69,22 +76,23 @@ export function useNodeLinking() {
 
 			return createMindmapWires(validPairs)
 		},
-		[createMindmapWires, data, deleteMindmapWires],
+		[createMindmapWires, deleteMindmapWires, getWires],
 	)
 
 	const checkLinkExists = useCallback(
 		(sourceNodeId: string, targetNodeId: string) => {
-			if (!data) {
+			const wires = getWires()
+			if (!wires) {
 				return false
 			}
 
-			return data.wires.some(
+			return wires.some(
 				(link) =>
 					(link.sourceNodeId === sourceNodeId && link.targetNodeId === targetNodeId) ||
 					(link.sourceNodeId === targetNodeId && link.targetNodeId === sourceNodeId),
 			)
 		},
-		[data],
+		[getWires],
 	)
 
 	return {
@@ -93,3 +101,10 @@ export function useNodeLinking() {
 		checkLinkExists,
 	}
 }
+
+/**
+ * `combineReducers` erases the tag types the mindmap endpoints inject, so the app-wide RootState
+ * does not line up with what a generated endpoint selector expects. Take the shape from the
+ * selector itself.
+ */
+type MindmapApiState = Parameters<ReturnType<typeof mindmapApi.endpoints.getMindmap.select>>[0]

@@ -1,12 +1,13 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
 import React from 'react'
-import { useSelector } from 'react-redux'
+import { useStore } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { RootState } from '@/app/store'
 
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
@@ -23,7 +24,7 @@ type Props = {
 
 export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
 	const { createLinks, checkLinkExists } = useNodeLinking()
-	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
+	const store = useStore<RootState>()
 
 	const theme = useCustomTheme()
 	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
@@ -32,6 +33,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		type: 'actorNodeLinking',
 		onDrop: (data) => {
 			const sourceNodeId = data.params.sourceNode.id
+			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
 			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
 				? [...new Set(selectedNodeKeys)]
 				: [sourceNodeId]
@@ -78,7 +80,6 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		<Box
 			ref={ref}
 			sx={{
-				// opacity: dimmed ? 0.35 : 1,
 				background: theme.custom.palette.background.timeline,
 
 				// Non-scaling border

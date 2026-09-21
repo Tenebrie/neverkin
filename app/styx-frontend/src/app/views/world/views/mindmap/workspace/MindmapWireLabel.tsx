@@ -31,6 +31,17 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 		},
 	})
 
+	// TODO: Check why label is not rendering
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = containerRef.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
+		},
+	})
+
 	return (
 		<Box
 			ref={containerRef}

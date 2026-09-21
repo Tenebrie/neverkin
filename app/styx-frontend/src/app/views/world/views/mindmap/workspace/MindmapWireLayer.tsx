@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
-import { Fragment, memo, useCallback, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { memo, useCallback, useRef, useState } from 'react'
+import { useStore } from 'react-redux'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEffectOnce } from '@/app/hooks/useEffectOnce'
@@ -22,6 +22,7 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
+	const store = useStore<RootState>()
 
 	useEffectOnce(() => {
 		setRefsReady(true)
@@ -33,13 +34,10 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 		mode: 'doubleClick',
 	})
 
-	const isBulkSelectContext = useSelector((state: RootState) => {
-		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
-		return thingsSelected > 1
-	})
-
 	const onOpenPopover = useCallback(
 		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
+			const state = store.getState().mindmap
+			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position,
@@ -48,7 +46,7 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				setPopoverState({ open: true, position, mode })
 			}
 		},
-		[isBulkSelectContext],
+		[store],
 	)
 
 	useEventBusSubscribe['mindmap/scale/changed']({
@@ -67,7 +65,6 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				position: 'absolute',
 				top: 0,
 				left: 0,
-				// Wires reach past this box and are painted by its overflow, so its size only has to be non-zero
 				width: '100vw',
 				height: '100vh',
 				pointerEvents: 'none',
@@ -87,16 +84,15 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 			</svg>
 			{refsReady &&
 				nodeLinks.map((link) => (
-					<Fragment key={link.id}>
-						<MindmapWireLine
-							wire={link}
-							source={link.sourceNode}
-							target={link.targetNode}
-							svgDefsPortal={svgDefsRef.current!}
-							svgGroupPortal={svgGroupRef.current!}
-							onOpenPopover={onOpenPopover}
-						/>
-					</Fragment>
+					<MindmapWireLine
+						key={link.id}
+						wire={link}
+						source={link.sourceNode}
+						target={link.targetNode}
+						svgDefsPortal={svgDefsRef.current!}
+						svgGroupPortal={svgGroupRef.current!}
+						onOpenPopover={onOpenPopover}
+					/>
 				))}
 			<MindmapWireGhost existingWires={existingWires} />
 			<MindmapWirePopover

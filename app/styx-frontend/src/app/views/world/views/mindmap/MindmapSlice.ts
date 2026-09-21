@@ -74,8 +74,12 @@ export const mindmapSlice = createSlice({
 			state.selectedWires = state.selectedWires.filter((wireId) => wireId !== payload)
 		},
 		clearSelections: (state) => {
-			state.selectedNodes = []
-			state.selectedWires = []
+			if (state.selectedNodes.length > 0) {
+				state.selectedNodes = []
+			}
+			if (state.selectedWires.length > 0) {
+				state.selectedWires = []
+			}
 		},
 
 		addNodeToHover: (state, { payload }: PayloadAction<{ key: string; entityId: string }>) => {
