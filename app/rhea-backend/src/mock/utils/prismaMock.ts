@@ -1,10 +1,12 @@
-import { CollaboratingUser, World } from '@prisma/client'
+import { CollaboratingUser, PrismaClient, World } from '@prisma/client'
 import { beforeEach, vi } from 'vitest'
 
-export const prismaMockRef = {
+/** What `getPrismaClient()` returns under test — a stub, or a real client a suite installs. */
+export const prismaMockRef: { current: PrismaClient } = {
 	current: makePrismaClient({}),
 }
 
+/** TODO: Nuke that, as there is a mock db available in test */
 function makePrismaClient({
 	worldCount,
 	world,
@@ -13,7 +15,7 @@ function makePrismaClient({
 	worldCount?: number
 	world?: World
 	collaboratingUser?: CollaboratingUser
-}) {
+}): PrismaClient {
 	return {
 		world: {
 			count: vi.fn().mockResolvedValue(worldCount),
@@ -24,7 +26,7 @@ function makePrismaClient({
 			findFirst: vi.fn().mockResolvedValue(collaboratingUser),
 			findFirstOrThrow: vi.fn().mockResolvedValue(collaboratingUser),
 		},
-	}
+	} as unknown as PrismaClient
 }
 
 export function mockPrismaClient({

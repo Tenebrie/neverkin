@@ -1,4 +1,5 @@
 import { MindmapLinkDirection, Prisma } from '@prisma/client'
+import { BadRequestError } from 'moonflower'
 
 import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
@@ -89,8 +90,20 @@ export const MindmapService = {
 			},
 		})
 	},
-	async createLinks(data: Prisma.MindmapLinkUncheckedCreateInput[]) {
+	async createLinks(worldId: string, data: Prisma.MindmapLinkUncheckedCreateInput[]) {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const allNodeIds = data.flatMap((d) => [d.sourceNodeId, d.targetNodeId])
+			const owned = await prisma.mindmapNode.count({
+				where: {
+					id: { in: allNodeIds },
+					worldId,
+				},
+			})
+
+			if (owned < new Set(allNodeIds).size) {
+				throw new BadRequestError('Not all nodes are owned by the world')
+			}
+
 			const existing = await prisma.mindmapLink.findMany({
 				where: {
 					OR: data.flatMap(({ sourceNodeId, targetNodeId }) => [
@@ -140,14 +153,17 @@ export const MindmapService = {
 			return { created, updated }
 		})
 	},
-	async updateLink(linkId: string, params: Prisma.MindmapLinkUpdateInput) {
+	async updateLink(
+		{ wireId, worldId }: { wireId: string; worldId: string },
+		params: Prisma.MindmapLinkUpdateInput,
+	) {
 		return getPrismaClient().mindmapLink.update({
-			where: { id: linkId },
+			where: { id: wireId, sourceNode: { worldId } },
 			data: params,
 		})
 	},
 	async splitLink(
-		{ worldId, linkId }: { worldId: string; linkId: string },
+		{ worldId, wireId }: { worldId: string; wireId: string },
 		{
 			name,
 			direction,
@@ -156,7 +172,7 @@ export const MindmapService = {
 	) {
 		return getPrismaClient().$transaction(async (prisma) => {
 			const link = await prisma.mindmapLink.findFirstOrThrow({
-				where: { id: linkId, sourceNode: { worldId } },
+				where: { id: wireId, sourceNode: { worldId } },
 			})
 
 			const node = await prisma.mindmapNode.create({
@@ -175,10 +191,10 @@ export const MindmapService = {
 			return { node, created }
 		})
 	},
-	async deleteLinks(worldId: string, linkIds: string[]) {
+	async deleteLinks(worldId: string, wireIds: string[]) {
 		return getPrismaClient().mindmapLink.deleteMany({
 			where: {
-				id: { in: linkIds },
+				id: { in: wireIds },
 				sourceNode: { worldId },
 			},
 		})
