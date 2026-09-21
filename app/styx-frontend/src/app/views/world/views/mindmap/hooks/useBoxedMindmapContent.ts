@@ -54,11 +54,17 @@ export function useBoxedMindmapContent() {
 		actors,
 		events,
 		tags,
+		isLoaded: isWorldLoaded,
 	} = useSelector(
 		getWorldState,
-		(a, b) => a.id === b.id && a.actors === b.actors && a.events === b.events && a.tags === b.tags,
+		(a, b) =>
+			a.id === b.id &&
+			a.actors === b.actors &&
+			a.events === b.events &&
+			a.tags === b.tags &&
+			a.isLoaded === b.isLoaded,
 	)
-	const { articles, folders } = useSelector(
+	const { articles, folders, foldersLoaded, articlesLoaded } = useSelector(
 		getWikiState,
 		(a, b) => a.articles === b.articles && a.folders === b.folders,
 	)
@@ -68,7 +74,7 @@ export function useBoxedMindmapContent() {
 	const wireCache = useRef(new Map<object, BoxedMindmapWire>())
 
 	return useMemo(() => {
-		if (!data) {
+		if (!data || !foldersLoaded || !articlesLoaded || !isWorldLoaded) {
 			return {
 				isLoaded: false,
 				actorsWithNodes: [] as BoxedMindmapNode[],
@@ -165,5 +171,5 @@ export function useBoxedMindmapContent() {
 		wireCache.current = nextWireCache
 
 		return { isLoaded: true, actorsWithNodes, nodeLinks, existingWires }
-	}, [data, actors, articles, events, folders, tags])
+	}, [data, foldersLoaded, articlesLoaded, isWorldLoaded, actors, articles, events, folders, tags])
 }

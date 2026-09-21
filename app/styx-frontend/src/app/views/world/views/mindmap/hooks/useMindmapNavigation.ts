@@ -7,14 +7,13 @@ import { EventParams } from '@/app/features/eventBus/types'
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 
-import { CANVAS_ORIGIN } from '../utils/mindmapCanvas'
+import { CANVAS_SIZE, GRID_SPACING } from '../utils/mindmapCanvas'
+import { MindmapState } from '../utils/MindmapState'
 import { useMindmapEdgeScroll } from './useMindmapEdgeScroll'
-import { useMindmapInitialFocus } from './useMindmapInitialFocus'
+import { usePointerCapture } from './usePointerCapture'
 
 const MIN_SCALE = 0.125
 const MAX_SCALE = 5
-// Time constant of the zoom easing, in seconds. Scale and scroll are eased by the same loop so they cannot drift apart.
-const ZOOM_SMOOTHING = 0.035
 
 // Safari reports trackpad pinches via proprietary gesture events instead of ctrl+wheel
 interface SafariGestureEvent extends Event {
@@ -27,9 +26,14 @@ function isGestureEvent(event: Event): event is SafariGestureEvent {
 	return 'scale' in event && 'clientX' in event
 }
 
-export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
+export function useMindmapNavigation(
+	ref: RefObject<HTMLDivElement | null>,
+	backgroundRef: RefObject<HTMLDivElement | null>,
+) {
 	const { registerUpdateFunction, clearUpdateFunction, updateMousePosition } = useMindmapEdgeScroll()
 	const bus = useEventBusContext()
+
+	const { capture, release } = usePointerCapture()
 
 	const { worldId } = useStrictParams({ from: '/world/$worldId/_world' })
 	const defaultCamera = { worldId: '', center: { x: 0, y: 0 }, scale: 1 }
@@ -58,14 +62,13 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		const navState = {
 			canClick: false,
 			totalOffsetFromStart: 0,
+			offsetFromStartX: 0,
+			offsetFromStartY: 0,
 			isDragging: false,
 			dragMode: 'select' as 'select' | 'pan',
 			gridScale: clampScale(state.current.scale),
-			renderedScale: clampScale(state.current.scale),
 			targetScrollLeft: 0,
 			targetScrollTop: 0,
-			frame: null as number | null,
-			lastFrameTime: 0,
 			elementRect: element.getBoundingClientRect(),
 			lastTrackpadPanAt: -Infinity,
 			pinchStartScale: 1,
@@ -78,113 +81,79 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			lastDistance: 0,
 		}
 
-		const persist = () => {
+		const saveCurrentState = () => {
 			setState(() => ({
 				worldId,
 				center: {
-					x: (element.scrollLeft + navState.elementRect.width / 2) / navState.renderedScale - CANVAS_ORIGIN,
-					y: (element.scrollTop + navState.elementRect.height / 2) / navState.renderedScale - CANVAS_ORIGIN,
+					x: (navState.targetScrollLeft + navState.elementRect.width / 2.0) / navState.gridScale,
+					y: (navState.targetScrollTop + navState.elementRect.height / 2.0) / navState.gridScale,
 				},
 				scale: navState.gridScale,
 			}))
 		}
 
-		const writeCamera = (scale: number, scrollLeft: number, scrollTop: number) => {
-			navState.renderedScale = scale
-			element.style.setProperty('--grid-scale', scale.toString())
-			element.scrollLeft = scrollLeft
-			element.scrollTop = scrollTop
+		const paintCamera = () => {
+			MindmapState.scale = navState.gridScale
 
-			if (Math.abs(element.scrollLeft - scrollLeft) > 0.5) {
-				navState.targetScrollLeft = element.scrollLeft
-			}
-			if (Math.abs(element.scrollTop - scrollTop) > 0.5) {
-				navState.targetScrollTop = element.scrollTop
-			}
+			ref.current?.scrollTo({
+				left: navState.targetScrollLeft + CANVAS_SIZE / 2.0,
+				top: navState.targetScrollTop + CANVAS_SIZE / 2.0,
+			})
+			saveCurrentState()
+
+			paintBackground()
 		}
 
-		const stopEasing = () => {
-			if (navState.frame !== null) {
-				cancelAnimationFrame(navState.frame)
-				navState.frame = null
-			}
-		}
-
-		const settleCamera = () => {
-			stopEasing()
-			writeCamera(navState.gridScale, navState.targetScrollLeft, navState.targetScrollTop)
-			persist()
-		}
-
-		const easeCamera = () => {
-			if (navState.frame !== null) {
+		const paintBackground = () => {
+			const background = backgroundRef.current
+			if (!background) {
 				return
 			}
 
-			navState.lastFrameTime = performance.now()
-			const step = (time: number) => {
-				const deltaTime = (time - navState.lastFrameTime) / 1000
-				navState.lastFrameTime = time
+			background.style.display = navState.gridScale < 0.4 ? 'none' : ''
+			const tile = GRID_SPACING * navState.gridScale
+			const originX = -navState.targetScrollLeft
+			const originY = -navState.targetScrollTop
 
-				const scaleDelta = navState.gridScale - navState.renderedScale
-				const leftDelta = navState.targetScrollLeft - element.scrollLeft
-				const topDelta = navState.targetScrollTop - element.scrollTop
-				if (Math.abs(scaleDelta) < 0.0005 && Math.abs(leftDelta) < 0.5 && Math.abs(topDelta) < 0.5) {
-					navState.frame = null
-					settleCamera()
-					return
-				}
+			const tileOffsetX = ((originX % tile) + tile) % tile
+			const tileOffsetY = ((originY % tile) + tile) % tile
 
-				const factor = Math.min(1, 1 - Math.exp(-deltaTime / ZOOM_SMOOTHING))
-				writeCamera(
-					navState.renderedScale + scaleDelta * factor,
-					element.scrollLeft + leftDelta * factor,
-					element.scrollTop + topDelta * factor,
-				)
-				navState.frame = requestAnimationFrame(step)
-			}
-			navState.frame = requestAnimationFrame(step)
-		}
-
-		// Native scrolling owns the scroll offset, so targets are only meaningful while the camera drives it
-		const syncTargetsFromScroll = () => {
-			if (navState.frame !== null) {
-				return
-			}
-			navState.targetScrollLeft = element.scrollLeft
-			navState.targetScrollTop = element.scrollTop
+			background.style.setProperty('--grid-phase-x', `${tileOffsetX}px`)
+			background.style.setProperty('--grid-phase-y', `${tileOffsetY}px`)
+			background.style.setProperty('--grid-scale', navState.gridScale.toString())
 		}
 
 		const panBy = (deltaX: number, deltaY: number) => {
-			syncTargetsFromScroll()
 			navState.targetScrollLeft -= deltaX
 			navState.targetScrollTop -= deltaY
-			settleCamera()
+			paintCamera()
 		}
 
 		const zoomAt = (originX: number, originY: number, newScaleRaw: number) => {
-			syncTargetsFromScroll()
 			const newScale = clampScale(newScaleRaw)
 			const scaleFactor = newScale / navState.gridScale
 			navState.targetScrollLeft = (navState.targetScrollLeft + originX) * scaleFactor - originX
 			navState.targetScrollTop = (navState.targetScrollTop + originY) * scaleFactor - originY
 			navState.gridScale = newScale
+			dispatchGlobalEvent['mindmap/scale/changed']({ scale: newScale })
+			paintCamera()
+			paintBackground()
 		}
 
 		const lookAt = ({ x, y, scale }: EventParams['mindmap/camera/requestLookAt']) => {
 			navState.gridScale = clampScale(scale ?? navState.gridScale)
-			navState.targetScrollLeft = (x + CANVAS_ORIGIN) * navState.gridScale - navState.elementRect.width / 2
-			navState.targetScrollTop = (y + CANVAS_ORIGIN) * navState.gridScale - navState.elementRect.height / 2
-			settleCamera()
+			navState.targetScrollLeft = x * navState.gridScale - navState.elementRect.width / 2
+			navState.targetScrollTop = y * navState.gridScale - navState.elementRect.height / 2
+			dispatchGlobalEvent['mindmap/scale/changed']({ scale: navState.gridScale })
+			paintCamera()
 		}
 
-		lookAt({ ...state.current.center, scale: navState.gridScale })
+		lookAt({ ...state.current.center, scale: state.current.scale })
 
 		const resizeObserver = new ResizeObserver((entries) => {
 			for (const entry of entries) {
 				if (entry.target === element) {
 					navState.elementRect = element.getBoundingClientRect()
-					persist()
 				}
 			}
 		})
@@ -199,6 +168,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				if (!navState.isDragging) {
 					navState.canClick = true
 					navState.totalOffsetFromStart = 0
+					navState.offsetFromStartX = 0
+					navState.offsetFromStartY = 0
 				}
 				navState.isDragging = true
 				navState.dragMode = 'select'
@@ -206,6 +177,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				if (!navState.isDragging) {
 					navState.canClick = true
 					navState.totalOffsetFromStart = 0
+					navState.offsetFromStartX = 0
+					navState.offsetFromStartY = 0
 				}
 				navState.isDragging = true
 				navState.dragMode = 'pan'
@@ -214,7 +187,7 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 
 		const handleClick = (event: MouseEvent) => {
 			const target = event.target as HTMLElement
-			if (event.button === 2 && target.hasAttribute('data-mindmap-click-area')) {
+			if (event.button === 2 && target.hasAttribute('data-mindmap-click-area') && navState.canClick) {
 				dispatchGlobalEvent['quickSelect/requestOpen']({
 					query: '',
 					screenPosTop: event.clientY,
@@ -224,8 +197,8 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			}
 		}
 
-		const handleMouseUp = (event: MouseEvent) => {
-			if (navState.totalOffsetFromStart < 5 && navState.canClick) {
+		const handleMouseUp = (event: PointerEvent) => {
+			if (navState.totalOffsetFromStart < 3 && navState.canClick) {
 				handleClick(event)
 			}
 			navState.canClick = false
@@ -237,10 +210,14 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			}
 			if (event.button === 2 && navState.dragMode === 'pan') {
 				navState.isDragging = false
+				// element.style.cursor = ''
+				// window.document.body.classList.remove('mouse-busy')
+				// element.releasePointerCapture(event.pointerId)
+				release()
 			}
 		}
 
-		const handleMouseMove = (event: MouseEvent) => {
+		const handleMouseMove = (event: PointerEvent) => {
 			if (DragDropState.current?.type === 'actorNodeLinking') {
 				updateMousePosition(event, navState.elementRect)
 			}
@@ -249,8 +226,17 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			}
 
 			navState.totalOffsetFromStart += Math.abs(event.movementX) + Math.abs(event.movementY)
+			navState.offsetFromStartX += event.movementX
+			navState.offsetFromStartY += event.movementY
 			if (navState.dragMode === 'pan') {
 				panBy(event.movementX, event.movementY)
+				if (navState.totalOffsetFromStart >= 4) {
+					navState.canClick = false
+					// element.style.cursor = 'grabbing'
+					// window.document.body.classList.add('mouse-busy')
+					// element.setPointerCapture(event.pointerId)
+					capture('grabbing', event.pointerId)
+				}
 			}
 		}
 
@@ -262,7 +248,6 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			if (event.ctrlKey || event.metaKey) {
 				event.preventDefault()
 				zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 100))
-				easeCamera()
 				return
 			}
 
@@ -272,13 +257,11 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			// Trackpad panning is left to the browser, which scrolls the canvas on the compositor
 			if (looksLikeTrackpad || event.timeStamp - navState.lastTrackpadPanAt < 300) {
 				navState.lastTrackpadPanAt = event.timeStamp
-				stopEasing()
 				return
 			}
 
 			event.preventDefault()
 			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 50))
-			easeCamera()
 		}
 
 		const getTouchMidpoint = (touches: TouchList) => {
@@ -368,15 +351,13 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 				event.clientY - navState.elementRect.top,
 				navState.pinchStartScale * event.scale,
 			)
-			easeCamera()
 		}
 
 		const handleContextMenu = (event: MouseEvent) => {
 			event.preventDefault()
 		}
 
-		element.addEventListener('mousedown', handleMouseDown)
-		element.addEventListener('scroll', persist, { passive: true })
+		element.addEventListener('pointerdown', handleMouseDown)
 		element.addEventListener('wheel', handleWheel, { passive: false })
 		element.addEventListener('touchstart', handleTouchStart, { passive: false })
 		element.addEventListener('touchmove', handleTouchMove, { passive: false })
@@ -385,17 +366,15 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 		element.addEventListener('gesturestart', handleGestureStart)
 		element.addEventListener('gesturechange', handleGestureChange)
 		element.addEventListener('contextmenu', handleContextMenu)
-		window.addEventListener('mousemove', handleMouseMove)
-		window.addEventListener('mouseup', handleMouseUp)
+		window.addEventListener('pointermove', handleMouseMove)
+		window.addEventListener('pointerup', handleMouseUp)
 		const offLookAt = bus.on('mindmap/camera/requestLookAt', lookAt)
 
 		return () => {
 			offLookAt()
-			stopEasing()
 			clearUpdateFunction()
 			resizeObserver.disconnect()
-			element.removeEventListener('mousedown', handleMouseDown)
-			element.removeEventListener('scroll', persist)
+			element.removeEventListener('pointerdown', handleMouseDown)
 			element.removeEventListener('wheel', handleWheel)
 			element.removeEventListener('touchstart', handleTouchStart)
 			element.removeEventListener('touchmove', handleTouchMove)
@@ -404,12 +383,24 @@ export function useMindmapNavigation(ref: RefObject<HTMLDivElement | null>) {
 			element.removeEventListener('gesturestart', handleGestureStart)
 			element.removeEventListener('gesturechange', handleGestureChange)
 			element.removeEventListener('contextmenu', handleContextMenu)
-			window.removeEventListener('mousemove', handleMouseMove)
-			window.removeEventListener('mouseup', handleMouseUp)
+			window.removeEventListener('pointermove', handleMouseMove)
+			window.removeEventListener('pointerup', handleMouseUp)
 		}
-	}, [ref, registerUpdateFunction, setState, clearUpdateFunction, updateMousePosition, state, worldId, bus])
+	}, [
+		ref,
+		backgroundRef,
+		registerUpdateFunction,
+		setState,
+		clearUpdateFunction,
+		updateMousePosition,
+		state,
+		worldId,
+		bus,
+		capture,
+		release,
+	])
 
-	useMindmapInitialFocus(ref, !state.current.worldId)
+	// useMindmapInitialFocus(ref, !state.current.worldId)
 }
 
 function clampScale(scale: number) {

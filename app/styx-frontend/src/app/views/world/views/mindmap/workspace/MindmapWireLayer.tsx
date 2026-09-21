@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { Fragment, memo, useCallback, useRef, useState } from 'react'
 import { useSelector } from 'react-redux'
 
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { RootState } from '@/app/store'
 
@@ -50,6 +50,16 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 		},
 		[isBulkSelectContext],
 	)
+
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = svgGroupRef.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
+		},
+	})
 
 	return (
 		<Box

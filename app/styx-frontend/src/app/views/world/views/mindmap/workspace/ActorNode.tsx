@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
-import React, { useState } from 'react'
+import React from 'react'
 import { useSelector } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -22,7 +22,6 @@ type Props = {
 }
 
 export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
-	const [dimmed, setDimmed] = useState(false)
 	const { createLinks, checkLinkExists } = useNodeLinking()
 	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
 
@@ -48,13 +47,30 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 
 	useEventBusSubscribe['mindmap/hover/changed']({
 		callback: ({ hoveredNodeIds }) => {
+			if (!ref.current) {
+				return
+			}
 			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
-				setDimmed(false)
+				ref.current.style.opacity = '1.0'
 				return
 			}
 
 			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
-			setDimmed(!anyHovered)
+			if (anyHovered) {
+				ref.current.style.opacity = '1.0'
+			} else {
+				ref.current.style.opacity = '0.35'
+			}
+		},
+	})
+
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = ref.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
 		},
 	})
 
@@ -62,7 +78,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		<Box
 			ref={ref}
 			sx={{
-				opacity: dimmed ? 0.35 : 1,
+				// opacity: dimmed ? 0.35 : 1,
 				background: theme.custom.palette.background.timeline,
 
 				// Non-scaling border

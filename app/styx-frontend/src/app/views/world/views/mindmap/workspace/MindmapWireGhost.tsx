@@ -11,6 +11,7 @@ import { RootState } from '@/app/store'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
 import { isEmptyMindmapSpot } from '../utils/isEmptyMindmapSpot'
+import { MindmapState } from '../utils/MindmapState'
 import {
 	buildPathD,
 	getNodeHeight,
@@ -328,11 +329,14 @@ export function MindmapWireGhost({ existingWires }: Props) {
 			</defs>
 			<g
 				ref={containerRef}
-				style={{
-					transform: 'scale(var(--grid-scale))',
-					transformOrigin: '0 0',
-					// transition: 'transform var(--transition-duration) ease-out',
-				}}
+				style={
+					{
+						'--grid-scale': MindmapState.scale,
+						transform: `scale(var(--grid-scale))`,
+						transformOrigin: '0 0',
+						// transition: 'transform var(--transition-duration) ease-out',
+					} as React.CSSProperties
+				}
 			>
 				{sourceNodes.map((node) => {
 					const srcH = getNodeHeight(node.id)
@@ -344,7 +348,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 						node.positionY + srcH / 2,
 					)
 					return (
-						<g key={node.id} data-ghost-wire={node.id}>
+						<g key={node.id} data-ghost-wire={node.id} display={'none'}>
 							<path
 								d={`M ${src.x},${src.y} C ${src.x},${src.y} ${src.x},${src.y} ${src.x},${src.y}`}
 								fill="none"

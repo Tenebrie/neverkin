@@ -4,3 +4,6 @@
  */
 export const CANVAS_SIZE = 1_000_000
 export const CANVAS_ORIGIN = CANVAS_SIZE / 2
+
+/** Distance between two grid dots, in unscaled pixels. */
+export const GRID_SPACING = 64

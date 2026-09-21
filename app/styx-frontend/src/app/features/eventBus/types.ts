@@ -78,6 +78,9 @@ export type EventParams = {
 	'mindmap/dropTarget/changed': {
 		target: HTMLElement | null
 	}
+	'mindmap/scale/changed': {
+		scale: number
+	}
 	'mindmap/camera/requestLookAt': { x: number; y: number; scale?: number }
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': { isReconnect: boolean }

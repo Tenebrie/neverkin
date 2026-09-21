@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import { alpha, lighten } from '@mui/material/styles'
-import { memo, useCallback, useEffect, useLayoutEffect, useMemo, useRef, useState } from 'react'
+import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
@@ -40,6 +40,8 @@ type Props = {
 	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
 }
 
+type WireHighlightState = 'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
+
 const ARROW_SIZE = 8
 const SHAPE_TRANSITION = 'fill 0.25s ease, stroke 0.25s ease'
 
@@ -53,10 +55,6 @@ function MindmapWireLineComponent({
 	svgGroupPortal,
 	onOpenPopover,
 }: Props) {
-	const [highlightState, setHighlightState] = useState<
-		'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
-	>('none')
-
 	const containerRef = useRef<HTMLDivElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const glowPathRef = useRef<SVGPathElement>(null)
@@ -102,10 +100,8 @@ function MindmapWireLineComponent({
 		srcPortRef.current?.setAttribute('transform', `translate(${ep.x1}, ${ep.y1})`)
 		tgtPortRef.current?.setAttribute('transform', `translate(${ep.x2}, ${ep.y2})`)
 		const mid = pathMidpoint(ep)
-		containerRef.current?.setAttribute(
-			'style',
-			`--label-position-x: ${mid.x}px; --label-position-y: ${mid.y}px`,
-		)
+		containerRef.current?.style.setProperty('--label-position-x', `${mid.x}px`)
+		containerRef.current?.style.setProperty('--label-position-y', `${mid.y}px`)
 		registerWire(wire.id, ep)
 	}
 
@@ -150,9 +146,11 @@ function MindmapWireLineComponent({
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
 	const selectedRef = useRef(false)
+	const highlightStateRef = useRef<WireHighlightState>('none')
 
 	useLayoutEffect(() => {
 		updateDom(resolveEndpoints())
+		applyHighlightState()
 	})
 	useEffect(() => () => unregisterWire(wire.id), [wire.id])
 
@@ -200,6 +198,25 @@ function MindmapWireLineComponent({
 			applyVisualState()
 		},
 	})
+
+	const applyHighlightState = () => {
+		const highlightState = highlightStateRef.current
+		const { sourceColor, targetColor } = getLineColors(highlightState)
+		const midColor = `color-mix(in oklch shorter hue, ${sourceColor}, ${targetColor})`
+
+		for (const element of [gradientRef.current, visibleGroupRef.current]) {
+			element?.style.setProperty('--wire-source-color', sourceColor)
+			element?.style.setProperty('--wire-mid-color', midColor)
+			element?.style.setProperty('--wire-target-color', targetColor)
+		}
+		containerRef.current?.style.setProperty('opacity', String(highlightState === 'dim' ? 0.35 : 1))
+	}
+
+	const setHighlightState = (highlightState: WireHighlightState) => {
+		highlightStateRef.current = highlightState
+		applyHighlightState()
+	}
+
 	useEventBusSubscribe['mindmap/hover/changed']({
 		callback: ({ hoveredNodeIds, hoveredWireIds }) => {
 			if (hoveredWireIds.has(wire.id)) {
@@ -217,16 +234,12 @@ function MindmapWireLineComponent({
 	})
 
 	const theme = useCustomTheme()
-	const opacity = useMemo(() => {
-		if (highlightState === 'dim') {
-			return 0.35
-		}
-		return 1
-	}, [highlightState])
 
-	const { sourceColor, targetColor } = useMemo(() => {
+	const getLineColors = (highlightState: WireHighlightState) => {
 		const alwaysShowColor = true
 		const baseColor = lighten(theme.custom.palette.background.timeline, 0.2)
+		const sourceParentColor = source.parent.color ?? baseColor
+		const targetParentColor = target.parent.color ?? baseColor
 
 		if (highlightState === 'dim') {
 			return {
@@ -237,34 +250,34 @@ function MindmapWireLineComponent({
 
 		if (highlightState === 'brightSource') {
 			return {
-				sourceColor: target.parent.color,
-				targetColor: target.parent.color,
+				sourceColor: targetParentColor,
+				targetColor: targetParentColor,
 			}
 		}
 
 		if (highlightState === 'brightTarget') {
 			return {
-				sourceColor: source.parent.color,
-				targetColor: source.parent.color,
+				sourceColor: sourceParentColor,
+				targetColor: sourceParentColor,
 			}
 		}
 
 		if (highlightState === 'brightGradient' && alwaysShowColor) {
 			return {
-				sourceColor: target.parent.color,
-				targetColor: source.parent.color,
+				sourceColor: targetParentColor,
+				targetColor: sourceParentColor,
 			}
 		} else if (highlightState === 'brightGradient') {
 			return {
-				sourceColor: source.parent.color,
-				targetColor: target.parent.color,
+				sourceColor: sourceParentColor,
+				targetColor: targetParentColor,
 			}
 		}
 
 		if (alwaysShowColor) {
 			return {
-				sourceColor: target.parent.color,
-				targetColor: source.parent.color,
+				sourceColor: targetParentColor,
+				targetColor: sourceParentColor,
 			}
 		}
 
@@ -272,16 +285,13 @@ function MindmapWireLineComponent({
 			sourceColor: baseColor,
 			targetColor: baseColor,
 		}
-	}, [highlightState, source.parent.color, target.parent.color, theme.custom.palette.background.timeline])
-
-	const midColor = `color-mix(in oklch shorter hue, ${sourceColor}, ${targetColor})`
+	}
 
 	return (
 		<Box
 			ref={containerRef}
 			sx={{
 				contentVisibility: 'auto',
-				opacity,
 				zIndex: 100,
 				transition: 'opacity 0.2s',
 				'--label-position-x': `${pathMidpoint(ep).x}px`,
@@ -298,9 +308,18 @@ function MindmapWireLineComponent({
 					x2={x2}
 					y2={y2}
 				>
-					<stop offset="0%" style={{ stopColor: sourceColor, transition: 'stop-color 0.25s ease' }} />
-					<stop offset="50%" style={{ stopColor: midColor, transition: 'stop-color 0.25s ease' }} />
-					<stop offset="100%" style={{ stopColor: targetColor, transition: 'stop-color 0.25s ease' }} />
+					<stop
+						offset="0%"
+						style={{ stopColor: 'var(--wire-source-color)', transition: 'stop-color 0.25s ease' }}
+					/>
+					<stop
+						offset="50%"
+						style={{ stopColor: 'var(--wire-mid-color)', transition: 'stop-color 0.25s ease' }}
+					/>
+					<stop
+						offset="100%"
+						style={{ stopColor: 'var(--wire-target-color)', transition: 'stop-color 0.25s ease' }}
+					/>
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -340,8 +359,8 @@ function MindmapWireLineComponent({
 									r="3"
 									strokeWidth="2"
 									style={{
-										fill: sourceColor,
-										stroke: sourceColor,
+										fill: 'var(--wire-source-color)',
+										stroke: 'var(--wire-source-color)',
 										transition: SHAPE_TRANSITION,
 									}}
 								/>
@@ -355,8 +374,8 @@ function MindmapWireLineComponent({
 									r="3"
 									strokeWidth="2"
 									style={{
-										fill: targetColor,
-										stroke: targetColor,
+										fill: 'var(--wire-target-color)',
+										stroke: 'var(--wire-target-color)',
 										transition: SHAPE_TRANSITION,
 									}}
 								/>

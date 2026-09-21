@@ -1,5 +1,6 @@
+import { PaletteMode } from '@mui/material'
 import { useTheme } from '@mui/material/styles'
-import { useDebugValue, useMemo } from 'react'
+import { useDebugValue } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTimelinePreferences } from '../../preferences/PreferencesSliceSelectors'
@@ -15,16 +16,31 @@ export const useCustomTheme = () => {
 		(a, b) => a.reduceAnimations === b.reduceAnimations,
 	)
 
-	const customTheme = useMemo(() => {
-		const materialTheme =
-			theme.palette.mode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations })
-		return {
-			mode: theme.palette.mode,
-			material: materialTheme,
-			custom: theme.palette.mode === 'light' ? customLightTheme : customDarkTheme,
-			customInverted: theme.palette.mode === 'light' ? customDarkTheme : customLightTheme,
-		}
-	}, [reduceAnimations, theme.palette.mode])
-
-	return customTheme
+	return getCustomTheme({ mode: theme.palette.mode, reduceAnimations })
 }
+
+type Props = {
+	mode: PaletteMode
+	reduceAnimations: boolean
+}
+
+const themeCache = new Map<string, ReturnType<typeof buildCustomTheme>>()
+
+export const getCustomTheme = (props: Props) => {
+	const key = `${props.mode}-${props.reduceAnimations}`
+	const cachedTheme = themeCache.get(key)
+	if (cachedTheme) {
+		return cachedTheme
+	}
+
+	const theme = buildCustomTheme(props)
+	themeCache.set(key, theme)
+	return theme
+}
+
+const buildCustomTheme = ({ mode, reduceAnimations }: Props) => ({
+	mode,
+	material: mode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations }),
+	custom: mode === 'light' ? customLightTheme : customDarkTheme,
+	customInverted: mode === 'light' ? customDarkTheme : customLightTheme,
+})

@@ -21,6 +21,7 @@ import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
+import { MindmapState } from '../utils/MindmapState'
 import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
@@ -157,8 +158,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 
 	useLayoutEffect(() => {
 		const el = ref.current
-		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
-		const height = el ? el.getBoundingClientRect().height / scale : 80
+		const height = el ? el.getBoundingClientRect().height / MindmapState.scale : 80
 		nodePositions.set(node.id, { ...positionRef.current, height })
 	})
 	useEffect(
@@ -257,7 +257,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.positionX = positionRef.current.x
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
-			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
+			mouseState.gridScale = MindmapState.scale
 			window.addEventListener('mousemove', handleMouseMove)
 			window.addEventListener('mouseup', handleMouseUp)
 		}
@@ -411,6 +411,16 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		},
 	})
 
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = ref.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
+		},
+	})
+
 	return (
 		<Box
 			ref={(element: HTMLDivElement | null) => {
@@ -426,6 +436,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			onMouseUp={onMouseUp}
 			style={
 				{
+					'--grid-scale': MindmapState.scale,
 					'--node-x': `${node.positionX}px`,
 					'--node-y': `${node.positionY}px`,
 				} as React.CSSProperties
