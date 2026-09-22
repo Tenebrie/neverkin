@@ -161,11 +161,22 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const nodeRef = useAutoRef(node)
 
 	// TODO: Get this working again
-	// useLayoutEffect(() => {
-	// 	const el = ref.current
-	// 	const height = el ? el.getBoundingClientRect().height / MindmapState.scale : 80
-	// 	nodePositions.set(node.id, { ...positionRef.current, height })
-	// })
+	const cachedHeight = useRef<number | null>(null)
+	useLayoutEffect(() => {
+		const el = ref.current
+		const height = (() => {
+			if (cachedHeight.current !== null) {
+				return cachedHeight.current
+			}
+			if (!el) {
+				return 80
+			}
+			cachedHeight.current = el.getBoundingClientRect().height / MindmapState.scale
+			return cachedHeight.current
+		})()
+		// const height = el ? el.getBoundingClientRect().height / MindmapState.scale : 80
+		nodePositions.set(node.id, { ...positionRef.current, height })
+	})
 	useEffect(
 		() => () => {
 			nodePositions.delete(node.id)

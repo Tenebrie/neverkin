@@ -55,9 +55,9 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 			}
 			isDimmedRef.current = dimmed
 			if (dimmed) {
-				ref.current.style.opacity = '1.0'
-			} else {
 				ref.current.style.opacity = '0.35'
+			} else {
+				ref.current.style.opacity = '1.0'
 			}
 		},
 		[ref],
@@ -75,9 +75,9 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 
 			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
 			if (anyHovered) {
-				setDimmed(true)
-			} else {
 				setDimmed(false)
+			} else {
+				setDimmed(true)
 			}
 		},
 	})
