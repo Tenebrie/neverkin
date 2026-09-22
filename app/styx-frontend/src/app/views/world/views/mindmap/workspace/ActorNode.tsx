@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
-import React from 'react'
+import React, { useCallback, useRef } from 'react'
 import { useStore } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -47,21 +47,37 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		},
 	})
 
+	const isDimmedRef = useRef(false)
+	const setDimmed = useCallback(
+		(dimmed: boolean) => {
+			if (isDimmedRef.current === dimmed || !ref.current) {
+				return
+			}
+			isDimmedRef.current = dimmed
+			if (dimmed) {
+				ref.current.style.opacity = '1.0'
+			} else {
+				ref.current.style.opacity = '0.35'
+			}
+		},
+		[ref],
+	)
+
 	useEventBusSubscribe['mindmap/hover/changed']({
 		callback: ({ hoveredNodeIds }) => {
 			if (!ref.current) {
 				return
 			}
 			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
-				ref.current.style.opacity = '1.0'
+				setDimmed(false)
 				return
 			}
 
 			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
 			if (anyHovered) {
-				ref.current.style.opacity = '1.0'
+				setDimmed(true)
 			} else {
-				ref.current.style.opacity = '0.35'
+				setDimmed(false)
 			}
 		},
 	})

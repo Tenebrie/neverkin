@@ -235,6 +235,9 @@ function MindmapWireLineComponent({
 	}
 
 	const setHighlightState = (highlightState: WireHighlightState) => {
+		if (highlightStateRef.current === highlightState) {
+			return
+		}
 		highlightStateRef.current = highlightState
 		applyHighlightState()
 	}
