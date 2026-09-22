@@ -9,6 +9,7 @@ import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapContentBounds } from '../utils/getMindmapContentBounds'
 import { getMindmapNodeCenter } from '../utils/getMindmapNodeCenter'
+import { MIN_SCALE } from '../utils/mindmapCanvas'
 
 const FIT_PADDING = 64
 
@@ -42,19 +43,19 @@ export function useMindmapInitialFocus(ref: RefObject<HTMLDivElement | null>, en
 			return
 		}
 		pending.current = false
-		const bounds = getMindmapContentBounds(data.nodes)
-		if (!bounds) {
+		const content = getMindmapContentBounds(data.nodes)
+		if (!content) {
 			return
 		}
+		const { bounds, mass } = content
 		const { width, height } = element.getBoundingClientRect()
-		lookAt({
-			x: (bounds.minX + bounds.maxX) / 2,
-			y: (bounds.minY + bounds.maxY) / 2,
-			scale: Math.min(
-				1,
-				(width - 2 * FIT_PADDING) / (bounds.maxX - bounds.minX),
-				(height - 2 * FIT_PADDING) / (bounds.maxY - bounds.minY),
-			),
-		})
+		const scale = Math.min(
+			1,
+			(width - 2 * FIT_PADDING) / (bounds.maxX - bounds.minX),
+			(height - 2 * FIT_PADDING) / (bounds.maxY - bounds.minY),
+		)
+		const target =
+			scale < MIN_SCALE ? mass : { x: (bounds.minX + bounds.maxX) / 2, y: (bounds.minY + bounds.maxY) / 2 }
+		lookAt({ ...target, scale })
 	}, [data, ref, lookAt, revealNodeId, dispatch])
 }

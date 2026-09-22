@@ -1,12 +1,13 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
-import React, { useState } from 'react'
-import { useSelector } from 'react-redux'
+import React, { useCallback, useRef } from 'react'
+import { useStore } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { RootState } from '@/app/store'
 
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
 import { useNodeLinking } from '../hooks/useNodeLinking'
@@ -22,9 +23,8 @@ type Props = {
 }
 
 export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
-	const [dimmed, setDimmed] = useState(false)
 	const { createLinks, checkLinkExists } = useNodeLinking()
-	const selectedNodeKeys = useSelector(getSelectedNodeKeys)
+	const store = useStore<RootState>()
 
 	const theme = useCustomTheme()
 	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
@@ -33,6 +33,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		type: 'actorNodeLinking',
 		onDrop: (data) => {
 			const sourceNodeId = data.params.sourceNode.id
+			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
 			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
 				? [...new Set(selectedNodeKeys)]
 				: [sourceNodeId]
@@ -46,15 +47,48 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		},
 	})
 
+	const isDimmedRef = useRef(false)
+	const setDimmed = useCallback(
+		(dimmed: boolean) => {
+			if (isDimmedRef.current === dimmed || !ref.current) {
+				return
+			}
+			isDimmedRef.current = dimmed
+			if (dimmed) {
+				ref.current.style.opacity = '0.35'
+			} else {
+				ref.current.style.opacity = '1.0'
+			}
+		},
+		[ref],
+	)
+
 	useEventBusSubscribe['mindmap/hover/changed']({
 		callback: ({ hoveredNodeIds }) => {
+			if (!ref.current) {
+				return
+			}
 			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
 				setDimmed(false)
 				return
 			}
 
 			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
-			setDimmed(!anyHovered)
+			if (anyHovered) {
+				setDimmed(false)
+			} else {
+				setDimmed(true)
+			}
+		},
+	})
+
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = ref.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
 		},
 	})
 
@@ -62,7 +96,6 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		<Box
 			ref={ref}
 			sx={{
-				opacity: dimmed ? 0.35 : 1,
 				background: theme.custom.palette.background.timeline,
 
 				// Non-scaling border

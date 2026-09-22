@@ -23,13 +23,16 @@ export const wikiSlice = createSlice({
 			)
 			state.articles = [...state.articles, ...payload.articles]
 		},
-		loadArticles: (state, { payload }: PayloadAction<{ articles: WikiArticle[] }>) => {
-			state.articlesLoaded = true
+		loadArticles: (
+			state,
+			{ payload }: PayloadAction<{ articles: WikiArticle[]; articlesLoading: boolean }>,
+		) => {
+			state.articlesLoaded = !payload.articlesLoading
 			state.articles = payload.articles
 		},
 
-		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[] }>) => {
-			state.foldersLoaded = true
+		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[]; foldersLoading: boolean }>) => {
+			state.foldersLoaded = !payload.foldersLoading
 			state.folders = payload.folders
 		},
 

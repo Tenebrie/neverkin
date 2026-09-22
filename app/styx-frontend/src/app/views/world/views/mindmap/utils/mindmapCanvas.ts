@@ -1,0 +1,13 @@
+/**
+ * The mindmap pans by scrolling a canvas of this many unscaled pixels, with the grid origin at its center.
+ * Grid coordinates are offset by `CANVAS_ORIGIN` to keep every position inside the scrollable area.
+ */
+export const CANVAS_SIZE = 1_000_000
+export const CANVAS_ORIGIN = CANVAS_SIZE / 2
+
+/** Distance between two grid dots, in unscaled pixels. */
+export const GRID_SPACING = 64
+
+/** Zoom limits of the camera. A fit that asks for less than `MIN_SCALE` cannot show its whole target. */
+export const MIN_SCALE = 0.125
+export const MAX_SCALE = 5

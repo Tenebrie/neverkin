@@ -36,8 +36,7 @@ body.cursor-resizing-ew * {
 	user-select: none !important;
 }
 
-body.cursor-grabbing,
-body.cursor-grabbing * {
+.cursor-grabbing {
 	cursor: grabbing !important;
 	user-select: none !important;
 }
@@ -50,21 +49,9 @@ a {
 	text-decoration: none;
 }
 
-@property --grid-offset-x {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0;
-}
-
-@property --grid-offset-y {
-  syntax: '<length>';
-  inherits: true;
-  initial-value: 0;
-}
-
 @property --grid-scale {
   syntax: '<number>';
-  inherits: true;
+  inherits: false;
   initial-value: 1;
 }
 

@@ -8,8 +8,11 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMousePositionRef } from '@/app/hooks/useMousePositionRef'
 import { RootState } from '@/app/store'
 
+import { useMindmapExistingWires } from '../hooks/useMindmapContentStore'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
+import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
 import { isEmptyMindmapSpot } from '../utils/isEmptyMindmapSpot'
+import { MindmapState } from '../utils/MindmapState'
 import {
 	buildPathD,
 	getNodeHeight,
@@ -26,11 +29,8 @@ type SourceNode = {
 	positionY: number
 }
 
-type Props = {
-	existingWires: Set<string>
-}
-
-export function MindmapWireGhost({ existingWires }: Props) {
+export function MindmapWireGhost() {
+	const existingWires = useMindmapExistingWires()
 	const [isDragging, setIsDragging] = useState(false)
 	const [awaitingSelection, setAwaitingSelection] = useState(false)
 	const [sourceNodes, setSourceNodes] = useState<SourceNode[]>([])
@@ -186,19 +186,13 @@ export function MindmapWireGhost({ existingWires }: Props) {
 				return
 			}
 
-			const gridContainer = container.closest('[data-mindmap-grid]') as HTMLElement | null
-			if (!gridContainer) {
+			const mousePosition = getMindmapGridPosition({ screenX: event.clientX, screenY: event.clientY })
+			if (!mousePosition) {
 				return
 			}
 
-			const style = getComputedStyle(gridContainer)
-			const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x'))
-			const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y'))
-			const scale = parseFloat(style.getPropertyValue('--grid-scale'))
-			const rect = gridContainer.getBoundingClientRect()
-
-			const mouseGridX = (event.clientX - rect.x - offsetX) / scale
-			const mouseGridY = (event.clientY - rect.y - offsetY) / scale
+			const mouseGridX = mousePosition.x
+			const mouseGridY = mousePosition.y
 
 			// Find snap target
 			const elementsUnder = document.elementsFromPoint(event.clientX, event.clientY)
@@ -333,11 +327,14 @@ export function MindmapWireGhost({ existingWires }: Props) {
 			</defs>
 			<g
 				ref={containerRef}
-				style={{
-					transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
-					transformOrigin: '0 0',
-					// transition: 'transform var(--transition-duration) ease-out',
-				}}
+				style={
+					{
+						'--grid-scale': MindmapState.scale,
+						transform: `scale(var(--grid-scale))`,
+						transformOrigin: '0 0',
+						// transition: 'transform var(--transition-duration) ease-out',
+					} as React.CSSProperties
+				}
 			>
 				{sourceNodes.map((node) => {
 					const srcH = getNodeHeight(node.id)
@@ -349,7 +346,7 @@ export function MindmapWireGhost({ existingWires }: Props) {
 						node.positionY + srcH / 2,
 					)
 					return (
-						<g key={node.id} data-ghost-wire={node.id}>
+						<g key={node.id} data-ghost-wire={node.id} display={'none'}>
 							<path
 								d={`M ${src.x},${src.y} C ${src.x},${src.y} ${src.x},${src.y} ${src.x},${src.y}`}
 								fill="none"

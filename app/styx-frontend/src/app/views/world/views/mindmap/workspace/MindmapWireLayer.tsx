@@ -1,27 +1,24 @@
 import Box from '@mui/material/Box'
-import { Fragment, memo, useCallback, useRef, useState } from 'react'
-import { useSelector } from 'react-redux'
+import { memo, useCallback, useRef, useState } from 'react'
+import { useStore } from 'react-redux'
 
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { RootState } from '@/app/store'
 
-import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
+import { useMindmapWireIds } from '../hooks/useMindmapContentStore'
 import { MindmapWireGhost } from './MindmapWireGhost'
 import { MindmapWireLine } from './MindmapWireLine'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
-type Props = {
-	nodeLinks: BoxedMindmapWire[]
-	existingWires: Set<string>
-}
-
 export const MindmapWireLayer = memo(MindmapWireLayerComponent)
 
-function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
+function MindmapWireLayerComponent() {
+	const wireIds = useMindmapWireIds()
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
+	const store = useStore<RootState>()
 
 	useEffectOnce(() => {
 		setRefsReady(true)
@@ -33,13 +30,10 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 		mode: 'doubleClick',
 	})
 
-	const isBulkSelectContext = useSelector((state: RootState) => {
-		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
-		return thingsSelected > 1
-	})
-
 	const onOpenPopover = useCallback(
 		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
+			const state = store.getState().mindmap
+			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position,
@@ -48,14 +42,27 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				setPopoverState({ open: true, position, mode })
 			}
 		},
-		[isBulkSelectContext],
+		[store],
 	)
+
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = svgGroupRef.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
+		},
+	})
 
 	return (
 		<Box
 			sx={{
 				position: 'absolute',
-				inset: 0,
+				top: 0,
+				left: 0,
+				width: '100vw',
+				height: '100vh',
 				pointerEvents: 'none',
 				overflow: 'visible',
 			}}
@@ -65,27 +72,23 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				<g
 					ref={svgGroupRef}
 					style={{
-						willChange: 'transform',
-						transform: 'translate(var(--grid-offset-x), var(--grid-offset-y)) scale(var(--grid-scale))',
+						transform: 'scale(var(--grid-scale))',
 						transformOrigin: '0 0',
 						// transition: 'transform var(--transition-duration) ease-out',
 					}}
 				></g>
 			</svg>
 			{refsReady &&
-				nodeLinks.map((link) => (
-					<Fragment key={link.id}>
-						<MindmapWireLine
-							wire={link}
-							source={link.sourceNode}
-							target={link.targetNode}
-							svgDefsPortal={svgDefsRef.current!}
-							svgGroupPortal={svgGroupRef.current!}
-							onOpenPopover={onOpenPopover}
-						/>
-					</Fragment>
+				wireIds.map((wireId) => (
+					<MindmapWireLine
+						key={wireId}
+						wireId={wireId}
+						svgDefsPortal={svgDefsRef.current!}
+						svgGroupPortal={svgGroupRef.current!}
+						onOpenPopover={onOpenPopover}
+					/>
 				))}
-			<MindmapWireGhost existingWires={existingWires} />
+			<MindmapWireGhost />
 			<MindmapWirePopover
 				{...popoverState}
 				onClose={() => setPopoverState({ ...popoverState, open: false })}

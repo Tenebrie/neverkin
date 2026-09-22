@@ -1,34 +1,51 @@
 import Box from '@mui/material/Box'
-import { useEffect } from 'react'
+import { useEffect, useLayoutEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { useDragDropBusSubscribe } from '@/app/features/dragDrop/hooks/useDragDropBus'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
 
-import { MindmapEmptyState } from './components/MindmapEmptyState'
 import { useBoxedMindmapContent } from './hooks/useBoxedMindmapContent'
+import { useMindmapNodeIds } from './hooks/useMindmapContentStore'
 import { getMindmapState } from './MindmapSliceSelectors'
 import { getHoveredMindmapNode } from './utils/getHoveredMindmapNode'
+import { mindmapExistingWireStore, mindmapNodeStore, mindmapWireStore } from './utils/MindmapContentStore'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
 
 export function MindmapContent() {
-	const { isLoaded, actorsWithNodes, nodeLinks, existingWires } = useBoxedMindmapContent()
-
-	if (actorsWithNodes.length === 0) {
-		return isLoaded ? <MindmapEmptyState /> : null
-	}
+	const nodeIds = useMindmapNodeIds()
 
 	return (
-		<Box sx={{ zIndex: 1 }}>
+		<Box
+			sx={{
+				position: 'absolute',
+				left: 'var(--grid-origin)',
+				top: 'var(--grid-origin)',
+				zIndex: 1,
+			}}
+		>
+			<MindmapContentPublisher />
 			<MindmapSelectionBridge />
 			<MindmapDropTargetBridge />
-			<MindmapWireLayer nodeLinks={nodeLinks} existingWires={existingWires} />
-			{actorsWithNodes.map((wrapper) => (
-				<ActorNodePositioner key={wrapper.id} parent={wrapper.parent} node={wrapper.node} />
+			<MindmapWireLayer />
+			{nodeIds.map((nodeId) => (
+				<ActorNodePositioner key={nodeId} nodeId={nodeId} />
 			))}
 		</Box>
 	)
+}
+
+function MindmapContentPublisher() {
+	const { nodes, wires, existingWires } = useBoxedMindmapContent()
+
+	useLayoutEffect(() => {
+		mindmapNodeStore.replace(nodes)
+		mindmapWireStore.replace(wires)
+		mindmapExistingWireStore.set(existingWires)
+	}, [nodes, wires, existingWires])
+
+	return null
 }
 
 function MindmapSelectionBridge() {

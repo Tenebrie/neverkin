@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
-import { memo, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -15,29 +15,39 @@ import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
-import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
+import { useMindmapNode } from '../hooks/useMindmapContentStore'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
+import { MindmapState } from '../utils/MindmapState'
 import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
+	nodeId: string
+}
+
+type NodeProps = {
 	node: MindmapNode
 	parent: BoxedMindmapParent
 }
 
-export const ActorNodePositioner = memo(
-	ActorNodePositionerComponent,
-	(prev, next) => prev.parent === next.parent && prev.node === next.node,
-)
+/**
+ * Subscribes to this one node in the content store, so an edit elsewhere on the mindmap never
+ * reaches this component.
+ */
+export function ActorNodePositioner({ nodeId }: Props) {
+	const boxedNode = useMindmapNode(nodeId)
+	if (!boxedNode) {
+		return null
+	}
 
-function ActorNodePositionerComponent({ parent, node }: Props) {
+	return <ActorNodePositionerComponent parent={boxedNode.parent} node={boxedNode.node} />
+}
+
+function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const [moveMindmapNodes] = useMoveMindmapNodes()
-	const [reparentMindmapNode] = useReparentMindmapNode()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
@@ -55,12 +65,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
 
-	const isBulkSelectContext = useSelector((state: RootState) => {
-		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
-		return thingsSelected > 1 && state.mindmap.selectedNodes.some((n) => n.key === node.id)
-	})
-
-	const { triggerClick: onHeaderClick } = useDoubleClick<{ multiselect: boolean }>({
+	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
@@ -107,9 +112,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				return
 			}
 
-			const fields = getMindmapDroppedNodeParams(params.article, targetPos)
-			if (fields) {
-				reparentMindmapNode(node.id, fields)
+			const body = getMindmapDroppedNodeParams(params.article, targetPos)
+			if (body) {
+				dispatchGlobalEvent['mindmap/node/requestReparent']({ nodeId: node.id, body })
 			}
 		},
 	})
@@ -155,10 +160,21 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 
 	const nodeRef = useAutoRef(node)
 
+	// TODO: Get this working again
+	const cachedHeight = useRef<number | null>(null)
 	useLayoutEffect(() => {
 		const el = ref.current
-		const scale = el ? parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale')) || 1 : 1
-		const height = el ? el.getBoundingClientRect().height / scale : 80
+		const height = (() => {
+			if (cachedHeight.current !== null) {
+				return cachedHeight.current
+			}
+			if (!el) {
+				return 80
+			}
+			cachedHeight.current = el.getBoundingClientRect().height / MindmapState.scale
+			return cachedHeight.current
+		})()
+		// const height = el ? el.getBoundingClientRect().height / MindmapState.scale : 80
 		nodePositions.set(node.id, { ...positionRef.current, height })
 	})
 	useEffect(
@@ -257,7 +273,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.positionX = positionRef.current.x
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
-			mouseState.gridScale = parseFloat(getComputedStyle(element).getPropertyValue('--grid-scale'))
+			mouseState.gridScale = MindmapState.scale
+			window.addEventListener('mousemove', handleMouseMove)
+			window.addEventListener('mouseup', handleMouseUp)
 		}
 
 		const handleMouseClick = (event: MouseEvent) => {
@@ -276,10 +294,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
-			if (!mouseState.isButtonDown) {
-				return
-			}
-
 			mouseState.deltaX += event.movementX
 			mouseState.deltaY += event.movementY
 
@@ -336,7 +350,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			const totalDeltaX = snappedPosition.x - nodeRef.current.positionX
 			const totalDeltaY = snappedPosition.y - nodeRef.current.positionY
 
-			moveMindmapNodes({
+			dispatchGlobalEvent['mindmap/node/requestMove']({
 				nodeIds: [...new Set(getSelectedNodeKeys(store.getState()).concat(nodeRef.current.id))],
 				deltaX: totalDeltaX,
 				deltaY: totalDeltaY,
@@ -363,13 +377,13 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			mouseState.deltaY = 0
 			setDragHover(false)
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+			window.removeEventListener('mousemove', handleMouseMove)
+			window.removeEventListener('mouseup', handleMouseUp)
 		}
 
 		element.addEventListener('mousedown', handleMouseDown)
 		element.addEventListener('click', handleMouseClick)
 		element.addEventListener('wheel', handleMouseWheel)
-		window.addEventListener('mousemove', handleMouseMove)
-		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
 			element.removeEventListener('mousedown', handleMouseDown)
@@ -378,20 +392,12 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [
-		positionRef,
-		moveMindmapNodes,
-		node.id,
-		nodeRef,
-		store,
-		dispatch,
-		clearSelections,
-		selectedRef,
-		setDragHover,
-	])
+	}, [positionRef, node.id, nodeRef, store, dispatch, clearSelections, selectedRef, setDragHover])
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
+			const state = store.getState().mindmap
+			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position: {
@@ -413,6 +419,21 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 		},
 	})
 
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			const el = ref.current
+			if (!el) {
+				return
+			}
+			el.style.setProperty('--grid-scale', scale.toString())
+		},
+	})
+
+	const onHeaderClick = useCallback(
+		(e: React.MouseEvent) => triggerClick(e, { multiselect: isMultiselectEvent(e) }),
+		[triggerClick],
+	)
+
 	return (
 		<Box
 			ref={(element: HTMLDivElement | null) => {
@@ -428,6 +449,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			onMouseUp={onMouseUp}
 			style={
 				{
+					'--grid-scale': MindmapState.scale,
 					'--node-x': `${node.positionX}px`,
 					'--node-y': `${node.positionY}px`,
 				} as React.CSSProperties
@@ -438,19 +460,14 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				// The drag ghost is snapped over this node and stands in for it
 				opacity: isDropTarget ? 0 : 1,
 				transform:
-					'translate(calc(var(--node-x) * var(--grid-scale) + var(--grid-offset-x)), calc(var(--node-y) * var(--grid-scale) + var(--grid-offset-y))) scale(var(--grid-scale))',
+					'translate(calc(var(--node-x) * var(--grid-scale)), calc(var(--node-y) * var(--grid-scale))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				'&:hover, &[data-dragging="true"]': {
 					zIndex: 10,
 				},
 			}}
 		>
-			<ActorNode
-				parent={parent}
-				node={node}
-				onHeaderClick={(e) => onHeaderClick(e, { multiselect: isMultiselectEvent(e) })}
-				onContentClick={onContentClick}
-			/>
+			<ActorNode parent={parent} node={node} onHeaderClick={onHeaderClick} onContentClick={onContentClick} />
 			{linkingGhost}
 		</Box>
 	)

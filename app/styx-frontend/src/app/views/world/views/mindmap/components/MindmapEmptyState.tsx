@@ -2,7 +2,17 @@ import Hub from '@mui/icons-material/Hub'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
+import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
+
 export function MindmapEmptyState() {
+	const { worldId } = useStrictParams({ from: '/world/$worldId/_world' })
+	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+
+	if (!data || data.nodes.length > 0) {
+		return null
+	}
+
 	return (
 		<Stack
 			alignItems="center"

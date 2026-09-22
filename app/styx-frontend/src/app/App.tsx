@@ -55,7 +55,7 @@ const App = () => {
 	useEffect(() => {
 		const clearMouseBusy = () => {
 			requestAnimationFrame(() => {
-				window.document.body.classList.remove('mouse-busy')
+				window.document.body.classList.remove('mouse-busy', 'cursor-grabbing')
 			})
 		}
 		window.addEventListener('mouseup', clearMouseBusy)
@@ -80,7 +80,6 @@ const App = () => {
 										flex: 1,
 										minHeight: 0,
 										overflowY: 'auto',
-										...scrollbars,
 									}}
 								>
 									<AuthBackground>

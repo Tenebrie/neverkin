@@ -9,6 +9,7 @@ import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/Se
 import { useNewNodeReceiver } from '../hooks/useNewNodeReceiver'
 import { mindmapSlice } from '../MindmapSlice'
 import { getMindmapState } from '../MindmapSliceSelectors'
+import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
 import { getWiresInRect } from './mindmapWireUtils'
 
 export function MindmapClickArea() {
@@ -142,19 +143,18 @@ function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: 
 	const boxBottom = boxTop + Math.abs(selectionBox.height)
 
 	// Convert selection rect from container coords to SVG node coords using grid transform
-	const gridEl = parentElement.closest<HTMLElement>('[data-mindmap-grid]')
-	if (!gridEl) {
+	const containerRect = parentElement.getBoundingClientRect()
+	const topLeft = getMindmapGridPosition({
+		screenX: containerRect.left + boxLeft,
+		screenY: containerRect.top + boxTop,
+	})
+	const bottomRight = getMindmapGridPosition({
+		screenX: containerRect.left + boxRight,
+		screenY: containerRect.top + boxBottom,
+	})
+	if (!topLeft || !bottomRight) {
 		return []
 	}
-	const style = getComputedStyle(gridEl)
-	const scale = parseFloat(style.getPropertyValue('--grid-scale')) || 1
-	const offsetX = parseFloat(style.getPropertyValue('--grid-offset-x')) || 0
-	const offsetY = parseFloat(style.getPropertyValue('--grid-offset-y')) || 0
 
-	return getWiresInRect(
-		(boxLeft - offsetX) / scale,
-		(boxTop - offsetY) / scale,
-		(boxRight - offsetX) / scale,
-		(boxBottom - offsetY) / scale,
-	)
+	return getWiresInRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
 }

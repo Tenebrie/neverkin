@@ -1,3 +1,5 @@
+import { MindmapState } from '../utils/MindmapState'
+
 export const NODE_W = 300
 export const NODE_FALLBACK_H = 60
 export const CORNER_R = 16
@@ -16,10 +18,11 @@ export type WireEndpoints = {
 export function getNodeHeight(nodeId: string): number {
 	const el = document.querySelector(`[data-mindmap-node="${nodeId}"]`)
 	if (!el) return NODE_FALLBACK_H
-	return (
-		el.getBoundingClientRect().height /
-		parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale') || '1')
-	)
+	// return (
+	// 	el.getBoundingClientRect().height /
+	// 	parseFloat(getComputedStyle(el).getPropertyValue('--grid-scale') || '1')
+	// )
+	return el.getBoundingClientRect().height / MindmapState.scale
 }
 
 export function isPointInsideNode(

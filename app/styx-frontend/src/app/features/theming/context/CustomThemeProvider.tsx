@@ -1,13 +1,14 @@
+import { PaletteMode } from '@mui/material'
 import { ThemeProvider } from '@mui/material/styles'
-import { JSX, useMemo } from 'react'
+import { JSX } from 'react'
 import { useSelector } from 'react-redux'
 
 import { getTimelinePreferences, getUserPreferences } from '../../preferences/PreferencesSliceSelectors'
-import { darkTheme, lightTheme } from '../themes'
+import { getCustomTheme } from '../hooks/useCustomTheme'
 
 type Props = {
 	children: JSX.Element | (JSX.Element | null)[] | null
-	colorMode?: 'light' | 'dark'
+	colorMode?: PaletteMode
 }
 
 export const CustomThemeProvider = ({ children, colorMode }: Props) => {
@@ -24,27 +25,16 @@ export const CustomThemeProvider = ({ children, colorMode }: Props) => {
 
 const AutomaticThemeProvider = ({ children }: Props) => {
 	const { colorMode } = useSelector(getUserPreferences, (a, b) => a.colorMode === b.colorMode)
-	const { reduceAnimations } = useSelector(
-		getTimelinePreferences,
-		(a, b) => a.reduceAnimations === b.reduceAnimations,
-	)
-	const theme = useMemo(
-		() => (colorMode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations })),
-		[colorMode, reduceAnimations],
-	)
 
-	return <ThemeProvider theme={theme}>{children}</ThemeProvider>
+	return <ManualThemeProvider colorMode={colorMode}>{children}</ManualThemeProvider>
 }
 
-const ManualThemeProvider = ({ children, colorMode }: Props) => {
+const ManualThemeProvider = ({ children, colorMode }: Props & { colorMode: PaletteMode }) => {
 	const { reduceAnimations } = useSelector(
 		getTimelinePreferences,
 		(a, b) => a.reduceAnimations === b.reduceAnimations,
 	)
-	const theme = useMemo(
-		() => (colorMode === 'light' ? lightTheme({ reduceAnimations }) : darkTheme({ reduceAnimations })),
-		[colorMode, reduceAnimations],
-	)
+	const theme = getCustomTheme({ mode: colorMode, reduceAnimations }).material
 
 	return <ThemeProvider theme={theme}>{children}</ThemeProvider>
 }
