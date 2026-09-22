@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
-import { useDispatch, useSelector, useStore } from 'react-redux'
+import { useCallback, useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -15,9 +15,8 @@ import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
-import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
+import { useMindmapNode } from '../hooks/useMindmapContentStore'
 import { mindmapSlice } from '../MindmapSlice'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
@@ -26,19 +25,29 @@ import { ActorNode } from './ActorNode'
 import { nodePositions } from './mindmapWireUtils'
 
 type Props = {
+	nodeId: string
+}
+
+type NodeProps = {
 	node: MindmapNode
 	parent: BoxedMindmapParent
 }
 
-export const ActorNodePositioner = memo(
-	ActorNodePositionerComponent,
-	(prev, next) => prev.parent === next.parent && prev.node === next.node,
-)
+/**
+ * Subscribes to this one node in the content store, so an edit elsewhere on the mindmap never
+ * reaches this component.
+ */
+export function ActorNodePositioner({ nodeId }: Props) {
+	const boxedNode = useMindmapNode(nodeId)
+	if (!boxedNode) {
+		return null
+	}
 
-function ActorNodePositionerComponent({ parent, node }: Props) {
+	return <ActorNodePositionerComponent parent={boxedNode.parent} node={boxedNode.node} />
+}
+
+function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const [moveMindmapNodes] = useMoveMindmapNodes()
-	const [reparentMindmapNode] = useReparentMindmapNode()
 
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
 
@@ -55,11 +64,6 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 	const store = useStore<RootState>()
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
-
-	const isBulkSelectContext = useSelector((state: RootState) => {
-		const thingsSelected = state.mindmap.selectedNodes.length + state.mindmap.selectedWires.length
-		return thingsSelected > 1 && state.mindmap.selectedNodes.some((n) => n.key === node.id)
-	})
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -108,9 +112,9 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 				return
 			}
 
-			const fields = getMindmapDroppedNodeParams(params.article, targetPos)
-			if (fields) {
-				reparentMindmapNode(node.id, fields)
+			const body = getMindmapDroppedNodeParams(params.article, targetPos)
+			if (body) {
+				dispatchGlobalEvent['mindmap/node/requestReparent']({ nodeId: node.id, body })
 			}
 		},
 	})
@@ -334,7 +338,7 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			const totalDeltaX = snappedPosition.x - nodeRef.current.positionX
 			const totalDeltaY = snappedPosition.y - nodeRef.current.positionY
 
-			moveMindmapNodes({
+			dispatchGlobalEvent['mindmap/node/requestMove']({
 				nodeIds: [...new Set(getSelectedNodeKeys(store.getState()).concat(nodeRef.current.id))],
 				deltaX: totalDeltaX,
 				deltaY: totalDeltaY,
@@ -376,20 +380,12 @@ function ActorNodePositionerComponent({ parent, node }: Props) {
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [
-		positionRef,
-		moveMindmapNodes,
-		node.id,
-		nodeRef,
-		store,
-		dispatch,
-		clearSelections,
-		selectedRef,
-		setDragHover,
-	])
+	}, [positionRef, node.id, nodeRef, store, dispatch, clearSelections, selectedRef, setDragHover])
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
+			const state = store.getState().mindmap
+			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position: {

@@ -7,13 +7,11 @@ import { EventParams } from '@/app/features/eventBus/types'
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
 import { useStrictParams } from '@/router-utils/hooks/useStrictParams'
 
-import { CANVAS_SIZE, GRID_SPACING } from '../utils/mindmapCanvas'
+import { CANVAS_SIZE, GRID_SPACING, MAX_SCALE, MIN_SCALE } from '../utils/mindmapCanvas'
 import { MindmapState } from '../utils/MindmapState'
 import { useMindmapEdgeScroll } from './useMindmapEdgeScroll'
+import { useMindmapInitialFocus } from './useMindmapInitialFocus'
 import { usePointerCapture } from './usePointerCapture'
-
-const MIN_SCALE = 0.125
-const MAX_SCALE = 5
 
 // Safari reports trackpad pinches via proprietary gesture events instead of ctrl+wheel
 interface SafariGestureEvent extends Event {
@@ -400,7 +398,7 @@ export function useMindmapNavigation(
 		release,
 	])
 
-	// useMindmapInitialFocus(ref, !state.current.worldId)
+	useMindmapInitialFocus(ref, !state.current.worldId)
 }
 
 function clampScale(scale: number) {

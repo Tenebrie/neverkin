@@ -6,19 +6,15 @@ import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventB
 import { useEffectOnce } from '@/app/hooks/useEffectOnce'
 import { RootState } from '@/app/store'
 
-import { BoxedMindmapWire } from '../hooks/useBoxedMindmapContent'
+import { useMindmapWireIds } from '../hooks/useMindmapContentStore'
 import { MindmapWireGhost } from './MindmapWireGhost'
 import { MindmapWireLine } from './MindmapWireLine'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
-type Props = {
-	nodeLinks: BoxedMindmapWire[]
-	existingWires: Set<string>
-}
-
 export const MindmapWireLayer = memo(MindmapWireLayerComponent)
 
-function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
+function MindmapWireLayerComponent() {
+	const wireIds = useMindmapWireIds()
 	const svgDefsRef = useRef<SVGDefsElement>(null)
 	const svgGroupRef = useRef<SVGGElement>(null)
 	const [refsReady, setRefsReady] = useState(false)
@@ -83,18 +79,16 @@ function MindmapWireLayerComponent({ nodeLinks, existingWires }: Props) {
 				></g>
 			</svg>
 			{refsReady &&
-				nodeLinks.map((link) => (
+				wireIds.map((wireId) => (
 					<MindmapWireLine
-						key={link.id}
-						wire={link}
-						source={link.sourceNode}
-						target={link.targetNode}
+						key={wireId}
+						wireId={wireId}
 						svgDefsPortal={svgDefsRef.current!}
 						svgGroupPortal={svgGroupRef.current!}
 						onOpenPopover={onOpenPopover}
 					/>
 				))}
-			<MindmapWireGhost existingWires={existingWires} />
+			<MindmapWireGhost />
 			<MindmapWirePopover
 				{...popoverState}
 				onClose={() => setPopoverState({ ...popoverState, open: false })}

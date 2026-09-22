@@ -72,15 +72,24 @@ export function useBoxedMindmapContent() {
 
 	const nodeCache = useRef(new Map<object, BoxedMindmapNode>())
 	const wireCache = useRef(new Map<object, BoxedMindmapWire>())
+	const existingWiresCache = useRef(new Set<string>())
 
 	return useMemo(() => {
 		if (!data || !foldersLoaded || !articlesLoaded || !isWorldLoaded) {
 			return {
 				isLoaded: false,
-				actorsWithNodes: [] as BoxedMindmapNode[],
-				nodeLinks: [] as BoxedMindmapWire[],
-				existingWires: new Set<string>(),
+				nodes: new Map<string, BoxedMindmapNode>(),
+				wires: new Map<string, BoxedMindmapWire>(),
+				existingWires: existingWiresCache.current,
 			}
+		}
+
+		const parents = {
+			actor: indexById(actors),
+			article: indexById(articles),
+			event: indexById(events),
+			folder: indexById(folders),
+			tag: indexById(tags),
 		}
 
 		const prevNodeCache = nodeCache.current
@@ -101,45 +110,25 @@ export function useBoxedMindmapContent() {
 			return item
 		}
 
-		const actorsWithNodes: BoxedMindmapNode[] = []
-		const nodeById = new Map<string, BoxedMindmapNode>()
+		const nodes = new Map<string, BoxedMindmapNode>()
 
 		for (const node of data.nodes) {
 			const parentId = getMindmapNodeParentId(node)
 
 			const parent =
-				(node.parentActorId &&
-					(() => {
-						const a = actors.find((a) => a.id === node.parentActorId)
-						return a && boxActor(a)
-					})()) ??
-				(node.parentArticleId &&
-					(() => {
-						const a = articles.find((a) => a.id === node.parentArticleId)
-						return a && boxArticle(a)
-					})()) ??
-				(node.parentEventId &&
-					(() => {
-						const e = events.find((e) => e.id === node.parentEventId)
-						return e && boxEvent(e)
-					})()) ??
-				(node.parentFolderId &&
-					(() => {
-						const f = folders.find((f) => f.id === node.parentFolderId)
-						return f && boxFolder(f)
-					})()) ??
-				(node.parentTagId &&
-					(() => {
-						const t = tags.find((t) => t.id === node.parentTagId)
-						return t && boxTag(t)
-					})()) ??
+				(node.parentActorId && mapEntity(parents.actor.get(node.parentActorId), boxActor)) ??
+				(node.parentArticleId && mapEntity(parents.article.get(node.parentArticleId), boxArticle)) ??
+				(node.parentEventId && mapEntity(parents.event.get(node.parentEventId), boxEvent)) ??
+				(node.parentFolderId && mapEntity(parents.folder.get(node.parentFolderId), boxFolder)) ??
+				(node.parentTagId && mapEntity(parents.tag.get(node.parentTagId), boxTag)) ??
 				(parentId ? null : boxPlainNode(node))
 
 			if (!parent) continue
 
-			const boxed = stableNode(node, parent, () => ({ id: node.id, node, parent }))
-			actorsWithNodes.push(boxed)
-			nodeById.set(node.id, boxed)
+			nodes.set(
+				node.id,
+				stableNode(node, parent, () => ({ id: node.id, node, parent })),
+			)
 		}
 
 		nodeCache.current = nextNodeCache
@@ -147,29 +136,44 @@ export function useBoxedMindmapContent() {
 		const prevWireCache = wireCache.current
 		const nextWireCache = new Map<object, BoxedMindmapWire>()
 
-		const nodeLinks: BoxedMindmapWire[] = []
+		const wires = new Map<string, BoxedMindmapWire>()
 		const existingWires = new Set<string>()
 
 		for (const wire of data.wires) {
-			const sourceNode = nodeById.get(wire.sourceNodeId)
-			const targetNode = nodeById.get(wire.targetNodeId)
+			const sourceNode = nodes.get(wire.sourceNodeId)
+			const targetNode = nodes.get(wire.targetNodeId)
 			if (!sourceNode || !targetNode) continue
 
 			const cached = prevWireCache.get(wire)
 			if (cached && cached.sourceNode === sourceNode && cached.targetNode === targetNode) {
 				nextWireCache.set(wire, cached)
-				nodeLinks.push(cached)
+				wires.set(wire.id, cached)
 			} else {
 				const boxed: BoxedMindmapWire = { ...wire, sourceNode, targetNode }
 				nextWireCache.set(wire, boxed)
-				nodeLinks.push(boxed)
+				wires.set(wire.id, boxed)
 			}
 
 			existingWires.add(`${sourceNode.id}->${targetNode.id}`)
 		}
 
 		wireCache.current = nextWireCache
+		if (!isSameSet(existingWiresCache.current, existingWires)) {
+			existingWiresCache.current = existingWires
+		}
 
-		return { isLoaded: true, actorsWithNodes, nodeLinks, existingWires }
+		return { isLoaded: true, nodes, wires, existingWires: existingWiresCache.current }
 	}, [data, foldersLoaded, articlesLoaded, isWorldLoaded, actors, articles, events, folders, tags])
+}
+
+function indexById<T extends { id: string }>(entities: T[]) {
+	return new Map(entities.map((entity) => [entity.id, entity]))
+}
+
+function mapEntity<T, R>(entity: T | undefined, box: (entity: T) => R) {
+	return entity && box(entity)
+}
+
+function isSameSet(a: Set<string>, b: Set<string>) {
+	return a.size === b.size && [...b].every((value) => a.has(value))
 }

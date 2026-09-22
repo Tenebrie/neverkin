@@ -3,6 +3,8 @@ import { getGhostElementRect } from '@/app/features/dragDrop/components/GhostWra
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
 import { getMindmapGridPosition } from './getMindmapGridPosition'
 
+export type MindmapReparentBody = NonNullable<ReturnType<typeof getMindmapDroppedNodeParams>>
+
 export function getMindmapDroppedNodeParams(entity: BoxedWikiEntity, targetPos: { x: number; y: number }) {
 	const gridPos = getMindmapGridPosition({ screenX: targetPos.x, screenY: targetPos.y })
 	if (!gridPos) {

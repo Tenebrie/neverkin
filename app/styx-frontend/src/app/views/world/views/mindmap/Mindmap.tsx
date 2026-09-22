@@ -11,6 +11,7 @@ import { CANVAS_ORIGIN, CANVAS_SIZE, GRID_SPACING } from './utils/mindmapCanvas'
 import { MindmapBulkContextMenu } from './workspace/MindmapBulkContextMenu'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
 import { MindmapHotkeys } from './workspace/MindmapHotkeys'
+import { MindmapMutationBridge } from './workspace/MindmapMutationBridge'
 import { MindmapNodeContextMenu } from './workspace/MindmapNodeContextMenu'
 
 export function Mindmap() {
@@ -68,6 +69,7 @@ export function Mindmap() {
 				<MindmapEmptyState />
 			</Box>
 			<MindmapHotkeys />
+			<MindmapMutationBridge />
 			<MindmapQuickSelect />
 			<MindmapNodeContextMenu />
 			<MindmapBulkContextMenu />

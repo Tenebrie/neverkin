@@ -7,3 +7,7 @@ export const CANVAS_ORIGIN = CANVAS_SIZE / 2
 
 /** Distance between two grid dots, in unscaled pixels. */
 export const GRID_SPACING = 64
+
+/** Zoom limits of the camera. A fit that asks for less than `MIN_SCALE` cannot show its whole target. */
+export const MIN_SCALE = 0.125
+export const MAX_SCALE = 5

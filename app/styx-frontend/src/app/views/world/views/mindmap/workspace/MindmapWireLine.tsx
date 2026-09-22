@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import { alpha, lighten } from '@mui/material/styles'
-import { memo, useCallback, useEffect, useLayoutEffect, useRef } from 'react'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
 
@@ -11,6 +11,7 @@ import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 
 import { BoxedMindmapParent } from '../hooks/useBoxedMindmapContent'
+import { useMindmapWire } from '../hooks/useMindmapContentStore'
 import { mindmapSlice } from '../MindmapSlice'
 import { MindmapWireLabel } from './MindmapWireLabel'
 import {
@@ -26,6 +27,13 @@ import {
 } from './mindmapWireUtils'
 
 type Props = {
+	wireId: string
+	svgDefsPortal: SVGDefsElement
+	svgGroupPortal: SVGGElement
+	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
+}
+
+type WireProps = Omit<Props, 'wireId'> & {
 	wire: MindmapWire
 	source: {
 		node: MindmapNode
@@ -35,17 +43,31 @@ type Props = {
 		node: MindmapNode
 		parent: BoxedMindmapParent
 	}
-	svgDefsPortal: SVGDefsElement
-	svgGroupPortal: SVGGElement
-	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
 }
 
 type WireHighlightState = 'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
 
 const ARROW_SIZE = 8
-const SHAPE_TRANSITION = 'fill 0.25s ease, stroke 0.25s ease'
 
-export const MindmapWireLine = memo(MindmapWireLineComponent)
+/**
+ * Subscribes to this one wire in the content store, so an edit elsewhere on the mindmap never
+ * reaches this component.
+ */
+export function MindmapWireLine({ wireId, ...props }: Props) {
+	const boxedWire = useMindmapWire(wireId)
+	if (!boxedWire) {
+		return null
+	}
+
+	return (
+		<MindmapWireLineComponent
+			{...props}
+			wire={boxedWire}
+			source={boxedWire.sourceNode}
+			target={boxedWire.targetNode}
+		/>
+	)
+}
 
 function MindmapWireLineComponent({
 	wire,
@@ -54,7 +76,7 @@ function MindmapWireLineComponent({
 	svgDefsPortal,
 	svgGroupPortal,
 	onOpenPopover,
-}: Props) {
+}: WireProps) {
 	const containerRef = useRef<HTMLDivElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const glowPathRef = useRef<SVGPathElement>(null)
@@ -293,7 +315,6 @@ function MindmapWireLineComponent({
 			sx={{
 				contentVisibility: 'auto',
 				zIndex: 100,
-				transition: 'opacity 0.2s',
 				'--label-position-x': `${pathMidpoint(ep).x}px`,
 				'--label-position-y': `${pathMidpoint(ep).y}px`,
 			}}
@@ -308,18 +329,9 @@ function MindmapWireLineComponent({
 					x2={x2}
 					y2={y2}
 				>
-					<stop
-						offset="0%"
-						style={{ stopColor: 'var(--wire-source-color)', transition: 'stop-color 0.25s ease' }}
-					/>
-					<stop
-						offset="50%"
-						style={{ stopColor: 'var(--wire-mid-color)', transition: 'stop-color 0.25s ease' }}
-					/>
-					<stop
-						offset="100%"
-						style={{ stopColor: 'var(--wire-target-color)', transition: 'stop-color 0.25s ease' }}
-					/>
+					<stop offset="0%" style={{ stopColor: 'var(--wire-source-color)' }} />
+					<stop offset="50%" style={{ stopColor: 'var(--wire-mid-color)' }} />
+					<stop offset="100%" style={{ stopColor: 'var(--wire-target-color)' }} />
 				</linearGradient>,
 				svgDefsPortal,
 			)}
@@ -332,7 +344,7 @@ function MindmapWireLineComponent({
 						fill="none"
 						strokeWidth={8}
 						pointerEvents="none"
-						style={{ stroke: `url(#${gradientId})`, opacity: 0.12, transition: 'opacity 0.25s ease' }}
+						style={{ stroke: `url(#${gradientId})`, opacity: 0.12 }}
 					/>
 					<g
 						ref={visibleGroupRef}
@@ -361,7 +373,6 @@ function MindmapWireLineComponent({
 									style={{
 										fill: 'var(--wire-source-color)',
 										stroke: 'var(--wire-source-color)',
-										transition: SHAPE_TRANSITION,
 									}}
 								/>
 							</g>
@@ -376,7 +387,6 @@ function MindmapWireLineComponent({
 									style={{
 										fill: 'var(--wire-target-color)',
 										stroke: 'var(--wire-target-color)',
-										transition: SHAPE_TRANSITION,
 									}}
 								/>
 							</g>

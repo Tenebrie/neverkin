@@ -8,6 +8,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMousePositionRef } from '@/app/hooks/useMousePositionRef'
 import { RootState } from '@/app/store'
 
+import { useMindmapExistingWires } from '../hooks/useMindmapContentStore'
 import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
 import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
 import { isEmptyMindmapSpot } from '../utils/isEmptyMindmapSpot'
@@ -28,11 +29,8 @@ type SourceNode = {
 	positionY: number
 }
 
-type Props = {
-	existingWires: Set<string>
-}
-
-export function MindmapWireGhost({ existingWires }: Props) {
+export function MindmapWireGhost() {
+	const existingWires = useMindmapExistingWires()
 	const [isDragging, setIsDragging] = useState(false)
 	const [awaitingSelection, setAwaitingSelection] = useState(false)
 	const [sourceNodes, setSourceNodes] = useState<SourceNode[]>([])

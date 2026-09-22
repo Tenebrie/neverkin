@@ -5,11 +5,14 @@ import { NODE_FALLBACK_H, NODE_W } from '../workspace/mindmapWireUtils'
 const OUTLIER_DISTANCE_RATIO = 3
 
 export type Bounds = { minX: number; minY: number; maxX: number; maxY: number }
+export type ContentBounds = { bounds: Bounds; mass: { x: number; y: number } }
 
 /**
- * Bounding box of the nodes, ignoring far-flung outliers that would otherwise pull the box into empty space.
+ * Bounding box of the nodes, ignoring far-flung outliers that would otherwise pull the box into empty space,
+ * along with `mass` - the median node position. The box tells the camera how far to zoom out; `mass` tells it
+ * where the nodes actually are, which is not the same point once the box is too wide to zoom out to.
  */
-export function getMindmapContentBounds(nodes: MindmapNode[]): Bounds | null {
+export function getMindmapContentBounds(nodes: MindmapNode[]): ContentBounds | null {
 	if (nodes.length === 0) {
 		return null
 	}
@@ -19,7 +22,7 @@ export function getMindmapContentBounds(nodes: MindmapNode[]): Bounds | null {
 	}
 	const distances = nodes.map((node) => Math.hypot(node.positionX - center.x, node.positionY - center.y))
 	const cutoff = OUTLIER_DISTANCE_RATIO * median(distances)
-	return nodes
+	const bounds = nodes
 		.filter((_, index) => distances[index] <= cutoff)
 		.reduce(
 			(acc, node) => ({
@@ -30,6 +33,8 @@ export function getMindmapContentBounds(nodes: MindmapNode[]): Bounds | null {
 			}),
 			{ minX: Infinity, minY: Infinity, maxX: -Infinity, maxY: -Infinity },
 		)
+
+	return { bounds, mass: { x: center.x + NODE_W / 2, y: center.y + NODE_FALLBACK_H / 2 } }
 }
 
 function median(values: number[]) {
