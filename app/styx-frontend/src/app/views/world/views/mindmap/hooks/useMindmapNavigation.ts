@@ -255,6 +255,8 @@ export function useMindmapNavigation(
 			// Trackpad panning is left to the browser, which scrolls the canvas on the compositor
 			if (looksLikeTrackpad || event.timeStamp - navState.lastTrackpadPanAt < 300) {
 				navState.lastTrackpadPanAt = event.timeStamp
+				panBy(-event.deltaX, -event.deltaY)
+				event.preventDefault()
 				return
 			}
 

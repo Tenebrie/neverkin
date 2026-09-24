@@ -6,7 +6,7 @@ import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useUpdateMindmapNode = () => {
+export function useUpdateMindmapNode() {
 	const worldId = useSelector(getWorldIdState)
 	const dispatch = useDispatch<AppDispatch>()
 	const [updateMindmapNode, state] = useUpdateNodeMutation()

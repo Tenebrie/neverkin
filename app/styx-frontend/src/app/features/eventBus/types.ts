@@ -97,6 +97,9 @@ export type EventParams = {
 	'mindmap/scale/changed': {
 		scale: number
 	}
+	'mindmap/scale/commit': {
+		scale: number
+	}
 	'mindmap/camera/requestLookAt': { x: number; y: number; scale?: number }
 	'world/requestNavigation': NavigateOptions
 	'calliope/onReconnected': { isReconnect: boolean }

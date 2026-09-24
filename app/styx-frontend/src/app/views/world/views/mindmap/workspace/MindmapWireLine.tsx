@@ -404,7 +404,7 @@ function MindmapWireLineComponent({
 						stroke="none"
 						strokeWidth={16}
 						pointerEvents="stroke"
-						style={{ cursor: 'pointer' }}
+						style={{ cursor: 'pointer', visibility: 'hidden' }}
 						onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 						onMouseEnter={() => {
 							isHoveredRef.current = true

@@ -6,7 +6,7 @@ import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-export const useDeleteMindmapNodes = () => {
+export function useDeleteMindmapNodes() {
 	const worldId = useSelector(getWorldIdState)
 	const dispatch = useDispatch<AppDispatch>()
 	const [deleteMindmapNodes, state] = useDeleteNodesMutation()

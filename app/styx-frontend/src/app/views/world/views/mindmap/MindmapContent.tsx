@@ -9,6 +9,7 @@ import { useBoxedMindmapContent } from './hooks/useBoxedMindmapContent'
 import { useMindmapNodeIds } from './hooks/useMindmapContentStore'
 import { getMindmapState } from './MindmapSliceSelectors'
 import { getHoveredMindmapNode } from './utils/getHoveredMindmapNode'
+import { CANVAS_ORIGIN } from './utils/mindmapCanvas'
 import { mindmapExistingWireStore, mindmapNodeStore, mindmapWireStore } from './utils/MindmapContentStore'
 import { ActorNodePositioner } from './workspace/ActorNodePositioner'
 import { MindmapWireLayer } from './workspace/MindmapWireLayer'
@@ -20,8 +21,8 @@ export function MindmapContent() {
 		<Box
 			sx={{
 				position: 'absolute',
-				left: 'var(--grid-origin)',
-				top: 'var(--grid-origin)',
+				left: `calc(${CANVAS_ORIGIN}px * var(--grid-scale))`,
+				top: `calc(${CANVAS_ORIGIN}px * var(--grid-scale))`,
 				zIndex: 1,
 			}}
 		>

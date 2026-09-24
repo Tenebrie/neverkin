@@ -55,7 +55,6 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 				background: theme.custom.palette.background.soft,
 				boxShadow:
 					theme.mode === 'light' ? '0 1px 4px rgba(20, 10, 50, 0.18)' : '0 1px 4px rgba(0, 0, 0, 0.4)',
-				transition: 'box-shadow 0.2s ease-out, transform 0.2s ease-out',
 				// border: (theme) => `1px solid ${theme.palette.divider}`,
 				'&:has(:hover):not(:has([data-mindmap-port]:hover))': {
 					boxShadow: '0 6px 10px rgba(0,0,0,0.2)',

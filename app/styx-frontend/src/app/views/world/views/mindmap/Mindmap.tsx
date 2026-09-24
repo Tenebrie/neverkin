@@ -5,9 +5,10 @@ import { useRef } from 'react'
 
 import { MindmapEmptyState } from './components/MindmapEmptyState'
 import { MindmapQuickSelect } from './components/MindmapQuickSelect'
+import { MindmapScaleReporter } from './components/MindmapScaleReporter'
 import { useMindmapNavigation } from './hooks/useMindmapNavigation'
 import { MindmapContent } from './MindmapContent'
-import { CANVAS_ORIGIN, CANVAS_SIZE, GRID_SPACING } from './utils/mindmapCanvas'
+import { CANVAS_SIZE, GRID_SPACING } from './utils/mindmapCanvas'
 import { MindmapBulkContextMenu } from './workspace/MindmapBulkContextMenu'
 import { MindmapClickArea } from './workspace/MindmapClickArea'
 import { MindmapHotkeys } from './workspace/MindmapHotkeys'
@@ -54,7 +55,6 @@ export function Mindmap() {
 			>
 				<Box
 					sx={{
-						'--grid-origin': `calc(${CANVAS_ORIGIN}px * var(--grid-scale))`,
 						position: 'relative',
 						width: `calc(${CANVAS_SIZE}px * var(--grid-scale))`,
 						height: `calc(${CANVAS_SIZE}px * var(--grid-scale))`,
@@ -68,6 +68,7 @@ export function Mindmap() {
 			<Box sx={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
 				<MindmapEmptyState />
 			</Box>
+			<MindmapScaleReporter />
 			<MindmapHotkeys />
 			<MindmapMutationBridge />
 			<MindmapQuickSelect />

@@ -82,7 +82,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		},
 	})
 
-	useEventBusSubscribe['mindmap/scale/changed']({
+	useEventBusSubscribe['mindmap/scale/commit']({
 		callback: ({ scale }) => {
 			const el = ref.current
 			if (!el) {
@@ -103,7 +103,6 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
 				'--node-border-width': 'calc(1px / var(--grid-scale))',
 				'--node-border-color': theme.material.palette.divider,
-				transition: 'opacity 0.2s, --node-border-color 0.2s ease-out',
 				'[data-selected="true"] > &': {
 					'--node-border-color': theme.material.palette.primary.main,
 					'&:hover': {
