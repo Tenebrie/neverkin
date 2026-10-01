@@ -33,7 +33,6 @@ import { WorldRouter } from './routers/WorldRouter.js'
 import { WorldSearchRouter } from './routers/WorldSearchRouter.js'
 import { WorldShareRouter } from './routers/WorldShareRouter.js'
 import { WorldShareVisitRouter } from './routers/WorldShareVisitRouter.js'
-import { WorldThumbnailRouter } from './routers/WorldThumbnailRouter.js'
 import { WorldWikiArticleRouter } from './routers/WorldWikiArticleRouter.js'
 import { WorldWikiFolderRouter } from './routers/WorldWikiFolderRouter.js'
 import { AuditLogService } from './services/AuditLogService.js'
@@ -130,8 +129,6 @@ app
 	.use(WorldShareRouter.allowedMethods())
 	.use(WorldShareVisitRouter.routes())
 	.use(WorldShareVisitRouter.allowedMethods())
-	.use(WorldThumbnailRouter.routes())
-	.use(WorldThumbnailRouter.allowedMethods())
 	.use(WorldWikiArticleRouter.routes())
 	.use(WorldWikiArticleRouter.allowedMethods())
 	.use(WorldWikiFolderRouter.routes())

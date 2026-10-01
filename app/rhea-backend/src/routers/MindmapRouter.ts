@@ -1,6 +1,7 @@
 import { MindmapLinkDirection } from '@prisma/client'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { UserAuthMiddleware } from '@src/middleware/UserAuthMiddleware.js'
+import { EntityNameSchema } from '@src/schema/NameSchema.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
@@ -46,9 +47,9 @@ router.post('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		id: z.uuid().optional(),
-		positionX: z.number(),
-		positionY: z.number(),
-		name: z.string().optional(),
+		positionX: z.number().optional().default(0),
+		positionY: z.number().optional().default(0),
+		name: EntityNameSchema.optional(),
 		parentActorId: z.string().optional(),
 		parentArticleId: z.string().optional(),
 		parentEventId: z.string().optional(),
@@ -81,9 +82,7 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		positionX: z.number().optional(),
 		positionY: z.number().optional(),
-		name: z.string().optional(),
-		content: z.string().optional(),
-		contentRich: z.string().optional(),
+		name: EntityNameSchema.optional(),
 	})
 
 	const node = await MindmapService.updateNode(
@@ -219,7 +218,7 @@ router.post('/api/world/:worldId/mindmap/wires', async (ctx) => {
 
 	const validWires = wires.filter((wire) => wire.sourceNodeId !== wire.targetNodeId)
 
-	const { created, updated } = await MindmapService.createLinks(validWires)
+	const { created, updated } = await MindmapService.createLinks(worldId, validWires)
 	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created, updated })
 
 	return {
@@ -244,10 +243,10 @@ router.patch('/api/world/:worldId/mindmap/wires/:wireId', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		direction: z.enum(MindmapLinkDirection).optional(),
-		content: z.string().optional(),
+		content: EntityNameSchema.optional(),
 	})
 
-	const wire = await MindmapService.updateLink(wireId, params)
+	const wire = await MindmapService.updateLink({ wireId, worldId }, params)
 	RedisService.notifyAboutMindmapWireUpdate(ctx, { worldId, wire })
 
 	return wire
@@ -270,11 +269,11 @@ router.post('/api/world/:worldId/mindmap/wires/:wireId/split', async (ctx) => {
 	const params = useRequestBody(ctx, {
 		positionX: z.number(),
 		positionY: z.number(),
-		name: z.string(),
+		name: EntityNameSchema,
 		direction: z.enum(MindmapLinkDirection),
 	})
 
-	const { node, created } = await MindmapService.splitLink({ worldId, linkId: wireId }, params)
+	const { node, created } = await MindmapService.splitLink({ worldId, wireId }, params)
 
 	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes: [node] })
 	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created, updated: [] })

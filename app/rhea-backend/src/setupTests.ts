@@ -4,7 +4,7 @@ import { prismaMockRef } from './mock/utils/prismaMock.js'
 
 vi.mock('moonflower', async () => {
 	return {
-		__esModule: true, //    <----- this __esModule: true is important
+		__esModule: true,
 		...(await vi.importActual('moonflower')),
 	}
 })

@@ -188,7 +188,7 @@ export const CalendarPresentationService = {
 		params: Omit<CalendarPresentationUnitUncheckedCreateInput, 'calendarId' | 'presentationId'>
 	}) => {
 		const unit = await getPrismaClient().$transaction(async (dbClient) => {
-			const unit = await getPrismaClient().calendarPresentationUnit.create({
+			const unit = await dbClient.calendarPresentationUnit.create({
 				data: {
 					...params,
 					calendarId,
