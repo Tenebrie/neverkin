@@ -3,16 +3,11 @@ import { useSelector } from 'react-redux'
 
 import { WorldEventTrack } from '@/api/types/worldEventTracksTypes'
 import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@/api/types/worldTypes'
-import { applyEventDelta } from '@/app/utils/applyEventDelta'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
 import { useListEventTracks } from '@/app/views/world/api/useListEventTracks'
-import {
-	getEventCreatorState,
-	getEventDeltaCreatorState,
-	getWorldState,
-} from '@/app/views/world/WorldSliceSelectors'
+import { getEventCreatorState, getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 export type TimelineTrack = {
 	events: TimelineEntity<MarkerType>[]
@@ -36,10 +31,8 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 } => {
 	const { events } = useSelector(getWorldState, (a, b) => a.events === b.events)
 	const { ghost: eventGhost } = useSelector(getEventCreatorState, (a, b) => a.ghost === b.ghost)
-	const { ghost: deltaGhost } = useSelector(getEventDeltaCreatorState, (a, b) => a.ghost === b.ghost)
 
 	const isEventCreator = false
-	const isDeltaCreator = false
 
 	const eventGroups = useMemo<TimelineEntity<MarkerType>[]>(() => {
 		const sortedEvents = events
@@ -50,27 +43,10 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 				markerPosition: event.timestamp,
 				markerType: asMarkerType('issuedAt'),
 				markerHeight: 0,
-				deltaStates: [...event.deltaStates].sort((a, b) => a.timestamp - b.timestamp),
 				baseEntity: event as WorldEvent | WorldEventDelta | null,
 				chainEntity: null,
 				followingEntity: null,
 			}))
-			.concat(
-				events.flatMap((event) =>
-					event.deltaStates.map((delta) => ({
-						...applyEventDelta({ event, timestamp: delta.timestamp }),
-						id: delta.id,
-						eventId: event.id,
-						key: `deltaState-${delta.id}`,
-						markerPosition: delta.timestamp,
-						markerType: asMarkerType('deltaState'),
-						markerHeight: 0,
-						baseEntity: delta,
-						chainEntity: null,
-						followingEntity: null,
-					})),
-				),
-			)
 			.concat(
 				events
 					.filter((event) => isNotNull(event.revokedAt))
@@ -89,9 +65,6 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 			.sort((a, b) => a.markerPosition - b.markerPosition)
 
 		const findChainedEntity = (event: (typeof sortedEvents)[number], index: number) => {
-			if (event.markerType === 'issuedAt' && event.deltaStates.length > 0) {
-				return sortedEvents.find((e) => e.id === event.deltaStates[0].id) ?? null
-			}
 			if (event.markerType === 'issuedAt' && isNotNull(event.revokedAt)) {
 				return sortedEvents.find((e) => e.eventId === event.eventId && e.markerType === 'revokedAt') ?? null
 			}
@@ -129,25 +102,10 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 				chainEntity: null,
 				followingEntity: null,
 			})
-		} else if (deltaGhost && isDeltaCreator) {
-			const event = events.find((event) => event.id === deltaGhost.worldEventId)
-			if (event) {
-				chainedEvents.push({
-					...event,
-					eventId: deltaGhost.worldEventId,
-					key: `ghostDelta-${deltaGhost.id}`,
-					markerType: asMarkerType('ghostDelta'),
-					markerPosition: deltaGhost.timestamp,
-					markerHeight: 0,
-					baseEntity: null,
-					chainEntity: null,
-					followingEntity: null,
-				})
-			}
 		}
 
 		return chainedEvents
-	}, [events, eventGhost, isEventCreator, deltaGhost, isDeltaCreator])
+	}, [events, eventGhost, isEventCreator])
 
 	const { data: tracks, isLoading } = useListEventTracks()
 	const validTrackIds = useMemo(() => new Set(tracks?.map((t) => t.id)), [tracks])

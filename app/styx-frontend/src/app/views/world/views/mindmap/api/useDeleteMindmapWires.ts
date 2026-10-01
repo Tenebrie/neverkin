@@ -1,13 +1,14 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { mindmapApi, useDeleteMindmapWiresMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+
+import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
 
 export function useDeleteMindmapWires() {
-	const worldId = useSelector(getWorldIdState)
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [deleteMindmapWires, state] = useDeleteMindmapWiresMutation()
 
@@ -33,13 +34,13 @@ export function useDeleteMindmapWires() {
 				}),
 			)
 			if (error) {
-				mindmapApi.util.invalidateTags(['mindmapWire'])
+				dispatch(mindmapApi.util.invalidateTags(['mindmapWire']))
 				patchResult.undo()
 				return
 			}
 			return response
 		},
-		[deleteMindmapWires, optimisticUpdate, worldId],
+		[deleteMindmapWires, dispatch, optimisticUpdate, worldId],
 	)
 
 	return [perform, state] as const

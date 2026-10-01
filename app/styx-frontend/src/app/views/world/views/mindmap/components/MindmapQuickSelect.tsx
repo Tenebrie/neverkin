@@ -8,8 +8,8 @@ import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
 import { useNodeLinking } from '../hooks/useNodeLinking'
-import { getMindmapGridPosition } from '../utils/getMindmapGridPosition'
-import { NODE_FALLBACK_H, NODE_W } from '../workspace/mindmapWireUtils'
+import { NODE_FALLBACK_H, NODE_W } from '../unrefactored/mindmapWireUtils'
+import { toWorkspaceCoords } from '../utils/toWorkspaceCoords'
 
 export function MindmapQuickSelect() {
 	const selectedEntityIds = useSearch({
@@ -54,7 +54,10 @@ export function MindmapQuickSelect() {
 			const sourceNodeIds = wireSourceIds.current
 			dispatchGlobalEvent['quickSelect/requestClose']()
 
-			const gridPos = getMindmapGridPosition({ screenX: spawnPos.current.x, screenY: spawnPos.current.y })
+			const gridPos = toWorkspaceCoords({
+				screenX: spawnPos.current.x,
+				screenY: spawnPos.current.y,
+			})
 			if (!gridPos) {
 				return
 			}

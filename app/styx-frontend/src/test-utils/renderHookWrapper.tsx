@@ -4,7 +4,7 @@ import { Provider } from 'react-redux'
 import { store } from '../app/store'
 
 type Props = {
-	children: ReactNode | ReactNode[]
+	children: ReactNode
 }
 
 export const renderHookWrapper = ({ children }: Props) => {

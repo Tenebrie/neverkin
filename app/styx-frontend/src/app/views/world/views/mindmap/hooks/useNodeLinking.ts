@@ -2,16 +2,20 @@ import { useCallback } from 'react'
 import { useStore } from 'react-redux'
 
 import { mindmapApi } from '@/api/mindmapApi'
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { RootState } from '@/app/store'
 
+import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useMindmapContext } from '../context/useMindmapContext'
+
 export function useNodeLinking() {
+	const worldId = useCurrentWorldId()
 	const store = useStore<MindmapApiState>()
+	const { createWires, deleteWires } = useMindmapContext()
 
 	const getWires = useCallback(() => {
 		const state = store.getState()
-		return mindmapApi.endpoints.getMindmap.select({ worldId: state.world.id })(state).data?.wires
-	}, [store])
+		return mindmapApi.endpoints.getMindmap.select({ worldId })(state).data?.wires
+	}, [store, worldId])
 
 	const createLinks = useCallback(
 		(newPairs: { sourceNodeId: string; targetNodeId: string }[]) => {
@@ -39,15 +43,13 @@ export function useNodeLinking() {
 				.filter((link): link is NonNullable<typeof link> => !!link)
 
 			if (existingLinks.length === validPairs.length) {
-				dispatchGlobalEvent['mindmap/wire/requestDelete']({
-					wireIds: existingLinks.map((link) => link.id),
-				})
+				deleteWires(existingLinks.map((link) => link.id))
 				return
 			}
 
-			dispatchGlobalEvent['mindmap/wire/requestCreate']({ wires: validPairs })
+			createWires(validPairs)
 		},
-		[getWires],
+		[createWires, deleteWires, getWires],
 	)
 
 	const checkLinkExists = useCallback(

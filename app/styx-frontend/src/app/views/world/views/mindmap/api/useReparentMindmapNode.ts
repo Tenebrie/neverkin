@@ -1,21 +1,20 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
-import { mindmapApi, useReparentNodeMutation } from '@/api/mindmapApi'
+import { mindmapApi, ReparentNodeApiArg, useReparentNodeMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
-import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
+import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
 
 export function useReparentMindmapNode() {
-	const worldId = useSelector(getWorldIdState)
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [reparentNode, state] = useReparentNodeMutation()
 
-	const perform = useCallback(
-		async (nodeId: string, body: NonNullable<ReturnType<typeof getMindmapDroppedNodeParams>>) => {
-			const patchResult = dispatch(
+	const updateCachedNode = useCallback(
+		(nodeId: string, body: ReparentNodeApiArg['body']) => {
+			return dispatch(
 				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
 					const node = draft.nodes.find((n) => n.id === nodeId)
 					if (node) {
@@ -23,15 +22,28 @@ export function useReparentMindmapNode() {
 					}
 				}),
 			)
+		},
+		[dispatch, worldId],
+	)
 
-			const { response, error } = parseApiResponse(await reparentNode({ worldId, nodeId, body }))
+	const perform = useCallback(
+		async (nodeId: string, body: ReparentNodeApiArg['body']) => {
+			const patchResult = updateCachedNode(nodeId, body)
+
+			const { response, error } = parseApiResponse(
+				await reparentNode({
+					worldId,
+					nodeId,
+					body,
+				}),
+			)
 			if (error) {
 				patchResult.undo()
 				return
 			}
 			return response
 		},
-		[dispatch, reparentNode, worldId],
+		[updateCachedNode, reparentNode, worldId],
 	)
 
 	return [perform, state] as const

@@ -1,14 +1,15 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { CreateMindmapWiresApiArg, mindmapApi, useCreateMindmapWiresMutation } from '@/api/mindmapApi'
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+
+import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
 
 export function useCreateMindmapWires() {
-	const worldId = useSelector(getWorldIdState)
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [createMindmapWire, state] = useCreateMindmapWiresMutation()
 
@@ -32,7 +33,7 @@ export function useCreateMindmapWires() {
 						draft.wires.push({
 							id: wire.id ?? existingWire?.id ?? `temp-${Math.random()}`,
 							createdAt: wire.createdAt ?? existingWire?.createdAt ?? new Date().toISOString(),
-							updatedAt: wire.updatedAt ?? existingWire?.createdAt ?? new Date().toISOString(),
+							updatedAt: wire.updatedAt ?? existingWire?.updatedAt ?? new Date().toISOString(),
 							sourceNodeId: wire.sourceNodeId,
 							targetNodeId: wire.targetNodeId,
 							direction: wire.direction ?? direction,

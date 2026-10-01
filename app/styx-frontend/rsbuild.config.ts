@@ -7,6 +7,7 @@ const tanstackTempDir = process.env.TSR_TMP_DIR || path.resolve('node_modules/.t
 
 export default defineConfig({
 	source: {
+		assetsInclude: /\.(vert|frag)$/,
 		define: {
 			__APP_VERSION__: JSON.stringify(process.env.VERSION ?? 'Dev'),
 			__BUILD_TIME__: JSON.stringify(new Date().toISOString()),

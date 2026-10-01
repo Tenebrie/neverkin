@@ -16,7 +16,7 @@ import { worldTagApi } from '@/api/worldTagApi'
 import { worldWikiApi } from '@/api/worldWikiApi'
 import { worldWikiFolderApi } from '@/api/worldWikiFolderApi'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
-import { ingestActor, ingestEvent, ingestEventDelta } from '@/app/utils/ingestEntity'
+import { ingestActor, ingestEvent } from '@/app/utils/ingestEntity'
 import { worldSlice } from '@/app/views/world/WorldSlice'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import {
@@ -30,7 +30,7 @@ import { useEventBusDispatch } from '../../eventBus'
 export const useLiveMessageHandlers = () => {
 	const { updatedAt: currentUpdatedAt } = useSelector(getWorldState, (a, b) => a.updatedAt === b.updatedAt)
 	const { updateUser } = authSlice.actions
-	const { updateEvent, updateEventDelta, updateActor, updateTag } = worldSlice.actions
+	const { updateEvent, updateActor, updateTag } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const { upsertCachedArticle, applyPositionUpdates } = useWikiApiCache()
@@ -71,14 +71,8 @@ export const useLiveMessageHandlers = () => {
 			const event = ingestEvent(JSON.parse(data.event) as GetWorldInfoApiResponse['events'][number])
 			dispatch(updateEvent(event))
 		},
-		[CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED]: (data) => {
-			dispatch(
-				updateEventDelta(
-					ingestEventDelta(
-						JSON.parse(data.eventDelta) as GetWorldInfoApiResponse['events'][number]['deltaStates'][number],
-					),
-				),
-			)
+		[CalliopeToClientMessageType.WORLD_EVENT_DELTA_UPDATED]: () => {
+			// nothing
 		},
 
 		[CalliopeToClientMessageType.ACTOR_UPDATED]: (data) => {

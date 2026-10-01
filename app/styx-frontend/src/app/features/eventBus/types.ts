@@ -3,8 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
-import { BoxedMindmapParent } from '@/app/views/world/views/mindmap/hooks/useBoxedMindmapContent'
-import { MindmapReparentBody } from '@/app/views/world/views/mindmap/utils/getMindmapDroppedNodeParams'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
@@ -40,7 +39,6 @@ export type EventParams = {
 			followerSpacing: number
 		} | null
 	}
-	'mindmap/actorEditor/requestOpen': { extraHeight?: number }
 	'mindmap/node/onMove': {
 		nodeId: string
 		positionX: number
@@ -57,25 +55,10 @@ export type EventParams = {
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
 	}
-	'mindmap/node/requestMove': {
-		nodeIds: string[]
-		deltaX: number
-		deltaY: number
-	}
-	'mindmap/node/requestReparent': {
-		nodeId: string
-		body: MindmapReparentBody
-	}
-	'mindmap/wire/requestCreate': {
-		wires: { sourceNodeId: string; targetNodeId: string }[]
-	}
-	'mindmap/wire/requestDelete': {
-		wireIds: string[]
-	}
 	'mindmap/node/requestOpenContextMenu': {
 		position: Position
 		node: MindmapNode
-		parent: BoxedMindmapParent
+		parent: MindmapNodeParentParcel
 	}
 	'mindmap/bulk/requestOpenContextMenu': {
 		position: Position

@@ -13,7 +13,7 @@ interface ResizeableDrawerContextProps {
 const ResizeableDrawerContext = createContext<ResizeableDrawerContextProps | undefined>(undefined)
 
 type ProviderProps = {
-	children: ReactNode | ReactNode[]
+	children: ReactNode
 	height: number
 	minHeight: number
 	maxHeight: number

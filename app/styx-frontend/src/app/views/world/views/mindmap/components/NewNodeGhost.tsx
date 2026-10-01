@@ -1,8 +1,8 @@
 import Box from '@mui/material/Box'
 
 import { BoxedWikiEntity } from '../../wiki/hooks/useBoxedWikiContent'
-import { MindmapState } from '../utils/MindmapState'
-import { ActorNodeContent } from '../workspace/ActorNodeContent'
+import { MindmapState } from '../MindmapState'
+import { ActorNodeContent } from '../workspace/content/nodes/ActorNodeContent'
 
 type Props = {
 	entityHandle: BoxedWikiEntity

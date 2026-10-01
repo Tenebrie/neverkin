@@ -79,7 +79,7 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{ownedWorlds.map((world) => (
-							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+							<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id}>
 									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>
@@ -95,7 +95,7 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{contributableWorlds.map((world) => (
-							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+							<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
 									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>
@@ -111,7 +111,7 @@ function WorldSelectorButtonComponent() {
 							</Typography>
 						</MenuItem>
 						{visibleWorlds.map((world) => (
-							<NavigationLink to="/world/$worldId/timeline" params={{ worldId: world.id }} key={world.id}>
+							<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id} data-hj-suppress>
 									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
 								</MenuItem>

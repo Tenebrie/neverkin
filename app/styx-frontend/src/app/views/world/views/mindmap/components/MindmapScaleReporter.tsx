@@ -1,7 +1,7 @@
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useDebounce } from '@/app/hooks/useDebounce'
 
-import { MindmapState } from '../utils/MindmapState'
+import { MindmapState } from '../MindmapState'
 
 export function MindmapScaleReporter() {
 	const commitScale = useDebounce(() => {

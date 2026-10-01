@@ -4,6 +4,7 @@ import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionsService } from './MentionsService.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 
 export const MindmapService = {
 	async getNodes(worldId: string) {
@@ -11,6 +12,7 @@ export const MindmapService = {
 			where: {
 				worldId,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 
@@ -87,6 +89,7 @@ export const MindmapService = {
 			where: {
 				sourceNode: { worldId },
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 	async createLinks(data: Prisma.MindmapLinkUncheckedCreateInput[]) {

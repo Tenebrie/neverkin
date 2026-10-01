@@ -1,76 +1,41 @@
-import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { useTheme } from '@mui/material/styles'
-import { useRef } from 'react'
 
-import { MindmapEmptyState } from './components/MindmapEmptyState'
+import { MindmapBulkContextMenu } from './components/MindmapBulkContextMenu'
+import { MindmapHotkeys } from './components/MindmapHotkeys'
+import { MindmapNodeContextMenu } from './components/MindmapNodeContextMenu'
 import { MindmapQuickSelect } from './components/MindmapQuickSelect'
 import { MindmapScaleReporter } from './components/MindmapScaleReporter'
-import { useMindmapNavigation } from './hooks/useMindmapNavigation'
-import { MindmapContent } from './MindmapContent'
-import { CANVAS_SIZE, GRID_SPACING } from './utils/mindmapCanvas'
-import { MindmapBulkContextMenu } from './workspace/MindmapBulkContextMenu'
-import { MindmapClickArea } from './workspace/MindmapClickArea'
-import { MindmapHotkeys } from './workspace/MindmapHotkeys'
-import { MindmapMutationBridge } from './workspace/MindmapMutationBridge'
-import { MindmapNodeContextMenu } from './workspace/MindmapNodeContextMenu'
+import { MindmapBackground } from './screenspace/MindmapBackground'
+import { MindmapEmptyState } from './screenspace/MindmapEmptyState'
+import { MindmapClickArea } from './workspace/clickArea/MindmapClickArea'
+import { MindmapContent } from './workspace/content/MindmapContent'
+import { MindmapContentManager } from './workspace/content/MindmapContentManager'
+import { MindmapNodeLayer } from './workspace/content/nodes/MindmapNodeLayer'
+import { MindmapWireCanvas } from './workspace/content/wires/canvas/MindmapCanvas'
+import { MindmapWireLayer } from './workspace/content/wires/MindmapWireLayer'
+import { MindmapWorkspace } from './workspace/MindmapWorkspace'
 
 export function Mindmap() {
-	const dotSize = 2
-
-	const ref = useRef<HTMLDivElement>(null)
-	const backgroundRef = useRef<HTMLDivElement>(null)
-	useMindmapNavigation(ref, backgroundRef)
-
-	const theme = useTheme()
-	const dotColor = theme.palette.divider
-
 	return (
-		<Stack sx={{ width: '100%', height: '100%' }}>
-			<Box
-				ref={backgroundRef}
-				sx={{
-					position: 'absolute',
-					width: '100%',
-					height: '100%',
-					pointerEvents: 'none',
-					backgroundImage: `radial-gradient(circle, ${dotColor} calc(${dotSize}px * var(--grid-scale)), transparent calc(${dotSize}px * var(--grid-scale)))`,
-					backgroundSize: `calc(${GRID_SPACING}px * var(--grid-scale)) calc(${GRID_SPACING}px * var(--grid-scale))`,
-					backgroundPosition: 'var(--grid-phase-x) var(--grid-phase-y)',
-				}}
-			/>
-			<Box
-				ref={ref}
-				data-testid="MindmapGrid"
-				data-mindmap-grid
-				sx={{
-					position: 'absolute',
-					width: '100%',
-					height: '100%',
-					overflow: 'auto',
-					overscrollBehavior: 'none',
-					scrollbarWidth: 'none',
-					touchAction: 'none',
-				}}
-			>
-				<Box
-					sx={{
-						position: 'relative',
-						width: `calc(${CANVAS_SIZE}px * var(--grid-scale))`,
-						height: `calc(${CANVAS_SIZE}px * var(--grid-scale))`,
-						overflowAnchor: 'none',
-					}}
-				>
-					<MindmapClickArea />
-					<MindmapContent />
-				</Box>
-			</Box>
-			<Box sx={{ position: 'absolute', width: '100%', height: '100%', pointerEvents: 'none' }}>
-				<MindmapEmptyState />
-			</Box>
+		<Stack sx={{ width: '100%', height: '100%', position: 'relative' }}>
+			{/* Screen-space */}
+			<MindmapBackground />
+			<MindmapWireCanvas />
+			<MindmapEmptyState />
+
+			{/* Scrollable container */}
+			<MindmapWorkspace>
+				<MindmapClickArea />
+				<MindmapContent>
+					<MindmapContentManager />
+					<MindmapNodeLayer />
+					<MindmapWireLayer />
+				</MindmapContent>
+			</MindmapWorkspace>
+
+			{/* Utilities */}
 			<MindmapScaleReporter />
 			<MindmapHotkeys />
-			<MindmapMutationBridge />
 			<MindmapQuickSelect />
 			<MindmapNodeContextMenu />
 			<MindmapBulkContextMenu />
