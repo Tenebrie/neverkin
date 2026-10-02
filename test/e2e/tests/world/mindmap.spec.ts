@@ -114,7 +114,7 @@ test.describe('World Mindmap', () => {
 
 		// --- Delete the wire ---
 		const wire = page.getByTestId('MindmapWire')
-		await wire.click()
+		await wire.click({ force: true })
 
 		const deleteWireRequest = page.waitForRequest(
 			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
