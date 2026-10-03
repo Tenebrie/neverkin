@@ -1,7 +1,8 @@
 import { useLayoutEffect, useRef } from 'react'
 
-import { useMindmapContext } from '../../../../context/useMindmapContext'
-import { MindmapState } from '../../../../MindmapState'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+
 import { buildWireTemplate, TEMPLATE_ATTRIBUTES, TEMPLATE_STRIDE, WIRE_PIECES } from './MindmapCanvasTemplate'
 import { WIRE_ATTRIBUTES } from './MindmapWireBuffer'
 import FRAGMENT_SHADER from './shaders/MindmapCanvas.glsl.frag?raw'

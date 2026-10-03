@@ -19,7 +19,6 @@ import { useSavedPreferences } from './features/preferences/hooks/useSavedPrefer
 import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
 import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
-import { useBrowserSpecificScrollbars } from './hooks/useBrowserSpecificScrollbars'
 import { useCloseMenusOnRightClick } from './hooks/useCloseMenusOnRightClick'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
@@ -39,7 +38,6 @@ const App = () => {
 	useSavedPreferences()
 	useShortcutManager()
 	useCloseMenusOnRightClick()
-	const scrollbars = useBrowserSpecificScrollbars()
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {

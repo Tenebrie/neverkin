@@ -39,11 +39,6 @@ export type EventParams = {
 			followerSpacing: number
 		} | null
 	}
-	'mindmap/node/onMove': {
-		nodeId: string
-		positionX: number
-		positionY: number
-	}
 	'mindmap/node/onGroupDragStart': {
 		sourceNodeId: string
 	}

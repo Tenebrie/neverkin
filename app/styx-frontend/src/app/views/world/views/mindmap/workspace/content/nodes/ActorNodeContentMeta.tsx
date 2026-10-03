@@ -4,8 +4,8 @@ import Stack from '@mui/material/Stack'
 
 import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { pluralize } from '@/app/utils/pluralize'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
-import { MindmapNodeParentParcel } from '../../../types'
 import { ActorNodeContentMetaEvent } from './ActorNodeContentMetaEvent'
 import { ActorNodeContentMetaFolder } from './ActorNodeContentMetaFolder'
 

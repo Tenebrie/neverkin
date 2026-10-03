@@ -1,6 +1,6 @@
 import Inventory2 from '@mui/icons-material/Inventory2'
 
-import { useFolderItemCount } from '../../../../wiki/hooks/useFolderItemCount'
+import { useFolderItemCount } from '@/app/views/world/views/wiki/hooks/useFolderItemCount'
 
 type Props = {
 	folderId: string

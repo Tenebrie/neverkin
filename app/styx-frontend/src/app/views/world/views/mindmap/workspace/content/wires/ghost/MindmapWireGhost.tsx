@@ -11,11 +11,11 @@ import { useDragDropState } from '@/app/features/dragDrop/hooks/useDragDropState
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RootState } from '@/app/store'
 import { isNotNull } from '@/app/utils/isNotNull'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import { resolveNodeLayout } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 
-import { useMindmapContext } from '../../../../context/useMindmapContext'
-import { getSelectedNodeKeys } from '../../../../MindmapSliceSelectors'
-import { getNodeHeight } from '../../../../unrefactored/mindmapWireUtils'
-import { toWorkspaceCoords } from '../../../../utils/toWorkspaceCoords'
 import { MindmapWireGhostContext } from './context/MindmapWireGhostContext'
 import { MindmapWireGhostLine } from './MindmapWireGhostLine'
 
@@ -24,7 +24,7 @@ type Props = {
 }
 
 export function MindmapWireGhost({ svgGroupPortal }: Props) {
-	const { nodes, wires } = useMindmapContext()
+	const { nodes, nodeLayouts, wires } = useMindmapContext()
 	const store = useStore<RootState>()
 	const { paint } = useRealtimeContext(MindmapWireGhostContext)
 
@@ -93,12 +93,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 			if (!parcel) {
 				continue
 			}
-			return {
-				id: nodeId,
-				x: parcel.node.positionX,
-				y: parcel.node.positionY,
-				height: getNodeHeight(nodeId),
-			}
+			return { id: nodeId, ...resolveNodeLayout(nodeLayouts, parcel.node) }
 		}
 		return null
 	}

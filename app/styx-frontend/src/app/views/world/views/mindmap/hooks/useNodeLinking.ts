@@ -3,8 +3,8 @@ import { useStore } from 'react-redux'
 
 import { mindmapApi } from '@/api/mindmapApi'
 import { RootState } from '@/app/store'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
 import { useMindmapContext } from '../context/useMindmapContext'
 
 export function useNodeLinking() {

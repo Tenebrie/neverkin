@@ -3,12 +3,11 @@ import useEvent from 'react-use-event-hook'
 
 import { RootState } from '@/app/store'
 import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
+import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import { getWiresInRect } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 import { deduplicateBy } from '@/ts-shared/utils/deduplicateBy'
 import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/SelectionBox'
-
-import { mindmapSlice } from '../../../MindmapSlice'
-import { getWiresInRect } from '../../../unrefactored/mindmapWireUtils'
-import { toWorkspaceCoords } from '../../../utils/toWorkspaceCoords'
 
 type Props = {
 	ref: React.RefObject<HTMLDivElement | null>

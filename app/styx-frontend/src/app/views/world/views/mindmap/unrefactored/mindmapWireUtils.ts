@@ -1,14 +1,34 @@
-import { MindmapState } from '../MindmapState'
+import { MindmapNode } from '@/api/types/mindmapTypes'
+import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
+import { MindmapNodeLayout } from '@/app/views/world/views/mindmap/types'
 import {
 	bezierPoint,
 	midpointOf,
 	toControlPoints,
 	WireControlPoints,
-} from '../workspace/content/wires/canvas/MindmapCanvasMath'
+} from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 
 export const NODE_W = 300
 export const NODE_FALLBACK_H = 60
 export const CORNER_R = 16
+
+export function resolveNodeLayout(
+	nodeLayouts: ReactiveMap<string, MindmapNodeLayout>,
+	node: MindmapNode,
+): MindmapNodeLayout {
+	return (
+		nodeLayouts.get(node.id) ?? {
+			x: node.positionX,
+			y: node.positionY,
+			width: NODE_W,
+			height: NODE_FALLBACK_H,
+		}
+	)
+}
+
+export function getLayoutCenter(layout: MindmapNodeLayout) {
+	return { x: layout.x + layout.width / 2, y: layout.y + layout.height / 2 }
+}
 
 export type WireEndpoints = {
 	x1: number
@@ -21,37 +41,27 @@ export type WireEndpoints = {
 	ny2: number
 }
 
-export function getNodeHeight(nodeId: string): number {
-	const el = document.querySelector(`[data-mindmap-node="${nodeId}"]`)
-	if (!el) {
-		return NODE_FALLBACK_H
-	}
-	return el.getBoundingClientRect().height / MindmapState.scale
-}
-
 /**
  * Given a ray from the rect center toward a target point, find where it exits the
  * rounded-rect perimeter. On flat edges the exit is trivial; in corner regions the
  * ray is intersected with the corner arc so the attachment point slides smoothly.
  */
 export function nearestEdgePoint(
-	rectX: number,
-	rectY: number,
-	nodeH: number,
+	rect: MindmapNodeLayout,
 	targetX: number,
 	targetY: number,
 ): { x: number; y: number; nx: number; ny: number } {
-	const cx = rectX + NODE_W / 2
-	const cy = rectY + nodeH / 2
+	const cx = rect.x + rect.width / 2
+	const cy = rect.y + rect.height / 2
 	const dx = targetX - cx
 	const dy = targetY - cy
 
 	if (dx === 0 && dy === 0) {
-		return { x: rectX + NODE_W, y: cy, nx: 1, ny: 0 }
+		return { x: rect.x + rect.width, y: cy, nx: 1, ny: 0 }
 	}
 
-	const halfW = NODE_W / 2
-	const halfH = nodeH / 2
+	const halfW = rect.width / 2
+	const halfH = rect.height / 2
 	const R = CORNER_R
 
 	// Inner half-dimensions (inset by corner radius)
@@ -106,19 +116,12 @@ export function nearestEdgePoint(
 	return { x: edgeX, y: edgeY, nx, ny }
 }
 
-export function pickEdgePoints(
-	srcX: number,
-	srcY: number,
-	srcH: number,
-	tgtX: number,
-	tgtY: number,
-	tgtH: number,
-): WireEndpoints {
-	const srcCenter = { x: srcX + NODE_W / 2, y: srcY + srcH / 2 }
-	const tgtCenter = { x: tgtX + NODE_W / 2, y: tgtY + tgtH / 2 }
+export function pickEdgePoints(source: MindmapNodeLayout, target: MindmapNodeLayout): WireEndpoints {
+	const srcCenter = getLayoutCenter(source)
+	const tgtCenter = getLayoutCenter(target)
 
-	const src = nearestEdgePoint(srcX, srcY, srcH, tgtCenter.x, tgtCenter.y)
-	const tgt = nearestEdgePoint(tgtX, tgtY, tgtH, srcCenter.x, srcCenter.y)
+	const src = nearestEdgePoint(source, tgtCenter.x, tgtCenter.y)
+	const tgt = nearestEdgePoint(target, srcCenter.x, srcCenter.y)
 
 	return { x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y, nx1: src.nx, ny1: src.ny, nx2: tgt.nx, ny2: tgt.ny }
 }
@@ -136,8 +139,6 @@ export type WirePaint = {
 }
 
 const wireRegistry = new Map<string, WireControlPoints>()
-
-export const nodePositions = new Map<string, { x: number; y: number; height: number }>()
 
 export function registerWire(id: string, ep: WireEndpoints): void {
 	wireRegistry.set(id, toControlPoints(ep))

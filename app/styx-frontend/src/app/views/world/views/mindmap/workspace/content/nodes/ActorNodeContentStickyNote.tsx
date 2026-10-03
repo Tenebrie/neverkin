@@ -2,9 +2,9 @@ import Box from '@mui/material/Box'
 import { memo } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
+import { PlainMindmapNodeParcel } from '@/app/views/world/views/mindmap/types'
+import { NODE_W } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
-import { PlainMindmapNodeParcel } from '../../../types'
-import { NODE_W } from '../../../unrefactored/mindmapWireUtils'
 import { ActorNodeContentStickyNoteEditor } from './ActorNodeContentStickyNoteEditor'
 import { MindmapNodePort } from './MindmapNodePort'
 

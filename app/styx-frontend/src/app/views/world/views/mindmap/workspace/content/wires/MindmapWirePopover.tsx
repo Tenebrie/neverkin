@@ -11,13 +11,17 @@ import { useSelector } from 'react-redux'
 
 import { MindmapWireDirection } from '@/api/types/mindmapTypes'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
+import { useDeleteMindmapWires } from '@/app/views/world/views/mindmap/api/useDeleteMindmapWires'
+import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapData'
+import { useSplitMindmapWire } from '@/app/views/world/views/mindmap/api/useSplitMindmapWire'
+import { useUpdateMindmapWire } from '@/app/views/world/views/mindmap/api/useUpdateMindmapWire'
+import { getSelectedWireKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import {
+	getWireMidpoint,
+	NODE_FALLBACK_H,
+	NODE_W,
+} from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
-import { useDeleteMindmapWires } from '../../../api/useDeleteMindmapWires'
-import { useMindmapData } from '../../../api/useMindmapData'
-import { useSplitMindmapWire } from '../../../api/useSplitMindmapWire'
-import { useUpdateMindmapWire } from '../../../api/useUpdateMindmapWire'
-import { getSelectedWireKeys } from '../../../MindmapSliceSelectors'
-import { getWireMidpoint, NODE_FALLBACK_H, NODE_W } from '../../../unrefactored/mindmapWireUtils'
 import { MindmapWirePopoverEditor } from './MindmapWirePopoverEditor'
 
 export type MindmapWireState = {

@@ -9,9 +9,8 @@ import Typography from '@mui/material/Typography'
 import { useEffect } from 'react'
 
 import { MindmapWire, MindmapWireDirection } from '@/api/types/mindmapTypes'
+import { useEntityResolver } from '@/app/views/world/modals/editEventModal/hooks/useEntityResolver'
 import { MultiSwitch } from '@/ui-lib/components/MultiSwitch/MultiSwitch'
-
-import { useEntityResolver } from '../../../../../modals/editEventModal/hooks/useEntityResolver'
 
 export type MindmapWireState = {
 	currentWire: MindmapWire

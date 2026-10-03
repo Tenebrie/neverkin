@@ -1,9 +1,8 @@
 import { RefObject } from 'react'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
-
-import { useCreateMindmapNode } from '../../../api/useCreateMindmapNode'
-import { getMindmapDroppedNodeParams } from '../../../utils/getMindmapDroppedNodeParams'
+import { useCreateMindmapNode } from '@/app/views/world/views/mindmap/api/useCreateMindmapNode'
+import { getMindmapDroppedNodeParams } from '@/app/views/world/views/mindmap/utils/getMindmapDroppedNodeParams'
 
 type Props = {
 	ref: RefObject<HTMLDivElement | null>

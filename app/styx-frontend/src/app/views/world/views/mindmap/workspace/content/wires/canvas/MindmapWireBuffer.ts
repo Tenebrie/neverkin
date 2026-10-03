@@ -1,6 +1,6 @@
 import { SlotBuffer } from '@/app/features/rendering/SlotBuffer'
+import { WirePaint } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
-import { WirePaint } from '../../../../unrefactored/mindmapWireUtils'
 import { toControlPoints } from './MindmapCanvasMath'
 
 /** Per-wire inputs of the vertex shader, in the order `MindmapWireBuffer.encode` lays them out */

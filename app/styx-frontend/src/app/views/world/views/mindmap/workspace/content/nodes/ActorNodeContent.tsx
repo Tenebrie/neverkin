@@ -6,11 +6,11 @@ import { memo, useMemo } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
+import { NODE_W } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { ArticleListItemIcon } from '../../../../wiki/articleList/icon/ArticleListItemIcon'
-import { MindmapNodeParentParcel } from '../../../types'
-import { NODE_W } from '../../../unrefactored/mindmapWireUtils'
 import { ActorNodeContentMeta } from './ActorNodeContentMeta'
 import { MindmapNodePort } from './MindmapNodePort'
 

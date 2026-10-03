@@ -1,8 +1,7 @@
 import z from 'zod'
 
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
-
-import { useCurrentWorldId } from '../../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useMindmapCameraPersistence() {
 	const worldId = useCurrentWorldId()

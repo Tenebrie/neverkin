@@ -4,8 +4,7 @@ import { useStore } from 'react-redux'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { RootState } from '@/app/store'
-
-import { getSelectedNodeKeys } from '../../../MindmapSliceSelectors'
+import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
 
 type Props = {
 	ref: RefObject<HTMLDivElement | null>

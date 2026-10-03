@@ -5,8 +5,7 @@ import { CreateMindmapWiresApiArg, mindmapApi, useCreateMindmapWiresMutation } f
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useCreateMindmapWires() {
 	const worldId = useCurrentWorldId()

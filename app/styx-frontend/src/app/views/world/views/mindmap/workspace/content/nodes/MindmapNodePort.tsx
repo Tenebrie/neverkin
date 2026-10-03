@@ -6,8 +6,7 @@ import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-
-import { MindmapNodeParentParcel } from '../../../types'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
 type Props = {
 	node?: MindmapNode

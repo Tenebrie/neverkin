@@ -2,8 +2,7 @@ import Schedule from '@mui/icons-material/Schedule'
 import { useSelector } from 'react-redux'
 
 import { useFormatTimestamp } from '@/app/features/time/calendar/hooks/useFormatTimestamp'
-
-import { getWorldState } from '../../../../../WorldSliceSelectors'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
 type Props = {
 	timestamp: number

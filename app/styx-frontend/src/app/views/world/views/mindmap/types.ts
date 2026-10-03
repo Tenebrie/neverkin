@@ -8,6 +8,13 @@ export type MindmapNodeParcel = {
 	parent: MindmapNodeParentParcel
 }
 
+export type MindmapNodeLayout = {
+	x: number
+	y: number
+	width: number
+	height: number
+}
+
 export type MindmapWireParcel = {
 	wire: MindmapWire
 	sourceNode: MindmapNodeParcel

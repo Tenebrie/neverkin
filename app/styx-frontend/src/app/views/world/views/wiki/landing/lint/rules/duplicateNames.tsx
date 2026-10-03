@@ -1,6 +1,7 @@
 import ContentCopyIcon from '@mui/icons-material/ContentCopy'
 
-import { BoxedWikiEntity } from '../../../hooks/useBoxedWikiContent'
+import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
+
 import { WikiLintRule } from '../WikiLintRule'
 
 export const duplicateNames: WikiLintRule = {

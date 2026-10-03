@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box'
 import Typography from '@mui/material/Typography'
-import { useCallback, useState } from 'react'
+import { useState } from 'react'
+import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-
-import { useUpdateMindmapNode } from '../../../api/useUpdateMindmapNode'
+import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
 
 type Props = {
 	node?: MindmapNode
@@ -24,7 +24,7 @@ export function ActorNodeContentStickyNoteEditor({ node, name }: Props) {
 		},
 	})
 
-	const attachTextarea = useCallback((element: HTMLTextAreaElement) => {
+	const onMount = useEvent((element: HTMLTextAreaElement) => {
 		fitToContent(element)
 		element.focus()
 		element.select()
@@ -46,7 +46,7 @@ export function ActorNodeContentStickyNoteEditor({ node, name }: Props) {
 			element.removeEventListener('mousedown', stopPropagation)
 			window.removeEventListener('pointerdown', blurOnOutsidePress, true)
 		}
-	}, [])
+	})
 
 	if (!isEditing || !node) {
 		return (
@@ -69,7 +69,7 @@ export function ActorNodeContentStickyNoteEditor({ node, name }: Props) {
 		<Box
 			data-1p-ignore
 			component="textarea"
-			ref={attachTextarea}
+			ref={onMount}
 			defaultValue={name}
 			rows={1}
 			onInput={(event) => fitToContent(event.currentTarget)}

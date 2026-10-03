@@ -8,11 +8,11 @@ import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropRe
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { RootState } from '@/app/store'
+import { useNodeLinking } from '@/app/views/world/views/mindmap/hooks/useNodeLinking'
+import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
-import { useNodeLinking } from '../../../hooks/useNodeLinking'
-import { getSelectedNodeKeys } from '../../../MindmapSliceSelectors'
-import { MindmapState } from '../../../MindmapState'
-import { MindmapNodeParentParcel } from '../../../types'
 import { ActorNodeContent } from './ActorNodeContent'
 import { ActorNodeContentStickyNote } from './ActorNodeContentStickyNote'
 

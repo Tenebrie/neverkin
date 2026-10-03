@@ -14,16 +14,16 @@ import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { usePointerCapture } from '@/app/hooks/usePointerCapture'
 import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
+import { useMindmapContext, useMindmapNode } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
+import { getMindmapDroppedNodeParams } from '@/app/views/world/views/mindmap/utils/getMindmapDroppedNodeParams'
+import { ActorNode } from '@/app/views/world/views/mindmap/workspace/content/nodes/ActorNode'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useMindmapContext, useMindmapNode } from '../context/useMindmapContext'
-import { mindmapSlice } from '../MindmapSlice'
-import { getSelectedNodeKeys } from '../MindmapSliceSelectors'
-import { MindmapState } from '../MindmapState'
-import { MindmapNodeParentParcel } from '../types'
-import { getMindmapDroppedNodeParams } from '../utils/getMindmapDroppedNodeParams'
-import { ActorNode } from '../workspace/content/nodes/ActorNode'
-import { nodePositions } from './mindmapWireUtils'
+import { NODE_FALLBACK_H, NODE_W } from './mindmapWireUtils'
 
 type Props = {
 	nodeId: string
@@ -46,23 +46,35 @@ export function ActorNodePositioner({ nodeId }: Props) {
 function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
+	const { moveNodes, reparentNode, nodeLayouts, nodeResizeObserver } = useMindmapContext()
+
 	const positionRef = useRef({ x: node.positionX, y: node.positionY })
+
+	const publishPosition = useEvent(() => {
+		const { x, y } = positionRef.current
+		const current = nodeLayouts.get(node.id)
+		nodeLayouts.set(node.id, {
+			x,
+			y,
+			width: current?.width ?? NODE_W,
+			height: current?.height ?? NODE_FALLBACK_H,
+		})
+	})
 
 	useLayoutEffect(() => {
 		positionRef.current = { x: node.positionX, y: node.positionY }
+		publishPosition()
 		const el = ref.current
 		if (el) {
 			el.style.setProperty('--node-x', `${node.positionX}px`)
 			el.style.setProperty('--node-y', `${node.positionY}px`)
 		}
-	}, [node])
+	}, [node, publishPosition])
 
 	const selectedRef = useRef(false)
 	const store = useStore<RootState>()
 	const { addNodeToSelection, removeNodeFromSelection, clearSelections } = mindmapSlice.actions
 	const dispatch = useDispatch()
-
-	const { moveNodes, reparentNode } = useMindmapContext()
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
@@ -146,10 +158,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			positionRef.current = { x: positionRef.current.x + deltaX, y: positionRef.current.y + deltaY }
 			ref.current?.style.setProperty('--node-x', `${positionRef.current.x}px`)
 			ref.current?.style.setProperty('--node-y', `${positionRef.current.y}px`)
-			nodePositions.set(node.id, {
-				...positionRef.current,
-				height: nodePositions.get(node.id)?.height ?? 80,
-			})
+			publishPosition()
 		},
 	})
 	useEventBusSubscribe['mindmap/node/onGroupDragEnd']({
@@ -164,30 +173,24 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 
 	const nodeRef = useAutoRef(node)
 
-	// TODO: Get this working again
-	const cachedHeight = useRef<number | null>(null)
 	useLayoutEffect(() => {
-		const el = ref.current
-		const height = (() => {
-			if (cachedHeight.current !== null) {
-				return cachedHeight.current
-			}
-			if (!el) {
-				return 80
-			}
-			cachedHeight.current = el.getBoundingClientRect().height / MindmapState.scale
-			return cachedHeight.current
-		})()
-		// const height = el ? el.getBoundingClientRect().height / MindmapState.scale : 80
-		nodePositions.set(node.id, { ...positionRef.current, height })
-	})
+		const element = ref.current
+		if (!element) {
+			return
+		}
+		return nodeResizeObserver.observe(element, (entry) => {
+			const { x, y } = positionRef.current
+			const { inlineSize, blockSize } = entry.borderBoxSize[0]
+			nodeLayouts.set(node.id, { x, y, width: inlineSize, height: blockSize })
+		})
+	}, [node.id, nodeLayouts, nodeResizeObserver])
 	useEffect(
 		() => () => {
-			nodePositions.delete(node.id)
+			nodeLayouts.delete(node.id)
 			clearTimeout(hoverTimeoutRef.current ?? undefined)
 			dispatch(mindmapSlice.actions.removeNodeFromHover(node.id))
 		},
-		[dispatch, node.id],
+		[dispatch, node.id, nodeLayouts],
 	)
 
 	useEventBusSubscribe['mindmap/selection/changed']({
@@ -310,19 +313,11 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 				positionRef.current = { x: mouseState.positionX, y: mouseState.positionY }
 				element.style.setProperty('--node-x', `${mouseState.positionX}px`)
 				element.style.setProperty('--node-y', `${mouseState.positionY}px`)
-				nodePositions.set(node.id, {
-					...positionRef.current,
-					height: nodePositions.get(node.id)?.height ?? 80,
-				})
+				publishPosition()
 				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 					sourceNodeId: node.id,
 					deltaX: mouseState.deltaX / mouseState.gridScale,
 					deltaY: mouseState.deltaY / mouseState.gridScale,
-				})
-				dispatchGlobalEvent['mindmap/node/onMove']({
-					nodeId: node.id,
-					positionX: mouseState.positionX,
-					positionY: mouseState.positionY,
 				})
 
 				mouseState.deltaX = 0
@@ -364,16 +359,11 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 				deltaY: totalDeltaY,
 			})
 
-			nodePositions.set(node.id, { ...snappedPosition, height: nodePositions.get(node.id)?.height ?? 80 })
+			publishPosition()
 			dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 				sourceNodeId: node.id,
 				deltaX: snappedPosition.x - mouseState.positionX,
 				deltaY: snappedPosition.y - mouseState.positionY,
-			})
-			dispatchGlobalEvent['mindmap/node/onMove']({
-				nodeId: node.id,
-				positionX: snappedPosition.x,
-				positionY: snappedPosition.y,
 			})
 			dispatchGlobalEvent['mindmap/node/onGroupDragEnd']({
 				sourceNodeId: node.id,
@@ -404,6 +394,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		moveNodes,
 		capturePointer,
 		releasePointer,
+		publishPosition,
 	])
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({

@@ -1,4 +1,4 @@
-import type { WireEndpoints } from '../../../../unrefactored/mindmapWireUtils'
+import type { WireEndpoints } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
 /**
  * A wire as a cubic Bézier curve, in grid coordinates.

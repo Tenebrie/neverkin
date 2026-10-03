@@ -2,8 +2,7 @@ import { useCallback } from 'react'
 
 import { SplitMindmapWireApiArg, useSplitMindmapWireMutation } from '@/api/mindmapApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useSplitMindmapWire() {
 	const worldId = useCurrentWorldId()

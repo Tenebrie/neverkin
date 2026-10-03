@@ -4,9 +4,11 @@ import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginAstro from 'eslint-plugin-astro'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
+import path from 'path'
 import tseslint from 'typescript-eslint'
 
 import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
@@ -60,7 +62,7 @@ export default defineConfig(
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
-			// 'no-relative-import-paths': noRelativeImportPaths,
+			'no-relative-import-paths': noRelativeImportPaths,
 			'mui-path-imports': muiPathImports,
 		},
 		rules: {
@@ -96,6 +98,20 @@ export default defineConfig(
 		plugins: { neverkin },
 		rules: {
 			'neverkin/no-untyped-local-paths': 'error',
+		},
+	},
+	{
+		files: ['app/styx-frontend/src/**/*.{ts,tsx}'],
+		rules: {
+			'no-relative-import-paths/no-relative-import-paths': [
+				'error',
+				{
+					allowSameFolder: true,
+					allowedDepth: 2,
+					rootDir: path.relative(process.cwd(), path.join(import.meta.dirname, 'app/styx-frontend/src')),
+					prefix: '@',
+				},
+			],
 		},
 	},
 	{

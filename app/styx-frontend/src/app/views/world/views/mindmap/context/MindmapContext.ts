@@ -1,15 +1,16 @@
 import { useInsertionEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
+import { createRealtimeContext } from '@/app/components/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
+import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 
-import { createRealtimeContext } from '../../../../../components/RealtimeContext'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { MindmapNavigationState, MindmapState } from '../MindmapState'
-import { MindmapNodeParcel, MindmapWireParcel } from '../types'
+import { MindmapNodeLayout, MindmapNodeParcel, MindmapWireParcel } from '../types'
 import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWireBuffer'
 
 export const MindmapContext = createRealtimeContext(() => {
@@ -47,11 +48,15 @@ export const MindmapContext = createRealtimeContext(() => {
 	})
 
 	const [nodes] = useState(() => new ReactiveMap<string, MindmapNodeParcel>())
+	const [nodeLayouts] = useState(() => new ReactiveMap<string, MindmapNodeLayout>())
+	const [nodeResizeObserver] = useState(() => new SharedResizeObserver())
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
 
 	return {
 		nodes,
+		nodeLayouts,
+		nodeResizeObserver,
 		wires,
 		wireBuffer,
 		onPaint,

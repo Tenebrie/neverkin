@@ -2,9 +2,8 @@ import { useEffect } from 'react'
 import { useSelector } from 'react-redux'
 
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
-
-import { useMindmapContext } from '../../../context/useMindmapContext'
-import { getMindmapState } from '../../../MindmapSliceSelectors'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { getMindmapState } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
 
 export function MindmapSelectionReporter() {
 	const { wires } = useMindmapContext()

@@ -4,8 +4,7 @@ import { ReactNode, useCallback, useState } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-
-import { useUpdateMindmapNode } from '../../../api/useUpdateMindmapNode'
+import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
 
 type Props = {
 	node?: MindmapNode

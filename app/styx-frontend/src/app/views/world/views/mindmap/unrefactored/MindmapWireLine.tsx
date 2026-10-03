@@ -3,6 +3,7 @@ import { alpha, lighten } from '@mui/material/styles'
 import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 import { createPortal } from 'react-dom'
 import { useDispatch } from 'react-redux'
+import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -16,11 +17,10 @@ import { MindmapNodeParentParcel, MindmapWireParcel } from '../types'
 import { MindmapWireLabel } from '../workspace/content/wires/label/MindmapWireLabel'
 import {
 	buildPathD,
-	getNodeHeight,
-	nodePositions,
 	pathMidpoint,
 	pickEdgePoints,
 	registerWire,
+	resolveNodeLayout,
 	unregisterWire,
 	WireEndpoints,
 	WirePaint,
@@ -74,16 +74,9 @@ function MindmapWireLineComponent({
 	onOpenPopover,
 }: WireProps) {
 	const { wire } = boxedWire
-	const { wireBuffer } = useMindmapContext()
+	const { wireBuffer, nodeLayouts } = useMindmapContext()
 	const containerRef = useRef<HTMLDivElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
-
-	const posRef = useRef({
-		srcX: source.node.positionX,
-		srcY: source.node.positionY,
-		tgtX: target.node.positionX,
-		tgtY: target.node.positionY,
-	})
 
 	const showSourceArrow = wire.direction === 'Reversed' || wire.direction === 'TwoWay'
 	const showTargetArrow = wire.direction === 'Normal' || wire.direction === 'TwoWay'
@@ -107,35 +100,21 @@ function MindmapWireLineComponent({
 	 * catch up once the move is committed. Props are the fallback for nodes that aren't mounted.
 	 */
 	const resolveEndpoints = (): WireEndpoints => {
-		const srcPos = nodePositions.get(source.node.id)
-		const tgtPos = nodePositions.get(target.node.id)
-		const pos = posRef.current
-		pos.srcX = srcPos?.x ?? source.node.positionX
-		pos.srcY = srcPos?.y ?? source.node.positionY
-		pos.tgtX = tgtPos?.x ?? target.node.positionX
-		pos.tgtY = tgtPos?.y ?? target.node.positionY
 		return pickEdgePoints(
-			pos.srcX,
-			pos.srcY,
-			srcPos?.height ?? getNodeHeight(source.node.id),
-			pos.tgtX,
-			pos.tgtY,
-			tgtPos?.height ?? getNodeHeight(target.node.id),
+			resolveNodeLayout(nodeLayouts, source.node),
+			resolveNodeLayout(nodeLayouts, target.node),
 		)
 	}
 
-	useEventBusSubscribe['mindmap/node/onMove']({
-		callback: () => {
-			if (!hitPathRef.current) return
-			const pos = posRef.current
-			const srcPos = nodePositions.get(source.node.id)
-			const tgtPos = nodePositions.get(target.node.id)
-			if (!srcPos || !tgtPos) return
-			if (pos.srcX === srcPos.x && pos.srcY === srcPos.y && pos.tgtX === tgtPos.x && pos.tgtY === tgtPos.y)
-				return
-			updateDom(resolveEndpoints())
-		},
-	})
+	const onNodeLayoutChanged = useEvent(() => updateDom(resolveEndpoints()))
+	useLayoutEffect(() => {
+		const offSource = nodeLayouts.subscribe(source.node.id, onNodeLayoutChanged)
+		const offTarget = nodeLayouts.subscribe(target.node.id, onNodeLayoutChanged)
+		return () => {
+			offSource()
+			offTarget()
+		}
+	}, [nodeLayouts, source.node.id, target.node.id, onNodeLayoutChanged])
 
 	const ep = resolveEndpoints()
 

@@ -5,7 +5,7 @@ export const initialState = {
 	selectedWires: [] as string[],
 	hoveredNodes: [] as { key: string; entityId: string }[],
 	hoveredWires: [] as string[],
-	pendingRevealNodeId: null as string | null,
+	pendingRevealEntityId: null as string | null,
 }
 
 export const mindmapSlice = createSlice({
@@ -107,7 +107,7 @@ export const mindmapSlice = createSlice({
 			state.hoveredWires = state.hoveredWires.filter((wireId) => wireId !== payload)
 		},
 		setPendingReveal: (state, { payload }: PayloadAction<string | null>) => {
-			state.pendingRevealNodeId = payload
+			state.pendingRevealEntityId = payload
 		},
 	},
 })

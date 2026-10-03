@@ -4,8 +4,7 @@ import { useDispatch } from 'react-redux'
 import { mindmapApi, useDeleteMindmapWiresMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useDeleteMindmapWires() {
 	const worldId = useCurrentWorldId()

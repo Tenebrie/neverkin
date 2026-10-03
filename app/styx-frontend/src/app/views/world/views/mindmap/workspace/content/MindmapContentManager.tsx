@@ -3,8 +3,6 @@ import { useSelector } from 'react-redux'
 
 import { useGetMindmapQuery } from '@/api/mindmapApi'
 import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
-import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
-
 import {
 	boxActor,
 	boxArticle,
@@ -12,8 +10,10 @@ import {
 	boxFolder,
 	boxPlainNode,
 	boxTag,
-} from '../../../wiki/utils/boxEntity'
-import { getWikiState } from '../../../wiki/WikiSliceSelectors'
+} from '@/app/views/world/views/wiki/utils/boxEntity'
+import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
+
 import { useMindmapContext } from '../../context/useMindmapContext'
 import { MindmapNodeParcel, MindmapWireParcel } from '../../types'
 import { getMindmapNodeParentId } from '../../utils/getMindmapNodeParentId'

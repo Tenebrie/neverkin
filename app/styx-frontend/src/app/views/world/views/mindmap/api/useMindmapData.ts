@@ -1,6 +1,5 @@
 import { GetMindmapApiResponse, useGetMindmapQuery } from '@/api/mindmapApi'
-
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 const emptyData = {
 	nodes: [],

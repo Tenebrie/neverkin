@@ -1,8 +1,8 @@
 import { useCallback } from 'react'
 
 import { AssetType } from '@/api/types/assetTypes'
+import { useRequestPresignedUrl } from '@/app/views/tools/image-converter/api/useRequestPresignedUrl'
 
-import { useRequestPresignedUrl } from '../../../app/views/tools/image-converter/api/useRequestPresignedUrl'
 import { useBucketFileUpload } from './useBucketFileUpload'
 import { useFinalizeFileUpload } from './useFinalizeFileUpload'
 

@@ -3,8 +3,7 @@ import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
 import { useGetMindmapQuery } from '@/api/mindmapApi'
-
-import { useCurrentWorldId } from '../../../hooks/useCurrentWorldId'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function MindmapEmptyState() {
 	const worldId = useCurrentWorldId()

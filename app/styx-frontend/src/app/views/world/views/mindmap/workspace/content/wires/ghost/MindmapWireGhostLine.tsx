@@ -2,15 +2,16 @@ import { useId, useRef, useState } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import {
 	buildPathD,
-	getNodeHeight,
+	getLayoutCenter,
 	nearestEdgePoint,
-	NODE_W,
 	pickEdgePoints,
+	resolveNodeLayout,
 	WireEndpoints,
-} from '../../../../unrefactored/mindmapWireUtils'
+} from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+
 import { useMindmapWireGhostPainter } from './context/useMindmapWireGhostContext'
 
 type Props = {
@@ -19,7 +20,8 @@ type Props = {
 
 export function MindmapWireGhostLine({ node }: Props) {
 	const gradientId = useId()
-	const [height] = useState(() => getNodeHeight(node.id))
+	const { nodeLayouts } = useMindmapContext()
+	const [layout] = useState(() => resolveNodeLayout(nodeLayouts, node))
 	const groupRef = useRef<SVGGElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const gradientRef = useRef<SVGLinearGradientElement>(null)
@@ -34,10 +36,10 @@ export function MindmapWireGhostLine({ node }: Props) {
 			return
 		}
 
-		const left = node.positionX
-		const right = left + NODE_W
-		const top = node.positionY
-		const bottom = node.positionY + height
+		const left = layout.x
+		const right = layout.x + layout.width
+		const top = layout.y
+		const bottom = layout.y + layout.height
 
 		// Skip rendering when wire points inside self
 		if (!target && mouseX >= left && mouseX <= right && mouseY >= top && mouseY <= bottom) {
@@ -50,7 +52,7 @@ export function MindmapWireGhostLine({ node }: Props) {
 		let colors = palette.free
 
 		if (target) {
-			endpoints = pickEdgePoints(node.positionX, node.positionY, height, target.x, target.y, target.height)
+			endpoints = pickEdgePoints(layout, target)
 			const isDuplicate =
 				wirePairs.has(`${node.id}->${target.id}`) || wirePairs.has(`${target.id}->${node.id}`)
 			if (isDuplicate) {
@@ -59,9 +61,10 @@ export function MindmapWireGhostLine({ node }: Props) {
 				colors = palette.snapped
 			}
 		} else {
-			const source = nearestEdgePoint(node.positionX, node.positionY, height, mouseX, mouseY)
-			const dx = mouseX - (node.positionX + NODE_W / 2)
-			const dy = mouseY - (node.positionY + height / 2)
+			const source = nearestEdgePoint(layout, mouseX, mouseY)
+			const center = getLayoutCenter(layout)
+			const dx = mouseX - center.x
+			const dy = mouseY - center.y
 			const length = Math.hypot(dx, dy) || 1
 			endpoints = {
 				x1: source.x,

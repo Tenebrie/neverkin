@@ -6,8 +6,7 @@ import { useRef } from 'react'
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-
-import { MindmapState } from '../../../../MindmapState'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 
 type Props = {
 	wire: MindmapWire
