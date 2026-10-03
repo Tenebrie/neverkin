@@ -364,7 +364,8 @@ test.describe('World Mindmap', () => {
 		await expect(page.getByTestId(/^ArticleListItem/)).toHaveCount(0)
 
 		// --- Write content, which reaches Rhea through the collaboration pipeline ---
-		await node.getByText('Quick draft').dblclick()
+		await node.getByText('Quick draft').click({ button: 'right' })
+		await page.getByRole('menuitem', { name: 'Edit as full entity' }).click()
 		const editor = page.locator('.ProseMirror').first()
 		await expect(editor).toBeVisible()
 		await editor.click()

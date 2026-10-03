@@ -50,7 +50,8 @@ test.describe('Asset references', () => {
 		const nodeId = (await node.getAttribute('data-mindmap-node'))!
 
 		// --- Write content on the node, which is the save that used to clear every other reference ---
-		await node.getByText('Quick draft').dblclick()
+		await node.getByText('Quick draft').click({ button: 'right' })
+		await page.getByRole('menuitem', { name: 'Edit as full entity' }).click()
 		const editor = page.locator('.ProseMirror').first()
 		await expect(editor).toBeVisible()
 		await editor.click()
