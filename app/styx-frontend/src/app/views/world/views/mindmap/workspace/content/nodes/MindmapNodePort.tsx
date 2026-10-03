@@ -1,6 +1,6 @@
 import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
-import { useEffect, useRef } from 'react'
+import { useEffect } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
@@ -15,7 +15,6 @@ type Props = {
 }
 
 export function MindmapNodePort({ node, parent }: Props) {
-	const isDragging = useRef(false)
 	const theme = useCustomTheme()
 
 	const { ref, ghostElement } = useDragDrop({
@@ -31,19 +30,20 @@ export function MindmapNodePort({ node, parent }: Props) {
 		if (!ref.current) {
 			return
 		}
-		const onMouseDown = (event: MouseEvent) => {
+		const onMouseDown = (event: MouseEvent | PointerEvent) => {
 			if (event.button !== 0) {
 				return
 			}
-			isDragging.current = true
 			event.stopPropagation()
 		}
 
 		const box = ref.current
 
 		box.addEventListener('mousedown', onMouseDown)
+		box.addEventListener('pointerdown', onMouseDown)
 		return () => {
 			box.removeEventListener('mousedown', onMouseDown)
+			box.removeEventListener('pointerdown', onMouseDown)
 		}
 	}, [node?.id, ref])
 

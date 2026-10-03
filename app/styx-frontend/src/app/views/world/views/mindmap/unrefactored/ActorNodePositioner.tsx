@@ -222,8 +222,8 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		}
 	})
 
-	const handleMouseEnter = useEvent(() => {
-		if (isDraggingRef.current || isHoverSuppressedRef.current) {
+	const handleMouseEnter = useEvent((event: React.MouseEvent) => {
+		if (isDraggingRef.current || isHoverSuppressedRef.current || event.buttons !== 0) {
 			return
 		}
 		setHovered(true, 600)
