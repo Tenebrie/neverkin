@@ -1,13 +1,14 @@
 import { useCallback, useLayoutEffect, useState } from 'react'
 import { useStore } from 'react-redux'
 
-import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { RootState } from '@/app/store'
 
 import { useMindmapWireIds } from '../../../context/useMindmapContext'
 import { useMindmapPainter } from '../../../context/useMindmapPainter'
 import { MindmapState } from '../../../MindmapState'
 import { MindmapWireLine } from '../../../unrefactored/MindmapWireLine'
+import { GLOW_WIDTH } from './canvas/MindmapCanvas'
 import { MindmapWireGhostContext } from './ghost/context/MindmapWireGhostContext'
 import { MindmapWireGhost } from './ghost/MindmapWireGhost'
 import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
@@ -19,7 +20,14 @@ export function MindmapWireLayer() {
 
 	useLayoutEffect(() => {
 		svgGroup?.style.setProperty('--grid-scale', String(MindmapState.scale))
+		svgGroup?.style.setProperty('--wire-hit-width', getWireHitWidth(MindmapState.scale))
 	}, [svgGroup])
+
+	useEventBusSubscribe['mindmap/scale/commit']({
+		callback: ({ scale }) => {
+			svgGroup?.style.setProperty('--wire-hit-width', getWireHitWidth(scale))
+		},
+	})
 
 	const [popoverState, setPopoverState] = useState<Omit<MindmapWireState, 'onClose'>>({
 		open: false,
@@ -83,4 +91,8 @@ export function MindmapWireLayer() {
 			/>
 		</>
 	)
+}
+
+function getWireHitWidth(scale: number) {
+	return `${Math.max(16 / scale, GLOW_WIDTH)}px`
 }

@@ -4,12 +4,14 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 
 import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
+import { mindmapSlice } from '../MindmapSlice'
 import { MindmapNodeParentParcel } from '../types'
 
 export function MindmapNodeContextMenu() {
@@ -17,6 +19,7 @@ export function MindmapNodeContextMenu() {
 	const [position, setPosition] = useState({ x: 0, y: 0 })
 	const [node, setNode] = useState<MindmapNode | null>(null)
 	const [parent, setParent] = useState<MindmapNodeParentParcel | null>(null)
+	const dispatch = useDispatch()
 
 	const { open: openBulkDeleteEntitiesModal } = useModal('bulkDeleteEntitiesModal')
 
@@ -43,7 +46,12 @@ export function MindmapNodeContextMenu() {
 				left: position.x,
 			}}
 			open={open}
-			onClose={() => setOpen(false)}
+			onClose={(_, reason) => {
+				setOpen(false)
+				if (reason === 'backdropClick') {
+					dispatch(mindmapSlice.actions.clearSelections())
+				}
+			}}
 			disableAutoFocusItem
 			disableRestoreFocus
 			disableEnforceFocus

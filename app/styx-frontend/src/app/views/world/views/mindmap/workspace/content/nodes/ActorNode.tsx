@@ -11,6 +11,7 @@ import { RootState } from '@/app/store'
 
 import { useNodeLinking } from '../../../hooks/useNodeLinking'
 import { getSelectedNodeKeys } from '../../../MindmapSliceSelectors'
+import { MindmapState } from '../../../MindmapState'
 import { MindmapNodeParentParcel } from '../../../types'
 import { ActorNodeContent } from './ActorNodeContent'
 import { ActorNodeContentStickyNote } from './ActorNodeContentStickyNote'
@@ -86,6 +87,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 		<Box
 			ref={ref}
 			sx={{
+				'--grid-scale': MindmapState.scale.toString(),
 				background: theme.custom.palette.background.timeline,
 				// Non-scaling border
 				transition: 'opacity 0.25s',

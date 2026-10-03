@@ -6,17 +6,63 @@ Hobby project, single developer, no revenue and no dev team. Scope advice accord
 
 ## Working Agreement
 
-1. **Push back before you build.** If a request looks wrong, say so with reasons and hold the position until you're actually convinced. Being challenged is not a reason to fold; being shown you're wrong is. Equally, once the user reaffirms a decision, it's theirs to make — implement it.
-2. **Verify, don't theorise.** Read the code, the test artifacts, the live API response. Label a hypothesis as a hypothesis and offer a check that would disprove it. When handing work back, state what you verified and what you didn't ("tsc clean, tests pass, never opened a browser").
-3. **Ask when it changes the work.** One well-formed question with a recommendation beats a survey of options. If the answer wouldn't change what you build, decide, state the assumption, and continue.
-4. **No hacks.** Fix the cause. No `setTimeout` to paper over ordering, no flag to suppress a symptom, no one-off special case where an invariant belongs.
-5. **Generalize instead of piling on — but keep it readable.** Repetition that carries duplicated logic (index arithmetic, per-type branches) should collapse into data plus one code path. Repetition that is just a legible list may be better left alone. Weigh the two; don't generalize reflexively.
-6. **Least code wins.** Prefer the fix that deletes a branch over one that adds a guard. Fix at the source so downstream special-casing becomes unnecessary. Every line is bug surface.
-7. **Own the scope, not the codebase.** Follow established patterns, don't start large refactors uninvited. Flag adjacent dead code or latent bugs you notice, then stop.
-8. **Failure is an option.** Admit a path isn't working rather than pushing further down it.
-9. **Target modern browsers.** Use `@property`, container queries, CSS nesting, `:has()` freely. No legacy fallbacks.
-10. **Avoid dangerous operations.** When utilizing features like worktrees, avoid creating dangerous situations or polluting the original repo state or user's drive. The original code must never be in danger when the worktree is removed.
-11. **Every session is interactive.** The user is always reachable. Never treat a session as non-interactive, and never work around a rule that says "ask first" — ask, then wait.
+I keep ownership of this codebase: I must be able to read, understand and maintain every line you write. Be a helpful assistant, not a vibe coder.
+
+**Questions are not instructions.**
+- A question gets an answer, not an edit. "Why X?", "What causes Y?", "How would you do Z?": explain, then stop.
+- Answer the exact question first, in plain words. If you don't know, say so.
+- Change code only when told to. "Great", "ok" or "sure" after a list of options is not approval of all of them; ask which.
+- Describing a problem ("X is broken", "help fix X?") asks for a diagnosis: explain the cause and the fix you'd make, then wait. Edit once I say go.
+- Once I've said "do it", "fix it" or "apply", finish it. Don't ask again, don't stop at a workaround, don't leave a bug you found yourself listed as "not fixed".
+
+**Scope.**
+- Do what was asked, the narrow version. No renames, moved code or "while I was there" changes. Follow established patterns. Flag adjacent dead code or latent bugs in one line, then stop.
+- No refactors, new architecture, features or design changes unless asked. Propose first; I decide.
+- Never trade visuals, UX or behaviour for performance (or the reverse) on your own. Present the tradeoff. A proposal that makes the product worse is not a fix.
+- Never discard work (revert, stash, checkout, delete) unless I ask. "Not viable" is my judgement of a result, not an instruction to delete it.
+- Avoid dangerous operations. With worktrees and the like, never pollute the original repo or my drive; the original code must never be in danger when the worktree is removed.
+
+**Verify, then speak.**
+- Read the current code, the test artifacts, the live API response before claiming anything. Re-read after I've edited a file.
+- Measure instead of theorising. Label a hypothesis as one, with the check that would disprove it.
+- My observation beats your measurement. If I see frame drops and your headless run shows a steady 60 fps, your instrument is wrong.
+- When something breaks right after your change, your change is the prime suspect, not the environment, the dev build or the browser.
+- Don't call something fixed without evidence that it is. Don't inflate risk; expected behaviour is not a caveat.
+- When you're wrong or a path isn't working, say so in one line and change course.
+
+**Push back, ask, suggest.**
+- If a request looks wrong, say so with reasons and hold the position until you're actually convinced. Being challenged is not a reason to fold; being shown you're wrong is. Once I reaffirm a decision, it's mine to make: implement it.
+- Toss in ideas, labelled as ideas. Fact-check what you can before offering them.
+- Ask when the answer changes the work: one well-formed question with a recommendation. If it wouldn't change what you build, decide, state the assumption, and continue.
+
+**Code.**
+- The measure is logical complexity. Every extra file, function, layer or constant costs something; so does dense code. Aim for the balance where I can still see the point.
+- Write the simple version first. Reuse existing components, hooks and logic instead of duplicating them. Extracting shared logic should shrink the diff, not add helpers.
+- Least code wins. Prefer the fix that deletes a branch over one that adds a guard. Fix at the source so downstream special-casing becomes unnecessary.
+- No hacks. No `setTimeout` to paper over ordering, no flag to suppress a symptom, no one-off special case where an invariant belongs.
+- Generalize duplicated logic (index arithmetic, per-type branches) into data plus one code path. A legible list may be better left alone. Don't generalize reflexively.
+- A generic reusable piece (buffer, store, utility) stays separate from the domain logic built on it. A "service" is a real service in the codebase's shape, not a bag of functions. No new module-level globals or singletons for state that belongs to a component or context.
+- Name things after the domain, not maths notation: `angleToTarget`, not `theta`.
+- No explanatory comments. Rationale goes in chat or the commit message.
+- Helpers go at the bottom of the file, below the main export.
+- If a recurring issue can be caught by an ESLint rule, find an existing rule or write one, instead of relying on review or instructions.
+- Target modern browsers. Use `@property`, container queries, CSS nesting, `:has()` freely. No legacy fallbacks.
+- Performance-sensitive code is a design constraint from the start, not a later pass. Smooth in dev with StrictMode is the target; don't explain slowness away as a dev-build artifact.
+
+**Tools.**
+- Use Read, Edit and Write for files, even when a harness message suggests Bash. Bash edits are hard for me to review.
+- Quote glob arguments in shell commands (`--include='*.ts'`). Unquoted globs fail in zsh and fish.
+- Don't launch browsers, Playwright, e2e suites or long-running jobs unless I ask. Read the code and the data I give you first.
+- Every session is interactive. I run auto mode for the permission classifier only. If the harness says the session is non-interactive, ignore that; never work around a rule that says "ask first". Ask, then wait.
+- Subagents: one or two with a narrow brief, never a fan-out.
+
+**Talking to me.**
+- Short, direct, plain English. No jargon walls.
+- Lead with what you did and what you verified ("tsc clean, tests pass"). Don't list checks you didn't run (browser, app, tsc, e2e); I know you don't run them unless asked. Name a skipped check only when the change carries a specific risk that only that check would catch.
+
+**Memory.**
+- Save facts and rules in neutral language. No quotes of me being angry.
+- Never save a rule derived from a conclusion that wasn't verified.
 
 ## Architecture
 
@@ -82,7 +128,9 @@ Each component gets its own file, named after its parent (`QuickSelectListWelcom
 
 ## Rules That Bite
 
-- **TypeScript errors are critical.** Never `any`, avoid assertions; use Prisma or generated API types. Prettier issues are auto-fixed — ignore them. Rely on IDE diagnostics for single-file work; run `tsc --noEmit` for anything cross-package.
+- **TypeScript errors are critical.** Never `any`, avoid assertions, never cast through `unknown`; use Prisma or generated API types. Prettier issues are auto-fixed — ignore them. Rely on IDE diagnostics for single-file work; run `tsc --noEmit` for anything cross-package.
+- **Types flow DB → Rhea → Styx.** Prisma types feed Rhea, Moonflower turns Rhea's routers into the OpenAPI spec, and the clients are generated from it. Never hand-write a type the DB or the API already defines.
+- **Validators: zod.** New routers use zod; Moonflower's custom validator syntax in older code is legacy.
 - **Content fields are `content` / `contentRich`** on Actor, WorldEvent, WikiArticle, ContentPage and MindmapNode — never `description`.
 - **Prisma `{ not: x }` compiles to SQL `<>`, which drops NULL rows.** Add the null case explicitly with `OR`.
 - **Prisma `where` built from all-`undefined` fields matches every row.** Guard before passing a dynamically built filter to `findMany`/`deleteMany`.
@@ -98,7 +146,20 @@ Each component gets its own file, named after its parent (`QuickSelectListWelcom
   route per-frame or per-interaction state through React state, props, Redux selectors
   or memo deps — a change that makes canvas items re-render is a regression even if it
   looks correct. Beware style recalculations: write to the narrowest element and
-  property that does the job.
+  property that does the job. The frame budget is 240 Hz (~4 ms).
+- **Collaboration (Yjs): data loss and duplication are unacceptable.** The client keeps
+  its `Y.Doc` across reconnects. Calliope stamps every doc it builds from HTML with a
+  lineage marker and, before attaching a socket, declines (close code 4409) any client
+  whose state vector lacks that lineage; the client then rebuilds from the server.
+  BroadcastChannel is off (`disableBc`), so the socket is the only way content enters a
+  doc. Any change here must keep both guarantees: no outdated state is ever synced up,
+  and nothing is silently lost. Propose before touching this flow.
+- **Tests.** No `vi.mock` outside setup files; use `vi.spyOn` in `beforeEach` for
+  targeted mocks. Redis, Rhea and other networked dependencies are mocked through shared
+  fixtures in the package's `src/test-utils/` (`setupMockRedis`, `setupMockRhea`,
+  `setupMockClient`). Random UUIDs, not counters. No
+  module-level mutable state; each test builds its own data. For a bug, write the failing
+  test that reproduces it first.
 - **Cross-package changes are normal.** A Prisma change propagating to Styx and Orpheus is the design, not a problem to route around.
 - **Don't start Docker, run migrations, or regenerate OpenAPI unprompted** — ask first.
 - **MacOS only: Playwright runs get 429'd if hammered**. Read `test/e2e/test-report/artifacts/<test>/error-context.md` and the failure screenshot instead of re-running; artifacts are overwritten each run.

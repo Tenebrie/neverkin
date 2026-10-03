@@ -29,6 +29,15 @@ export function MindmapWorkspace({ children }: Props) {
 		})
 		observer.observe(element)
 
+		// Device pixel ratio
+		let dprQuery: MediaQueryList
+		const watchDpr = () => {
+			element.style.setProperty('--dpr', String(window.devicePixelRatio))
+			dprQuery = window.matchMedia(`(resolution: ${window.devicePixelRatio}dppx)`)
+			dprQuery.addEventListener('change', watchDpr, { once: true })
+		}
+		watchDpr()
+
 		// Rendering
 		const offPaint = onPaint((navState) => {
 			element.scrollTo({
@@ -39,6 +48,7 @@ export function MindmapWorkspace({ children }: Props) {
 
 		return () => {
 			observer.disconnect()
+			dprQuery.removeEventListener('change', watchDpr)
 			offPaint()
 		}
 	})

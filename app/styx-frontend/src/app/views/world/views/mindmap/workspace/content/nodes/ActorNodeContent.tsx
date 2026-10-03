@@ -49,6 +49,7 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 					boxShadow: '0 6px 10px rgba(0,0,0,0.2)',
 				},
 			}}
+			onClick={onHeaderClick}
 		>
 			<Stack
 				direction="row"
@@ -56,7 +57,6 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 				sx={{
 					padding: '12px',
 				}}
-				onClick={onHeaderClick}
 			>
 				<Box sx={{ width: 24, height: 24 }}>
 					{parent.type === 'node' ? (

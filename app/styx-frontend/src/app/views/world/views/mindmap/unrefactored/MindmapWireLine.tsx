@@ -317,9 +317,8 @@ function MindmapWireLineComponent({
 						d={buildPathD(ep)}
 						fill="none"
 						stroke="none"
-						strokeWidth={16}
 						pointerEvents="stroke"
-						style={{ cursor: 'pointer', visibility: 'hidden' }}
+						style={{ cursor: 'pointer', visibility: 'hidden', strokeWidth: 'var(--wire-hit-width)' }}
 						onClick={(event) => triggerClick(event, { multiselect: event.shiftKey, event })}
 						onMouseEnter={() => {
 							isHoveredRef.current = true

@@ -7,7 +7,7 @@ import { WIRE_ATTRIBUTES } from './MindmapWireBuffer'
 import FRAGMENT_SHADER from './shaders/MindmapCanvas.glsl.frag?raw'
 import VERTEX_SHADER from './shaders/MindmapCanvas.glsl.vert?raw'
 
-const GLOW_WIDTH = 8
+export const GLOW_WIDTH = 8
 const STROKE_WIDTH = 2
 /** The former SVG port: an r=3 circle with a 2px stroke */
 const PORT_RADIUS = 4

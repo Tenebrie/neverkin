@@ -66,7 +66,7 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 				top: 0,
 				'--grid-scale': MindmapState.scale,
 				transform: `translate(
-					calc(var(--label-position-x) * var(--grid-scale) - 50%), calc(var(--label-position-y) * var(--grid-scale) - 50%)
+					calc(round(var(--label-position-x) * var(--grid-scale), 1px / var(--dpr)) - 50%), calc(round(var(--label-position-y) * var(--grid-scale), 1px / var(--dpr)) - 50%)
 					) scale(var(--grid-scale))`,
 
 				'--node-border-width': 'calc(1px / var(--grid-scale))',

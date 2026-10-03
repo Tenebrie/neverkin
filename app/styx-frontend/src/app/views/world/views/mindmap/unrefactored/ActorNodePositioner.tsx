@@ -66,6 +66,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
+			clearTimeout(hoverTimeoutRef.current ?? undefined)
 			if (selectedRef.current) {
 				dispatch(removeNodeFromSelection(node.id))
 			} else {
@@ -195,6 +196,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 
 	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
 	const isDraggingRef = useRef(false)
+	const isHoverSuppressedRef = useRef(false)
 	const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
 
 	const setHovered = useEvent((isHovered: boolean, delay: number) => {
@@ -216,23 +218,22 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		isDraggingRef.current = isDragging
 		ref.current?.setAttribute('data-dragging', String(isDragging))
 		if (isDragging) {
-			setHovered(true, 0)
-		} else if (!ref.current?.matches(':hover')) {
 			setHovered(false, 0)
 		}
 	})
 
 	const handleMouseEnter = useEvent(() => {
-		if (isDraggingRef.current) {
+		if (isDraggingRef.current || isHoverSuppressedRef.current) {
 			return
 		}
-		setHovered(true, 100)
+		setHovered(true, 600)
 	})
 
 	const handleMouseLeave = useEvent(() => {
 		if (isDraggingRef.current) {
 			return
 		}
+		isHoverSuppressedRef.current = false
 		setHovered(false, 0)
 	})
 
@@ -249,7 +250,6 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			positionX: positionRef.current.x,
 			positionY: positionRef.current.y,
 			gridScale: 1,
-			canClick: true,
 
 			isDragging: false,
 			deltaX: 0,
@@ -279,14 +279,6 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			window.addEventListener('pointerup', handleMouseUp)
 		}
 
-		const handleMouseClick = (event: PointerEvent) => {
-			if (!mouseState.canClick) {
-				event.stopPropagation()
-				event.preventDefault()
-			}
-			mouseState.canClick = true
-		}
-
 		const handleMouseWheel = (event: WheelEvent) => {
 			if (mouseState.isDragging) {
 				event.stopPropagation()
@@ -300,7 +292,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 
 			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
 				mouseState.isDragging = true
-				mouseState.canClick = false
+				isHoverSuppressedRef.current = true
 				setDragHover(true)
 				capturePointer('grabbing', event.pointerId)
 				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
@@ -388,12 +380,10 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		}
 
 		element.addEventListener('pointerdown', handleMouseDown)
-		element.addEventListener('click', handleMouseClick)
 		element.addEventListener('wheel', handleMouseWheel)
 
 		return () => {
 			element.removeEventListener('pointerdown', handleMouseDown)
-			element.removeEventListener('click', handleMouseClick)
 			element.removeEventListener('wheel', handleMouseWheel)
 			window.removeEventListener('pointermove', handleMouseMove)
 			window.removeEventListener('pointerup', handleMouseUp)
@@ -415,7 +405,9 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
 			const state = store.getState().mindmap
-			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
+			const isBulkSelectContext =
+				state.selectedNodes.length + state.selectedWires.length > 1 &&
+				state.selectedNodes.some((selectedNode) => selectedNode.key === node.id)
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position: {
@@ -479,7 +471,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 				// The drag ghost is snapped over this node and stands in for it
 				opacity: isDropTarget ? 0 : 1,
 				transform:
-					'translate(calc(var(--node-x) * var(--grid-scale)), calc(var(--node-y) * var(--grid-scale))) scale(var(--grid-scale))',
+					'translate(round(var(--node-x) * var(--grid-scale), 1px / var(--dpr)), round(var(--node-y) * var(--grid-scale), 1px / var(--dpr))) scale(var(--grid-scale))',
 				transformOrigin: 'top left',
 				'&:hover, &[data-dragging="true"]': {
 					zIndex: 10,

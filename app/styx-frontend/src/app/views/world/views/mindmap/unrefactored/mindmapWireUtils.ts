@@ -167,13 +167,15 @@ export function getWiresInRect(
 		if (svgLeft > bboxRight || svgRight < bboxLeft || svgTop > bboxBottom || svgBottom < bboxTop) {
 			return
 		}
-		const SAMPLES = 20
-		for (let i = 0; i <= SAMPLES; i++) {
-			const { x, y } = bezierPoint(cp, i / SAMPLES)
-			if (x >= svgLeft && x <= svgRight && y >= svgTop && y <= svgBottom) {
+		const SEGMENTS = 20
+		let segmentStart = bezierPoint(cp, 0)
+		for (let i = 1; i <= SEGMENTS; i++) {
+			const segmentEnd = bezierPoint(cp, i / SEGMENTS)
+			if (segmentIntersectsRect(segmentStart, segmentEnd, svgLeft, svgTop, svgRight, svgBottom)) {
 				result.push(wireId)
 				return
 			}
+			segmentStart = segmentEnd
 		}
 	})
 	return result
@@ -186,4 +188,42 @@ export function buildPathD(ep: WireEndpoints) {
 
 export function pathMidpoint(ep: WireEndpoints): { x: number; y: number } {
 	return midpointOf(toControlPoints(ep))
+}
+
+function segmentIntersectsRect(
+	start: { x: number; y: number },
+	end: { x: number; y: number },
+	left: number,
+	top: number,
+	right: number,
+	bottom: number,
+): boolean {
+	const dx = end.x - start.x
+	const dy = end.y - start.y
+	const boundaries = [
+		{ direction: -dx, distance: start.x - left },
+		{ direction: dx, distance: right - start.x },
+		{ direction: -dy, distance: start.y - top },
+		{ direction: dy, distance: bottom - start.y },
+	]
+	let enter = 0
+	let exit = 1
+	for (const { direction, distance } of boundaries) {
+		if (direction === 0) {
+			if (distance < 0) {
+				return false
+			}
+			continue
+		}
+		const crossing = distance / direction
+		if (direction < 0) {
+			enter = Math.max(enter, crossing)
+		} else {
+			exit = Math.min(exit, crossing)
+		}
+		if (enter > exit) {
+			return false
+		}
+	}
+	return true
 }
