@@ -60,6 +60,9 @@ export type EventParams = {
 		node: MindmapNode
 		parent: MindmapNodeParentParcel
 	}
+	'mindmap/node/requestEditPlainNode': {
+		nodeId: string
+	}
 	'mindmap/bulk/requestOpenContextMenu': {
 		position: Position
 	}

@@ -84,6 +84,10 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		if (parent.type === 'folder') {
 			return
 		}
+		if (parent.type === 'node' && parent.entity.content.length === 0) {
+			dispatchGlobalEvent['mindmap/node/requestEditPlainNode']({ nodeId: node.id })
+			return
+		}
 		navigate({
 			search: (prev) => ({
 				...prev,

@@ -1,11 +1,11 @@
 import Box from '@mui/material/Box'
-import Typography from '@mui/material/Typography'
 import { memo } from 'react'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 
 import { PlainMindmapNodeParcel } from '../../../types'
 import { NODE_W } from '../../../unrefactored/mindmapWireUtils'
+import { ActorNodeContentStickyNoteEditor } from './ActorNodeContentStickyNoteEditor'
 import { MindmapNodePort } from './MindmapNodePort'
 
 type Props = {
@@ -32,18 +32,7 @@ function ActorNodeContentStickyNoteComponent({ node, parent, onHeaderClick }: Pr
 				justifyContent: 'center',
 			}}
 		>
-			<Typography
-				sx={{
-					textAlign: 'center',
-					overflowWrap: 'anywhere',
-					display: '-webkit-box',
-					WebkitLineClamp: 8,
-					WebkitBoxOrient: 'vertical',
-					overflow: 'hidden',
-				}}
-			>
-				{parent.name || <i>empty</i>}
-			</Typography>
+			<ActorNodeContentStickyNoteEditor node={node} name={parent.name} />
 			<Box sx={{ position: 'absolute', top: 0, right: 0 }}>
 				<MindmapNodePort node={node} parent={parent} />
 			</Box>

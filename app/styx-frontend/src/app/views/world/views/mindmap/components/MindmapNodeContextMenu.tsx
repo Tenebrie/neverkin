@@ -1,4 +1,6 @@
 import Delete from '@mui/icons-material/Delete'
+import Edit from '@mui/icons-material/Edit'
+import OpenInFull from '@mui/icons-material/OpenInFull'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
@@ -7,8 +9,9 @@ import { useState } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
-import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
 import { mindmapSlice } from '../MindmapSlice'
@@ -20,6 +23,7 @@ export function MindmapNodeContextMenu() {
 	const [node, setNode] = useState<MindmapNode | null>(null)
 	const [parent, setParent] = useState<MindmapNodeParentParcel | null>(null)
 	const dispatch = useDispatch()
+	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
 	const { open: openBulkDeleteEntitiesModal } = useModal('bulkDeleteEntitiesModal')
 
@@ -37,6 +41,8 @@ export function MindmapNodeContextMenu() {
 	if (!node || !parent) {
 		return
 	}
+
+	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
 
 	return (
 		<Menu
@@ -56,6 +62,36 @@ export function MindmapNodeContextMenu() {
 			disableRestoreFocus
 			disableEnforceFocus
 		>
+			{parent.type !== 'folder' && (
+				<MenuItem
+					onClick={() => {
+						if (isStickyNote) {
+							dispatchGlobalEvent['mindmap/node/requestEditPlainNode']({ nodeId: node.id })
+						} else {
+							navigate({ search: (prev) => ({ ...prev, navi: [parent.id] }) })
+						}
+						setOpen(false)
+					}}
+				>
+					<ListItemIcon>
+						<Edit />
+					</ListItemIcon>
+					<ListItemText>Edit</ListItemText>
+				</MenuItem>
+			)}
+			{isStickyNote && (
+				<MenuItem
+					onClick={() => {
+						navigate({ search: (prev) => ({ ...prev, navi: [parent.id] }) })
+						setOpen(false)
+					}}
+				>
+					<ListItemIcon>
+						<OpenInFull />
+					</ListItemIcon>
+					<ListItemText>Edit as full entity</ListItemText>
+				</MenuItem>
+			)}
 			<MenuItem
 				color="error"
 				onClick={() => {
