@@ -193,8 +193,10 @@ export function useMindmapNavigation({ ref }: Props) {
 
 			const looksLikeTrackpad =
 				event.deltaMode === WheelEvent.DOM_DELTA_PIXEL &&
-				(event.deltaX !== 0 || !Number.isInteger(event.deltaY) || Math.abs(event.deltaY) < 40)
-			// Trackpad panning is left to the browser, which scrolls the canvas on the compositor
+				(event.deltaX !== 0 ||
+					Math.abs(event.deltaY - Math.round(event.deltaY)) > 0.01 ||
+					Math.abs(event.deltaY) < 40)
+
 			if (looksLikeTrackpad || event.timeStamp - navState.lastTrackpadPanAt < 300) {
 				navState.lastTrackpadPanAt = event.timeStamp
 				panBy(-event.deltaX, -event.deltaY)
@@ -203,7 +205,8 @@ export function useMindmapNavigation({ ref }: Props) {
 			}
 
 			event.preventDefault()
-			zoomAt(originX, originY, navState.gridScale * Math.exp(-event.deltaY / 50))
+			const pixelDeltaY = toPixelDelta(event.deltaY, event.deltaMode, workspaceRect.height)
+			zoomAt(originX, originY, navState.gridScale * Math.exp(-pixelDeltaY / 1000))
 		}
 
 		const getTouchMidpoint = (touches: TouchList) => {
@@ -346,4 +349,14 @@ export function useMindmapNavigation({ ref }: Props) {
 
 function clampScale(scale: number) {
 	return Math.min(Math.max(MIN_SCALE, scale), MAX_SCALE)
+}
+
+function toPixelDelta(delta: number, deltaMode: number, pageHeight: number) {
+	if (deltaMode === WheelEvent.DOM_DELTA_LINE) {
+		return delta * 20
+	}
+	if (deltaMode === WheelEvent.DOM_DELTA_PAGE) {
+		return delta * pageHeight
+	}
+	return delta
 }
