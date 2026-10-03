@@ -10,6 +10,7 @@ import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { MindmapNavigationState, MindmapState } from '../MindmapState'
 import { MindmapNodeParcel, MindmapWireParcel } from '../types'
+import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWireBuffer'
 
 export const MindmapContext = createRealtimeContext(() => {
 	const [painters] = useState(() => new Set<(navState: MindmapNavigationState) => void>())
@@ -47,10 +48,12 @@ export const MindmapContext = createRealtimeContext(() => {
 
 	const [nodes] = useState(() => new ReactiveMap<string, MindmapNodeParcel>())
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
+	const [wireBuffer] = useState(() => new MindmapWireBuffer())
 
 	return {
 		nodes,
 		wires,
+		wireBuffer,
 		onPaint,
 		paint,
 		moveNodes,

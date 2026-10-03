@@ -123,7 +123,7 @@ export function pickEdgePoints(
 	return { x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y, nx1: src.nx, ny1: src.ny, nx2: tgt.nx, ny2: tgt.ny }
 }
 
-/** A wire's look, drawn by `MindmapWireCanvas`. `vertices` caches its triangles until the wire changes. */
+/** A wire's look, drawn by `MindmapWireCanvas` */
 export type WirePaint = {
 	endpoints: WireEndpoints
 	hasSourceArrow: boolean
@@ -133,17 +133,11 @@ export type WirePaint = {
 	targetColor: string
 	glowOpacity: number
 	isActive: boolean
-	vertices: Float32Array | null
 }
 
 const wireRegistry = new Map<string, WireControlPoints>()
 
-export const wirePaints = new Map<string, WirePaint>()
-
 export const nodePositions = new Map<string, { x: number; y: number; height: number }>()
-
-let wirePainter: (() => void) | null = null
-let pendingWirePaint = 0
 
 export function registerWire(id: string, ep: WireEndpoints): void {
 	wireRegistry.set(id, toControlPoints(ep))
@@ -156,29 +150,6 @@ export function getWireMidpoint(id: string): { x: number; y: number } | null {
 
 export function unregisterWire(id: string): void {
 	wireRegistry.delete(id)
-	wirePaints.delete(id)
-	requestWirePaint()
-}
-
-export function publishWirePaint(id: string, paint: WirePaint): void {
-	paint.vertices = null
-	wirePaints.set(id, paint)
-	requestWirePaint()
-}
-
-export function setWirePainter(painter: (() => void) | null): void {
-	wirePainter = painter
-}
-
-/** Coalesces every wire change and camera move within a frame into a single repaint */
-export function requestWirePaint(): void {
-	if (pendingWirePaint) {
-		return
-	}
-	pendingWirePaint = requestAnimationFrame(() => {
-		pendingWirePaint = 0
-		wirePainter?.()
-	})
 }
 
 export function getWiresInRect(

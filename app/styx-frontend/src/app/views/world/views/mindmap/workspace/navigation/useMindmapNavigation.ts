@@ -10,7 +10,6 @@ import { useMindmapContext } from '../../context/useMindmapContext'
 import { useMindmapEdgeScroll } from '../../hooks/useMindmapEdgeScroll'
 import { makeMindmapNavigationState } from '../../MindmapState'
 import { MindmapState } from '../../MindmapState'
-import { requestWirePaint } from '../../unrefactored/mindmapWireUtils'
 import { useMindmapCameraPersistence } from './useMindmapCameraPersistence'
 
 export const MIN_SCALE = 0.125 / 6
@@ -41,7 +40,7 @@ export function useMindmapNavigation({ ref }: Props) {
 	const worldId = useCurrentWorldId()
 	const [state, setState] = useMindmapCameraPersistence()
 
-	const { paint, workspaceRect } = useMindmapContext()
+	const { paint, workspaceRect, wireBuffer } = useMindmapContext()
 
 	useLayoutEffect(() => {
 		const element = ref.current
@@ -74,7 +73,7 @@ export function useMindmapNavigation({ ref }: Props) {
 			MindmapState.scale = navState.gridScale
 			MindmapState.cameraX = navState.targetScrollLeft
 			MindmapState.cameraY = navState.targetScrollTop
-			requestWirePaint()
+			wireBuffer.requestPaint()
 			saveCurrentState()
 
 			paint(navState)
@@ -341,6 +340,7 @@ export function useMindmapNavigation({ ref }: Props) {
 		release,
 		paint,
 		workspaceRect,
+		wireBuffer,
 	])
 }
 

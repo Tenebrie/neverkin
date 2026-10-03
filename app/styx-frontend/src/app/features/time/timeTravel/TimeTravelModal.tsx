@@ -112,11 +112,15 @@ export const TimeTravelModal = () => {
 	])
 
 	useEffect(() => {
+		if (!isOpen) {
+			return
+		}
 		const interval = window.setInterval(() => {
-			if (selectorRef.current && isOpen) {
-				selectorRef.current.select()
-				window.clearInterval(interval)
+			if (!selectorRef.current) {
+				return
 			}
+			selectorRef.current.select()
+			window.clearInterval(interval)
 		}, 10)
 		return () => {
 			window.clearInterval(interval)

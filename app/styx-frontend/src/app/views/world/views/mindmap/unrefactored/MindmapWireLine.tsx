@@ -10,7 +10,7 @@ import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 
-import { useMindmapWire } from '../context/useMindmapContext'
+import { useMindmapContext, useMindmapWire } from '../context/useMindmapContext'
 import { mindmapSlice } from '../MindmapSlice'
 import { MindmapNodeParentParcel, MindmapWireParcel } from '../types'
 import { MindmapWireLabel } from '../workspace/content/wires/label/MindmapWireLabel'
@@ -20,7 +20,6 @@ import {
 	nodePositions,
 	pathMidpoint,
 	pickEdgePoints,
-	publishWirePaint,
 	registerWire,
 	unregisterWire,
 	WireEndpoints,
@@ -75,6 +74,7 @@ function MindmapWireLineComponent({
 	onOpenPopover,
 }: WireProps) {
 	const { wire } = boxedWire
+	const { wireBuffer } = useMindmapContext()
 	const containerRef = useRef<HTMLDivElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
 
@@ -99,7 +99,7 @@ function MindmapWireLineComponent({
 		paint.endpoints = ep
 		paint.hasSourceArrow = showSourceArrow
 		paint.hasTargetArrow = showTargetArrow
-		publishWirePaint(wire.id, paint)
+		wireBuffer.publish(wire.id, paint)
 	}
 
 	/**
@@ -148,7 +148,6 @@ function MindmapWireLineComponent({
 		targetColor: 'transparent',
 		glowOpacity: 0.12,
 		isActive: false,
-		vertices: null,
 	})
 
 	const isHoveredRef = useRef(false)
@@ -160,7 +159,13 @@ function MindmapWireLineComponent({
 		updateDom(resolveEndpoints())
 		applyHighlightState()
 	})
-	useEffect(() => () => unregisterWire(wire.id), [wire.id])
+	useEffect(
+		() => () => {
+			unregisterWire(wire.id)
+			wireBuffer.remove(wire.id)
+		},
+		[wire.id, wireBuffer],
+	)
 
 	const { addWireToSelection, removeWireFromSelection } = mindmapSlice.actions
 	const { addWireToHover, removeWireFromHover } = mindmapSlice.actions
@@ -196,8 +201,8 @@ function MindmapWireLineComponent({
 		const paint = paintRef.current
 		paint.glowOpacity = isSel ? 0.7 : isHov || isAct ? 0.4 : 0.12
 		paint.isActive = isAct
-		publishWirePaint(wire.id, paint)
-	}, [wire.id])
+		wireBuffer.publish(wire.id, paint)
+	}, [wire.id, wireBuffer])
 
 	useEventBusSubscribe['mindmap/selection/changed']({
 		callback: ({ selectedWireIds }) => {
@@ -213,7 +218,7 @@ function MindmapWireLineComponent({
 		paint.sourceColor = sourceColor
 		paint.midColor = `color-mix(in oklch shorter hue, ${sourceColor}, ${targetColor})`
 		paint.targetColor = targetColor
-		publishWirePaint(wire.id, paint)
+		wireBuffer.publish(wire.id, paint)
 		containerRef.current?.style.setProperty('opacity', String(highlightState === 'dim' ? 0.35 : 1))
 	}
 

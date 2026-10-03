@@ -66,25 +66,6 @@ export function midpointOf(cp: WireControlPoints): { x: number; y: number } {
 }
 
 /**
- * The two outer ends of an arrowhead's barbs. Each barb is drawn as a line from its end to the tip.
- * The barbs reach `size` back from the tip and spread 0.4 × `size` to either side.
- *
- * @param x Tip of the arrow.
- * @param y Tip of the arrow.
- * @param nx The direction the arrow points in, as a unit vector (the way the wire travels at the tip).
- * @param ny The direction the arrow points in, as a unit vector (the way the wire travels at the tip).
- * @param size Length of the arrowhead, in grid units.
- */
-export function arrowBarbs(x: number, y: number, nx: number, ny: number, size: number) {
-	const px = -ny
-	const py = nx
-	return [
-		{ x: x - nx * size + px * size * 0.4, y: y - ny * size + py * size * 0.4 },
-		{ x: x - nx * size - px * size * 0.4, y: y - ny * size - py * size * 0.4 },
-	]
-}
-
-/**
  * How far each control point reaches out from its node: 40% of the straight-line distance between the
  * wire's ends, capped at 400. Two facing handles then never overlap, so short wires flatten into a line.
  */

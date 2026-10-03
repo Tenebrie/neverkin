@@ -1,4 +1,4 @@
-import { useCallback } from 'react'
+import { useCallback, useMemo } from 'react'
 import { useStore } from 'react-redux'
 
 import { mindmapApi } from '@/api/mindmapApi'
@@ -12,10 +12,12 @@ export function useNodeLinking() {
 	const store = useStore<MindmapApiState>()
 	const { createWires, deleteWires } = useMindmapContext()
 
+	const selectMindmapState = useMemo(() => mindmapApi.endpoints.getMindmap.select({ worldId }), [worldId])
+
 	const getWires = useCallback(() => {
 		const state = store.getState()
-		return mindmapApi.endpoints.getMindmap.select({ worldId })(state).data?.wires
-	}, [store, worldId])
+		return selectMindmapState(state).data?.wires
+	}, [store, selectMindmapState])
 
 	const createLinks = useCallback(
 		(newPairs: { sourceNodeId: string; targetNodeId: string }[]) => {
@@ -52,25 +54,8 @@ export function useNodeLinking() {
 		[createWires, deleteWires, getWires],
 	)
 
-	const checkLinkExists = useCallback(
-		(sourceNodeId: string, targetNodeId: string) => {
-			const wires = getWires()
-			if (!wires) {
-				return false
-			}
-
-			return wires.some(
-				(link) =>
-					(link.sourceNodeId === sourceNodeId && link.targetNodeId === targetNodeId) ||
-					(link.sourceNodeId === targetNodeId && link.targetNodeId === sourceNodeId),
-			)
-		},
-		[getWires],
-	)
-
 	return {
 		createLinks,
-		checkLinkExists,
 	}
 }
 

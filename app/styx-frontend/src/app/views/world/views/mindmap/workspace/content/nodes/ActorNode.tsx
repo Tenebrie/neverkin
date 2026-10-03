@@ -23,7 +23,7 @@ type Props = {
 }
 
 export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
-	const { createLinks, checkLinkExists } = useNodeLinking()
+	const { createLinks } = useNodeLinking()
 	const store = useStore<RootState>()
 
 	const theme = useCustomTheme()
@@ -64,21 +64,11 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 	)
 
 	useEventBusSubscribe['mindmap/hover/changed']({
-		callback: ({ hoveredNodeIds }) => {
+		callback: ({ hoveredNodeIds, highlightedWireIds }) => {
 			if (!ref.current) {
 				return
 			}
-			if (hoveredNodeIds.size === 0 || hoveredNodeIds.has(node.id)) {
-				setDimmed(false)
-				return
-			}
-
-			const anyHovered = [...hoveredNodeIds].some((nodeId) => checkLinkExists(node.id, nodeId))
-			if (anyHovered) {
-				setDimmed(false)
-			} else {
-				setDimmed(true)
-			}
+			setDimmed(hoveredNodeIds.size > 0 && !hoveredNodeIds.has(node.id) && !highlightedWireIds.has(node.id))
 		},
 	})
 
@@ -97,8 +87,8 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 			ref={ref}
 			sx={{
 				background: theme.custom.palette.background.timeline,
-
 				// Non-scaling border
+				transition: 'opacity 0.25s',
 				borderRadius: '15px',
 				boxShadow: 'inset 0 0 0 var(--node-border-width) var(--node-border-color)',
 				'--node-border-width': 'calc(1px / var(--grid-scale))',

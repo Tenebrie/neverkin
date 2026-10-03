@@ -73,6 +73,7 @@ export type EventParams = {
 	'mindmap/hover/changed': {
 		hoveredNodeIds: Set<string>
 		hoveredWireIds: Set<string>
+		highlightedWireIds: Set<string>
 	}
 	'mindmap/dropTarget/changed': {
 		target: HTMLElement | null

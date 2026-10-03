@@ -1,6 +1,6 @@
 # Neverkin — AI Context & Architecture Guide
 
-**Last Updated**: August 18, 2026
+**Last Updated**: October 03, 2026
 **Project**: Collaborative worldbuilding and timeline management app for writers, GMs and worldbuilders.
 Hobby project, single developer, no revenue and no dev team. Scope advice accordingly.
 
@@ -16,8 +16,7 @@ Hobby project, single developer, no revenue and no dev team. Scope advice accord
 8. **Failure is an option.** Admit a path isn't working rather than pushing further down it.
 9. **Target modern browsers.** Use `@property`, container queries, CSS nesting, `:has()` freely. No legacy fallbacks.
 10. **Avoid dangerous operations.** When utilizing features like worktrees, avoid creating dangerous situations or polluting the original repo state or user's drive. The original code must never be in danger when the worktree is removed.
-11. **You hate adding code.** When you want to add more code, think again if there are better ways. Prefer existing solutions or components when available. Search for ways to trim duplication and complexity.
-12. **Every session is interactive.** The user is always reachable. Never treat a session as non-interactive, and never work around a rule that says "ask first" — ask, then wait.
+11. **Every session is interactive.** The user is always reachable. Never treat a session as non-interactive, and never work around a rule that says "ask first" — ask, then wait.
 
 ## Architecture
 
@@ -90,10 +89,19 @@ Each component gets its own file, named after its parent (`QuickSelectListWelcom
 - **Moonflower caches parsed sources by mtime.** Change a Prisma model without touching the router/service that returns it and the regenerated client keeps the *old* response shape while request bodies update. `npm run migrate` handles this; if you regenerate by hand, `touch` the service file.
 - **Access control:** check world ownership/collaborator permissions on every mutation.
 - **Realtime:** entity mutations must notify via `RedisService` so other clients update.
-- **Mindmap rendering** is performance-sensitive at scale: no `will-change`, no fractional opacity or masks on large elements, wires are clipped rather than masked.
-- **Cross-package changes are normal.** A Prisma change propagating to styx and orpheus is the design, not a problem to route around.
+- **Realtime canvases (timeline, mindmap) bypass React for updates.** React renders the
+  initial structure and layout; after that, components mount once and do not re-render.
+  Live changes (drag, scroll, pan, zoom, selection, hover) flow through non-React
+  channels: global events on the event bus (`timeline/*`, `mindmap/*`), realtime
+  contexts holding stable mutable objects (`createRealtimeContext`, `ReactiveMap`,
+  painter registries), refs, and direct DOM writes such as CSS custom properties. Never
+  route per-frame or per-interaction state through React state, props, Redux selectors
+  or memo deps — a change that makes canvas items re-render is a regression even if it
+  looks correct. Beware style recalculations: write to the narrowest element and
+  property that does the job.
+- **Cross-package changes are normal.** A Prisma change propagating to Styx and Orpheus is the design, not a problem to route around.
 - **Don't start Docker, run migrations, or regenerate OpenAPI unprompted** — ask first.
-- **Playwright runs get 429'd if hammered** (macOS bug). Read `test/e2e/test-report/artifacts/<test>/error-context.md` and the failure screenshot instead of re-running; artifacts are overwritten each run.
+- **MacOS only: Playwright runs get 429'd if hammered**. Read `test/e2e/test-report/artifacts/<test>/error-context.md` and the failure screenshot instead of re-running; artifacts are overwritten each run.
 
 ## Non-Starters
 

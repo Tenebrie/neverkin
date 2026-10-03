@@ -11,6 +11,7 @@ import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventB
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
+import { usePointerCapture } from '@/app/hooks/usePointerCapture'
 import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -235,6 +236,8 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 		setHovered(false, 0)
 	})
 
+	const { capture: capturePointer, release: releasePointer } = usePointerCapture()
+
 	useEffect(() => {
 		const element = ref.current
 		if (!element) {
@@ -272,11 +275,11 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			mouseState.positionY = positionRef.current.y
 			mouseState.isButtonDown = true
 			mouseState.gridScale = MindmapState.scale
-			window.addEventListener('mousemove', handleMouseMove)
-			window.addEventListener('mouseup', handleMouseUp)
+			window.addEventListener('pointermove', handleMouseMove)
+			window.addEventListener('pointerup', handleMouseUp)
 		}
 
-		const handleMouseClick = (event: MouseEvent) => {
+		const handleMouseClick = (event: PointerEvent) => {
 			if (!mouseState.canClick) {
 				event.stopPropagation()
 				event.preventDefault()
@@ -291,7 +294,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			}
 		}
 
-		const handleMouseMove = (event: MouseEvent) => {
+		const handleMouseMove = (event: PointerEvent) => {
 			mouseState.deltaX += event.movementX
 			mouseState.deltaY += event.movementY
 
@@ -299,7 +302,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 				mouseState.isDragging = true
 				mouseState.canClick = false
 				setDragHover(true)
-				window.document.body.classList.add('cursor-grabbing', 'mouse-busy')
+				capturePointer('grabbing', event.pointerId)
 				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
 					sourceNodeId: node.id,
 				})
@@ -331,7 +334,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			}
 		}
 
-		const handleMouseUp = (event: MouseEvent) => {
+		const handleMouseUp = (event: PointerEvent) => {
 			if (event.button !== 0 || !mouseState.isButtonDown) {
 				return
 			}
@@ -339,8 +342,8 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			mouseState.isButtonDown = false
 			mouseState.deltaX = 0
 			mouseState.deltaY = 0
-			window.removeEventListener('mousemove', handleMouseMove)
-			window.removeEventListener('mouseup', handleMouseUp)
+			window.removeEventListener('pointermove', handleMouseMove)
+			window.removeEventListener('pointerup', handleMouseUp)
 
 			if (!mouseState.isDragging) {
 				return
@@ -381,21 +384,33 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			})
 
 			setDragHover(false)
-			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
+			releasePointer()
 		}
 
-		element.addEventListener('mousedown', handleMouseDown)
+		element.addEventListener('pointerdown', handleMouseDown)
 		element.addEventListener('click', handleMouseClick)
 		element.addEventListener('wheel', handleMouseWheel)
 
 		return () => {
-			element.removeEventListener('mousedown', handleMouseDown)
+			element.removeEventListener('pointerdown', handleMouseDown)
 			element.removeEventListener('click', handleMouseClick)
 			element.removeEventListener('wheel', handleMouseWheel)
-			window.removeEventListener('mousemove', handleMouseMove)
-			window.removeEventListener('mouseup', handleMouseUp)
+			window.removeEventListener('pointermove', handleMouseMove)
+			window.removeEventListener('pointerup', handleMouseUp)
 		}
-	}, [positionRef, node.id, nodeRef, store, dispatch, clearSelections, selectedRef, setDragHover, moveNodes])
+	}, [
+		positionRef,
+		node.id,
+		nodeRef,
+		store,
+		dispatch,
+		clearSelections,
+		selectedRef,
+		setDragHover,
+		moveNodes,
+		capturePointer,
+		releasePointer,
+	])
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
