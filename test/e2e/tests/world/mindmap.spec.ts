@@ -254,8 +254,10 @@ test.describe('World Mindmap', () => {
 		// --- Re-select all nodes (previous selection may have been cleared) ---
 		await page.mouse.move(selStartX, selStartY, { steps: 5 })
 		await page.mouse.down()
-		await page.mouse.move(selEndX, selEndY + 80, { steps: 30 })
+		await page.mouse.move(selEndX, selEndY, { steps: 30 })
 		await page.mouse.up()
+		await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))))
+		await expect(page.locator('[data-mindmap-node][data-selected="true"]')).toHaveCount(4)
 
 		// --- Create wires by dragging from a selected node's port to a target node ---
 		// Pick the last node (Delta) as the target. The other 3 selected nodes should each get a wire to it.

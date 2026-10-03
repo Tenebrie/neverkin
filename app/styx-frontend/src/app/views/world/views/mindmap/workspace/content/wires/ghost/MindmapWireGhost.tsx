@@ -4,7 +4,7 @@ import { useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
-import { useRealtimeContext } from '@/app/components/RealtimeContext'
+import { useRealtimeContext } from '@/app/components/RealtimeContext/useRealtimeContext'
 import { useDragDropEnded } from '@/app/features/dragDrop/hooks/useDragDropEnded'
 import { useDragDropStarted } from '@/app/features/dragDrop/hooks/useDragDropStarted'
 import { useDragDropState } from '@/app/features/dragDrop/hooks/useDragDropState'

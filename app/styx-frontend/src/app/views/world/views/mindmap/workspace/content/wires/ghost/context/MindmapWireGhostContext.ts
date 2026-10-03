@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { createRealtimeContext } from '@/app/components/RealtimeContext'
+import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { MindmapNodeLayout } from '@/app/views/world/views/mindmap/types'
 
 export type MindmapWireGhostFrame = {

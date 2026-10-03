@@ -1,4 +1,4 @@
-import { Context, createContext, ReactNode, use, useInsertionEffect, useRef, useState } from 'react'
+import { createContext, ReactNode, useInsertionEffect, useRef, useState } from 'react'
 
 export function createRealtimeContext<T extends object>(useValue: () => T) {
 	const LiveContext = createContext<T | null>(null)
@@ -15,12 +15,4 @@ export function createRealtimeContext<T extends object>(useValue: () => T) {
 	Provider.context = LiveContext
 
 	return Provider
-}
-
-export function useRealtimeContext<T extends object>(realtimeContext: { context: Context<T | null> }): T {
-	const value = use(realtimeContext.context)
-	if (!value) {
-		throw new Error('useRealtimeContext called outside its provider')
-	}
-	return value
 }

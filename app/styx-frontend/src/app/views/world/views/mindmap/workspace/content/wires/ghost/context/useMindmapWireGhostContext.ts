@@ -1,7 +1,7 @@
 import { useLayoutEffect } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { useRealtimeContext } from '@/app/components/RealtimeContext'
+import { useRealtimeContext } from '@/app/components/RealtimeContext/useRealtimeContext'
 
 import { MindmapWireGhostContext, MindmapWireGhostFrame } from './MindmapWireGhostContext'
 

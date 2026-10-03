@@ -1,7 +1,7 @@
 import { useInsertionEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { createRealtimeContext } from '@/app/components/RealtimeContext'
+import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 

@@ -1,4 +1,4 @@
-import { useRealtimeContext } from '@/app/components/RealtimeContext'
+import { useRealtimeContext } from '@/app/components/RealtimeContext/useRealtimeContext'
 import { useReactiveMapKeys, useReactiveMapValue } from '@/app/features/reactivity/useReactiveMap'
 
 import { MindmapContext } from './MindmapContext'
