@@ -14,7 +14,7 @@ import { ResizeableDrawerProvider } from './ResizeableDrawerContext'
 import { ResizeableDrawerPulldown } from './ResizeableDrawerPulldown'
 
 type Props = {
-	children: ReactNode | ReactNode[]
+	children: ReactNode
 	pulldownWidth: number
 	pulldownLabel: ReactNode
 	minHeight: number

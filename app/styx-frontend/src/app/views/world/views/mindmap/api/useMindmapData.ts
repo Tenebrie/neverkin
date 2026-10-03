@@ -1,17 +1,16 @@
-import { useSelector } from 'react-redux'
-
 import { GetMindmapApiResponse, useGetMindmapQuery } from '@/api/mindmapApi'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-import { getWorldState } from '../../../WorldSliceSelectors'
+const emptyData = {
+	nodes: [],
+	wires: [],
+} as GetMindmapApiResponse
 
 export function useMindmapData() {
-	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id)
-	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+	const worldId = useCurrentWorldId()
+	const { data } = useGetMindmapQuery({ worldId })
 	if (!data) {
-		return {
-			nodes: [],
-			wires: [],
-		} as GetMindmapApiResponse
+		return emptyData
 	}
 
 	return data

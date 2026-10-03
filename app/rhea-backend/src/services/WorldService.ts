@@ -3,6 +3,7 @@ import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 
 import { CalendarService } from './CalendarService.js'
 import { CalendarTemplateId, CalendarTemplateService } from './CalendarTemplateService.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 
 export const WorldService = {
 	findWorldByIdInternal: async (worldId: string) => {
@@ -91,6 +92,7 @@ export const WorldService = {
 			where: {
 				owner: params.owner,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 
@@ -110,11 +112,14 @@ export const WorldService = {
 			},
 			include: {
 				collaborators: true,
-				calendars: true,
+				calendars: {
+					orderBy: CommonOrderBy,
+				},
 				userPins: {
 					where: { userId: params.owner.id },
 				},
 			},
+			orderBy: CommonOrderBy,
 		})
 
 		const ownedWorlds = worlds.filter((world) => world.ownerId === params.owner.id)
@@ -147,6 +152,7 @@ export const WorldService = {
 								id: true,
 								name: true,
 							},
+							orderBy: CommonOrderBy,
 						},
 						mentions: {
 							distinct: ['targetId'],
@@ -154,6 +160,7 @@ export const WorldService = {
 								targetId: true,
 								targetType: true,
 							},
+							orderBy: { targetId: 'asc' },
 						},
 						mentionedIn: {
 							distinct: ['sourceId'],
@@ -161,19 +168,20 @@ export const WorldService = {
 								sourceId: true,
 								sourceType: true,
 							},
+							orderBy: { sourceId: 'asc' },
 						},
 					},
+					orderBy: CommonOrderBy,
 				},
 				events: {
-					orderBy: {
-						timestamp: 'asc',
-					},
+					orderBy: [{ timestamp: 'asc' }, ...CommonOrderBy],
 					include: {
 						pages: {
 							select: {
 								id: true,
 								name: true,
 							},
+							orderBy: CommonOrderBy,
 						},
 						mentions: {
 							distinct: ['targetId'],
@@ -181,6 +189,7 @@ export const WorldService = {
 								targetId: true,
 								targetType: true,
 							},
+							orderBy: { targetId: 'asc' },
 						},
 						mentionedIn: {
 							distinct: ['sourceId'],
@@ -188,11 +197,10 @@ export const WorldService = {
 								sourceId: true,
 								sourceType: true,
 							},
+							orderBy: { sourceId: 'asc' },
 						},
 						deltaStates: {
-							orderBy: {
-								timestamp: 'asc',
-							},
+							orderBy: [{ timestamp: 'asc' }, ...CommonOrderBy],
 						},
 					},
 				},
@@ -262,10 +270,14 @@ export const WorldService = {
 								calendarId: true,
 							},
 							include: {
-								intervals: true,
+								intervals: {
+									orderBy: CommonOrderBy,
+								},
 							},
+							orderBy: CommonOrderBy,
 						},
 					},
+					orderBy: CommonOrderBy,
 				},
 				tags: {
 					include: {
@@ -275,6 +287,7 @@ export const WorldService = {
 								targetId: true,
 								targetType: true,
 							},
+							orderBy: { targetId: 'asc' },
 						},
 						mentionedIn: {
 							distinct: ['sourceId'],
@@ -282,8 +295,10 @@ export const WorldService = {
 								sourceId: true,
 								sourceType: true,
 							},
+							orderBy: { sourceId: 'asc' },
 						},
 					},
+					orderBy: CommonOrderBy,
 				},
 			},
 		})

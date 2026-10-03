@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { v4 as getRandomId } from 'uuid'
 
 import { CreateNodeApiArg, mindmapApi, useCreateNodeMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-export const useCreateMindmapNode = () => {
-	const worldId = useSelector(getWorldIdState)
+export function useCreateMindmapNode() {
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [createMindmapNode, state] = useCreateNodeMutation()
 

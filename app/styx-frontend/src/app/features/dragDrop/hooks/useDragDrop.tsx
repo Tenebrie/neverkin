@@ -1,4 +1,5 @@
 import { ReactNode, useCallback, useEffect, useRef, useState } from 'react'
+import useEvent from 'react-use-event-hook'
 
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
@@ -73,21 +74,19 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		)
 	}, [])
 
-	const onMouseDown = useCallback(
-		(event: MouseEvent) => {
-			if (!containerRef.current || !matchesDragTrigger(event, trigger)) {
-				return
-			}
-			isPreparingToDrag.current = true
-			const boundingRect = containerRef.current.getBoundingClientRect()
-			rootPos.current = {
-				x: boundingRect.left,
-				y: boundingRect.top,
-			}
-			dragFromPos.current = { x: event.clientX, y: event.clientY }
-		},
-		[trigger],
-	)
+	const onMouseDown = useEvent((event: MouseEvent) => {
+		if (!containerRef.current || !matchesDragTrigger(event, trigger)) {
+			return
+		}
+		isPreparingToDrag.current = true
+		const boundingRect = containerRef.current.getBoundingClientRect()
+		rootPos.current = {
+			x: boundingRect.left,
+			y: boundingRect.top,
+		}
+		dragFromPos.current = { x: event.clientX, y: event.clientY }
+		attachWindowEvents()
+	})
 
 	const startDragging = useCallback(
 		(event: MouseEvent) => {
@@ -120,38 +119,36 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		},
 	})
 
-	const onMouseMove = useCallback(
-		(event: MouseEvent) => {
-			lastMouseEventRef.current = event
-			if (
-				isPreparingToDrag.current &&
-				(Math.abs(event.clientX - dragFromPos.current.x) > 3 ||
-					Math.abs(event.clientY - dragFromPos.current.y) > 3)
-			) {
-				isPreparingToDrag.current = false
-				startDragging(event)
-			}
-			if (!isDraggingNow.current) {
-				return
-			}
+	const onMouseMove = useEvent((event: MouseEvent) => {
+		lastMouseEventRef.current = event
+		if (
+			isPreparingToDrag.current &&
+			(Math.abs(event.clientX - dragFromPos.current.x) > 3 ||
+				Math.abs(event.clientY - dragFromPos.current.y) > 3)
+		) {
+			isPreparingToDrag.current = false
+			startDragging(event)
+		}
+		if (!isDraggingNow.current) {
+			return
+		}
 
-			const basePos = { x: event.clientX, y: event.clientY }
-			const pos = adjustPositionRef.current ? adjustPositionRef.current(basePos, rootPos.current) : basePos
-			setStateQuietly({
-				...getState()!,
-				targetPos: pos,
-			})
+		const basePos = { x: event.clientX, y: event.clientY }
+		const pos = adjustPositionRef.current ? adjustPositionRef.current(basePos, rootPos.current) : basePos
+		setStateQuietly({
+			...getState()!,
+			targetPos: pos,
+		})
 
-			if (ghostWrapperRef.current) {
-				const alignLeft = ghostAlignRef.current?.left ?? 'start'
-				const alignTop = ghostAlignRef.current?.top ?? 'start'
-				ghostWrapperRef.current.style.transform = `translate(${Math.round(pos.x)}px, ${Math.round(pos.y)}px) translate(${getTransformAlign(alignLeft)}, ${getTransformAlign(alignTop)})`
-			}
-		},
-		[getState, setStateQuietly, startDragging],
-	)
+		if (ghostWrapperRef.current) {
+			const alignLeft = ghostAlignRef.current?.left ?? 'start'
+			const alignTop = ghostAlignRef.current?.top ?? 'start'
+			ghostWrapperRef.current.style.transform = `translate(${Math.round(pos.x)}px, ${Math.round(pos.y)}px) translate(${getTransformAlign(alignLeft)}, ${getTransformAlign(alignTop)})`
+		}
+	})
 
-	const onMouseUp = useCallback(() => {
+	const onMouseUp = useEvent(() => {
+		detachWindowEvents()
 		isPreparingToDrag.current = false
 		if (!isDraggingNow.current) {
 			return
@@ -162,18 +159,29 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		setTimeout(() => {
 			window.document.body.classList.remove('cursor-grabbing', 'mouse-busy')
 		}, 1)
-	}, [clearState])
+	})
 
-	const onRightClick = useCallback(
-		(event: MouseEvent) => {
-			if (!isDraggingNow.current) {
-				return
-			}
-			onMouseUp()
-			event.preventDefault()
-		},
-		[onMouseUp],
-	)
+	const onRightClick = useEvent((event: MouseEvent) => {
+		if (!isDraggingNow.current) {
+			return
+		}
+		onMouseUp()
+		event.preventDefault()
+	})
+
+	const attachWindowEvents = useEvent(() => {
+		window.addEventListener('contextmenu', onRightClick)
+		window.addEventListener('mouseup', onMouseUp)
+		window.addEventListener('mousemove', onMouseMove)
+		window.addEventListener('blur', onMouseUp)
+	})
+
+	const detachWindowEvents = useEvent(() => {
+		window.removeEventListener('contextmenu', onRightClick)
+		window.removeEventListener('mouseup', onMouseUp)
+		window.removeEventListener('mousemove', onMouseMove)
+		window.removeEventListener('blur', onMouseUp)
+	})
 
 	useShortcut(
 		Shortcut.Escape,
@@ -200,22 +208,7 @@ export const useDragDrop = <T extends AllowedDraggableType>({
 		return attachEvents()
 	}, [attachEvents])
 
-	useEffect(() => {
-		if (disabled) {
-			return
-		}
-		window.addEventListener('contextmenu', onRightClick)
-		window.addEventListener('mouseup', onMouseUp)
-		window.addEventListener('mousemove', onMouseMove)
-		window.addEventListener('blur', onMouseUp)
-
-		return () => {
-			window.removeEventListener('contextmenu', onRightClick)
-			window.removeEventListener('mouseup', onMouseUp)
-			window.removeEventListener('mousemove', onMouseMove)
-			window.removeEventListener('blur', onMouseUp)
-		}
-	}, [onMouseMove, onMouseUp, onRightClick, disabled])
+	useEffect(() => detachWindowEvents, [detachWindowEvents])
 
 	return {
 		ref: containerRef,

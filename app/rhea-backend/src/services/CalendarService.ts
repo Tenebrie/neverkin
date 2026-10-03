@@ -11,6 +11,7 @@ import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortCalendarUnitsQuery } from './dbQueries/makeSortCalendarUnitsQuery.js'
 import { makeTouchCalendarQuery } from './dbQueries/makeTouchCalendarQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 
 export const CalendarService = {
 	listUserCalendars: async ({ ownerId }: { ownerId: string }) => {
@@ -19,6 +20,7 @@ export const CalendarService = {
 				ownerId,
 				worldId: null,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 
@@ -28,6 +30,7 @@ export const CalendarService = {
 				ownerId: null,
 				worldId,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 

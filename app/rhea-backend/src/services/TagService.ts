@@ -4,6 +4,7 @@ import { TagUncheckedCreateInput, TagUncheckedUpdateInput } from '../../prisma/c
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 import { BulkActionService } from './WorldBulkActionService.js'
 
 export type MentionedByEntry = {
@@ -107,9 +108,10 @@ export const TagService = {
 		return getPrismaClient().tag.findMany({
 			where: { worldId },
 			include: {
-				mentions: { distinct: ['targetId'] },
-				mentionedIn: { distinct: ['sourceId'] },
+				mentions: { distinct: ['targetId'], orderBy: { targetId: 'asc' } },
+				mentionedIn: { distinct: ['sourceId'], orderBy: { sourceId: 'asc' } },
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 

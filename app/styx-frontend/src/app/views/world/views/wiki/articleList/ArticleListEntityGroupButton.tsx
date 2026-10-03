@@ -81,7 +81,7 @@ function ArticleListEntityGroupButtonComponent() {
 										color: 'secondary.contrastText',
 									}}
 								>
-									{counts[type] < 100 ? counts[type] : '...'}
+									{counts[type]}
 								</Box>
 							</Stack>
 						}

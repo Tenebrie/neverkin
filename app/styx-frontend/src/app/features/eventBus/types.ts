@@ -3,7 +3,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
-import { BoxedMindmapParent } from '@/app/views/world/views/mindmap/hooks/useBoxedMindmapContent'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
@@ -39,12 +39,6 @@ export type EventParams = {
 			followerSpacing: number
 		} | null
 	}
-	'mindmap/actorEditor/requestOpen': { extraHeight?: number }
-	'mindmap/node/onMove': {
-		nodeId: string
-		positionX: number
-		positionY: number
-	}
 	'mindmap/node/onGroupDragStart': {
 		sourceNodeId: string
 	}
@@ -59,7 +53,10 @@ export type EventParams = {
 	'mindmap/node/requestOpenContextMenu': {
 		position: Position
 		node: MindmapNode
-		parent: BoxedMindmapParent
+		parent: MindmapNodeParentParcel
+	}
+	'mindmap/node/requestEditPlainNode': {
+		nodeId: string
 	}
 	'mindmap/bulk/requestOpenContextMenu': {
 		position: Position
@@ -74,9 +71,16 @@ export type EventParams = {
 	'mindmap/hover/changed': {
 		hoveredNodeIds: Set<string>
 		hoveredWireIds: Set<string>
+		highlightedWireIds: Set<string>
 	}
 	'mindmap/dropTarget/changed': {
 		target: HTMLElement | null
+	}
+	'mindmap/scale/changed': {
+		scale: number
+	}
+	'mindmap/scale/commit': {
+		scale: number
 	}
 	'mindmap/camera/requestLookAt': { x: number; y: number; scale?: number }
 	'world/requestNavigation': NavigateOptions

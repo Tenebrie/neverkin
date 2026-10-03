@@ -7,13 +7,13 @@ import { useState } from 'react'
 
 import { SavedColors } from '@/app/components/ColorPicker/SavedColors'
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { useUpdateActor } from '@/app/views/world/api/useUpdateActor'
+import { useUpdateArticle } from '@/app/views/world/api/useUpdateArticle'
+import { useUpdateEvent } from '@/app/views/world/api/useUpdateEvent'
+import { useUpdateFolder } from '@/app/views/world/api/useUpdateFolder'
+import { useUpdateTag } from '@/app/views/world/api/useUpdateTag'
 import { Header } from '@/ui-lib/components/Header/Header'
 
-import { useUpdateActor } from '../../../api/useUpdateActor'
-import { useUpdateArticle } from '../../../api/useUpdateArticle'
-import { useUpdateEvent } from '../../../api/useUpdateEvent'
-import { useUpdateFolder } from '../../../api/useUpdateFolder'
-import { useUpdateTag } from '../../../api/useUpdateTag'
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 
 type Props = {

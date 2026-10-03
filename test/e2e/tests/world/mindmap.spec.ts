@@ -114,7 +114,7 @@ test.describe('World Mindmap', () => {
 
 		// --- Delete the wire ---
 		const wire = page.getByTestId('MindmapWire')
-		await wire.click()
+		await wire.click({ force: true })
 
 		const deleteWireRequest = page.waitForRequest(
 			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
@@ -254,8 +254,10 @@ test.describe('World Mindmap', () => {
 		// --- Re-select all nodes (previous selection may have been cleared) ---
 		await page.mouse.move(selStartX, selStartY, { steps: 5 })
 		await page.mouse.down()
-		await page.mouse.move(selEndX, selEndY + 80, { steps: 30 })
+		await page.mouse.move(selEndX, selEndY, { steps: 30 })
 		await page.mouse.up()
+		await page.evaluate(() => new Promise((r) => requestAnimationFrame(() => requestAnimationFrame(r))))
+		await expect(page.locator('[data-mindmap-node][data-selected="true"]')).toHaveCount(4)
 
 		// --- Create wires by dragging from a selected node's port to a target node ---
 		// Pick the last node (Delta) as the target. The other 3 selected nodes should each get a wire to it.
@@ -364,7 +366,8 @@ test.describe('World Mindmap', () => {
 		await expect(page.getByTestId(/^ArticleListItem/)).toHaveCount(0)
 
 		// --- Write content, which reaches Rhea through the collaboration pipeline ---
-		await node.getByText('Quick draft').dblclick()
+		await node.getByText('Quick draft').click({ button: 'right' })
+		await page.getByRole('menuitem', { name: 'Edit as full entity' }).click()
 		const editor = page.locator('.ProseMirror').first()
 		await expect(editor).toBeVisible()
 		await editor.click()

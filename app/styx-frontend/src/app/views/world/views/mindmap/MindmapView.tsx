@@ -1,11 +1,10 @@
-import Box from '@mui/material/Box'
-
+import { MindmapContext } from './context/MindmapContext'
 import { Mindmap } from './Mindmap'
 
-export const MindmapView = () => {
+export function MindmapView() {
 	return (
-		<Box width={1} height={1} position="relative" overflow="auto">
+		<MindmapContext>
 			<Mindmap />
-		</Box>
+		</MindmapContext>
 	)
 }

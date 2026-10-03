@@ -1,10 +1,9 @@
-import { Rect } from '@tiptap/pm/tables'
 import { useCallback, useEffect, useRef } from 'react'
 
 export function useMindmapEdgeScroll() {
 	const updateFunction = useRef<(scroll: { x: number; y: number }) => void>(undefined)
 	const lastSeenMousePosition = useRef<{ x: number; y: number }>({ x: 0, y: 0 })
-	const lastSeenElementRect = useRef<Rect | null>(null)
+	const lastSeenElementRect = useRef<DOMRect | null>(null)
 
 	const registerUpdateFunction = useCallback((callback: (scroll: { x: number; y: number }) => void) => {
 		updateFunction.current = callback
@@ -72,7 +71,7 @@ export function useMindmapEdgeScroll() {
 		})
 	})
 
-	const updateMousePosition = useCallback((event: MouseEvent, element: Rect) => {
+	const updateMousePosition = useCallback((event: MouseEvent, element: DOMRect) => {
 		if (event.buttons === 0) {
 			updateLoopRunning.current = false
 			return

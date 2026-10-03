@@ -25,11 +25,8 @@ export type WorldEvent = Omit<
 > & {
 	timestamp: number
 	revokedAt?: number
-	deltaStates: (Omit<GetWorldInfoApiResponse['events'][number]['deltaStates'][number], 'timestamp'> & {
-		timestamp: number
-	})[]
 }
-export type WorldEventDelta = WorldEvent['deltaStates'][number]
+export type WorldEventDelta = GetWorldInfoApiResponse['events'][number]['deltaStates'][number]
 export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
 	originTime: number
 }

@@ -4,6 +4,7 @@ import { BadRequestError } from 'moonflower'
 import { WorldShareLinkUncheckedCreateInput } from '../../prisma/client/models.js'
 import { AuthorizationService } from './AuthorizationService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 
 export const WorldShareService = {
 	listCollaborators: async ({ worldId }: { worldId: string }) => {
@@ -186,6 +187,7 @@ export const WorldShareService = {
 				createdAt: true,
 				usageCount: true,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 

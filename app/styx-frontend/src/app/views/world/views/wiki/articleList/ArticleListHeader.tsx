@@ -11,8 +11,8 @@ import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getAllWikiEntityIds, getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
+import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-import { getWorldState } from '../../../WorldSliceSelectors'
 import { ArticleListHeaderCreateButton } from './ArticleListHeaderCreateButton'
 
 export const ArticleListHeader = () => {

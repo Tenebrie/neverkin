@@ -1,6 +1,9 @@
+import { MindmapNode } from '@/api/types/mindmapTypes'
 import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
+import { DefaultColors } from '@/app/features/colors/defaultColors'
 
+import { PlainMindmapNodeParcel } from '../../mindmap/types'
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 
 export function boxActor(actor: Actor): BoxedWikiEntity {
@@ -55,5 +58,16 @@ export function boxTag(tag: WorldTag): BoxedWikiEntity {
 		name: tag.name,
 		position: tag.parentFolderPosition,
 		color: tag.color,
+	}
+}
+
+export function boxPlainNode(node: MindmapNode): PlainMindmapNodeParcel {
+	return {
+		id: node.id,
+		type: 'node',
+		entity: node,
+		name: node.name,
+		position: 0,
+		color: DefaultColors.node,
 	}
 }

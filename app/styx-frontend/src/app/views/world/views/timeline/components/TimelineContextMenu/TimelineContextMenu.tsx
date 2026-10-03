@@ -51,7 +51,6 @@ export const TimelineContextMenuComponent = () => {
 	const dispatch = useDispatch()
 	const { closeTimelineContextMenu } = worldSlice.actions
 	const { open: openDeleteEventModal } = useModal('deleteEventModal')
-	const { open: openDeleteEventDeltaModal } = useModal('deleteEventDeltaModal')
 
 	const onClose = useCallback(
 		() => dispatch(closeTimelineContextMenu()),
@@ -101,18 +100,8 @@ export const TimelineContextMenuComponent = () => {
 			return
 		}
 
-		if (targetedMarker.markerType === 'deltaState') {
-			const deltaState = targetedMarker.deltaStates.find((state) => state.id === targetedMarker.id)
-			if (!deltaState) {
-				return
-			}
-
-			openDeleteEventDeltaModal({ target: deltaState })
-			return
-		}
-
 		openDeleteEventModal({ target: targetedMarker })
-	}, [onClose, openDeleteEventDeltaModal, openDeleteEventModal, targetedMarker])
+	}, [onClose, openDeleteEventModal, targetedMarker])
 
 	const onUnselectAll = useCallback(() => {
 		dispatch(clearSelections())

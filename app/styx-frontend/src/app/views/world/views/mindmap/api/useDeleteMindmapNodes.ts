@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { mindmapApi, useDeleteNodesMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-export const useDeleteMindmapNodes = () => {
-	const worldId = useSelector(getWorldIdState)
+export function useDeleteMindmapNodes() {
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [deleteMindmapNodes, state] = useDeleteNodesMutation()
 
@@ -18,7 +18,7 @@ export const useDeleteMindmapNodes = () => {
 					for (const id of nodes) {
 						const index = draft.nodes.findIndex((node) => node.id === id)
 						if (index === -1) {
-							return
+							continue
 						}
 						draft.nodes.splice(index, 1)
 					}
@@ -38,13 +38,13 @@ export const useDeleteMindmapNodes = () => {
 				}),
 			)
 			if (error) {
-				mindmapApi.util.invalidateTags(['mindmapNode'])
+				dispatch(mindmapApi.util.invalidateTags(['mindmapNode']))
 				transaction.undo()
 				return
 			}
 			return response
 		},
-		[deleteMindmapNodes, removeCachedNode, worldId],
+		[deleteMindmapNodes, dispatch, removeCachedNode, worldId],
 	)
 
 	return [perform, state] as const

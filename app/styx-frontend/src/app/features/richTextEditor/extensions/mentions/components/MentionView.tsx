@@ -3,12 +3,11 @@ import { NodeViewProps } from '@tiptap/core'
 import { NodeViewWrapper } from '@tiptap/react'
 import { useSelector } from 'react-redux'
 
+import { ActorMentionChip } from '@/app/features/richTextEditor/components/chips/ActorMentionChip'
+import { ArticleMentionChip } from '@/app/features/richTextEditor/components/chips/ArticleMentionChip'
+import { EventMentionChip } from '@/app/features/richTextEditor/components/chips/EventMentionChip'
+import { TagMentionChip } from '@/app/features/richTextEditor/components/chips/TagMentionChip'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
-
-import { ActorMentionChip } from '../../../components/chips/ActorMentionChip'
-import { ArticleMentionChip } from '../../../components/chips/ArticleMentionChip'
-import { EventMentionChip } from '../../../components/chips/EventMentionChip'
-import { TagMentionChip } from '../../../components/chips/TagMentionChip'
 
 const ZERO_WIDTH_SPACE = String.fromCharCode(8203)
 

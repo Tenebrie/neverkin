@@ -7,9 +7,8 @@ import { useMemo, useState } from 'react'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useBulkDelete } from '@/app/views/world/api/useBulkDelete'
+import { useEntityResolver } from '@/app/views/world/modals/editEventModal/hooks/useEntityResolver'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
-
-import { useEntityResolver } from '../../../modals/editEventModal/hooks/useEntityResolver'
 
 export function BulkDeleteEntitiesModal() {
 	const [deleteArticles, { isLoading }] = useBulkDelete()
