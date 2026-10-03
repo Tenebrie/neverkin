@@ -16,8 +16,8 @@ export function MindmapNodeContentStickyNoteEditor({ nodeId, name }: Props) {
 	const [updateNode] = useUpdateMindmapNode()
 
 	useEventBusSubscribe['mindmap/node/requestEditPlainNode']({
-		callback: ({ nodeId }) => {
-			if (nodeId === nodeId) {
+		callback: ({ nodeId: editNodeId }) => {
+			if (nodeId === editNodeId) {
 				setIsEditing(true)
 			}
 		},
