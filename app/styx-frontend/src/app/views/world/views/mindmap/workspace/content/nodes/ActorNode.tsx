@@ -1,9 +1,8 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
-import React, { useCallback, useRef } from 'react'
+import React, { memo, useCallback, useRef } from 'react'
 import { useStore } from 'react-redux'
 
-import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -13,17 +12,21 @@ import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSlic
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
-import { ActorNodeContent } from './ActorNodeContent'
-import { ActorNodeContentStickyNote } from './ActorNodeContentStickyNote'
+import { ActorNodeContent } from './content/ActorNodeContent'
+import { ActorNodeContentStickyNote } from './content/ActorNodeContentStickyNote'
+
+export const NODE_W = 300
+export const NODE_FALLBACK_H = 60
 
 type Props = {
-	node: MindmapNode
+	nodeId: string
 	parent: MindmapNodeParentParcel
 	onHeaderClick: (e: React.MouseEvent) => void
-	onContentClick: () => void
 }
 
-export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props) {
+export const ActorNode = memo(ActorNodeComponent)
+
+function ActorNodeComponent({ parent, nodeId, onHeaderClick }: Props) {
 	const { createLinks } = useNodeLinking()
 	const store = useStore<RootState>()
 
@@ -33,7 +36,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 	const { ref } = useDragDropReceiver({
 		type: 'actorNodeLinking',
 		onDrop: (data) => {
-			const sourceNodeId = data.params.sourceNode.id
+			const sourceNodeId = data.params.sourceNodeId
 			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
 			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
 				? [...new Set(selectedNodeKeys)]
@@ -42,7 +45,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 			createLinks(
 				sourceIds.map((srcId) => ({
 					sourceNodeId: srcId,
-					targetNodeId: node.id,
+					targetNodeId: nodeId,
 				})),
 			)
 		},
@@ -69,7 +72,7 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 			if (!ref.current) {
 				return
 			}
-			setDimmed(hoveredNodeIds.size > 0 && !hoveredNodeIds.has(node.id) && !highlightedWireIds.has(node.id))
+			setDimmed(hoveredNodeIds.size > 0 && !hoveredNodeIds.has(nodeId) && !highlightedWireIds.has(nodeId))
 		},
 	})
 
@@ -113,14 +116,9 @@ export function ActorNode({ parent, node, onHeaderClick, onContentClick }: Props
 			}}
 		>
 			{isStickyNote ? (
-				<ActorNodeContentStickyNote node={node} parent={parent} onHeaderClick={onHeaderClick} />
+				<ActorNodeContentStickyNote nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
 			) : (
-				<ActorNodeContent
-					node={node}
-					parent={parent}
-					onHeaderClick={onHeaderClick}
-					onContentClick={onContentClick}
-				/>
+				<ActorNodeContent nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
 			)}
 		</Box>
 	)

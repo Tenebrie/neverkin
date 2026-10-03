@@ -21,7 +21,7 @@ export function useWireDropReceiver({ ref }: Props) {
 				return
 			}
 
-			const sourceId = params.sourceNode.id
+			const sourceId = params.sourceNodeId
 			const selectedKeys = getSelectedNodeKeys(store.getState())
 			const sourceNodeIds = selectedKeys.includes(sourceId) ? selectedKeys : [sourceId]
 

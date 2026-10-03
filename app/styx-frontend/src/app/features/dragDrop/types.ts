@@ -1,5 +1,4 @@
 import { CalendarDraftUnit, CalendarDraftUnitChildRelation } from '@/api/types/calendarTypes'
-import { MindmapNode } from '@/api/types/mindmapTypes'
 import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { BoxedWikiEntity } from '@/app/views/world/views/wiki/hooks/useBoxedWikiContent'
 
@@ -24,7 +23,7 @@ export type DraggableParams = {
 		index: number
 	}
 	['actorNodeLinking']: {
-		sourceNode: MindmapNode
+		sourceNodeId: string
 	}
 }
 

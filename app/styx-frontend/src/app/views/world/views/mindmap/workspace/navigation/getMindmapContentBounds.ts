@@ -1,6 +1,6 @@
 import { MindmapNode } from '@/api/types/mindmapTypes'
 
-import { NODE_FALLBACK_H, NODE_W } from '../../unrefactored/mindmapWireUtils'
+import { NODE_FALLBACK_H, NODE_W } from '../content/nodes/ActorNode'
 
 const OUTLIER_DISTANCE_RATIO = 3
 

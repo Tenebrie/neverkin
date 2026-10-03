@@ -9,9 +9,10 @@ import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 import { useMindmapContext } from '../../context/useMindmapContext'
 import { mindmapSlice } from '../../MindmapSlice'
-import { getLayoutCenter, resolveNodeLayout } from '../../unrefactored/mindmapWireUtils'
 import { getMindmapNodeParentId } from '../../utils/getMindmapNodeParentId'
 import { toWorkspaceCoords } from '../../utils/toWorkspaceCoords'
+import { getNodeLayout } from '../content/wires/utils/getNodeLayout'
+import { getRectCenter } from '../content/wires/utils/getRectCenter'
 import { getMindmapContentBounds } from './getMindmapContentBounds'
 import { useMindmapCameraPersistence } from './useMindmapCameraPersistence'
 import { MIN_SCALE } from './useMindmapNavigation'
@@ -43,7 +44,7 @@ export function useMindmapInitialFocus() {
 			screenY: workspaceRect.y + workspaceRect.height / 2,
 		})
 		if (entityNodes.length > 0 && viewCenter) {
-			const getCenter = (node: MindmapNode) => getLayoutCenter(resolveNodeLayout(nodeLayouts, node))
+			const getCenter = (node: MindmapNode) => getRectCenter(getNodeLayout(nodeLayouts, node))
 			pending.current = false
 			lookAt(getCenter(pickNextNode(entityNodes, viewCenter, getCenter)))
 		}

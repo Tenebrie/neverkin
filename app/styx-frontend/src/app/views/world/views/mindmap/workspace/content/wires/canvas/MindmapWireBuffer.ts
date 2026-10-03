@@ -1,5 +1,30 @@
 import { SlotBuffer } from '@/app/features/rendering/SlotBuffer'
-import { WirePaint } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+
+import { WireControlPoints } from './MindmapCanvasMath'
+
+/** A wire's look, drawn by `MindmapWireCanvas` */
+export type WirePaint = {
+	endpoints: WireEndpoints
+	curve: WireControlPoints
+	hasSourceArrow: boolean
+	hasTargetArrow: boolean
+	sourceColor: string
+	midColor: string
+	targetColor: string
+	glowOpacity: number
+	isActive: boolean
+}
+
+export type WireEndpoints = {
+	x1: number
+	y1: number
+	x2: number
+	y2: number
+	nx1: number
+	ny1: number
+	nx2: number
+	ny2: number
+}
 
 /** Per-wire inputs of the vertex shader, in the order `MindmapWireBuffer.encode` lays them out */
 export const WIRE_ATTRIBUTES = [

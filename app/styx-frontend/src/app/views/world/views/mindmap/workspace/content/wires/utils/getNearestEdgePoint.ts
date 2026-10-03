@@ -1,47 +1,14 @@
-import { MindmapNode } from '@/api/types/mindmapTypes'
-import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { MindmapNodeLayout } from '@/app/views/world/views/mindmap/types'
-import { WireControlPoints } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 
-export const NODE_W = 300
-export const NODE_FALLBACK_H = 60
 export const CORNER_R = 16
-
-export function resolveNodeLayout(
-	nodeLayouts: ReactiveMap<string, MindmapNodeLayout>,
-	node: MindmapNode,
-): MindmapNodeLayout {
-	return (
-		nodeLayouts.get(node.id) ?? {
-			x: node.positionX,
-			y: node.positionY,
-			width: NODE_W,
-			height: NODE_FALLBACK_H,
-		}
-	)
-}
-
-export function getLayoutCenter(layout: MindmapNodeLayout) {
-	return { x: layout.x + layout.width / 2, y: layout.y + layout.height / 2 }
-}
-
-export type WireEndpoints = {
-	x1: number
-	y1: number
-	x2: number
-	y2: number
-	nx1: number
-	ny1: number
-	nx2: number
-	ny2: number
-}
 
 /**
  * Given a ray from the rect center toward a target point, find where it exits the
  * rounded-rect perimeter. On flat edges the exit is trivial; in corner regions the
  * ray is intersected with the corner arc so the attachment point slides smoothly.
  */
-export function nearestEdgePoint(
+
+export function getNearestEdgePoint(
 	rect: MindmapNodeLayout,
 	targetX: number,
 	targetY: number,
@@ -109,31 +76,4 @@ export function nearestEdgePoint(
 	const ny = scaleX > scaleY ? Math.sign(dy) : 0
 
 	return { x: edgeX, y: edgeY, nx, ny }
-}
-
-export function pickEdgePoints(source: MindmapNodeLayout, target: MindmapNodeLayout): WireEndpoints {
-	const srcCenter = getLayoutCenter(source)
-	const tgtCenter = getLayoutCenter(target)
-
-	const src = nearestEdgePoint(source, tgtCenter.x, tgtCenter.y)
-	const tgt = nearestEdgePoint(target, srcCenter.x, srcCenter.y)
-
-	return { x1: src.x, y1: src.y, x2: tgt.x, y2: tgt.y, nx1: src.nx, ny1: src.ny, nx2: tgt.nx, ny2: tgt.ny }
-}
-
-/** A wire's look, drawn by `MindmapWireCanvas` */
-export type WirePaint = {
-	endpoints: WireEndpoints
-	curve: WireControlPoints
-	hasSourceArrow: boolean
-	hasTargetArrow: boolean
-	sourceColor: string
-	midColor: string
-	targetColor: string
-	glowOpacity: number
-	isActive: boolean
-}
-
-export function buildPathD({ x1, y1, cx1, cy1, cx2, cy2, x2, y2 }: WireControlPoints) {
-	return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
 }

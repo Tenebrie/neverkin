@@ -4,26 +4,24 @@ import Divider from '@mui/material/Divider'
 import Stack from '@mui/material/Stack'
 import { memo, useMemo } from 'react'
 
-import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
-import { NODE_W } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
+import { NODE_W } from '../ActorNode'
+import { MindmapNodePort } from '../MindmapNodePort'
 import { ActorNodeContentMeta } from './ActorNodeContentMeta'
-import { MindmapNodePort } from './MindmapNodePort'
 
 type Props = {
-	node?: MindmapNode
+	nodeId: string
 	parent: MindmapNodeParentParcel
 	onHeaderClick?: (e: React.MouseEvent) => void
-	onContentClick?: () => void
 }
 
 export const ActorNodeContent = memo(ActorNodeContentComponent)
 
-function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
+function ActorNodeContentComponent({ nodeId, parent, onHeaderClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
@@ -113,7 +111,7 @@ function ActorNodeContentComponent({ node, parent, onHeaderClick }: Props) {
 							</Stack>
 						</Stack>
 						<Box sx={{ marginTop: '-12px', marginRight: '-12px' }}>
-							<MindmapNodePort node={node} parent={parent} />
+							<MindmapNodePort nodeId={nodeId} parent={parent} />
 						</Box>
 					</Stack>
 

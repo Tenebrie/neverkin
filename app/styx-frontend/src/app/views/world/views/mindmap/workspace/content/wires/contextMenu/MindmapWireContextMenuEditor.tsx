@@ -20,7 +20,7 @@ export type MindmapWireState = {
 	setDirection: (direction: MindmapWireDirection) => void
 }
 
-export function MindmapWirePopoverEditor({
+export function MindmapWireContextMenuEditor({
 	currentWire,
 	label,
 	setLabel,

@@ -6,12 +6,12 @@ import { RootState } from '@/app/store'
 import { useMindmapWireIds } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { useMindmapPainter } from '@/app/views/world/views/mindmap/context/useMindmapPainter'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
-import { MindmapWireLine } from '@/app/views/world/views/mindmap/unrefactored/MindmapWireLine'
+import { MindmapWireLine } from '@/app/views/world/views/mindmap/workspace/content/wires/MindmapWire'
 
 import { GLOW_WIDTH } from './canvas/MindmapCanvas'
+import { MindmapWireContextMenu, MindmapWireState } from './contextMenu/MindmapWireContextMenu'
 import { MindmapWireGhostContext } from './ghost/context/MindmapWireGhostContext'
 import { MindmapWireGhost } from './ghost/MindmapWireGhost'
-import { MindmapWirePopover, MindmapWireState } from './MindmapWirePopover'
 
 export function MindmapWireLayer() {
 	const wireIds = useMindmapWireIds()
@@ -80,7 +80,7 @@ export function MindmapWireLayer() {
 					</MindmapWireGhostContext>
 				</>
 			)}
-			<MindmapWirePopover
+			<MindmapWireContextMenu
 				{...popoverState}
 				onClose={() =>
 					setPopoverState((current) => ({

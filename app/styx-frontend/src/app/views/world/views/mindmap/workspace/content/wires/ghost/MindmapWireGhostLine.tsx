@@ -3,16 +3,13 @@ import { useId, useRef, useState } from 'react'
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import {
-	buildPathD,
-	getLayoutCenter,
-	nearestEdgePoint,
-	pickEdgePoints,
-	resolveNodeLayout,
-	WireEndpoints,
-} from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 import { toControlPoints } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 
+import { buildSvgBezierString } from '../utils/buildSvgBezierString'
+import { getEdgePoints } from '../utils/getEdgePoints'
+import { getNearestEdgePoint } from '../utils/getNearestEdgePoint'
+import { getNodeLayout } from '../utils/getNodeLayout'
+import { getRectCenter } from '../utils/getRectCenter'
 import { useMindmapWireGhostPainter } from './context/useMindmapWireGhostContext'
 
 type Props = {
@@ -22,7 +19,7 @@ type Props = {
 export function MindmapWireGhostLine({ node }: Props) {
 	const gradientId = useId()
 	const { nodeLayouts } = useMindmapContext()
-	const [layout] = useState(() => resolveNodeLayout(nodeLayouts, node))
+	const [layout] = useState(() => getNodeLayout(nodeLayouts, node))
 	const groupRef = useRef<SVGGElement>(null)
 	const pathRef = useRef<SVGPathElement>(null)
 	const gradientRef = useRef<SVGLinearGradientElement>(null)
@@ -49,11 +46,11 @@ export function MindmapWireGhostLine({ node }: Props) {
 		}
 		group.setAttribute('display', 'inline')
 
-		let endpoints: WireEndpoints
+		let endpoints: ReturnType<typeof getEdgePoints>
 		let colors = palette.free
 
 		if (target) {
-			endpoints = pickEdgePoints(layout, target)
+			endpoints = getEdgePoints(layout, target)
 			const isDuplicate =
 				wirePairs.has(`${node.id}->${target.id}`) || wirePairs.has(`${target.id}->${node.id}`)
 			if (isDuplicate) {
@@ -62,8 +59,8 @@ export function MindmapWireGhostLine({ node }: Props) {
 				colors = palette.snapped
 			}
 		} else {
-			const source = nearestEdgePoint(layout, mouseX, mouseY)
-			const center = getLayoutCenter(layout)
+			const source = getNearestEdgePoint(layout, mouseX, mouseY)
+			const center = getRectCenter(layout)
 			const dx = mouseX - center.x
 			const dy = mouseY - center.y
 			const length = Math.hypot(dx, dy) || 1
@@ -79,7 +76,7 @@ export function MindmapWireGhostLine({ node }: Props) {
 			}
 		}
 
-		pathRef.current?.setAttribute('d', buildPathD(toControlPoints(endpoints)))
+		pathRef.current?.setAttribute('d', buildSvgBezierString(toControlPoints(endpoints)))
 		gradientRef.current?.setAttribute('x1', String(endpoints.x1))
 		gradientRef.current?.setAttribute('y1', String(endpoints.y1))
 		gradientRef.current?.setAttribute('x2', String(endpoints.x2))

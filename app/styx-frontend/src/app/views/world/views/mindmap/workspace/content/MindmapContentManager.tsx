@@ -74,10 +74,12 @@ export function MindmapContentManager() {
 			}
 
 			const prev = nodes.get(node.id)
+			const usedParent = prev?.parent.entity === parent.entity ? prev.parent : parent
+
 			if (prev && prev.node === node && prev.parent.entity === parent.entity) {
 				nextNodes.set(node.id, prev)
 			} else {
-				nextNodes.set(node.id, { id: node.id, node, parent })
+				nextNodes.set(node.id, { id: node.id, node, parent: usedParent })
 			}
 		}
 

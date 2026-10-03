@@ -2,18 +2,17 @@ import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useEffect } from 'react'
 
-import { MindmapNode } from '@/api/types/mindmapTypes'
 import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
 type Props = {
-	node?: MindmapNode
+	nodeId: string
 	parent: MindmapNodeParentParcel
 }
 
-export function MindmapNodePort({ node, parent }: Props) {
+export function MindmapNodePort({ nodeId, parent }: Props) {
 	const theme = useCustomTheme()
 
 	const { ref, ghostElement } = useDragDrop({
@@ -21,7 +20,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 		trigger: DragTrigger.MindmapNodePortWire,
 		ghostFactory: () => null,
 		params: {
-			sourceNode: node!,
+			sourceNodeId: nodeId,
 		},
 	})
 
@@ -44,7 +43,7 @@ export function MindmapNodePort({ node, parent }: Props) {
 			box.removeEventListener('mousedown', onMouseDown)
 			box.removeEventListener('pointerdown', onMouseDown)
 		}
-	}, [node?.id, ref])
+	}, [nodeId, ref])
 
 	return (
 		<>

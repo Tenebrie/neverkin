@@ -13,9 +13,9 @@ import { RootState } from '@/app/store'
 import { isNotNull } from '@/app/utils/isNotNull'
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
-import { resolveNodeLayout } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 
+import { getNodeLayout } from '../utils/getNodeLayout'
 import { MindmapWireGhostContext } from './context/MindmapWireGhostContext'
 import { MindmapWireGhostLine } from './MindmapWireGhostLine'
 
@@ -42,7 +42,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 	useDragDropStarted({
 		type: 'actorNodeLinking',
 		callback: ({ params }) => {
-			const sourceId = params.sourceNode.id
+			const sourceId = params.sourceNodeId
 			const selectedKeys = getSelectedNodeKeys(store.getState())
 			const sourceIds = selectedKeys.includes(sourceId) ? selectedKeys : [sourceId]
 
@@ -93,7 +93,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 			if (!parcel) {
 				continue
 			}
-			return { id: nodeId, ...resolveNodeLayout(nodeLayouts, parcel.node) }
+			return { id: nodeId, ...getNodeLayout(nodeLayouts, parcel.node) }
 		}
 		return null
 	}

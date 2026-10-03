@@ -8,8 +8,8 @@ import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
 import { useNodeLinking } from '../hooks/useNodeLinking'
-import { NODE_FALLBACK_H, NODE_W } from '../unrefactored/mindmapWireUtils'
 import { toWorkspaceCoords } from '../utils/toWorkspaceCoords'
+import { NODE_FALLBACK_H, NODE_W } from '../workspace/content/nodes/ActorNode'
 
 export function MindmapQuickSelect() {
 	const selectedEntityIds = useSearch({

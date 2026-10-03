@@ -1,31 +1,29 @@
 import Box from '@mui/material/Box'
-import { SxProps, Theme } from '@mui/material/styles'
-import { ReactNode, useCallback, useState } from 'react'
+import Typography from '@mui/material/Typography'
+import { useState } from 'react'
+import useEvent from 'react-use-event-hook'
 
-import { MindmapNode } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
 
 type Props = {
-	node?: MindmapNode
+	nodeId: string
 	name: string
-	sx: SxProps<Theme>
-	children: ReactNode
 }
 
-export function ActorNodeName({ node, name, sx, children }: Props) {
+export function ActorNodeContentStickyNoteEditor({ nodeId, name }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [updateNode] = useUpdateMindmapNode()
 
 	useEventBusSubscribe['mindmap/node/requestEditPlainNode']({
 		callback: ({ nodeId }) => {
-			if (nodeId === node?.id) {
+			if (nodeId === nodeId) {
 				setIsEditing(true)
 			}
 		},
 	})
 
-	const attachTextarea = useCallback((element: HTMLTextAreaElement) => {
+	const onMount = useEvent((element: HTMLTextAreaElement) => {
 		fitToContent(element)
 		element.focus()
 		element.select()
@@ -34,6 +32,11 @@ export function ActorNodeName({ node, name, sx, children }: Props) {
 				element.blur()
 			}
 		}
+
+		function stopPropagation(event: Event) {
+			event.stopPropagation()
+		}
+
 		element.addEventListener('pointerdown', stopPropagation)
 		element.addEventListener('mousedown', stopPropagation)
 		window.addEventListener('pointerdown', blurOnOutsidePress, true)
@@ -42,21 +45,35 @@ export function ActorNodeName({ node, name, sx, children }: Props) {
 			element.removeEventListener('mousedown', stopPropagation)
 			window.removeEventListener('pointerdown', blurOnOutsidePress, true)
 		}
-	}, [])
+	})
 
-	if (!isEditing || !node) {
-		return children
+	if (!isEditing || !nodeId) {
+		return (
+			<Typography
+				sx={{
+					textAlign: 'center',
+					overflowWrap: 'anywhere',
+					display: '-webkit-box',
+					WebkitLineClamp: 8,
+					WebkitBoxOrient: 'vertical',
+					overflow: 'hidden',
+				}}
+			>
+				{name || <i>empty</i>}
+			</Typography>
+		)
 	}
 
 	return (
 		<Box
+			data-1p-ignore
 			component="textarea"
-			ref={attachTextarea}
+			ref={onMount}
 			defaultValue={name}
 			rows={1}
-			onInput={(event: React.FormEvent<HTMLTextAreaElement>) => fitToContent(event.currentTarget)}
-			onClick={(event: React.MouseEvent) => event.stopPropagation()}
-			onKeyDown={(event: React.KeyboardEvent<HTMLTextAreaElement>) => {
+			onInput={(event) => fitToContent(event.currentTarget)}
+			onClick={(event) => event.stopPropagation()}
+			onKeyDown={(event) => {
 				if (event.key === 'Escape') {
 					event.currentTarget.value = name
 					event.currentTarget.blur()
@@ -64,29 +81,28 @@ export function ActorNodeName({ node, name, sx, children }: Props) {
 					event.currentTarget.blur()
 				}
 			}}
-			onBlur={(event: React.FocusEvent<HTMLTextAreaElement>) => {
+			onBlur={(event) => {
 				setIsEditing(false)
 				if (event.currentTarget.value !== name) {
-					updateNode(node.id, { name: event.currentTarget.value })
+					updateNode(nodeId, { name: event.currentTarget.value })
 				}
 			}}
-			sx={[
-				{
-					display: 'block',
-					width: '100%',
-					margin: 0,
-					padding: 0,
-					border: 'none',
-					outline: 'none',
-					resize: 'none',
-					overflow: 'hidden',
-					background: 'transparent',
-					color: 'inherit',
-					font: 'inherit',
-					userSelect: 'text',
-				},
-				...(Array.isArray(sx) ? sx : [sx]),
-			]}
+			sx={{
+				display: 'block',
+				width: '100%',
+				margin: 0,
+				padding: 0,
+				border: 'none',
+				outline: 'none',
+				resize: 'none',
+				overflow: 'hidden',
+				background: 'transparent',
+				color: 'inherit',
+				typography: 'body1',
+				textAlign: 'center',
+				overflowWrap: 'anywhere',
+				userSelect: 'text',
+			}}
 		/>
 	)
 }
@@ -94,8 +110,4 @@ export function ActorNodeName({ node, name, sx, children }: Props) {
 function fitToContent(element: HTMLTextAreaElement) {
 	element.style.height = 'auto'
 	element.style.height = `${element.scrollHeight}px`
-}
-
-function stopPropagation(event: Event) {
-	event.stopPropagation()
 }

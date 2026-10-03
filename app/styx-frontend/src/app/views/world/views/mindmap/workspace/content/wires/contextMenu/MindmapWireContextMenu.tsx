@@ -17,10 +17,10 @@ import { useSplitMindmapWire } from '@/app/views/world/views/mindmap/api/useSpli
 import { useUpdateMindmapWire } from '@/app/views/world/views/mindmap/api/useUpdateMindmapWire'
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { getSelectedWireKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
-import { NODE_FALLBACK_H, NODE_W } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
-import { midpointOf } from './canvas/MindmapCanvasMath'
-import { MindmapWirePopoverEditor } from './MindmapWirePopoverEditor'
+import { NODE_FALLBACK_H, NODE_W } from '../../nodes/ActorNode'
+import { midpointOf } from '../canvas/MindmapCanvasMath'
+import { MindmapWireContextMenuEditor } from './MindmapWireContextMenuEditor'
 
 export type MindmapWireState = {
 	open: boolean
@@ -29,7 +29,7 @@ export type MindmapWireState = {
 	mode: 'doubleClick' | 'contextMenu'
 }
 
-export function MindmapWirePopover({ open, position, onClose }: MindmapWireState) {
+export function MindmapWireContextMenu({ open, position, onClose }: MindmapWireState) {
 	const { wires } = useMindmapData()
 	const { wireGeometry } = useMindmapContext()
 
@@ -88,7 +88,7 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 			}}
 		>
 			{currentWire && (
-				<MindmapWirePopoverEditor
+				<MindmapWireContextMenuEditor
 					currentWire={currentWire}
 					label={label}
 					setLabel={setLabel}
