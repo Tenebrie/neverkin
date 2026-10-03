@@ -2,7 +2,7 @@ import { MindmapNode } from '@/api/types/mindmapTypes'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { MindmapNodeLayout } from '@/app/views/world/views/mindmap/types'
 
-import { NODE_FALLBACK_H, NODE_W } from '../../nodes/ActorNode'
+import { NODE_FALLBACK_H, NODE_W } from '../../nodes/MindmapNodeRenderer'
 
 export function getNodeLayout(
 	nodeLayouts: ReactiveMap<string, MindmapNodeLayout>,

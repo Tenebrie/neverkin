@@ -1,6 +1,6 @@
 import { MindmapNode } from '@/api/types/mindmapTypes'
 
-import { NODE_FALLBACK_H, NODE_W } from '../content/nodes/ActorNode'
+import { NODE_FALLBACK_H, NODE_W } from '../content/nodes/MindmapNodeRenderer'
 
 const OUTLIER_DISTANCE_RATIO = 3
 

@@ -8,7 +8,7 @@ type Props = {
 	timestamp: number
 }
 
-export function ActorNodeContentMetaEvent({ timestamp }: Props) {
+export function MindmapNodeContentMetaEvent({ timestamp }: Props) {
 	const { calendars } = useSelector(getWorldState, (a, b) => a.calendars === b.calendars)
 	const formatTimestamp = useFormatTimestamp({ calendar: calendars[0] ?? null })
 

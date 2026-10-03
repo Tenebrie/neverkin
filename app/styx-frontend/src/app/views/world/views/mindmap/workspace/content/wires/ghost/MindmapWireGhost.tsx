@@ -40,7 +40,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 	})
 
 	useDragDropStarted({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		callback: ({ params }) => {
 			const sourceId = params.sourceNodeId
 			const selectedKeys = getSelectedNodeKeys(store.getState())
@@ -60,7 +60,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 	})
 
 	useDragDropEnded({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		callback: () => {
 			if (!isAwaitingSelection.current) {
 				clearGhost()

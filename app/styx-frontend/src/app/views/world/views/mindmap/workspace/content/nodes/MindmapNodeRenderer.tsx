@@ -12,8 +12,8 @@ import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSlic
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
-import { ActorNodeContent } from './content/ActorNodeContent'
-import { ActorNodeContentStickyNote } from './content/ActorNodeContentStickyNote'
+import { MindmapNodeContent } from './content/MindmapNodeContent'
+import { MindmapNodeContentStickyNote } from './content/MindmapNodeContentStickyNote'
 
 export const NODE_W = 300
 export const NODE_FALLBACK_H = 60
@@ -24,9 +24,9 @@ type Props = {
 	onHeaderClick: (e: React.MouseEvent) => void
 }
 
-export const ActorNode = memo(ActorNodeComponent)
+export const MindmapNodeRenderer = memo(MindmapNodeRendererComponent)
 
-function ActorNodeComponent({ parent, nodeId, onHeaderClick }: Props) {
+function MindmapNodeRendererComponent({ parent, nodeId, onHeaderClick }: Props) {
 	const { createLinks } = useNodeLinking()
 	const store = useStore<RootState>()
 
@@ -34,7 +34,7 @@ function ActorNodeComponent({ parent, nodeId, onHeaderClick }: Props) {
 	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
 
 	const { ref } = useDragDropReceiver({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		onDrop: (data) => {
 			const sourceNodeId = data.params.sourceNodeId
 			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
@@ -116,9 +116,9 @@ function ActorNodeComponent({ parent, nodeId, onHeaderClick }: Props) {
 			}}
 		>
 			{isStickyNote ? (
-				<ActorNodeContentStickyNote nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
+				<MindmapNodeContentStickyNote nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
 			) : (
-				<ActorNodeContent nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
+				<MindmapNodeContent nodeId={nodeId} parent={parent} onHeaderClick={onHeaderClick} />
 			)}
 		</Box>
 	)

@@ -16,7 +16,7 @@ export function MindmapNodePort({ nodeId, parent }: Props) {
 	const theme = useCustomTheme()
 
 	const { ref, ghostElement } = useDragDrop({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		trigger: DragTrigger.MindmapNodePortWire,
 		ghostFactory: () => null,
 		params: {

@@ -6,7 +6,7 @@ type Props = {
 	folderId: string
 }
 
-export function ActorNodeContentMetaFolder({ folderId }: Props) {
+export function MindmapNodeContentMetaFolder({ folderId }: Props) {
 	const folderItemCount = useFolderItemCount(folderId)
 
 	return (

@@ -6,14 +6,14 @@ import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
 import { pluralize } from '@/app/utils/pluralize'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
-import { ActorNodeContentMetaEvent } from './ActorNodeContentMetaEvent'
-import { ActorNodeContentMetaFolder } from './ActorNodeContentMetaFolder'
+import { MindmapNodeContentMetaEvent } from './MindmapNodeContentMetaEvent'
+import { MindmapNodeContentMetaFolder } from './MindmapNodeContentMetaFolder'
 
 type Props = {
 	parent: MindmapNodeParentParcel
 }
 
-export function ActorNodeContentMeta({ parent }: Props) {
+export function MindmapNodeContentMeta({ parent }: Props) {
 	return (
 		<Stack
 			direction="row"
@@ -33,10 +33,10 @@ export function ActorNodeContentMeta({ parent }: Props) {
 
 function renderLabel(parent: MindmapNodeParentParcel) {
 	if (parent.type === 'event') {
-		return <ActorNodeContentMetaEvent timestamp={parent.entity.timestamp} />
+		return <MindmapNodeContentMetaEvent timestamp={parent.entity.timestamp} />
 	}
 	if (parent.type === 'folder') {
-		return <ActorNodeContentMetaFolder folderId={parent.id} />
+		return <MindmapNodeContentMetaFolder folderId={parent.id} />
 	}
 	if (parent.type === 'tag') {
 		return (

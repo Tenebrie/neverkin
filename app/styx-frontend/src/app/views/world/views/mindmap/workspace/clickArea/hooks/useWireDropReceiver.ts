@@ -14,7 +14,7 @@ export function useWireDropReceiver({ ref }: Props) {
 	const store = useStore<RootState>()
 
 	useDragDropReceiver({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		receiverRef: ref,
 		onDrop: ({ params }, { mouseEvent }) => {
 			if (!mouseEvent || mouseEvent.button !== 0) {

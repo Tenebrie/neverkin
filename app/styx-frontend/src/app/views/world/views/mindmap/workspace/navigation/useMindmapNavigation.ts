@@ -161,7 +161,7 @@ export function useMindmapNavigation({ ref }: Props) {
 		}
 
 		const handleMouseMove = (event: PointerEvent) => {
-			if (DragDropState.current?.type === 'actorNodeLinking') {
+			if (DragDropState.current?.type === 'mindmapNodeLinking') {
 				updateMousePosition(event, workspaceRect)
 			}
 			if (!navState.isDragging) {

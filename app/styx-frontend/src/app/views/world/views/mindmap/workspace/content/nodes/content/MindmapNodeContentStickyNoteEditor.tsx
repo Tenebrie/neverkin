@@ -11,7 +11,7 @@ type Props = {
 	name: string
 }
 
-export function ActorNodeContentStickyNoteEditor({ nodeId, name }: Props) {
+export function MindmapNodeContentStickyNoteEditor({ nodeId, name }: Props) {
 	const [isEditing, setIsEditing] = useState(false)
 	const [updateNode] = useUpdateMindmapNode()
 

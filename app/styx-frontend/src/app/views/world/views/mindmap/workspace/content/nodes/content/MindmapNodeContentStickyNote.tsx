@@ -3,9 +3,9 @@ import { memo } from 'react'
 
 import { PlainMindmapNodeParcel } from '@/app/views/world/views/mindmap/types'
 
-import { NODE_W } from '../ActorNode'
-import { MindmapNodePort } from '../MindmapNodePort'
-import { ActorNodeContentStickyNoteEditor } from './ActorNodeContentStickyNoteEditor'
+import { NODE_W } from '../MindmapNodeRenderer'
+import { MindmapNodePort } from '../port/MindmapNodePort'
+import { MindmapNodeContentStickyNoteEditor } from './MindmapNodeContentStickyNoteEditor'
 
 type Props = {
 	nodeId: string
@@ -13,9 +13,9 @@ type Props = {
 	onHeaderClick?: (e: React.MouseEvent) => void
 }
 
-export const ActorNodeContentStickyNote = memo(ActorNodeContentStickyNoteComponent)
+export const MindmapNodeContentStickyNote = memo(MindmapNodeContentStickyNoteComponent)
 
-function ActorNodeContentStickyNoteComponent({ nodeId, parent, onHeaderClick }: Props) {
+function MindmapNodeContentStickyNoteComponent({ nodeId, parent, onHeaderClick }: Props) {
 	return (
 		<Box
 			data-mindmap-header
@@ -31,7 +31,7 @@ function ActorNodeContentStickyNoteComponent({ nodeId, parent, onHeaderClick }: 
 				justifyContent: 'center',
 			}}
 		>
-			<ActorNodeContentStickyNoteEditor nodeId={nodeId} name={parent.name} />
+			<MindmapNodeContentStickyNoteEditor nodeId={nodeId} name={parent.name} />
 			<Box sx={{ position: 'absolute', top: 0, right: 0 }}>
 				<MindmapNodePort nodeId={nodeId} parent={parent} />
 			</Box>

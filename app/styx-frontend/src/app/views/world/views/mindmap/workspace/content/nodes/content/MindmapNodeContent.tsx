@@ -9,9 +9,9 @@ import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { NODE_W } from '../ActorNode'
-import { MindmapNodePort } from '../MindmapNodePort'
-import { ActorNodeContentMeta } from './ActorNodeContentMeta'
+import { NODE_W } from '../MindmapNodeRenderer'
+import { MindmapNodePort } from '../port/MindmapNodePort'
+import { MindmapNodeContentMeta } from './MindmapNodeContentMeta'
 
 type Props = {
 	nodeId: string
@@ -19,9 +19,9 @@ type Props = {
 	onHeaderClick?: (e: React.MouseEvent) => void
 }
 
-export const ActorNodeContent = memo(ActorNodeContentComponent)
+export const MindmapNodeContent = memo(MindmapNodeContentComponent)
 
-function ActorNodeContentComponent({ nodeId, parent, onHeaderClick }: Props) {
+function MindmapNodeContentComponent({ nodeId, parent, onHeaderClick }: Props) {
 	const theme = useCustomTheme()
 
 	const description = useMemo(() => {
@@ -140,7 +140,7 @@ function ActorNodeContentComponent({ nodeId, parent, onHeaderClick }: Props) {
 					borderColor: (theme) => alpha(theme.palette.divider, 0.05),
 				}}
 			/>
-			<ActorNodeContentMeta parent={parent} />
+			<MindmapNodeContentMeta parent={parent} />
 		</Box>
 	)
 }

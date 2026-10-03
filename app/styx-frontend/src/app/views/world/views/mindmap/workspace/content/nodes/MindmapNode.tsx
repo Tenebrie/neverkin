@@ -1,7 +1,7 @@
 import Box from '@mui/material/Box'
 import { useRef, useState } from 'react'
 
-import { MindmapNode } from '@/api/types/mindmapTypes'
+import { MindmapNode as MindmapNodeType } from '@/api/types/mindmapTypes'
 import { DragTrigger } from '@/app/features/dragDrop/DragTrigger'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
@@ -10,31 +10,32 @@ import { useMindmapContext, useMindmapNode } from '@/app/views/world/views/mindm
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { getMindmapDroppedNodeParams } from '@/app/views/world/views/mindmap/utils/getMindmapDroppedNodeParams'
-import { ActorNode } from '@/app/views/world/views/mindmap/workspace/content/nodes/ActorNode'
 import { useMindmapNodeClicks } from '@/app/views/world/views/mindmap/workspace/content/nodes/hooks/useMindmapNodeClicks'
 import { useMindmapNodeDrag } from '@/app/views/world/views/mindmap/workspace/content/nodes/hooks/useMindmapNodeDrag'
 import { useMindmapNodeHover } from '@/app/views/world/views/mindmap/workspace/content/nodes/hooks/useMindmapNodeHover'
 import { useMindmapNodeLayout } from '@/app/views/world/views/mindmap/workspace/content/nodes/hooks/useMindmapNodeLayout'
+
+import { MindmapNodeRenderer } from './MindmapNodeRenderer'
 
 type Props = {
 	nodeId: string
 }
 
 type NodeProps = {
-	node: MindmapNode
+	node: MindmapNodeType
 	parent: MindmapNodeParentParcel
 }
 
-export function ActorNodePositioner({ nodeId }: Props) {
+export function MindmapNode({ nodeId }: Props) {
 	const boxedNode = useMindmapNode(nodeId)
 	if (!boxedNode) {
 		return null
 	}
 
-	return <ActorNodePositionerComponent parent={boxedNode.parent} node={boxedNode.node} />
+	return <MindmapNodeComponent parent={boxedNode.parent} node={boxedNode.node} />
 }
 
-function ActorNodePositionerComponent({ parent, node }: NodeProps) {
+function MindmapNodeComponent({ parent, node }: NodeProps) {
 	const { reparentNode } = useMindmapContext()
 	const ref = useRef<HTMLDivElement>(null)
 
@@ -54,7 +55,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart, onDragEnd })
 
 	const { ref: linkingRef, ghostElement: linkingGhost } = useDragDrop({
-		type: 'actorNodeLinking',
+		type: 'mindmapNodeLinking',
 		ghostFactory: () => null,
 		trigger: DragTrigger.MindmapForceNewWire,
 		params: {
@@ -123,7 +124,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 				},
 			}}
 		>
-			<ActorNode parent={parent} nodeId={node.id} onHeaderClick={onHeaderClick} />
+			<MindmapNodeRenderer parent={parent} nodeId={node.id} onHeaderClick={onHeaderClick} />
 			{linkingGhost}
 		</Box>
 	)

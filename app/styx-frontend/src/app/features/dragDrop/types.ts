@@ -22,7 +22,7 @@ export type DraggableParams = {
 		child: CalendarDraftUnitChildRelation
 		index: number
 	}
-	['actorNodeLinking']: {
+	['mindmapNodeLinking']: {
 		sourceNodeId: string
 	}
 }

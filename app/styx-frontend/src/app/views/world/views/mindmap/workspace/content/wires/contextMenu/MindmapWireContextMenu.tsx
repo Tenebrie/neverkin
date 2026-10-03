@@ -18,7 +18,7 @@ import { useUpdateMindmapWire } from '@/app/views/world/views/mindmap/api/useUpd
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { getSelectedWireKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
 
-import { NODE_FALLBACK_H, NODE_W } from '../../nodes/ActorNode'
+import { NODE_FALLBACK_H, NODE_W } from '../../nodes/MindmapNodeRenderer'
 import { midpointOf } from '../canvas/MindmapCanvasMath'
 import { MindmapWireContextMenuEditor } from './MindmapWireContextMenuEditor'
 
