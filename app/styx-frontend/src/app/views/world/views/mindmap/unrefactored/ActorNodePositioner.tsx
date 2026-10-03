@@ -53,6 +53,9 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 	const publishPosition = useEvent(() => {
 		const { x, y } = positionRef.current
 		const current = nodeLayouts.get(node.id)
+		if (current && current.x === x && current.y === y) {
+			return
+		}
 		nodeLayouts.set(node.id, {
 			x,
 			y,

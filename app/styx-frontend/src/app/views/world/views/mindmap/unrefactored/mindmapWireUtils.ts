@@ -1,12 +1,7 @@
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { MindmapNodeLayout } from '@/app/views/world/views/mindmap/types'
-import {
-	bezierPoint,
-	midpointOf,
-	toControlPoints,
-	WireControlPoints,
-} from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
+import { WireControlPoints } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 
 export const NODE_W = 300
 export const NODE_FALLBACK_H = 60
@@ -129,6 +124,7 @@ export function pickEdgePoints(source: MindmapNodeLayout, target: MindmapNodeLay
 /** A wire's look, drawn by `MindmapWireCanvas` */
 export type WirePaint = {
 	endpoints: WireEndpoints
+	curve: WireControlPoints
 	hasSourceArrow: boolean
 	hasTargetArrow: boolean
 	sourceColor: string
@@ -138,93 +134,6 @@ export type WirePaint = {
 	isActive: boolean
 }
 
-const wireRegistry = new Map<string, WireControlPoints>()
-
-export function registerWire(id: string, ep: WireEndpoints): void {
-	wireRegistry.set(id, toControlPoints(ep))
-}
-
-export function getWireMidpoint(id: string): { x: number; y: number } | null {
-	const controlPoints = wireRegistry.get(id)
-	return controlPoints ? midpointOf(controlPoints) : null
-}
-
-export function unregisterWire(id: string): void {
-	wireRegistry.delete(id)
-}
-
-export function getWiresInRect(
-	svgLeft: number,
-	svgTop: number,
-	svgRight: number,
-	svgBottom: number,
-): string[] {
-	const result: string[] = []
-	wireRegistry.forEach((cp, wireId) => {
-		const bboxLeft = Math.min(cp.x1, cp.cx1, cp.cx2, cp.x2)
-		const bboxRight = Math.max(cp.x1, cp.cx1, cp.cx2, cp.x2)
-		const bboxTop = Math.min(cp.y1, cp.cy1, cp.cy2, cp.y2)
-		const bboxBottom = Math.max(cp.y1, cp.cy1, cp.cy2, cp.y2)
-		if (svgLeft > bboxRight || svgRight < bboxLeft || svgTop > bboxBottom || svgBottom < bboxTop) {
-			return
-		}
-		const SEGMENTS = 20
-		let segmentStart = bezierPoint(cp, 0)
-		for (let i = 1; i <= SEGMENTS; i++) {
-			const segmentEnd = bezierPoint(cp, i / SEGMENTS)
-			if (segmentIntersectsRect(segmentStart, segmentEnd, svgLeft, svgTop, svgRight, svgBottom)) {
-				result.push(wireId)
-				return
-			}
-			segmentStart = segmentEnd
-		}
-	})
-	return result
-}
-
-export function buildPathD(ep: WireEndpoints) {
-	const { x1, y1, cx1, cy1, cx2, cy2, x2, y2 } = toControlPoints(ep)
+export function buildPathD({ x1, y1, cx1, cy1, cx2, cy2, x2, y2 }: WireControlPoints) {
 	return `M ${x1},${y1} C ${cx1},${cy1} ${cx2},${cy2} ${x2},${y2}`
-}
-
-export function pathMidpoint(ep: WireEndpoints): { x: number; y: number } {
-	return midpointOf(toControlPoints(ep))
-}
-
-function segmentIntersectsRect(
-	start: { x: number; y: number },
-	end: { x: number; y: number },
-	left: number,
-	top: number,
-	right: number,
-	bottom: number,
-): boolean {
-	const dx = end.x - start.x
-	const dy = end.y - start.y
-	const boundaries = [
-		{ direction: -dx, distance: start.x - left },
-		{ direction: dx, distance: right - start.x },
-		{ direction: -dy, distance: start.y - top },
-		{ direction: dy, distance: bottom - start.y },
-	]
-	let enter = 0
-	let exit = 1
-	for (const { direction, distance } of boundaries) {
-		if (direction === 0) {
-			if (distance < 0) {
-				return false
-			}
-			continue
-		}
-		const crossing = distance / direction
-		if (direction < 0) {
-			enter = Math.max(enter, crossing)
-		} else {
-			exit = Math.min(exit, crossing)
-		}
-		if (enter > exit) {
-			return false
-		}
-	}
-	return true
 }

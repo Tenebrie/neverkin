@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import { useStore } from 'react-redux'
 
+import { DragDropState } from '@/app/features/dragDrop/DragDropState'
 import { useDragDrop } from '@/app/features/dragDrop/hooks/useDragDrop'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useDragHoverExpand } from '@/app/features/dragDrop/hooks/useDragHoverExpand'
@@ -10,7 +11,6 @@ import { useBulkWikiMove } from '@/app/views/world/api/useBulkWikiMove'
 import { useMoveArticle } from '@/app/views/world/api/useMoveArticle'
 
 import { NewNodeGhost } from '../../mindmap/components/NewNodeGhost'
-import { getHoveredMindmapClickArea } from '../../mindmap/utils/getHoveredMindmapClickArea'
 import { getHoveredMindmapNode } from '../../mindmap/utils/getHoveredMindmapNode'
 import { useArticleCollapseControls } from '../articleList/hooks/useArticleCollapseControls'
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
@@ -28,6 +28,14 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 	const { forceOpen } = useArticleCollapseControls(article)
 
 	const store = useStore<RootState>()
+
+	function getHoveredMindmapClickArea() {
+		const state = DragDropState.current
+		if (!state) {
+			return false
+		}
+		return state.hovered.find((element) => element.hasAttribute('data-mindmap-click-area'))
+	}
 
 	const { ref, ghostElement } = useDragDrop({
 		type: 'articleListItem',

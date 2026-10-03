@@ -1,8 +1,6 @@
 import { SlotBuffer } from '@/app/features/rendering/SlotBuffer'
 import { WirePaint } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
-import { toControlPoints } from './MindmapCanvasMath'
-
 /** Per-wire inputs of the vertex shader, in the order `MindmapWireBuffer.encode` lays them out */
 export const WIRE_ATTRIBUTES = [
 	{ name: 'a_sourcePoint', size: 2 },
@@ -75,7 +73,7 @@ export class MindmapWireBuffer {
 	/** Writes `paint` into `encoded`, in the order of `WIRE_ATTRIBUTES` */
 	private encode(paint: WirePaint) {
 		const out = this.encoded
-		const curve = toControlPoints(paint.endpoints)
+		const { curve } = paint
 		const { nx1, ny1, nx2, ny2 } = paint.endpoints
 		let i = 0
 		out[i++] = curve.x1

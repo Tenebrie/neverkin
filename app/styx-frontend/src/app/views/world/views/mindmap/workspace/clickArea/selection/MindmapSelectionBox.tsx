@@ -3,9 +3,13 @@ import useEvent from 'react-use-event-hook'
 
 import { RootState } from '@/app/store'
 import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
-import { getWiresInRect } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
+import {
+	bezierPoint,
+	WireControlPoints,
+} from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 import { deduplicateBy } from '@/ts-shared/utils/deduplicateBy'
 import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/SelectionBox'
 
@@ -16,6 +20,7 @@ type Props = {
 export function MindmapSelectionBox({ ref }: Props) {
 	const store = useStore<RootState>()
 	const dispatch = useDispatch()
+	const { wireGeometry } = useMindmapContext()
 
 	const onClick = useEvent((event: MouseEvent) => {
 		if (isMultiselectEvent(event)) {
@@ -28,7 +33,7 @@ export function MindmapSelectionBox({ ref }: Props) {
 		const { selectedNodes, selectedWires } = store.getState().mindmap
 
 		const intersectingNodes = checkNodeIntersection(ref.current, rect)
-		const intersectingWires = checkWireIntersection(ref.current, rect)
+		const intersectingWires = checkWireIntersection(ref.current, rect, wireGeometry)
 		let newSelectedNodes: ReturnType<typeof checkNodeIntersection> = []
 		let newSelectedWires: ReturnType<typeof checkWireIntersection> = []
 
@@ -117,7 +122,11 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 	return deduplicateBy(selectedNodeIds, (item) => item.key)
 }
 
-function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
+function checkWireIntersection(
+	parentElement: HTMLElement | null,
+	selectionBox: SelectionRect,
+	wireGeometry: Map<string, WireControlPoints>,
+) {
 	if (!parentElement) {
 		return []
 	}
@@ -141,5 +150,73 @@ function checkWireIntersection(parentElement: HTMLElement | null, selectionBox: 
 		return []
 	}
 
-	return getWiresInRect(topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+	return getWiresInRect(wireGeometry, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+}
+
+export function getWiresInRect(
+	wireGeometry: Map<string, WireControlPoints>,
+	svgLeft: number,
+	svgTop: number,
+	svgRight: number,
+	svgBottom: number,
+): string[] {
+	const result: string[] = []
+	wireGeometry.forEach((cp, wireId) => {
+		const bboxLeft = Math.min(cp.x1, cp.cx1, cp.cx2, cp.x2)
+		const bboxRight = Math.max(cp.x1, cp.cx1, cp.cx2, cp.x2)
+		const bboxTop = Math.min(cp.y1, cp.cy1, cp.cy2, cp.y2)
+		const bboxBottom = Math.max(cp.y1, cp.cy1, cp.cy2, cp.y2)
+		if (svgLeft > bboxRight || svgRight < bboxLeft || svgTop > bboxBottom || svgBottom < bboxTop) {
+			return
+		}
+		const SEGMENTS = 20
+		let segmentStart = bezierPoint(cp, 0)
+		for (let i = 1; i <= SEGMENTS; i++) {
+			const segmentEnd = bezierPoint(cp, i / SEGMENTS)
+			if (segmentIntersectsRect(segmentStart, segmentEnd, svgLeft, svgTop, svgRight, svgBottom)) {
+				result.push(wireId)
+				return
+			}
+			segmentStart = segmentEnd
+		}
+	})
+	return result
+}
+
+function segmentIntersectsRect(
+	start: { x: number; y: number },
+	end: { x: number; y: number },
+	left: number,
+	top: number,
+	right: number,
+	bottom: number,
+): boolean {
+	const dx = end.x - start.x
+	const dy = end.y - start.y
+	const boundaries = [
+		{ direction: -dx, distance: start.x - left },
+		{ direction: dx, distance: right - start.x },
+		{ direction: -dy, distance: start.y - top },
+		{ direction: dy, distance: bottom - start.y },
+	]
+	let enter = 0
+	let exit = 1
+	for (const { direction, distance } of boundaries) {
+		if (direction === 0) {
+			if (distance < 0) {
+				return false
+			}
+			continue
+		}
+		const crossing = distance / direction
+		if (direction < 0) {
+			enter = Math.max(enter, crossing)
+		} else {
+			exit = Math.min(exit, crossing)
+		}
+		if (enter > exit) {
+			return false
+		}
+	}
+	return true
 }

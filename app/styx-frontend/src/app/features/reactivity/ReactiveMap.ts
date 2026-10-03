@@ -2,7 +2,7 @@ export type Listener = () => void
 
 export class ReactiveMap<Key, Value> {
 	private data = new Map<Key, Value>()
-	private keyList: Key[] = []
+	private keyList: Key[] | null = []
 	private listeners = new Map<Key, Set<Listener>>()
 	private keyListeners = new Set<Listener>()
 
@@ -11,6 +11,7 @@ export class ReactiveMap<Key, Value> {
 	}
 
 	keys() {
+		this.keyList ??= [...this.data.keys()]
 		return this.keyList
 	}
 
@@ -25,7 +26,7 @@ export class ReactiveMap<Key, Value> {
 		}
 		this.data.set(key, value)
 		if (isNew) {
-			this.keyList = [...this.data.keys()]
+			this.keyList = null
 		}
 		this.notify([key], isNew)
 	}
@@ -34,7 +35,7 @@ export class ReactiveMap<Key, Value> {
 		if (!this.data.delete(key)) {
 			return
 		}
-		this.keyList = [...this.data.keys()]
+		this.keyList = null
 		this.notify([key], true)
 	}
 
@@ -52,7 +53,7 @@ export class ReactiveMap<Key, Value> {
 			}
 		}
 		const nextKeys = [...next.keys()]
-		const keysChanged = !isSameList(this.keyList, nextKeys)
+		const keysChanged = !isSameList(this.keys(), nextKeys)
 
 		this.data = next
 		if (keysChanged) {

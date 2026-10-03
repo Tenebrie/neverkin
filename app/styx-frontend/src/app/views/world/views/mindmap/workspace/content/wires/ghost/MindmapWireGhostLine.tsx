@@ -11,6 +11,7 @@ import {
 	resolveNodeLayout,
 	WireEndpoints,
 } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+import { toControlPoints } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 
 import { useMindmapWireGhostPainter } from './context/useMindmapWireGhostContext'
 
@@ -78,7 +79,7 @@ export function MindmapWireGhostLine({ node }: Props) {
 			}
 		}
 
-		pathRef.current?.setAttribute('d', buildPathD(endpoints))
+		pathRef.current?.setAttribute('d', buildPathD(toControlPoints(endpoints)))
 		gradientRef.current?.setAttribute('x1', String(endpoints.x1))
 		gradientRef.current?.setAttribute('y1', String(endpoints.y1))
 		gradientRef.current?.setAttribute('x2', String(endpoints.x2))

@@ -15,13 +15,11 @@ import { useDeleteMindmapWires } from '@/app/views/world/views/mindmap/api/useDe
 import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapData'
 import { useSplitMindmapWire } from '@/app/views/world/views/mindmap/api/useSplitMindmapWire'
 import { useUpdateMindmapWire } from '@/app/views/world/views/mindmap/api/useUpdateMindmapWire'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { getSelectedWireKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
-import {
-	getWireMidpoint,
-	NODE_FALLBACK_H,
-	NODE_W,
-} from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
+import { NODE_FALLBACK_H, NODE_W } from '@/app/views/world/views/mindmap/unrefactored/mindmapWireUtils'
 
+import { midpointOf } from './canvas/MindmapCanvasMath'
 import { MindmapWirePopoverEditor } from './MindmapWirePopoverEditor'
 
 export type MindmapWireState = {
@@ -33,6 +31,7 @@ export type MindmapWireState = {
 
 export function MindmapWirePopover({ open, position, onClose }: MindmapWireState) {
 	const { wires } = useMindmapData()
+	const { wireGeometry } = useMindmapContext()
 
 	const [updateMindmapWire] = useUpdateMindmapWire()
 	const [deleteMindmapWires] = useDeleteMindmapWires()
@@ -57,7 +56,8 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 	}, [currentWire, direction, label, onClose, updateMindmapWire])
 
 	const handleSplit = useCallback(() => {
-		const midpoint = currentWire ? getWireMidpoint(currentWire.id) : null
+		const curve = currentWire ? wireGeometry.get(currentWire.id) : undefined
+		const midpoint = curve ? midpointOf(curve) : null
 		if (!currentWire || !midpoint) {
 			return
 		}
@@ -68,7 +68,7 @@ export function MindmapWirePopover({ open, position, onClose }: MindmapWireState
 			direction,
 		})
 		onClose()
-	}, [currentWire, direction, label, onClose, splitMindmapWire])
+	}, [currentWire, direction, label, onClose, splitMindmapWire, wireGeometry])
 
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], handleClose, open && ShortcutPriorities.InputField)
 

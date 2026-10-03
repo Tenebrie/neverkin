@@ -11,6 +11,7 @@ import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { MindmapNavigationState, MindmapState } from '../MindmapState'
 import { MindmapNodeLayout, MindmapNodeParcel, MindmapWireParcel } from '../types'
+import { WireControlPoints } from '../workspace/content/wires/canvas/MindmapCanvasMath'
 import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWireBuffer'
 
 export const MindmapContext = createRealtimeContext(() => {
@@ -52,6 +53,7 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [nodeResizeObserver] = useState(() => new SharedResizeObserver())
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
+	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
 
 	return {
 		nodes,
@@ -59,6 +61,7 @@ export const MindmapContext = createRealtimeContext(() => {
 		nodeResizeObserver,
 		wires,
 		wireBuffer,
+		wireGeometry,
 		onPaint,
 		paint,
 		moveNodes,

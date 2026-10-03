@@ -14,17 +14,9 @@ import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { useMindmapContext, useMindmapWire } from '../context/useMindmapContext'
 import { mindmapSlice } from '../MindmapSlice'
 import { MindmapNodeParentParcel, MindmapWireParcel } from '../types'
+import { midpointOf, toControlPoints } from '../workspace/content/wires/canvas/MindmapCanvasMath'
 import { MindmapWireLabel } from '../workspace/content/wires/label/MindmapWireLabel'
-import {
-	buildPathD,
-	pathMidpoint,
-	pickEdgePoints,
-	registerWire,
-	resolveNodeLayout,
-	unregisterWire,
-	WireEndpoints,
-	WirePaint,
-} from './mindmapWireUtils'
+import { buildPathD, pickEdgePoints, resolveNodeLayout, WireEndpoints, WirePaint } from './mindmapWireUtils'
 
 type Props = {
 	wireId: string
@@ -32,24 +24,6 @@ type Props = {
 	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
 }
 
-type WireProps = Omit<Props, 'wireId'> & {
-	wire: MindmapWireParcel
-	source: {
-		node: MindmapNode
-		parent: MindmapNodeParentParcel
-	}
-	target: {
-		node: MindmapNode
-		parent: MindmapNodeParentParcel
-	}
-}
-
-type WireHighlightState = 'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
-
-/**
- * Subscribes to this one wire in the content store, so an edit elsewhere on the mindmap never
- * reaches this component.
- */
 export function MindmapWireLine({ wireId, ...props }: Props) {
 	const boxedWire = useMindmapWire(wireId)
 	if (!boxedWire) {
@@ -66,6 +40,20 @@ export function MindmapWireLine({ wireId, ...props }: Props) {
 	)
 }
 
+type WireHighlightState = 'none' | 'brightGradient' | 'brightSource' | 'brightTarget' | 'dim'
+
+type WireProps = Omit<Props, 'wireId'> & {
+	wire: MindmapWireParcel
+	source: {
+		node: MindmapNode
+		parent: MindmapNodeParentParcel
+	}
+	target: {
+		node: MindmapNode
+		parent: MindmapNodeParentParcel
+	}
+}
+
 function MindmapWireLineComponent({
 	wire: boxedWire,
 	source,
@@ -74,7 +62,7 @@ function MindmapWireLineComponent({
 	onOpenPopover,
 }: WireProps) {
 	const { wire } = boxedWire
-	const { wireBuffer, nodeLayouts } = useMindmapContext()
+	const { wireBuffer, wireGeometry, nodeLayouts } = useMindmapContext()
 	const containerRef = useRef<HTMLDivElement>(null)
 	const hitPathRef = useRef<SVGPathElement>(null)
 
@@ -82,23 +70,21 @@ function MindmapWireLineComponent({
 	const showTargetArrow = wire.direction === 'Normal' || wire.direction === 'TwoWay'
 
 	const updateDom = (ep: WireEndpoints) => {
-		hitPathRef.current?.setAttribute('d', buildPathD(ep))
-		const mid = pathMidpoint(ep)
+		const curve = toControlPoints(ep)
+		hitPathRef.current?.setAttribute('d', buildPathD(curve))
+		const mid = midpointOf(curve)
 		containerRef.current?.style.setProperty('--label-position-x', `${mid.x}px`)
 		containerRef.current?.style.setProperty('--label-position-y', `${mid.y}px`)
-		registerWire(wire.id, ep)
+		wireGeometry.set(wire.id, curve)
 
 		const paint = paintRef.current
 		paint.endpoints = ep
+		paint.curve = curve
 		paint.hasSourceArrow = showSourceArrow
 		paint.hasTargetArrow = showTargetArrow
 		wireBuffer.publish(wire.id, paint)
 	}
 
-	/**
-	 * Live node positions are authoritative — they follow a drag in progress, while the props only
-	 * catch up once the move is committed. Props are the fallback for nodes that aren't mounted.
-	 */
 	const resolveEndpoints = (): WireEndpoints => {
 		return pickEdgePoints(
 			resolveNodeLayout(nodeLayouts, source.node),
@@ -120,6 +106,7 @@ function MindmapWireLineComponent({
 
 	const paintRef = useRef<WirePaint>({
 		endpoints: ep,
+		curve: toControlPoints(ep),
 		hasSourceArrow: showSourceArrow,
 		hasTargetArrow: showTargetArrow,
 		sourceColor: 'transparent',
@@ -140,10 +127,10 @@ function MindmapWireLineComponent({
 	})
 	useEffect(
 		() => () => {
-			unregisterWire(wire.id)
+			wireGeometry.delete(wire.id)
 			wireBuffer.remove(wire.id)
 		},
-		[wire.id, wireBuffer],
+		[wire.id, wireBuffer, wireGeometry],
 	)
 
 	const { addWireToSelection, removeWireFromSelection } = mindmapSlice.actions
@@ -280,20 +267,13 @@ function MindmapWireLineComponent({
 	}
 
 	return (
-		<Box
-			ref={containerRef}
-			sx={{
-				'--label-position-x': `${pathMidpoint(ep).x}px`,
-				'--label-position-y': `${pathMidpoint(ep).y}px`,
-			}}
-		>
+		<Box ref={containerRef}>
 			{createPortal(
 				<>
 					{/* Invisible fat hit area for pointer events; the visible wire is drawn by MindmapWireCanvas */}
 					<path
 						data-testid="MindmapWire"
 						ref={hitPathRef}
-						d={buildPathD(ep)}
 						fill="none"
 						stroke="none"
 						pointerEvents="stroke"
