@@ -460,6 +460,7 @@ function ActorNodePositionerComponent({ parent, node }: NodeProps) {
 			sx={{
 				pointerEvents: 'auto',
 				position: 'absolute',
+				zIndex: 1,
 				// The drag ghost is snapped over this node and stands in for it
 				opacity: isDropTarget ? 0 : 1,
 				transform:
