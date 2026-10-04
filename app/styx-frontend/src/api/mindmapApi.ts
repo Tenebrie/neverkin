@@ -277,11 +277,13 @@ export type PasteMindmapNodesApiArg = {
 				sourceTempId: string
 				targetTempId: string
 				direction: 'Normal' | 'Reversed' | 'TwoWay'
+				content: string
 			}[]
 			externalLinks: {
 				sourceTempId: string
 				targetNodeId: string
 				direction: 'Normal' | 'Reversed' | 'TwoWay'
+				content: string
 			}[]
 		}
 	}

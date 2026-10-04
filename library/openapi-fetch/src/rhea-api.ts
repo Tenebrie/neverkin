@@ -8589,11 +8589,13 @@ export interface operations {
                             sourceTempId: string;
                             targetTempId: string;
                             direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
                         }[];
                         externalLinks: {
                             sourceTempId: string;
                             targetNodeId: string;
                             direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
                         }[];
                     };
                 };
@@ -8613,11 +8615,13 @@ export interface operations {
                             sourceTempId: string;
                             targetTempId: string;
                             direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
                         }[];
                         externalLinks: {
                             sourceTempId: string;
                             targetNodeId: string;
                             direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
                         }[];
                     };
                 };
