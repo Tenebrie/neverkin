@@ -32,6 +32,7 @@ export function MindmapClipboardManager({ containerRef }: Props) {
 				return
 			}
 
+			event.clipboardData.setData('text/plain', JSON.stringify(structuredData))
 			event.clipboardData.setData(STRUCTURED_DATA_TYPE, JSON.stringify(structuredData))
 			const totalNodes = structuredData.nodes.length
 			const totalWires = structuredData.internalLinks.length + structuredData.externalLinks.length
