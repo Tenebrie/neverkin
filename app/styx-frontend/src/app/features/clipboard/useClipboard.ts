@@ -51,7 +51,7 @@ export function useClipboard({ containerRef, onCopy, onPaste, onCut }: Props) {
 			document.body.removeEventListener('cut', handleCut)
 			element.removeEventListener('pointerdown', grabFocus)
 		}
-	}, [containerRef, handleCopy, handleCut, handlePaste, onCopy, onCut, onPaste])
+	}, [containerRef, handleCopy, handleCut, handlePaste])
 }
 
 function isTargetingInput(target: EventTarget | null) {
