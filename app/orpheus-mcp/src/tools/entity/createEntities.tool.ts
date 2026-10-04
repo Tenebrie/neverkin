@@ -8,7 +8,7 @@ import { normalizeColor } from '@src/utils/normalizeColor.js'
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { resolveTimestamp } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'create_entities'
 

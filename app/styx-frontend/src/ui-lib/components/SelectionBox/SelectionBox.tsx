@@ -11,8 +11,13 @@ export type SelectionRect = {
 	height: number
 }
 
+export type SelectionBoxHandle = {
+	scaleAround: (originX: number, originY: number, factor: number) => void
+}
+
 type Props = {
 	ref: RefObject<HTMLDivElement | null>
+	handle?: RefObject<SelectionBoxHandle | null>
 	onClick: (event: MouseEvent) => void
 	onUpdateSelection: (rect: SelectionRect, event: MouseEvent) => void
 	onFinalizeSelection: (rect: SelectionRect, event: MouseEvent) => void
@@ -20,7 +25,13 @@ type Props = {
 
 export const SelectionBox = memo(SelectionBoxComponent)
 
-export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinalizeSelection }: Props) {
+export function SelectionBoxComponent({
+	ref,
+	handle,
+	onClick,
+	onUpdateSelection,
+	onFinalizeSelection,
+}: Props) {
 	const selectionRect = useRef<SelectionRect>({
 		visible: false,
 		x: 0,
@@ -140,16 +151,32 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 			}
 		}
 
+		if (handle) {
+			handle.current = {
+				scaleAround: (originX, originY, factor) => {
+					const rect = selectionRect.current
+					rect.x = originX + (rect.x - originX) * factor
+					rect.y = originY + (rect.y - originY) * factor
+					rect.width *= factor
+					rect.height *= factor
+					applySelectionBoxStyle()
+				},
+			}
+		}
+
 		element.addEventListener('mousedown', handleMouseDown)
 		window.addEventListener('mousemove', handleMouseMove)
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
+			if (handle) {
+				handle.current = null
+			}
 			element.removeEventListener('mousedown', handleMouseDown)
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [onClick, onUpdateSelection, onFinalizeSelection, ref])
+	}, [onClick, onUpdateSelection, onFinalizeSelection, ref, handle])
 
 	const theme = useCustomTheme()
 

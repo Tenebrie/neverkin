@@ -29,7 +29,9 @@ export function useDeleteMindmapWires() {
 			const { response, error } = parseApiResponse(
 				await deleteMindmapWires({
 					worldId,
-					wires,
+					body: {
+						wires,
+					},
 				}),
 			)
 			if (error) {

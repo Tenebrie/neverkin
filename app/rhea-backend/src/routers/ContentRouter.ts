@@ -16,7 +16,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { actorListTag, entityContentTag, worldEventTag, worldWikiArticleTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'

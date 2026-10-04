@@ -237,6 +237,7 @@ updates:
       - '/library/tiptap-schema'
       - '/library/openapi-fetch'
       - '/library/esoteric-date'
+      - '/library/zod-schema'
     schedule:
       interval: 'weekly'
     ignore:

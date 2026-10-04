@@ -329,12 +329,18 @@ test.describe('Wiki View', () => {
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
 			await textbox.click()
+			await expect(textbox).toBeFocused()
 			await textbox.pressSequentially('Hello ', { delay: 10 })
 
 			// Click the @Mention button, type a name, and press Enter to create
 			await page.getByRole('button', { name: '@Mention' }).click()
+			await expect(textbox).toBeFocused()
+			await expect(textbox).toHaveText('Hello @')
 			await page.keyboard.type('NewActor', { delay: 10 })
-			await expect(page.getByText('Quick create')).toBeVisible()
+			await expect(textbox).toHaveText('Hello @NewActor')
+			await expect(
+				page.getByRole('menuitem').filter({ hasText: 'Actor:' }).filter({ hasText: 'NewActor' }),
+			).toHaveClass(/Mui-selected/)
 			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Expect the mention to be inserted (not a newline)

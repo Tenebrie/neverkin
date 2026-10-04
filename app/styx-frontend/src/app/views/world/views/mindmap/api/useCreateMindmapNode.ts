@@ -23,6 +23,8 @@ export function useCreateMindmapNode() {
 						contentRich: '',
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
+						positionX: 0,
+						positionY: 0,
 						...body,
 						id,
 					})

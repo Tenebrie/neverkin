@@ -1,14 +1,17 @@
 import { useInsertionEffect, useState } from 'react'
+import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
+import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
+import { getMindmapState } from '../MindmapSliceSelectors'
 import { MindmapNavigationState, MindmapState } from '../MindmapState'
 import { MindmapNodeLayout, MindmapNodeParcel, MindmapWireParcel } from '../types'
 import { WireControlPoints } from '../workspace/content/wires/canvas/MindmapCanvasMath'
@@ -20,6 +23,11 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [reparentNode] = useReparentMindmapNode()
 	const [createWires] = useCreateMindmapWires()
 	const [deleteWires] = useDeleteMindmapWires()
+
+	const { selectedNodes, selectedWires } = useSelector(
+		getMindmapState,
+		(a, b) => a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires,
+	)
 
 	const onPaint = useEvent((painter: (navState: MindmapNavigationState) => void) => {
 		painters.add(painter)
@@ -54,6 +62,9 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
 	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
+	// const [selectedNodes]
+	const selectedNodesCache = useAutoRef(selectedNodes)
+	const selectedWiresCache = useAutoRef(selectedWires)
 
 	return {
 		nodes,
@@ -62,6 +73,8 @@ export const MindmapContext = createRealtimeContext(() => {
 		wires,
 		wireBuffer,
 		wireGeometry,
+		selectedNodesCache,
+		selectedWiresCache,
 		onPaint,
 		paint,
 		moveNodes,

@@ -19,7 +19,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'

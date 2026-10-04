@@ -53,6 +53,7 @@ export function MindmapNodeContentStickyNoteEditor({ nodeId, name }: Props) {
 				sx={{
 					textAlign: 'center',
 					overflowWrap: 'anywhere',
+					whiteSpace: 'pre-wrap',
 					display: '-webkit-box',
 					WebkitLineClamp: 8,
 					WebkitBoxOrient: 'vertical',
@@ -77,7 +78,7 @@ export function MindmapNodeContentStickyNoteEditor({ nodeId, name }: Props) {
 				if (event.key === 'Escape') {
 					event.currentTarget.value = name
 					event.currentTarget.blur()
-				} else if (event.key === 'Enter' && (event.ctrlKey || event.metaKey)) {
+				} else if (event.key === 'Enter' && !event.shiftKey) {
 					event.currentTarget.blur()
 				}
 			}}

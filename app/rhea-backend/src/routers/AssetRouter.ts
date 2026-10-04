@@ -14,7 +14,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { assetTag, imageGenerationTag } from './utils/tags.js'
 import { AssetTypeValidator } from './validators/AssetTypeValidator.js'

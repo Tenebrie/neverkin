@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 import usePersistentStateRef from '@/app/hooks/usePersistentStateRef'
 import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'

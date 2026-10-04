@@ -1,6 +1,5 @@
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
-import OpenInFull from '@mui/icons-material/OpenInFull'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
@@ -77,19 +76,6 @@ export function MindmapNodeContextMenu() {
 						<Edit />
 					</ListItemIcon>
 					<ListItemText>Edit</ListItemText>
-				</MenuItem>
-			)}
-			{isStickyNote && (
-				<MenuItem
-					onClick={() => {
-						navigate({ search: (prev) => ({ ...prev, navi: [parent.id] }) })
-						setOpen(false)
-					}}
-				>
-					<ListItemIcon>
-						<OpenInFull />
-					</ListItemIcon>
-					<ListItemText>Edit as full entity</ListItemText>
 				</MenuItem>
 			)}
 			<MenuItem

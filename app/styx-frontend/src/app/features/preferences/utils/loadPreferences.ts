@@ -20,29 +20,29 @@ export const PreferencesStateSchema = z.object({
 			notificationTitle: z.string().default(''),
 			notificationDescription: z.string().default(''),
 		})
-		.default({}),
+		.prefault({}),
 	calendarEditor: z
 		.object({
 			expandedUnitSections: z.array(z.nativeEnum(CalendarUnitEditorTab)).default([]),
 		})
-		.default({}),
+		.prefault({}),
 	colorMode: z.union([z.literal('light'), z.literal('dark')]).default(defaultTheme),
 	global: z
 		.object({
 			animatedBackground: z.boolean().default(true),
 			showDiscordLink: z.boolean().default(true),
 		})
-		.default({}),
+		.prefault({}),
 	home: z
 		.object({
 			lastOpenedWorldId: z.string().nullable().default(null),
 		})
-		.default({}),
+		.prefault({}),
 	iconSets: z
 		.object({
 			recent: z.array(z.string()).default([]),
 		})
-		.default({}),
+		.prefault({}),
 	outliner: z
 		.object({
 			tabIndex: z.number().default(0),
@@ -51,7 +51,7 @@ export const PreferencesStateSchema = z.object({
 			expandedEvents: z.array(z.string()).default([]),
 			expandedTags: z.array(z.string()).default([]),
 		})
-		.default({}),
+		.prefault({}),
 	overview: z
 		.object({
 			actorsOpen: z.boolean().default(true),
@@ -59,14 +59,14 @@ export const PreferencesStateSchema = z.object({
 			eventsOpen: z.boolean().default(true),
 			eventsReversed: z.boolean().default(false),
 		})
-		.default({}),
+		.prefault({}),
 	timeline: z
 		.object({
 			containerHeight: z.number().default(232),
 			scaleLevel: ScaleLevelSchema.default(0),
 			reduceAnimations: z.boolean().default(false),
 		})
-		.default({}),
+		.prefault({}),
 	wiki: z
 		.object({
 			expandedFolders: z.array(z.string()).default([]),
@@ -74,12 +74,12 @@ export const PreferencesStateSchema = z.object({
 				.array(z.enum(['article', 'actor', 'event', 'tag']))
 				.default(['article', 'actor', 'event', 'tag']),
 		})
-		.default({}),
+		.prefault({}),
 	imageGenerator: z
 		.object({
 			lastPrompt: z.string().default(''),
 		})
-		.default({}),
+		.prefault({}),
 })
 
 export const loadPreferences = () => {

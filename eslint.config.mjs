@@ -136,6 +136,15 @@ export default defineConfig(
 		rules: {
 			'neverkin/no-opaque-destructive-filter': 'error',
 			'neverkin/no-transaction-escape': 'error',
+			'no-restricted-properties': [
+				'error',
+				...['$queryRaw', '$queryRawUnsafe', '$queryRawTyped', '$executeRaw', '$executeRawUnsafe'].map(
+					(property) => ({
+						property,
+						message: 'Raw SQL is forbidden. Use the typed Prisma query API.',
+					}),
+				),
+			],
 		},
 	},
 	{
@@ -143,6 +152,24 @@ export default defineConfig(
 		plugins: { neverkin },
 		rules: {
 			'neverkin/no-unknown-api-path': 'error',
+		},
+	},
+	{
+		files: ['**/*.{ts,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					paths: [
+						{
+							name: 'zod',
+							importNames: ['default'],
+							message:
+								"Use `import { z } from 'zod'`. The default import emits `z.z.core.*` into the .d.ts, which ts-morph (Moonflower) resolves to `any`.",
+						},
+					],
+				},
+			],
 		},
 	},
 	{

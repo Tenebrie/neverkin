@@ -27,7 +27,7 @@
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
 		"redis": "^6.2.1",
-		"zod": "^4.5.4"
+		"zod": "^4.6.5"
 	},
 	"devDependencies": {
 		"@modelcontextprotocol/inspector": "^2.5.0",

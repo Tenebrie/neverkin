@@ -34,7 +34,9 @@ export function useDeleteMindmapNodes() {
 			const { response, error } = parseApiResponse(
 				await deleteMindmapNodes({
 					worldId,
-					nodes,
+					body: {
+						nodes,
+					},
 				}),
 			)
 			if (error) {

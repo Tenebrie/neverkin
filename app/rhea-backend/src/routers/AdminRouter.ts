@@ -20,7 +20,7 @@ import {
 	useQueryParams,
 	useRequestBody,
 } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { adminUsersTag } from './utils/tags.js'
 import { UserLevelValidator } from './validators/UserLevelValidator.js'
