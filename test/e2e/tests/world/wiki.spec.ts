@@ -24,7 +24,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 
 			// Open article
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
@@ -300,7 +300,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
@@ -321,7 +321,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
@@ -355,7 +355,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create and open an article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -401,7 +401,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create and open an article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -511,7 +511,7 @@ test.describe('Wiki View', () => {
 		await dragRowToPoint(page, source, box.x + box.width / 2, box.y + box.height - 16)
 	}
 
-	async function createArticleViaUI(page: Page, name: string) {
+	async function createArticleAsUser(page: Page, name: string) {
 		await page.getByRole('button', { name: 'Create new object' }).click()
 		await page.getByRole('button', { name: 'Article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill(name)

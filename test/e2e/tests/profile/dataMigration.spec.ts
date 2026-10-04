@@ -1,19 +1,11 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { createMindmapNode, createMindmapWires } from '@fixtures/mindmap'
+import { createActor } from '@fixtures/world'
 import { expect, Page, test } from '@playwright/test'
 import { makeUrl } from '@tests/utils'
 import { readFile } from 'fs/promises'
 
-import type {
-	CreateActorApiArg,
-	CreateActorApiResponse,
-} from '../../../../app/styx-frontend/src/api/actorListApi'
 import type { ExportUserDataInlineApiResponse } from '../../../../app/styx-frontend/src/api/dataMigrationApi'
-import type {
-	CreateMindmapWiresApiArg,
-	CreateMindmapWiresApiResponse,
-	CreateNodeApiArg,
-	CreateNodeApiResponse,
-} from '../../../../app/styx-frontend/src/api/mindmapApi'
 import type {
 	CreateWorldEventApiArg,
 	CreateWorldEventApiResponse,
@@ -40,24 +32,12 @@ async function createWorld(page: Page, body: CreateWorldApiArg['body']) {
 	return postJson<CreateWorldApiResponse>(page, '/api/worlds', body)
 }
 
-async function createActor(page: Page, worldId: string, body: CreateActorApiArg['body']) {
-	return postJson<CreateActorApiResponse>(page, `/api/world/${worldId}/actors`, body)
-}
-
 async function createEvent(page: Page, worldId: string, body: CreateWorldEventApiArg['body']) {
 	return postJson<CreateWorldEventApiResponse>(page, `/api/world/${worldId}/event`, body)
 }
 
 async function createArticle(page: Page, worldId: string, body: CreateArticleApiArg['body']) {
 	return postJson<CreateArticleApiResponse>(page, `/api/world/${worldId}/wiki/articles`, body)
-}
-
-async function createMindmapNode(page: Page, worldId: string, body: CreateNodeApiArg['body']) {
-	return postJson<CreateNodeApiResponse>(page, `/api/world/${worldId}/mindmap/nodes`, body)
-}
-
-async function createMindmapWires(page: Page, worldId: string, body: CreateMindmapWiresApiArg['body']) {
-	return postJson<CreateMindmapWiresApiResponse>(page, `/api/world/${worldId}/mindmap/wires`, body)
 }
 
 async function deleteWorld(page: Page, worldId: string) {

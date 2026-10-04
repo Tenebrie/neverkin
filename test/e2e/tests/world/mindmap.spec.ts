@@ -1,5 +1,5 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { createActor, navigateToMindmap } from '@fixtures/world'
+import { createActorAsUser, navigateToMindmap } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
 
 test.describe('World Mindmap', () => {
@@ -11,11 +11,11 @@ test.describe('World Mindmap', () => {
 		await navigateToMindmap(page, 'createWorld')
 
 		// --- Create first actor ---
-		await createActor(page, 'Actor One')
+		await createActorAsUser(page, 'Actor One')
 		await expect(page.getByTestId('ArticleListItem/Actor One/0')).toBeVisible()
 
 		// --- Create second actor ---
-		await createActor(page, 'Actor Two')
+		await createActorAsUser(page, 'Actor Two')
 		await expect(page.getByTestId('ArticleListItem/Actor Two/0')).toBeVisible()
 
 		// --- Drag first actor from outliner to workspace ---
@@ -177,7 +177,7 @@ test.describe('World Mindmap', () => {
 		// --- Create 4 actors ---
 		const actorNames = ['Alpha', 'Beta', 'Gamma', 'Delta']
 		for (const name of actorNames) {
-			await createActor(page, name)
+			await createActorAsUser(page, name)
 			await expect(page.getByTestId(`ArticleListItem/${name}/0`)).toBeVisible()
 		}
 

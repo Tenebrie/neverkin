@@ -1,20 +1,10 @@
 import assert from 'node:assert'
 
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { createWorld, navigateToMindmap } from '@fixtures/world'
-import test, { expect, Locator, Page } from '@playwright/test'
-import { makeUrl, multiselectModifier } from '@tests/utils'
-
-import type {
-	CreateActorApiArg,
-	CreateActorApiResponse,
-} from '../../../../app/styx-frontend/src/api/actorListApi'
-import type {
-	CreateMindmapWiresApiArg,
-	CreateMindmapWiresApiResponse,
-	CreateNodeApiArg,
-	CreateNodeApiResponse,
-} from '../../../../app/styx-frontend/src/api/mindmapApi'
+import { createMindmapNode, createMindmapWires, multiselectWire } from '@fixtures/mindmap'
+import { createActor, createWorld, navigateToMindmap } from '@fixtures/world'
+import test, { expect } from '@playwright/test'
+import { multiselectModifier } from '@tests/utils'
 
 test.describe('Mindmap clipboard', () => {
 	test.beforeEach(async ({ page }) => {
@@ -24,13 +14,19 @@ test.describe('Mindmap clipboard', () => {
 	test('copy and paste puts the copies at the cursor', async ({ page }) => {
 		const world = await createWorld(page)
 		const actor = await createActor(page, world.id, { name: 'Actor' })
-		const actorNode = await createNode(page, world.id, {
+		const actorNode = await createMindmapNode(page, world.id, {
 			parentActorId: actor.id,
 			positionX: -350,
 			positionY: -150,
 		})
-		const plainNode = await createNode(page, world.id, { name: 'Plain node', positionX: 50, positionY: -50 })
-		await createWires(page, world.id, { wires: [{ sourceNodeId: actorNode.id, targetNodeId: plainNode.id }] })
+		const plainNode = await createMindmapNode(page, world.id, {
+			name: 'Plain node',
+			positionX: 50,
+			positionY: -50,
+		})
+		await createMindmapWires(page, world.id, {
+			wires: [{ sourceNodeId: actorNode.id, targetNodeId: plainNode.id }],
+		})
 		await navigateToMindmap(page, world)
 
 		const actorCard = page.locator(`[data-mindmap-node="${actorNode.id}"]`)
@@ -97,18 +93,22 @@ test.describe('Mindmap clipboard', () => {
 		page,
 	}) => {
 		const world = await createWorld(page)
-		const copiedNode = await createNode(page, world.id, { name: 'Copied', positionX: -350, positionY: -200 })
-		const selectedWireTarget = await createNode(page, world.id, {
+		const copiedNode = await createMindmapNode(page, world.id, {
+			name: 'Copied',
+			positionX: -350,
+			positionY: -200,
+		})
+		const selectedWireTarget = await createMindmapNode(page, world.id, {
 			name: 'Selected wire target',
 			positionX: 50,
 			positionY: -50,
 		})
-		const unselectedWireTarget = await createNode(page, world.id, {
+		const unselectedWireTarget = await createMindmapNode(page, world.id, {
 			name: 'Unselected wire target',
 			positionX: -300,
 			positionY: 150,
 		})
-		await createWires(page, world.id, {
+		await createMindmapWires(page, world.id, {
 			wires: [
 				{ sourceNodeId: copiedNode.id, targetNodeId: selectedWireTarget.id },
 				{ sourceNodeId: copiedNode.id, targetNodeId: unselectedWireTarget.id },
@@ -156,13 +156,19 @@ test.describe('Mindmap clipboard', () => {
 	test('cut removes the nodes and their wires, and paste brings them back', async ({ page }) => {
 		const world = await createWorld(page)
 		const actor = await createActor(page, world.id, { name: 'Actor' })
-		const actorNode = await createNode(page, world.id, {
+		const actorNode = await createMindmapNode(page, world.id, {
 			parentActorId: actor.id,
 			positionX: -350,
 			positionY: -150,
 		})
-		const plainNode = await createNode(page, world.id, { name: 'Plain node', positionX: 50, positionY: -50 })
-		await createWires(page, world.id, { wires: [{ sourceNodeId: actorNode.id, targetNodeId: plainNode.id }] })
+		const plainNode = await createMindmapNode(page, world.id, {
+			name: 'Plain node',
+			positionX: 50,
+			positionY: -50,
+		})
+		await createMindmapWires(page, world.id, {
+			wires: [{ sourceNodeId: actorNode.id, targetNodeId: plainNode.id }],
+		})
 		await navigateToMindmap(page, world)
 
 		const wire = page.getByTestId('MindmapWire')
@@ -207,7 +213,7 @@ test.describe('Mindmap clipboard', () => {
 
 	test('copy in one tab pastes in another', async ({ page }) => {
 		const world = await createWorld(page)
-		const node = await createNode(page, world.id, { name: 'Node', positionX: -150, positionY: -150 })
+		const node = await createMindmapNode(page, world.id, { name: 'Node', positionX: -150, positionY: -150 })
 		await navigateToMindmap(page, world)
 
 		const secondTab = await page.context().newPage()
@@ -239,37 +245,3 @@ test.describe('Mindmap clipboard', () => {
 		await deleteAccount(page)
 	})
 })
-
-async function multiselectWire(wire: Locator) {
-	const midpoint = await wire.evaluate((path) => {
-		if (!(path instanceof SVGPathElement)) {
-			throw new Error('MindmapWire is not an SVG path')
-		}
-		const point = path.getPointAtLength(path.getTotalLength() / 2)
-		const pathBox = path.getBBox()
-		const screenBox = path.getBoundingClientRect()
-		return {
-			x: ((point.x - pathBox.x) / pathBox.width) * screenBox.width,
-			y: ((point.y - pathBox.y) / pathBox.height) * screenBox.height,
-		}
-	})
-	await wire.click({ modifiers: [multiselectModifier], force: true, position: midpoint })
-}
-
-async function postJson<TResponse>(page: Page, path: string, body: object): Promise<TResponse> {
-	const response = await page.request.post(makeUrl(path), { data: body })
-	expect(response.ok(), `POST ${path} failed: ${response.status()}`).toBeTruthy()
-	return (await response.json()) as TResponse
-}
-
-async function createActor(page: Page, worldId: string, body: CreateActorApiArg['body']) {
-	return postJson<CreateActorApiResponse>(page, `/api/world/${worldId}/actors`, body)
-}
-
-async function createNode(page: Page, worldId: string, body: CreateNodeApiArg['body']) {
-	return postJson<CreateNodeApiResponse>(page, `/api/world/${worldId}/mindmap/nodes`, body)
-}
-
-async function createWires(page: Page, worldId: string, body: CreateMindmapWiresApiArg['body']) {
-	return postJson<CreateMindmapWiresApiResponse>(page, `/api/world/${worldId}/mindmap/wires`, body)
-}

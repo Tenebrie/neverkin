@@ -1,9 +1,9 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
 import {
 	closeModal,
-	createActor,
-	createArticle,
-	createEvent,
+	createActorAsUser,
+	createArticleAsUser,
+	createEventAsUser,
 	createWorld,
 	navigateToTimeline,
 } from '@fixtures/world'
@@ -19,12 +19,12 @@ test.describe('Entity Editor', () => {
 		const world = await createWorld(page)
 		await navigateToTimeline(page, world)
 
-		await createActor(page, 'First actor')
-		await createArticle(page, 'First article')
+		await createActorAsUser(page, 'First actor')
+		await createArticleAsUser(page, 'First article')
 
-		await createEvent(page, 'First event')
-		await createEvent(page, 'Second event')
-		await createEvent(page, 'Third event')
+		await createEventAsUser(page, 'First event')
+		await createEventAsUser(page, 'Second event')
+		await createEventAsUser(page, 'Third event')
 
 		await page.locator('[data-testid="TimelineMarker"][data-entity-name="First event"]').dblclick()
 		const contentEditor = page.getByTestId('ModalBackdrop').getByRole('textbox')

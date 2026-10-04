@@ -2,6 +2,10 @@ import { expect, Page } from '@playwright/test'
 import { makeUrl } from '@tests/utils'
 import { randomBytes } from 'crypto'
 
+import type {
+	CreateActorApiArg,
+	CreateActorApiResponse,
+} from '../../../app/styx-frontend/src/api/actorListApi'
 import { withCreatedActor, withCreatedArticle, withCreatedEvent } from './withRequest'
 
 export const createWorld = async (page: Page) => {
@@ -89,7 +93,7 @@ export async function closeModal(page: Page) {
 	await page.getByTestId('ModalBackdrop').click({ position: { x: 0, y: 0 } })
 }
 
-export async function createEvent(page: Page, title: string) {
+export async function createEventAsUser(page: Page, title: string) {
 	await page.getByTestId('NavigateToTimeline').click()
 	await page.getByText('Create event').click()
 	await page.getByTestId('ModalBackdrop').getByRole('textbox').fill(title)
@@ -100,7 +104,7 @@ export async function createEvent(page: Page, title: string) {
 	await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 }
 
-export async function createActor(page: Page, name: string) {
+export async function createActorAsUser(page: Page, name: string) {
 	await page.getByTestId('NavigateToMindmap').click()
 	await page.getByRole('button', { name: 'Create new object' }).click()
 	await page.getByRole('button', { name: 'Actor', exact: true }).click()
@@ -111,7 +115,7 @@ export async function createActor(page: Page, name: string) {
 	)
 }
 
-export async function createArticle(page: Page, name: string) {
+export async function createArticleAsUser(page: Page, name: string) {
 	await page.getByTestId('NavigateToWiki').click()
 	await page.getByRole('button', { name: 'Create new object' }).click()
 	await page.getByRole('button', { name: 'Article', exact: true }).click()
@@ -120,6 +124,12 @@ export async function createArticle(page: Page, name: string) {
 		page,
 		async () => await page.getByRole('button', { name: 'Create', exact: true }).click(),
 	)
+}
+
+export async function createActor(page: Page, worldId: string, body: CreateActorApiArg['body']) {
+	const rawResponse = await page.request.post(makeUrl(`/api/world/${worldId}/actors`), { data: body })
+	expect(rawResponse.ok()).toBeTruthy()
+	return (await rawResponse.json()) as CreateActorApiResponse
 }
 
 export const createWikiArticle = async (
