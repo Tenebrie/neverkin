@@ -29,14 +29,15 @@ test.describe('World Mindmap', () => {
 
 		const actorOneItem = page.getByTestId('ArticleListItem/Actor One/0')
 
-		const createNodeRequest1 = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		const createNodeResponse1 = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
 		)
 		await actorOneItem.hover()
 		await page.mouse.down()
 		await page.mouse.move(dropX1, dropY1, { steps: 20 })
 		await page.mouse.up()
-		await createNodeRequest1
+		await createNodeResponse1
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(1)
 
@@ -45,14 +46,15 @@ test.describe('World Mindmap', () => {
 
 		const actorTwoItem = page.getByTestId('ArticleListItem/Actor Two/0')
 
-		const createNodeRequest2 = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		const createNodeResponse2 = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
 		)
 		await actorTwoItem.hover()
 		await page.mouse.down()
 		await page.mouse.move(dropX2, dropY2, { steps: 20 })
 		await page.mouse.up()
-		await createNodeRequest2
+		await createNodeResponse2
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(2)
 
@@ -64,8 +66,9 @@ test.describe('World Mindmap', () => {
 		const nodeTwoBox = await nodeTwo.boundingBox()
 		expect(nodeTwoBox).toBeTruthy()
 
-		const createWireRequest = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
+		const createWireResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
 		)
 		await portOne.hover()
 		await page.mouse.down()
@@ -80,16 +83,17 @@ test.describe('World Mindmap', () => {
 		await expect(page.getByTestId('MindmapWire')).toHaveCount(1)
 
 		// Wait for network request to persist it
-		await createWireRequest
+		await createWireResponse
 
 		// --- Move first node 100px down ---
 		const nodeOneHeader = nodeOne.locator('[data-mindmap-header]')
 		const nodeOneBox = await nodeOneHeader.boundingBox()
 		expect(nodeOneBox).toBeTruthy()
 
-		const moveRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/move/),
+		const moveResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/move/),
 		)
 
 		await nodeOneHeader.hover()
@@ -100,7 +104,7 @@ test.describe('World Mindmap', () => {
 			{ steps: 20 },
 		)
 		await page.mouse.up()
-		await moveRequest
+		await moveResponse
 
 		// --- Refresh and assert state persisted ---
 		await page.reload()
@@ -115,12 +119,13 @@ test.describe('World Mindmap', () => {
 		const wire = page.getByTestId('MindmapWire')
 		await wire.click({ force: true })
 
-		const deleteWireRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires\/delete/),
+		const deleteWireResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires\/delete/),
 		)
 		await page.keyboard.press('Delete')
-		await deleteWireRequest
+		await deleteWireResponse
 
 		await expect(page.getByTestId('MindmapWire')).toHaveCount(0)
 
@@ -129,12 +134,13 @@ test.describe('World Mindmap', () => {
 		const headerToClick = nodeToDelete.locator('[data-mindmap-header]')
 		await headerToClick.click()
 
-		const deleteNodeRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
+		const deleteNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
-		await deleteNodeRequest
+		await deleteNodeResponse
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(1)
 
@@ -143,12 +149,13 @@ test.describe('World Mindmap', () => {
 		const remainingHeader = remainingNode.locator('[data-mindmap-header]')
 		await remainingHeader.click()
 
-		const deleteNodeRequest2 = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
+		const deleteNodeResponse2 = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
-		await deleteNodeRequest2
+		await deleteNodeResponse2
 
 		await expect(page.getByTestId('MindmapNode')).toHaveCount(0)
 
@@ -316,7 +323,7 @@ test.describe('World Mindmap', () => {
 		// --- Select all nodes and delete them ---
 		await page.mouse.move(selStartX, selStartY, { steps: 5 })
 		await page.mouse.down()
-		await page.mouse.move(selEndX, selEndY + 80, { steps: 30 })
+		await page.mouse.move(selEndX, selEndY, { steps: 30 })
 		await page.mouse.up()
 
 		const deleteNodesRequest = page.waitForRequest(
@@ -351,13 +358,14 @@ test.describe('World Mindmap', () => {
 		await expect(welcomeState).toBeVisible()
 
 		// --- Quick create a plain node, which has no backing entity ---
-		const createNodeRequest = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		const createNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
 		)
 		await page.keyboard.type('Quick draft')
 		await expect(welcomeState).toBeHidden()
 		await page.getByRole('menuitem').filter({ hasText: 'Node:' }).click()
-		await createNodeRequest
+		await createNodeResponse
 
 		const node = page.getByTestId('MindmapNode')
 		await expect(node).toHaveCount(1)
@@ -374,14 +382,14 @@ test.describe('World Mindmap', () => {
 		const nameInput = node.locator('textarea')
 		await expect(nameInput).toBeFocused()
 
-		const updateNodeRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'PATCH' &&
-				!!req.url().match(new RegExp(`/api/world/[a-zA-Z0-9-]+/mindmap/nodes/${nodeId}$`)),
+		const updateNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'PATCH' &&
+				!!res.url().match(new RegExp(`/api/world/[a-zA-Z0-9-]+/mindmap/nodes/${nodeId}$`)),
 		)
 		await nameInput.fill('Renamed draft')
 		await nameInput.press('Enter')
-		await updateNodeRequest
+		await updateNodeResponse
 		await expect(nameInput).toHaveCount(0)
 		await expect(node.getByText('Renamed draft')).toBeVisible()
 
@@ -392,12 +400,13 @@ test.describe('World Mindmap', () => {
 		// --- Delete the node ---
 		await node.getByText('Renamed draft').click()
 
-		const deleteNodeRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
+		const deleteNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
-		await deleteNodeRequest
+		await deleteNodeResponse
 		await expect(node).toHaveCount(0)
 
 		await page.reload()

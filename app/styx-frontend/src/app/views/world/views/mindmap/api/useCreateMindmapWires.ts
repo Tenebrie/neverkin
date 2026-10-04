@@ -55,12 +55,11 @@ export function useCreateMindmapWires() {
 					body: { wires },
 				}),
 			)
-			patchResult.undo()
 			if (error) {
+				patchResult.undo()
 				return
 			}
 
-			// Reapply patch to get correct IDs
 			updateCachedWires([...response.created, ...response.updated])
 			return response
 		},

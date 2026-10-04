@@ -36,8 +36,9 @@ export function useCreateMindmapNode() {
 
 	const perform = useCallback(
 		async (body: CreateNodeApiArg['body']) => {
-			body.id = body.id ?? getRandomId()
-			const patchResult = addCachedNode(body.id, body)
+			const id = body.id ?? getRandomId()
+			body.id = id
+			addCachedNode(id, body)
 
 			const { response, error } = parseApiResponse(
 				await createMindmapNode({
@@ -45,16 +46,16 @@ export function useCreateMindmapNode() {
 					body,
 				}),
 			)
-			patchResult.undo()
-			if (error) {
-				return
-			}
-
-			// Reapply patch to get the correct id
-			addCachedNode(response.id, body)
+			dispatch(
+				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
+					draft.nodes = error
+						? draft.nodes.filter((node) => node.id !== id)
+						: draft.nodes.map((node) => (node.id === id ? response : node))
+				}),
+			)
 			return response
 		},
-		[addCachedNode, createMindmapNode, worldId],
+		[addCachedNode, createMindmapNode, dispatch, worldId],
 	)
 
 	return [perform, state] as const

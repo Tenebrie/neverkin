@@ -97,6 +97,7 @@ export async function createEvent(page: Page, title: string) {
 		page,
 		async () => await page.getByTestId('ModalBackdrop').getByText('Create', { exact: true }).click(),
 	)
+	await expect(page.getByTestId('ModalBackdrop')).toBeHidden()
 }
 
 export async function createActor(page: Page, name: string) {
