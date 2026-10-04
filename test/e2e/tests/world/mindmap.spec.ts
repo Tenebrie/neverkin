@@ -1,7 +1,6 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { closeModal, createActor, navigateToMindmap } from '@fixtures/world'
+import { createActor, navigateToMindmap } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
-import { makeUrl } from '@tests/utils'
 
 test.describe('World Mindmap', () => {
 	test.beforeEach(async ({ page }) => {
@@ -117,7 +116,8 @@ test.describe('World Mindmap', () => {
 		await wire.click({ force: true })
 
 		const deleteWireRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteWireRequest
@@ -130,7 +130,8 @@ test.describe('World Mindmap', () => {
 		await headerToClick.click()
 
 		const deleteNodeRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodeRequest
@@ -143,7 +144,8 @@ test.describe('World Mindmap', () => {
 		await remainingHeader.click()
 
 		const deleteNodeRequest2 = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodeRequest2
@@ -294,7 +296,8 @@ test.describe('World Mindmap', () => {
 
 		// --- Repeat the wire action — should delete the wires (toggle) ---
 		const deleteWiresRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/wires\/delete/),
 		)
 		await sourcePort.hover()
 		await page.mouse.down()
@@ -317,7 +320,8 @@ test.describe('World Mindmap', () => {
 		await page.mouse.up()
 
 		const deleteNodesRequest = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodesRequest
@@ -359,44 +363,38 @@ test.describe('World Mindmap', () => {
 		await expect(node).toHaveCount(1)
 		await expect(node.getByText('Quick draft')).toBeVisible()
 
-		const worldId = page.url().match(/\/world\/([a-zA-Z0-9-]+)\//)![1]
 		const nodeId = (await node.getAttribute('data-mindmap-node'))!
 
 		// --- A plain node is not an actor, so it stays out of the outliner ---
 		await expect(page.getByTestId(/^ArticleListItem/)).toHaveCount(0)
 
-		// --- Write content, which reaches Rhea through the collaboration pipeline ---
+		// --- Rename the node inline ---
 		await node.getByText('Quick draft').click({ button: 'right' })
-		await page.getByRole('menuitem', { name: 'Edit as full entity' }).click()
-		const editor = page.locator('.ProseMirror').first()
-		await expect(editor).toBeVisible()
-		await editor.click()
-		await page.keyboard.type('Placeholder body text.')
+		await page.getByRole('menuitem', { name: 'Edit', exact: true }).click()
+		const nameInput = node.locator('textarea')
+		await expect(nameInput).toBeFocused()
 
-		// Calliope flushes the document server-side, so poll Rhea rather than the browser
-		await expect
-			.poll(
-				async () => {
-					const response = await page.request.get(makeUrl(`/api/world/${worldId}/node/${nodeId}/content`))
-					if (!response.ok()) {
-						return ''
-					}
-					return (await response.json()).contentHtml as string
-				},
-				{ timeout: 20000 },
-			)
-			.toContain('Placeholder body text.')
+		const updateNodeRequest = page.waitForRequest(
+			(req) =>
+				req.method() === 'PATCH' &&
+				!!req.url().match(new RegExp(`/api/world/[a-zA-Z0-9-]+/mindmap/nodes/${nodeId}$`)),
+		)
+		await nameInput.fill('Renamed draft')
+		await nameInput.press('Enter')
+		await updateNodeRequest
+		await expect(nameInput).toHaveCount(0)
+		await expect(node.getByText('Renamed draft')).toBeVisible()
 
-		// --- Content survives a reload, so it came back from the database ---
+		// --- The new name survives a reload, so it came back from the database ---
 		await page.reload()
-		await expect(page.locator('.ProseMirror').first()).toContainText('Placeholder body text.')
+		await expect(node.getByText('Renamed draft')).toBeVisible()
 
-		// --- Deleting the node takes its content with it ---
-		await closeModal(page)
-		await node.getByText('Quick draft').click()
+		// --- Delete the node ---
+		await node.getByText('Renamed draft').click()
 
 		const deleteNodeRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodeRequest

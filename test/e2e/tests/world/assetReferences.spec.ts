@@ -1,5 +1,5 @@
 import { createNewUser, deleteAccount } from '@fixtures/auth'
-import { closeModal, createWorld, navigateToMindmap, navigateToWikiArticle } from '@fixtures/world'
+import { createWorld, navigateToMindmap, navigateToWikiArticle } from '@fixtures/world'
 import { expect, Page, test } from '@playwright/test'
 import { makeUrl } from '@tests/utils'
 
@@ -48,38 +48,22 @@ test.describe('Asset references', () => {
 		const node = page.getByTestId('MindmapNode')
 		await expect(node).toHaveCount(1)
 		const nodeId = (await node.getAttribute('data-mindmap-node'))!
+		await node.getByText('Quick draft').click()
+		await expect(node).toHaveAttribute('data-selected', 'true')
 
 		// --- Write content on the node, which is the save that used to clear every other reference ---
-		await node.getByText('Quick draft').click({ button: 'right' })
-		await page.getByRole('menuitem', { name: 'Edit as full entity' }).click()
-		const editor = page.locator('.ProseMirror').first()
-		await expect(editor).toBeVisible()
-		await editor.click()
-		await page.keyboard.type('Placeholder body text.')
-
-		// Wait for the save to reach Rhea, otherwise the assertion below can win the race
-		await expect
-			.poll(
-				async () => {
-					const response = await page.request.get(makeUrl(`/api/world/${world.id}/node/${nodeId}/content`))
-					if (!response.ok()) {
-						return ''
-					}
-					return (await response.json()).contentHtml as string
-				},
-				{ timeout: 20000 },
-			)
-			.toContain('Placeholder body text.')
+		const putContentResponse = await page.request.put(
+			makeUrl(`/api/world/${world.id}/node/${nodeId}/content`),
+			{ data: { content: '<p>Placeholder body text.</p>' } },
+		)
+		expect(putContentResponse.ok()).toBe(true)
 
 		expect(await referenceCount(page, assetId)).toBeGreaterThan(0)
 
 		// --- Deleting the node takes its own content, and nothing belonging to the article ---
-		// Opening the editor selected the node, and clicking it again would toggle that back off
-		await closeModal(page)
-		await expect(node).toHaveAttribute('data-selected', 'true')
-
 		const deleteNodeRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) =>
+				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodeRequest

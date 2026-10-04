@@ -78,19 +78,6 @@ export function MindmapNodeContextMenu() {
 					<ListItemText>Edit</ListItemText>
 				</MenuItem>
 			)}
-			{/* {isStickyNote && (
-				<MenuItem
-					onClick={() => {
-						navigate({ search: (prev) => ({ ...prev, navi: [parent.id] }) })
-						setOpen(false)
-					}}
-				>
-					<ListItemIcon> 
-						<OpenInFull />
-					</ListItemIcon>
-					<ListItemText>Edit as full entity</ListItemText>
-				</MenuItem>
-			)} */}
 			<MenuItem
 				color="error"
 				onClick={() => {
