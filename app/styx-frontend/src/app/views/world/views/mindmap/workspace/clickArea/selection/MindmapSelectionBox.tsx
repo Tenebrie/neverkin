@@ -1,17 +1,25 @@
+import { useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
+import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { RootState } from '@/app/store'
 import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 import {
 	bezierPoint,
 	WireControlPoints,
 } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
+import { WORKSPACE_SIZE } from '@/app/views/world/views/mindmap/workspace/MindmapWorkspace'
 import { deduplicateBy } from '@/ts-shared/utils/deduplicateBy'
-import { SelectionBox, SelectionRect } from '@/ui-lib/components/SelectionBox/SelectionBox'
+import {
+	SelectionBox,
+	SelectionBoxHandle,
+	SelectionRect,
+} from '@/ui-lib/components/SelectionBox/SelectionBox'
 
 type Props = {
 	ref: React.RefObject<HTMLDivElement | null>
@@ -21,6 +29,19 @@ export function MindmapSelectionBox({ ref }: Props) {
 	const store = useStore<RootState>()
 	const dispatch = useDispatch()
 	const { wireGeometry } = useMindmapContext()
+	const selectionBoxHandle = useRef<SelectionBoxHandle>(null)
+	const lastScale = useRef(MindmapState.scale)
+
+	useEventBusSubscribe['mindmap/scale/changed']({
+		callback: ({ scale }) => {
+			selectionBoxHandle.current?.scaleAround(
+				WORKSPACE_SIZE / 2,
+				WORKSPACE_SIZE / 2,
+				scale / lastScale.current,
+			)
+			lastScale.current = scale
+		},
+	})
 
 	const onClick = useEvent((event: MouseEvent) => {
 		if (isMultiselectEvent(event)) {
@@ -75,6 +96,7 @@ export function MindmapSelectionBox({ ref }: Props) {
 	return (
 		<SelectionBox
 			ref={ref}
+			handle={selectionBoxHandle}
 			onClick={onClick}
 			onUpdateSelection={onUpdateSelection}
 			onFinalizeSelection={onUpdateSelection}

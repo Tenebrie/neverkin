@@ -1,5 +1,7 @@
 import { ContentEntityType } from '@src/schema/ContentEntityType.js'
+import { MindmapEntityType } from '@src/schema/EntityType.js'
 
+import { MindmapNodeWhereInput } from '../../prisma/client/models.js'
 import { ActorService } from './ActorService.js'
 import { ContentService } from './ContentService.js'
 import { TagService } from './TagService.js'
@@ -51,5 +53,28 @@ export const EntityResolverService = {
 				contentRich: '',
 			}
 		}
+	},
+
+	resolveNodeParentId(entityType: MindmapEntityType, entityId: string | null) {
+		const columns = {
+			parentActorId: null as string | null,
+			parentArticleId: null as string | null,
+			parentEventId: null as string | null,
+			parentFolderId: null as string | null,
+			parentTagId: null as string | null,
+		} satisfies MindmapNodeWhereInput
+		if (entityType === 'actor') {
+			columns.parentActorId = entityId
+		} else if (entityType === 'article') {
+			columns.parentArticleId = entityId
+		} else if (entityType === 'event') {
+			columns.parentEventId = entityId
+		} else if (entityType === 'folder') {
+			columns.parentFolderId = entityId
+		} else if (entityType === 'tag') {
+			columns.parentTagId = entityId
+		}
+
+		return columns
 	},
 }

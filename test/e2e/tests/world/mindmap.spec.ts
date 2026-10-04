@@ -317,7 +317,7 @@ test.describe('World Mindmap', () => {
 		await page.mouse.up()
 
 		const deleteNodesRequest = page.waitForRequest(
-			(req) => req.method() === 'DELETE' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
 		)
 		await page.keyboard.press('Delete')
 		await deleteNodesRequest

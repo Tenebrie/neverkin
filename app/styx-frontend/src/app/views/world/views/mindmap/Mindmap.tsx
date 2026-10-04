@@ -1,4 +1,5 @@
 import Stack from '@mui/material/Stack'
+import { useRef } from 'react'
 
 import { MindmapBulkContextMenu } from './components/MindmapBulkContextMenu'
 import { MindmapHotkeys } from './components/MindmapHotkeys'
@@ -8,6 +9,7 @@ import { MindmapScaleReporter } from './components/MindmapScaleReporter'
 import { MindmapBackground } from './screenspace/MindmapBackground'
 import { MindmapEmptyState } from './screenspace/MindmapEmptyState'
 import { MindmapClickArea } from './workspace/clickArea/MindmapClickArea'
+import { MindmapClipboardManager } from './workspace/clipboard/MindmapClipboardManager'
 import { MindmapContent } from './workspace/content/MindmapContent'
 import { MindmapContentManager } from './workspace/content/MindmapContentManager'
 import { MindmapNodeLayer } from './workspace/content/nodes/MindmapNodeLayer'
@@ -16,8 +18,10 @@ import { MindmapWireLayer } from './workspace/content/wires/MindmapWireLayer'
 import { MindmapWorkspace } from './workspace/MindmapWorkspace'
 
 export function Mindmap() {
+	const containerRef = useRef<HTMLDivElement>(null)
+
 	return (
-		<Stack sx={{ width: '100%', height: '100%', position: 'relative' }}>
+		<Stack ref={containerRef} tabIndex={-1} sx={{ width: '100%', height: '100%', position: 'relative' }}>
 			{/* Screen-space */}
 			<MindmapBackground />
 			<MindmapWireCanvas />
@@ -39,6 +43,7 @@ export function Mindmap() {
 			<MindmapQuickSelect />
 			<MindmapNodeContextMenu />
 			<MindmapBulkContextMenu />
+			<MindmapClipboardManager containerRef={containerRef} />
 		</Stack>
 	)
 }

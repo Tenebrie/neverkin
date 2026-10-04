@@ -18,16 +18,6 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			deleteNodes: build.mutation<DeleteNodesApiResponse, DeleteNodesApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/nodes`,
-					method: 'DELETE',
-					params: {
-						nodes: queryArg.nodes,
-					},
-				}),
-				invalidatesTags: ['mindmap', 'mindmapNode'],
-			}),
 			updateNode: build.mutation<UpdateNodeApiResponse, UpdateNodeApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/nodes/${queryArg.nodeId}`,
@@ -52,21 +42,27 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
+			pasteMindmapNodes: build.mutation<PasteMindmapNodesApiResponse, PasteMindmapNodesApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/paste`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap', 'mindmapNode'],
+			}),
+			deleteNodes: build.mutation<DeleteNodesApiResponse, DeleteNodesApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/nodes/delete`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: ['mindmap', 'mindmapNode'],
+			}),
 			createMindmapWires: build.mutation<CreateMindmapWiresApiResponse, CreateMindmapWiresApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
 					method: 'POST',
 					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
-			deleteMindmapWires: build.mutation<DeleteMindmapWiresApiResponse, DeleteMindmapWiresApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/wires`,
-					method: 'DELETE',
-					params: {
-						wires: queryArg.wires,
-					},
 				}),
 				invalidatesTags: [],
 			}),
@@ -86,54 +82,62 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: ['mindmap', 'mindmapNode', 'mindmapWire'],
 			}),
+			deleteMindmapWires: build.mutation<DeleteMindmapWiresApiResponse, DeleteMindmapWiresApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/mindmap/wires/delete`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 		}),
 		overrideExisting: false,
 	})
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		content: string
-		contentRich: string
-		parentFolderId?: null | string
-		parentActorId?: null | string
-		parentEventId?: null | string
-		parentArticleId?: null | string
+		worldId: string
 		positionX: number
 		positionY: number
+		content: string
+		contentRich: string
+		parentActorId?: null | string
+		parentArticleId?: null | string
+		parentEventId?: null | string
+		parentFolderId?: null | string
 		parentTagId?: null | string
 	}[]
 	wires: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 }
 export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	content: string
-	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	content: string
+	contentRich: string
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }
 export type CreateNodeApiArg = {
@@ -150,27 +154,20 @@ export type CreateNodeApiArg = {
 		parentTagId?: string
 	}
 }
-export type DeleteNodesApiResponse = /** status 200  */ {
-	count: number
-}
-export type DeleteNodesApiArg = {
-	worldId: string
-	nodes: string[]
-}
 export type UpdateNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	content: string
-	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	content: string
+	contentRich: string
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }
 export type UpdateNodeApiArg = {
@@ -183,19 +180,19 @@ export type UpdateNodeApiArg = {
 	}
 }
 export type ReparentNodeApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	content: string
-	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	content: string
+	contentRich: string
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }
 export type ReparentNodeApiArg = {
@@ -212,19 +209,19 @@ export type ReparentNodeApiArg = {
 	}
 }
 export type MoveMindmapNodesApiResponse = /** status 200  */ {
-	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	content: string
-	contentRich: string
-	parentFolderId?: null | string
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
+	worldId: string
 	positionX: number
 	positionY: number
+	content: string
+	contentRich: string
+	parentActorId?: null | string
+	parentArticleId?: null | string
+	parentEventId?: null | string
+	parentFolderId?: null | string
 	parentTagId?: null | string
 }[]
 export type MoveMindmapNodesApiArg = {
@@ -235,24 +232,87 @@ export type MoveMindmapNodesApiArg = {
 		deltaY: number
 	}
 }
+export type PasteMindmapNodesApiResponse = /** status 200  */ {
+	nodes: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId: string
+		positionX: number
+		positionY: number
+		content: string
+		contentRich: string
+		parentActorId?: null | string
+		parentArticleId?: null | string
+		parentEventId?: null | string
+		parentFolderId?: null | string
+		parentTagId?: null | string
+	}[]
+	wires: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+		sourceNodeId: string
+		targetNodeId: string
+	}[]
+}
+export type PasteMindmapNodesApiArg = {
+	worldId: string
+	body: {
+		originX: number
+		originY: number
+		pasteData: {
+			nodes: {
+				tempId: string
+				offsetX: number
+				offsetY: number
+				parentId?: null | string
+				parentType: 'actor' | 'tag' | 'node' | 'article' | 'event' | 'folder'
+				plainNodeName: string
+			}[]
+			internalLinks: {
+				sourceTempId: string
+				targetTempId: string
+				direction: 'Normal' | 'Reversed' | 'TwoWay'
+			}[]
+			externalLinks: {
+				sourceTempId: string
+				targetNodeId: string
+				direction: 'Normal' | 'Reversed' | 'TwoWay'
+			}[]
+		}
+	}
+}
+export type DeleteNodesApiResponse = /** status 200  */ {
+	count: number
+}
+export type DeleteNodesApiArg = {
+	worldId: string
+	body: {
+		nodes: string[]
+	}
+}
 export type CreateMindmapWiresApiResponse = /** status 200  */ {
 	created: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 	updated: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 }
 export type CreateMindmapWiresApiArg = {
@@ -264,19 +324,14 @@ export type CreateMindmapWiresApiArg = {
 		}[]
 	}
 }
-export type DeleteMindmapWiresApiResponse = /** status 200  */ string[]
-export type DeleteMindmapWiresApiArg = {
-	worldId: string
-	wires: string[]
-}
 export type UpdateMindmapWireApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	content: string
 	sourceNodeId: string
 	targetNodeId: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
 }
 export type UpdateMindmapWireApiArg = {
 	worldId: string
@@ -288,29 +343,29 @@ export type UpdateMindmapWireApiArg = {
 }
 export type SplitMindmapWireApiResponse = /** status 200  */ {
 	node: {
-		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		content: string
-		contentRich: string
-		parentFolderId?: null | string
-		parentActorId?: null | string
-		parentEventId?: null | string
-		parentArticleId?: null | string
+		worldId: string
 		positionX: number
 		positionY: number
+		content: string
+		contentRich: string
+		parentActorId?: null | string
+		parentArticleId?: null | string
+		parentEventId?: null | string
+		parentFolderId?: null | string
 		parentTagId?: null | string
 	}
 	wires: {
 		id: string
 		createdAt: string
 		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
 		targetNodeId: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}[]
 }
 export type SplitMindmapWireApiArg = {
@@ -323,16 +378,24 @@ export type SplitMindmapWireApiArg = {
 		direction: 'Normal' | 'Reversed' | 'TwoWay'
 	}
 }
+export type DeleteMindmapWiresApiResponse = /** status 200  */ string[]
+export type DeleteMindmapWiresApiArg = {
+	worldId: string
+	body: {
+		wires: string[]
+	}
+}
 export const {
 	useGetMindmapQuery,
 	useLazyGetMindmapQuery,
 	useCreateNodeMutation,
-	useDeleteNodesMutation,
 	useUpdateNodeMutation,
 	useReparentNodeMutation,
 	useMoveMindmapNodesMutation,
+	usePasteMindmapNodesMutation,
+	useDeleteNodesMutation,
 	useCreateMindmapWiresMutation,
-	useDeleteMindmapWiresMutation,
 	useUpdateMindmapWireMutation,
 	useSplitMindmapWireMutation,
+	useDeleteMindmapWiresMutation,
 } = injectedRtkApi

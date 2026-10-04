@@ -28,6 +28,7 @@ export const mindmapSlice = createSlice({
 			}
 			state.selectedNodes = [...state.selectedNodes, record]
 		},
+		// key = node.id
 		setNodeSelection: (state, { payload }: PayloadAction<{ key: string; actorId: string }[]>) => {
 			if (
 				state.selectedNodes.length === payload.length &&

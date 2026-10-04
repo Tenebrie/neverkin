@@ -1,4 +1,4 @@
-import { User, World } from '@prisma/client'
+import { Prisma, User, World } from '@prisma/client'
 import { UnauthorizedError } from 'moonflower/errors/UserFacingErrors'
 
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
@@ -264,6 +264,16 @@ export const AuthorizationService = {
 			if (!count) {
 				throw new UnauthorizedError('No access to this folder')
 			}
+		} else if (entityType === 'node') {
+			const count = await getPrismaClient().mindmapNode.count({
+				where: {
+					id: entityId,
+					worldId,
+				},
+			})
+			if (!count) {
+				throw new UnauthorizedError('No access to this node')
+			}
 		} else if (entityType === 'tag') {
 			const count = await getPrismaClient().tag.count({
 				where: {
@@ -277,5 +287,31 @@ export const AuthorizationService = {
 		} else {
 			throw new UnauthorizedError('No access to this entity')
 		}
+	},
+
+	checkEntitiesWorldOwnership: async (
+		worldId: string,
+		entities: { id: string; type: WorldEntityType }[],
+		prisma?: Prisma.TransactionClient,
+	) => {
+		const idsOfType = (type: WorldEntityType) =>
+			entities.filter((entity) => entity.type === type).map((entity) => entity.id)
+
+		const world = await getPrismaClient(prisma).world.findUnique({
+			where: { id: worldId },
+			select: {
+				actors: { where: { id: { in: idsOfType('actor') } }, select: { id: true } },
+				articles: { where: { id: { in: idsOfType('article') } }, select: { id: true } },
+				events: { where: { id: { in: idsOfType('event') } }, select: { id: true } },
+				folders: { where: { id: { in: idsOfType('folder') } }, select: { id: true } },
+				tags: { where: { id: { in: idsOfType('tag') } }, select: { id: true } },
+			},
+		})
+		const ownedIds = new Set(
+			[world?.actors, world?.articles, world?.events, world?.folders, world?.tags]
+				.flatMap((owned) => owned ?? [])
+				.map((entity) => entity.id),
+		)
+		return new Map(entities.map((entity) => [entity.id, ownedIds.has(entity.id)]))
 	},
 }

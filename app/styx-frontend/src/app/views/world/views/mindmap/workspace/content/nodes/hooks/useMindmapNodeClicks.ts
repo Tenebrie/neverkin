@@ -1,4 +1,4 @@
-import { RefObject, useCallback, useRef } from 'react'
+import { RefObject, useCallback, useLayoutEffect, useRef } from 'react'
 import { useDispatch, useStore } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -7,6 +7,7 @@ import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
@@ -24,7 +25,9 @@ export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 	const dispatch = useDispatch()
 	const { addNodeToSelection, removeNodeFromSelection } = mindmapSlice.actions
 	const selectedRef = useRef(false)
+	const { selectedNodesCache } = useMindmapContext()
 
+	// TODO: Unify the two paths into a ReactiveMap in context
 	useEventBusSubscribe['mindmap/selection/changed']({
 		callback: ({ selectedNodeIds }) => {
 			const isSelected = selectedNodeIds.has(node.id)
@@ -32,6 +35,13 @@ export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 			ref.current?.setAttribute('data-selected', String(isSelected))
 		},
 	})
+
+	useLayoutEffect(() => {
+		if (selectedNodesCache.current.some((entry) => entry.key === node.id)) {
+			selectedRef.current = true
+			ref.current?.setAttribute('data-selected', 'true')
+		}
+	}, [node.id, ref, selectedNodesCache])
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {

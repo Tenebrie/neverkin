@@ -136,6 +136,15 @@ export default defineConfig(
 		rules: {
 			'neverkin/no-opaque-destructive-filter': 'error',
 			'neverkin/no-transaction-escape': 'error',
+			'no-restricted-properties': [
+				'error',
+				...['$queryRaw', '$queryRawUnsafe', '$queryRawTyped', '$executeRaw', '$executeRawUnsafe'].map(
+					(property) => ({
+						property,
+						message: 'Raw SQL is forbidden. Use the typed Prisma query API.',
+					}),
+				),
+			],
 		},
 	},
 	{

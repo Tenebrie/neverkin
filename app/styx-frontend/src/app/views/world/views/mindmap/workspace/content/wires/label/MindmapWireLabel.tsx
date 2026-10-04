@@ -1,11 +1,12 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { useRef } from 'react'
+import { useLayoutEffect, useRef } from 'react'
 
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 
 type Props = {
@@ -23,6 +24,7 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 			? wire.content.slice(0, maxLabelLength) + '…'
 			: wire.content
 		: ''
+	const { selectedWiresCache } = useMindmapContext()
 
 	const containerRef = useRef<HTMLElement>(null)
 	useEventBusSubscribe['mindmap/selection/changed']({
@@ -31,6 +33,11 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 			containerRef.current?.setAttribute('data-selected', String(selected))
 		},
 	})
+	useLayoutEffect(() => {
+		if (selectedWiresCache.current.includes(wire.id)) {
+			containerRef.current?.setAttribute('data-selected', String(true))
+		}
+	}, [selectedWiresCache, wire.id])
 
 	useEventBusSubscribe['mindmap/scale/changed']({
 		callback: ({ scale }) => {

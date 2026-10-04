@@ -1,4 +1,4 @@
-import { useCallback, useRef } from 'react'
+import { useCallback, useLayoutEffect, useRef } from 'react'
 import { useDispatch } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
@@ -15,7 +15,7 @@ type Props = {
 }
 
 export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Props) {
-	const { wireBuffer } = useMindmapContext()
+	const { wireBuffer, selectedWiresCache } = useMindmapContext()
 	const dispatch = useDispatch()
 	const { addWireToSelection, removeWireFromSelection, addWireToHover, removeWireFromHover } =
 		mindmapSlice.actions
@@ -40,6 +40,12 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 			applyVisualState()
 		},
 	})
+	useLayoutEffect(() => {
+		if (selectedWiresCache.current.includes(wireId)) {
+			selectedRef.current = true
+			applyVisualState()
+		}
+	}, [applyVisualState, selectedWiresCache, wireId])
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean; event: React.MouseEvent }>({
 		onClick: ({ multiselect }) => {

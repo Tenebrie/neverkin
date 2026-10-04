@@ -33,7 +33,7 @@
 		"jsonwebtoken": "^9.0.3",
 		"koa": "^3.2.1",
 		"koa-bodyparser": "^4.4.1",
-		"moonflower": "^1.7.3",
+		"moonflower": "^1.7.4",
 		"prisma": "^7.10.0",
 		"redis": "^6.2.1",
 		"sharp": "^0.35.4",

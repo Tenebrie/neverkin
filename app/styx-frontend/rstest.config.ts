@@ -12,6 +12,7 @@ export default defineConfig({
 	testEnvironment: 'jsdom',
 	setupFiles: ['src/test-utils/setupTests.ts'],
 	testTimeout: 15000,
+	clearMocks: true,
 	coverage: {
 		provider: 'v8',
 		reporters: ['text'],

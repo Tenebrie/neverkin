@@ -50,8 +50,6 @@ export function useEntityResolver() {
 		(a, b) => a.id === b.id && a.events === b.events && a.actors === b.actors && a.tags === b.tags,
 	)
 	const { data: mindmapData } = useGetMindmapQuery({ worldId }, { skip: !worldId })
-	// const { markers } = useSelector(getTimelineState, (a, b) => a.markers === b.markers)
-	// const { articles } = useSelector(getWikiState, (a, b) => a.articles === b.articles)
 
 	const resolveEntity = (entityId: string): ResolvedMention | null => {
 		const event = events.find((e) => e.id === entityId)
