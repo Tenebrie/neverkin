@@ -77,13 +77,15 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 
 		const mouseState = {
 			isButtonDown: false,
+			startClientX: 0,
+			startClientY: 0,
+			startPositionX: 0,
+			startPositionY: 0,
 			positionX: 0,
 			positionY: 0,
 			gridScale: 1,
 
 			isDragging: false,
-			deltaX: 0,
-			deltaY: 0,
 		}
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -102,6 +104,10 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			}
 
 			const { x, y } = getPosition()
+			mouseState.startClientX = event.clientX
+			mouseState.startClientY = event.clientY
+			mouseState.startPositionX = x
+			mouseState.startPositionY = y
 			mouseState.positionX = x
 			mouseState.positionY = y
 			mouseState.isButtonDown = true
@@ -118,10 +124,10 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 		}
 
 		const handleMouseMove = (event: PointerEvent) => {
-			mouseState.deltaX += event.movementX
-			mouseState.deltaY += event.movementY
+			const pointerOffsetX = event.clientX - mouseState.startClientX
+			const pointerOffsetY = event.clientY - mouseState.startClientY
 
-			if (!mouseState.isDragging && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
+			if (!mouseState.isDragging && (Math.abs(pointerOffsetX) > 3 || Math.abs(pointerOffsetY) > 3)) {
 				mouseState.isDragging = true
 				startDragging(true)
 				capturePointer('grabbing', event.pointerId)
@@ -131,17 +137,17 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			}
 
 			if (mouseState.isDragging) {
-				mouseState.positionX += mouseState.deltaX / mouseState.gridScale
-				mouseState.positionY += mouseState.deltaY / mouseState.gridScale
-				moveTo(mouseState.positionX, mouseState.positionY)
+				const nextPositionX = mouseState.startPositionX + pointerOffsetX / mouseState.gridScale
+				const nextPositionY = mouseState.startPositionY + pointerOffsetY / mouseState.gridScale
+				moveTo(nextPositionX, nextPositionY)
 				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
 					sourceNodeId: nodeRef.current.id,
-					deltaX: mouseState.deltaX / mouseState.gridScale,
-					deltaY: mouseState.deltaY / mouseState.gridScale,
+					deltaX: nextPositionX - mouseState.positionX,
+					deltaY: nextPositionY - mouseState.positionY,
 				})
 
-				mouseState.deltaX = 0
-				mouseState.deltaY = 0
+				mouseState.positionX = nextPositionX
+				mouseState.positionY = nextPositionY
 			}
 		}
 
@@ -151,8 +157,6 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			}
 
 			mouseState.isButtonDown = false
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
 			window.removeEventListener('pointermove', handleMouseMove)
 			window.removeEventListener('pointerup', handleMouseUp)
 

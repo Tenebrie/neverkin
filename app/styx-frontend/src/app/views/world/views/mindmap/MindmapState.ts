@@ -6,6 +6,8 @@ export function makeMindmapNavigationState() {
 		totalOffsetFromStart: 0,
 		offsetFromStartX: 0,
 		offsetFromStartY: 0,
+		lastPointerX: 0,
+		lastPointerY: 0,
 		isDragging: false,
 		dragMode: 'select' as 'select' | 'pan',
 		gridScale: 1.0,
