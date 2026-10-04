@@ -36,14 +36,15 @@ test.describe('Asset references', () => {
 		const gridBox = await grid.boundingBox()
 		expect(gridBox).toBeTruthy()
 
-		const createNodeRequest = page.waitForRequest(
-			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
+		const createNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes/),
 		)
 		await page.mouse.move(gridBox!.x + gridBox!.width / 2, gridBox!.y + gridBox!.height / 2)
 		await page.keyboard.press(' ')
 		await page.keyboard.type('Quick draft')
 		await page.getByRole('menuitem').filter({ hasText: 'Node:' }).click()
-		await createNodeRequest
+		await createNodeResponse
 
 		const node = page.getByTestId('MindmapNode')
 		await expect(node).toHaveCount(1)
@@ -61,12 +62,13 @@ test.describe('Asset references', () => {
 		expect(await referenceCount(page, assetId)).toBeGreaterThan(0)
 
 		// --- Deleting the node takes its own content, and nothing belonging to the article ---
-		const deleteNodeRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
+		const deleteNodeResponse = page.waitForResponse(
+			(res) =>
+				res.request().method() === 'POST' &&
+				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/delete/),
 		)
 		await page.keyboard.press('Delete')
-		await deleteNodeRequest
+		await deleteNodeResponse
 		await expect(node).toHaveCount(0)
 
 		expect(await referenceCount(page, assetId)).toBeGreaterThan(0)

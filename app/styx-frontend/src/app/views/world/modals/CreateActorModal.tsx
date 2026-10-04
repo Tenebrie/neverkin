@@ -12,7 +12,7 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const CreateActorModal = () => {
-	const { isOpen, close } = useModal('createActorModal')
+	const { isOpen } = useModal('createActorModal')
 
 	const [name, setName] = useState('')
 	const [nameValidationError, setNameValidationError] = useState<string | null>(null)
@@ -52,7 +52,6 @@ export const CreateActorModal = () => {
 			return
 		}
 
-		close()
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -65,7 +64,6 @@ export const CreateActorModal = () => {
 		if (isLoading) {
 			return
 		}
-		close()
 		navigate({
 			search: (prev) => ({
 				...prev,

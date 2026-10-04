@@ -62,7 +62,6 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
 	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
-	// const [selectedNodes]
 	const selectedNodesCache = useAutoRef(selectedNodes)
 	const selectedWiresCache = useAutoRef(selectedWires)
 

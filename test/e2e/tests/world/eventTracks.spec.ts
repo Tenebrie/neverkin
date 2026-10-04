@@ -79,12 +79,12 @@ test.describe('Event Tracks', () => {
 		const earliestMarker = page.locator('[data-testid="TimelineMarker"][data-entity-name="Earliest event"]')
 		const latestMarker = page.locator('[data-testid="TimelineMarker"][data-entity-name="Latest event"]')
 
-		await createEvent(page, 'Earliest event')
+		await createEventAsUser(page, 'Earliest event')
 
 		await timeTravel(page, '3d')
 		await expect(earliestMarker).toHaveCount(0)
 
-		await createEvent(page, 'Latest event')
+		await createEventAsUser(page, 'Latest event')
 		await expect(latestMarker).toBeVisible()
 		await expect(earliestMarker).toHaveCount(0)
 
@@ -224,7 +224,7 @@ async function dragTrackOnto(page: Page, source: Locator, target: Locator) {
 	await page.mouse.up()
 }
 
-async function createEvent(page: Page, name: string) {
+async function createEventAsUser(page: Page, name: string) {
 	await page.getByTestId('CreateEntityButton').click()
 	const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 	await expect(textbox).toBeVisible()

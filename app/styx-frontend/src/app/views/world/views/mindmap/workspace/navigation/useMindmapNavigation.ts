@@ -116,6 +116,8 @@ export function useMindmapNavigation({ ref }: Props) {
 					navState.totalOffsetFromStart = 0
 					navState.offsetFromStartX = 0
 					navState.offsetFromStartY = 0
+					navState.lastPointerX = event.clientX
+					navState.lastPointerY = event.clientY
 				}
 				navState.isDragging = true
 				navState.dragMode = 'select'
@@ -125,6 +127,8 @@ export function useMindmapNavigation({ ref }: Props) {
 					navState.totalOffsetFromStart = 0
 					navState.offsetFromStartX = 0
 					navState.offsetFromStartY = 0
+					navState.lastPointerX = event.clientX
+					navState.lastPointerY = event.clientY
 				}
 				navState.isDragging = true
 				navState.dragMode = 'pan'
@@ -168,11 +172,16 @@ export function useMindmapNavigation({ ref }: Props) {
 				return
 			}
 
-			navState.totalOffsetFromStart += Math.abs(event.movementX) + Math.abs(event.movementY)
-			navState.offsetFromStartX += event.movementX
-			navState.offsetFromStartY += event.movementY
+			const stepX = event.clientX - navState.lastPointerX
+			const stepY = event.clientY - navState.lastPointerY
+			navState.lastPointerX = event.clientX
+			navState.lastPointerY = event.clientY
+
+			navState.totalOffsetFromStart += Math.abs(stepX) + Math.abs(stepY)
+			navState.offsetFromStartX += stepX
+			navState.offsetFromStartY += stepY
 			if (navState.dragMode === 'pan') {
-				panBy(event.movementX, event.movementY)
+				panBy(stepX, stepY)
 				if (navState.totalOffsetFromStart >= 4) {
 					navState.canClick = false
 					capture('grabbing', event.pointerId)
