@@ -289,7 +289,7 @@ test.describe('World Mindmap', () => {
 		// --- Re-select all nodes again ---
 		await page.mouse.move(selStartX, selStartY, { steps: 5 })
 		await page.mouse.down()
-		await page.mouse.move(selEndX, selEndY + 80, { steps: 30 })
+		await page.mouse.move(selEndX, selEndY, { steps: 30 })
 		await page.mouse.up()
 
 		// --- Repeat the wire action — should delete the wires (toggle) ---

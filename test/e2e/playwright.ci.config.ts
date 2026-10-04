@@ -6,7 +6,6 @@ export default defineConfig({
 	reporter: [['list'], ['html', { outputFolder: './test-report/html', open: 'never' }]],
 	retries: 2,
 	fullyParallel: true,
-	workers: 1,
 	timeout: 30000,
 	expect: {
 		timeout: 10000,
