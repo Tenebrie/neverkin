@@ -4,6 +4,7 @@ import { useDispatch } from 'react-redux'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
+import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
 import { WirePaint } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapWireBuffer'
@@ -65,11 +66,12 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
 			onOpenPopover({ x: event.clientX, y: event.clientY }, 'contextMenu')
-			dispatch(addWireToSelection({ wireId, multiselect: event.shiftKey }))
+			dispatch(addWireToSelection({ wireId, multiselect: isMultiselectEvent(event) }))
 		},
 	})
 
-	const onClick = (event: React.MouseEvent) => triggerClick(event, { multiselect: event.shiftKey, event })
+	const onClick = (event: React.MouseEvent) =>
+		triggerClick(event, { multiselect: isMultiselectEvent(event), event })
 
 	const pathProps = {
 		onClick,
