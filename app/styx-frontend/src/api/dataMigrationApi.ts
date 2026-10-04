@@ -72,12 +72,12 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				name: string
 				position: number
 				calendarId: string
+				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+				negativeFormat: 'MinusSign' | 'AbsoluteValue'
 				displayName?: null | string
 				displayNameShort?: null | string
 				displayNamePlural?: null | string
-				formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 				formatShorthand?: null | string
-				negativeFormat: 'MinusSign' | 'AbsoluteValue'
 				duration: string
 				treeDepth: number
 			}[]
@@ -107,11 +107,11 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					position: number
 					calendarId: string
-					presentationId: string
 					formatString: string
 					subdivision: number
 					labeledIndices: number[]
 					unitId: string
+					presentationId: string
 				}[]
 				id: string
 				createdAt: string
@@ -403,12 +403,12 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					name: string
 					position: number
 					calendarId: string
+					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
+					negativeFormat: 'MinusSign' | 'AbsoluteValue'
 					displayName?: null | string
 					displayNameShort?: null | string
 					displayNamePlural?: null | string
-					formatMode: 'Name' | 'NameOneIndexed' | 'Numeric' | 'NumericOneIndexed' | 'Hidden'
 					formatShorthand?: null | string
-					negativeFormat: 'MinusSign' | 'AbsoluteValue'
 					duration: string
 					treeDepth: number
 				}[]
@@ -438,11 +438,11 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 						name: string
 						position: number
 						calendarId: string
-						presentationId: string
 						formatString: string
 						subdivision: number
 						labeledIndices: number[]
 						unitId: string
+						presentationId: string
 					}[]
 					id: string
 					createdAt: string

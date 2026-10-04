@@ -4,216 +4,6 @@
  */
 
 export interface paths {
-    "/api/world/{worldId}/actors": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new actor */
-        post: operations["createActor"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/actor/{actorId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the target actor */
-        delete: operations["deleteActor"];
-        options?: never;
-        head?: never;
-        /** @description Updates the target actor */
-        patch: operations["updateActor"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/actor/{actorId}/backlinks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the list of entities that mention the specified actor. */
-        get: operations["getActorBacklinks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/feature-flags/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets the feature flags for a user */
-        get: operations["adminGetFeatureFlags"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/feature-flags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets a feature flag for a user or globally */
-        post: operations["adminSetFeatureFlag"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/dashboard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for the admin panel */
-        get: operations["adminGetDashboard"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/audit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch audit logs */
-        get: operations["adminGetAuditLogs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets list of all registered users */
-        get: operations["adminGetUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for a single user */
-        get: operations["adminGetUser"];
-        put?: never;
-        post?: never;
-        /** @description Deletes the user with the given ID */
-        delete: operations["adminDeleteUser"];
-        options?: never;
-        head?: never;
-        /** @description Updates the user information for the given user */
-        patch: operations["adminUpdateUser"];
-        trace?: never;
-    };
-    "/api/admin/user/{userId}/impersonate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Admin impersonate user endpoint
-         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
-         */
-        post: operations["adminImpersonateUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/level": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the user level for the given user */
-        post: operations["adminSetUserLevel"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the password for the given user */
-        post: operations["adminSetUserPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/announcements": {
         parameters: {
             query?: never;
@@ -244,75 +34,6 @@ export interface paths {
         post?: never;
         /** @description Permanently hides the target announcement. */
         delete: operations["dismissAnnouncement"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/assets/{assetId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets a presigned URL for an asset. */
-        get: operations["getAsset"];
-        put?: never;
-        post?: never;
-        /** @description Deletes an asset owned by the user. */
-        delete: operations["deleteAsset"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/assets": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description List all assets owned by the user. */
-        get: operations["listUserAssets"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/assets/upload/presigned": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Requests a presigned URL for a file upload. */
-        post: operations["requestPresignedUrl"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/assets/upload/finalize": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Finalizes an asset upload. */
-        post: operations["finalizeAssetUpload"];
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -717,128 +438,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/{entityType}/{entityId}/content": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the content of the specified entity. */
-        get: operations["getEntityContent"];
-        /** @description Updates the content of the specified entity. */
-        put: operations["putEntityContent"];
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/{entityType}/{entityId}/content/pages/{pageId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the content of the specified content page. */
-        get: operations["getEntityContentPage"];
-        /** @description Updates the content of the specified content page. */
-        put: operations["putEntityContentPage"];
-        post?: never;
-        /** @description Deletes a content page from the specified entity. */
-        delete: operations["deleteEntityContentPage"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/{entityType}/{entityId}/content/pages": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new content page for the specified entity. */
-        post: operations["createEntityContentPage"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/import/user-data/validate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Perform a dry run of user data import. */
-        post: operations["validateImportUserData"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/import/user-data/commit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Import user data in JSON format */
-        post: operations["importUserData"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/export/user-data": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Export user data in JSON format */
-        post: operations["exportUserData"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/export/user-data/inline": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Export user data in JSON format without using cloud storage */
-        post: operations["exportUserDataInline"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/health": {
         parameters: {
             query?: never;
@@ -1082,42 +681,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/tags": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new tag */
-        post: operations["createTag"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/tag/{tagId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the details of a tag, including all entities that mention it */
-        get: operations["getTagDetails"];
-        put?: never;
-        post?: never;
-        /** @description Deletes the target tag */
-        delete: operations["deleteTag"];
-        options?: never;
-        head?: never;
-        /** @description Updates the target tag */
-        patch: operations["updateTag"];
-        trace?: never;
-    };
     "/api/world/{worldId}/bulk/delete": {
         parameters: {
             query?: never;
@@ -1165,213 +728,6 @@ export interface paths {
         post?: never;
         /** @description Deletes a saved color from a world. */
         delete: operations["deleteWorldColor"];
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new world event. */
-        post: operations["createWorldEvent"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the target world event. */
-        delete: operations["deleteWorldEvent"];
-        options?: never;
-        head?: never;
-        /** @description Updates the target world event */
-        patch: operations["updateWorldEvent"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}/revoke": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Marks the specified event as revoked at specified timestamp. */
-        post: operations["revokeWorldEvent"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}/unrevoke": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Marks the event as never revoked. */
-        post: operations["unrevokeWorldEvent"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}/delta": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new delta state for given event. */
-        post: operations["createWorldEventDelta"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}/delta/{deltaId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the target world event delta state. */
-        delete: operations["deleteWorldEventDelta"];
-        options?: never;
-        head?: never;
-        /** @description Updates the target world event delta state */
-        patch: operations["updateWorldEventDelta"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/event/{eventId}/backlinks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the list of entities that mention the specified world event. */
-        get: operations["getWorldEventBacklinks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-tracks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Lists all world event tracks. */
-        get: operations["getWorldEventTracks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates a new world event track. */
-        post: operations["createWorldEventTrack"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/{trackId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes the given world event track. */
-        delete: operations["deleteWorldEventTrack"];
-        options?: never;
-        head?: never;
-        /** @description Updates the given world event track. */
-        patch: operations["updateWorldEventTrack"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/swap": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Swaps the position of two given tracks. */
-        post: operations["swapWorldEventTracks"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/event-track/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves the track to a new position. */
-        post: operations["moveWorldEventTrack"];
-        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1686,129 +1042,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/wiki/articles": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of articles in the wiki without content. */
-        get: operations["getArticles"];
-        put?: never;
-        /** @description Creates a new article in the wiki. */
-        post: operations["createArticle"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/article/{articleId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes an article from the wiki. */
-        delete: operations["deleteArticle"];
-        options?: never;
-        head?: never;
-        /** @description Updates an article in the wiki. */
-        patch: operations["updateArticle"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves an entity to a new wiki position. */
-        post: operations["moveWikiEntity"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/bulk/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves a number of entities to a new wiki position. */
-        post: operations["bulkMoveWikiEntities"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/article/{articleId}/backlinks": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetches the list of entities that mention the specified wiki article. */
-        get: operations["getArticleBacklinks"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/folders": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Returns a list of folders in the wiki without content. */
-        get: operations["getFolders"];
-        put?: never;
-        /** @description Creates a new folder in the wiki. */
-        post: operations["createFolder"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/wiki/folder/{folderId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        post?: never;
-        /** @description Deletes a folder from the wiki. */
-        delete: operations["deleteFolder"];
-        options?: never;
-        head?: never;
-        /** @description Updates a folder in the wiki. */
-        patch: operations["updateFolder"];
-        trace?: never;
-    };
     "/api/internal/auth/{userId}": {
         parameters: {
             query?: never;
@@ -1820,6 +1053,407 @@ export interface paths {
         get: operations["getUserWorldAccessLevel"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/actors": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new actor */
+        post: operations["createActor"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/actor/{actorId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the target actor */
+        delete: operations["deleteActor"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target actor */
+        patch: operations["updateActor"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/actor/{actorId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified actor. */
+        get: operations["getActorBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/feature-flags/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets the feature flags for a user */
+        get: operations["adminGetFeatureFlags"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/feature-flags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets a feature flag for a user or globally */
+        post: operations["adminSetFeatureFlag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets dashboard information for the admin panel */
+        get: operations["adminGetDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch audit logs */
+        get: operations["adminGetAuditLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets list of all registered users */
+        get: operations["adminGetUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets dashboard information for a single user */
+        get: operations["adminGetUser"];
+        put?: never;
+        post?: never;
+        /** @description Deletes the user with the given ID */
+        delete: operations["adminDeleteUser"];
+        options?: never;
+        head?: never;
+        /** @description Updates the user information for the given user */
+        patch: operations["adminUpdateUser"];
+        trace?: never;
+    };
+    "/api/admin/user/{userId}/impersonate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Admin impersonate user endpoint
+         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
+         */
+        post: operations["adminImpersonateUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets the user level for the given user */
+        post: operations["adminSetUserLevel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets the password for the given user */
+        post: operations["adminSetUserPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/{assetId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets a presigned URL for an asset. */
+        get: operations["getAsset"];
+        put?: never;
+        post?: never;
+        /** @description Deletes an asset owned by the user. */
+        delete: operations["deleteAsset"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description List all assets owned by the user. */
+        get: operations["listUserAssets"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/upload/presigned": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Requests a presigned URL for a file upload. */
+        post: operations["requestPresignedUrl"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/assets/upload/finalize": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Finalizes an asset upload. */
+        post: operations["finalizeAssetUpload"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/{entityType}/{entityId}/content": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the content of the specified entity. */
+        get: operations["getEntityContent"];
+        /** @description Updates the content of the specified entity. */
+        put: operations["putEntityContent"];
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/{entityType}/{entityId}/content/pages/{pageId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the content of the specified content page. */
+        get: operations["getEntityContentPage"];
+        /** @description Updates the content of the specified content page. */
+        put: operations["putEntityContentPage"];
+        post?: never;
+        /** @description Deletes a content page from the specified entity. */
+        delete: operations["deleteEntityContentPage"];
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/{entityType}/{entityId}/content/pages": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new content page for the specified entity. */
+        post: operations["createEntityContentPage"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/import/user-data/validate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Perform a dry run of user data import. */
+        post: operations["validateImportUserData"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/import/user-data/commit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Import user data in JSON format */
+        post: operations["importUserData"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/export/user-data": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Export user data in JSON format */
+        post: operations["exportUserData"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/export/user-data/inline": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Export user data in JSON format without using cloud storage */
+        post: operations["exportUserDataInline"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1964,6 +1598,372 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/tags": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new tag */
+        post: operations["createTag"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/tag/{tagId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the details of a tag, including all entities that mention it */
+        get: operations["getTagDetails"];
+        put?: never;
+        post?: never;
+        /** @description Deletes the target tag */
+        delete: operations["deleteTag"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target tag */
+        patch: operations["updateTag"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new world event. */
+        post: operations["createWorldEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the target world event. */
+        delete: operations["deleteWorldEvent"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target world event */
+        patch: operations["updateWorldEvent"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/revoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Marks the specified event as revoked at specified timestamp. */
+        post: operations["revokeWorldEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/unrevoke": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Marks the event as never revoked. */
+        post: operations["unrevokeWorldEvent"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/delta": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new delta state for given event. */
+        post: operations["createWorldEventDelta"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/delta/{deltaId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the target world event delta state. */
+        delete: operations["deleteWorldEventDelta"];
+        options?: never;
+        head?: never;
+        /** @description Updates the target world event delta state */
+        patch: operations["updateWorldEventDelta"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event/{eventId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified world event. */
+        get: operations["getWorldEventBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-tracks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Lists all world event tracks. */
+        get: operations["getWorldEventTracks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new world event track. */
+        post: operations["createWorldEventTrack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/{trackId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes the given world event track. */
+        delete: operations["deleteWorldEventTrack"];
+        options?: never;
+        head?: never;
+        /** @description Updates the given world event track. */
+        patch: operations["updateWorldEventTrack"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/swap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Swaps the position of two given tracks. */
+        post: operations["swapWorldEventTracks"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/event-track/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves the track to a new position. */
+        post: operations["moveWorldEventTrack"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/articles": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of articles in the wiki without content. */
+        get: operations["getArticles"];
+        put?: never;
+        /** @description Creates a new article in the wiki. */
+        post: operations["createArticle"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/article/{articleId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes an article from the wiki. */
+        delete: operations["deleteArticle"];
+        options?: never;
+        head?: never;
+        /** @description Updates an article in the wiki. */
+        patch: operations["updateArticle"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves an entity to a new wiki position. */
+        post: operations["moveWikiEntity"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/bulk/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves a number of entities to a new wiki position. */
+        post: operations["bulkMoveWikiEntities"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/article/{articleId}/backlinks": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetches the list of entities that mention the specified wiki article. */
+        get: operations["getArticleBacklinks"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/folders": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Returns a list of folders in the wiki without content. */
+        get: operations["getFolders"];
+        put?: never;
+        /** @description Creates a new folder in the wiki. */
+        post: operations["createFolder"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/wiki/folder/{folderId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        /** @description Deletes a folder from the wiki. */
+        delete: operations["deleteFolder"];
+        options?: never;
+        head?: never;
+        /** @description Updates a folder in the wiki. */
+        patch: operations["updateFolder"];
+        trace?: never;
+    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -1976,876 +1976,6 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    createActor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    title?: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich?: string;
-                    parentFolderId?: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    title?: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich?: string;
-                    parentFolderId?: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        pages: {
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        mentionedIn: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        title: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    deleteActor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                actorId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        title: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    updateActor: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                actorId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    title?: string;
-                    icon?: string;
-                    color?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    title?: string;
-                    icon?: string;
-                    color?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        pages: {
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        mentionedIn: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        title: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    getActorBacklinks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                actorId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        type: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        id: string;
-                        name: string;
-                    }[];
-                };
-            };
-        };
-    };
-    adminGetFeatureFlags: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string[];
-                };
-            };
-        };
-    };
-    adminSetFeatureFlag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    flag: "GlobalSearch" | "MindmapRework";
-                    userId: string;
-                    enable: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    flag: "GlobalSearch" | "MindmapRework";
-                    userId: string;
-                    enable: boolean;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    adminGetDashboard: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                        fileSystemStats: {
-                            root: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                            database: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminGetAuditLogs: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        logs: {
-                            data: string;
-                            user: null | {
-                                id: string;
-                                email: string;
-                                username: string;
-                            };
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            userId?: null | string;
-                            requestIp: string;
-                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
-                            dedupeKey?: null | string;
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUsers: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
-                sortDirection?: "asc" | "desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        users: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                            activity: {
-                                activeDays: number;
-                                regular: boolean;
-                                lastActiveAt?: null | string;
-                            };
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                        };
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminDeleteUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminUpdateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminImpersonateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            deletedAt?: null | string;
-                            deletionScheduledAt?: null | string;
-                            email: string;
-                            username: string;
-                            password: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            avatarId?: null | string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminSetUserLevel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-                "application/x-www-form-urlencoded": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminSetUserPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    password: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
     getAnnouncements: {
         parameters: {
             query?: never;
@@ -2908,202 +2038,6 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
-            };
-        };
-    };
-    getAsset: {
-        parameters: {
-            query?: {
-                disposition?: "inline" | "attachment";
-            };
-            header?: never;
-            path: {
-                /** @description Any string value */
-                assetId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        url: string;
-                        imageWidth?: null | number;
-                        imageHeight?: null | number;
-                    };
-                };
-            };
-        };
-    };
-    deleteAsset: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                assetId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    listUserAssets: {
-        parameters: {
-            query?: {
-                offset?: number;
-                limit?: number;
-                sortField?: string;
-                sortDirection?: "asc" | "desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        assets: {
-                            previewUrl?: null | string;
-                            _count: {
-                                references: number;
-                            };
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            ownerId: string;
-                            size: number;
-                            expiresAt?: null | string;
-                            bucketKey: string;
-                            originalFileName: string;
-                            originalFileExtension: string;
-                            contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                            status: "Pending" | "Finalized" | "Failed";
-                            contentDescription?: null | string;
-                            imageWidth?: null | number;
-                            imageHeight?: null | number;
-                        }[];
-                        total: number;
-                    };
-                };
-            };
-        };
-    };
-    requestPresignedUrl: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    fileName: string;
-                    fileSize: number;
-                    assetType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                };
-                "application/x-www-form-urlencoded": {
-                    fileName: string;
-                    fileSize: number;
-                    assetType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        asset: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            ownerId: string;
-                            size: number;
-                            expiresAt?: null | string;
-                            bucketKey: string;
-                            originalFileName: string;
-                            originalFileExtension: string;
-                            contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                            status: "Pending" | "Finalized" | "Failed";
-                            contentDescription?: null | string;
-                            imageWidth?: null | number;
-                            imageHeight?: null | number;
-                        };
-                        url: string;
-                        fields: {
-                            [key: string]: string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    finalizeAssetUpload: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    assetId: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    assetId: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        ownerId: string;
-                        size: number;
-                        expiresAt?: null | string;
-                        bucketKey: string;
-                        originalFileName: string;
-                        originalFileExtension: string;
-                        contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
-                        status: "Pending" | "Finalized" | "Failed";
-                        contentDescription?: null | string;
-                        imageWidth?: null | number;
-                        imageHeight?: null | number;
-                    };
-                };
             };
         };
     };
@@ -4377,786 +3311,6 @@ export interface operations {
             };
         };
     };
-    getEntityContent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        contentHtml: string;
-                    };
-                };
-            };
-        };
-    };
-    putEntityContent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    content: string;
-                    reloadClients?: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    content: string;
-                    reloadClients?: boolean;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getEntityContentPage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-                /** @description Any string value */
-                pageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        contentHtml: string;
-                    };
-                };
-            };
-        };
-    };
-    putEntityContentPage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-                /** @description Any string value */
-                pageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    content: string;
-                    reloadClients?: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    content: string;
-                    reloadClients?: boolean;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    deleteEntityContentPage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-                /** @description Any string value */
-                pageId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createEntityContentPage: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                entityType: "actor" | "event" | "article" | "node";
-                /** @description Any string value */
-                entityId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        content: string;
-                        contentRich: string;
-                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        parentActorId?: null | string;
-                        parentEventId?: null | string;
-                        parentArticleId?: null | string;
-                        parentNodeId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    validateImportUserData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    assetId: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    assetId: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    importUserData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    assetId: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    assetId: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    exportUserData: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        url: string;
-                    };
-                };
-            };
-        };
-    };
-    exportUserDataInline: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        version: number;
-                        user: {
-                            id: string;
-                            calendars: {
-                                units: {
-                                    children: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        position: number;
-                                        calendarId: string;
-                                        label?: null | string;
-                                        shortLabel?: null | string;
-                                        repeats: number;
-                                        parentUnitId: string;
-                                        childUnitId: string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    position: number;
-                                    calendarId: string;
-                                    displayName?: null | string;
-                                    displayNameShort?: null | string;
-                                    displayNamePlural?: null | string;
-                                    formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
-                                    formatShorthand?: null | string;
-                                    negativeFormat: "MinusSign" | "AbsoluteValue";
-                                    /** Format: bigint */
-                                    duration: string;
-                                    treeDepth: number;
-                                }[];
-                                seasons: {
-                                    intervals: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        calendarId: string;
-                                        leftIndex: number;
-                                        rightIndex: number;
-                                        seasonId: string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    position: number;
-                                    calendarId: string;
-                                    formatShorthand?: null | string;
-                                }[];
-                                presentations: {
-                                    units: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        position: number;
-                                        calendarId: string;
-                                        presentationId: string;
-                                        formatString: string;
-                                        subdivision: number;
-                                        labeledIndices: number[];
-                                        unitId: string;
-                                    }[];
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    calendarId: string;
-                                    compression: number;
-                                    scaleFactor: number;
-                                    baselineUnitId?: null | string;
-                                }[];
-                                description: string;
-                                worldId?: null | string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                name: string;
-                                ownerId?: null | string;
-                                position: number;
-                                /** Format: bigint */
-                                originTime: string;
-                                dateFormat?: null | string;
-                            }[];
-                            worlds: {
-                                actors: {
-                                    pages: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        content: string;
-                                        contentRich: string;
-                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        parentActorId?: null | string;
-                                        parentEventId?: null | string;
-                                        parentArticleId?: null | string;
-                                        parentNodeId?: null | string;
-                                    }[];
-                                    mentions: {
-                                        id: string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        sourceNodeId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                        pageId?: null | string;
-                                    }[];
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    title: string;
-                                    icon: string;
-                                    color: string;
-                                    content: string;
-                                    contentRich: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                }[];
-                                events: {
-                                    pages: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        content: string;
-                                        contentRich: string;
-                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        parentActorId?: null | string;
-                                        parentEventId?: null | string;
-                                        parentArticleId?: null | string;
-                                        parentNodeId?: null | string;
-                                    }[];
-                                    mentions: {
-                                        id: string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        sourceNodeId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                        pageId?: null | string;
-                                    }[];
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    icon: string;
-                                    color: string;
-                                    content: string;
-                                    contentRich: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                    /** Format: bigint */
-                                    timestamp: string;
-                                    revokedAt?: null | string;
-                                    worldEventTrackId?: null | string;
-                                }[];
-                                articles: {
-                                    pages: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        content: string;
-                                        contentRich: string;
-                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        parentActorId?: null | string;
-                                        parentEventId?: null | string;
-                                        parentArticleId?: null | string;
-                                        parentNodeId?: null | string;
-                                    }[];
-                                    mentions: {
-                                        id: string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        sourceNodeId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                        pageId?: null | string;
-                                    }[];
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    icon: string;
-                                    color: string;
-                                    content: string;
-                                    contentRich: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                }[];
-                                folders: {
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    icon: string;
-                                    color: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                }[];
-                                tags: {
-                                    mentions: {
-                                        id: string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        sourceNodeId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                        pageId?: null | string;
-                                    }[];
-                                    description: string;
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    color: string;
-                                    parentFolderId?: null | string;
-                                    parentFolderPosition: number;
-                                }[];
-                                mindmapNodes: {
-                                    pages: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        content: string;
-                                        contentRich: string;
-                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        parentActorId?: null | string;
-                                        parentEventId?: null | string;
-                                        parentArticleId?: null | string;
-                                        parentNodeId?: null | string;
-                                    }[];
-                                    mentions: {
-                                        id: string;
-                                        sourceId: string;
-                                        targetId: string;
-                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                                        sourceActorId?: null | string;
-                                        sourceEventId?: null | string;
-                                        sourceArticleId?: null | string;
-                                        sourceTagId?: null | string;
-                                        sourceNodeId?: null | string;
-                                        targetActorId?: null | string;
-                                        targetEventId?: null | string;
-                                        targetArticleId?: null | string;
-                                        targetTagId?: null | string;
-                                        pageId?: null | string;
-                                    }[];
-                                    links: {
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        content: string;
-                                        sourceNodeId: string;
-                                        targetNodeId: string;
-                                        direction: "Normal" | "Reversed" | "TwoWay";
-                                    }[];
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    content: string;
-                                    contentRich: string;
-                                    parentFolderId?: null | string;
-                                    parentActorId?: null | string;
-                                    parentEventId?: null | string;
-                                    parentArticleId?: null | string;
-                                    positionX: number;
-                                    positionY: number;
-                                    parentTagId?: null | string;
-                                }[];
-                                worldEventTracks: {
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    position: number;
-                                    visible: boolean;
-                                }[];
-                                worldCommonIconSets: {
-                                    worldId: string;
-                                    id: string;
-                                    iconSet: string;
-                                }[];
-                                savedColors: {
-                                    worldId: string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    value: string;
-                                    label?: null | string;
-                                }[];
-                                calendars: {
-                                    units: {
-                                        children: {
-                                            id: string;
-                                            /** Format: date-time */
-                                            createdAt: string;
-                                            /** Format: date-time */
-                                            updatedAt: string;
-                                            position: number;
-                                            calendarId: string;
-                                            label?: null | string;
-                                            shortLabel?: null | string;
-                                            repeats: number;
-                                            parentUnitId: string;
-                                            childUnitId: string;
-                                        }[];
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        position: number;
-                                        calendarId: string;
-                                        displayName?: null | string;
-                                        displayNameShort?: null | string;
-                                        displayNamePlural?: null | string;
-                                        formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
-                                        formatShorthand?: null | string;
-                                        negativeFormat: "MinusSign" | "AbsoluteValue";
-                                        /** Format: bigint */
-                                        duration: string;
-                                        treeDepth: number;
-                                    }[];
-                                    seasons: {
-                                        intervals: {
-                                            id: string;
-                                            /** Format: date-time */
-                                            createdAt: string;
-                                            /** Format: date-time */
-                                            updatedAt: string;
-                                            calendarId: string;
-                                            leftIndex: number;
-                                            rightIndex: number;
-                                            seasonId: string;
-                                        }[];
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        position: number;
-                                        calendarId: string;
-                                        formatShorthand?: null | string;
-                                    }[];
-                                    presentations: {
-                                        units: {
-                                            id: string;
-                                            /** Format: date-time */
-                                            createdAt: string;
-                                            /** Format: date-time */
-                                            updatedAt: string;
-                                            name: string;
-                                            position: number;
-                                            calendarId: string;
-                                            presentationId: string;
-                                            formatString: string;
-                                            subdivision: number;
-                                            labeledIndices: number[];
-                                            unitId: string;
-                                        }[];
-                                        id: string;
-                                        /** Format: date-time */
-                                        createdAt: string;
-                                        /** Format: date-time */
-                                        updatedAt: string;
-                                        name: string;
-                                        calendarId: string;
-                                        compression: number;
-                                        scaleFactor: number;
-                                        baselineUnitId?: null | string;
-                                    }[];
-                                    description: string;
-                                    worldId?: null | string;
-                                    id: string;
-                                    /** Format: date-time */
-                                    createdAt: string;
-                                    /** Format: date-time */
-                                    updatedAt: string;
-                                    name: string;
-                                    ownerId?: null | string;
-                                    position: number;
-                                    /** Format: bigint */
-                                    originTime: string;
-                                    dateFormat?: null | string;
-                                }[];
-                                description: string;
-                                id: string;
-                                /** Format: date-time */
-                                createdAt: string;
-                                /** Format: date-time */
-                                updatedAt: string;
-                                name: string;
-                                calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
-                                /** Format: bigint */
-                                timeOrigin: string;
-                                ownerId: string;
-                                accessMode: "Private" | "PublicRead" | "PublicEdit";
-                            }[];
-                        };
-                    };
-                };
-            };
-        };
-    };
     getHealth: {
         parameters: {
             query?: never;
@@ -5600,244 +3754,6 @@ export interface operations {
             };
         };
     };
-    createTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    description?: string;
-                    parentFolderId?: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    description?: string;
-                    parentFolderId?: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentions: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        mentionedIn: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        color: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    getTagDetails: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentionedBy: {
-                            type: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            id: string;
-                            sourceId: string;
-                            targetId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                            sourceActorId?: null | string;
-                            sourceEventId?: null | string;
-                            sourceArticleId?: null | string;
-                            sourceTagId?: null | string;
-                            sourceNodeId?: null | string;
-                            targetActorId?: null | string;
-                            targetEventId?: null | string;
-                            targetArticleId?: null | string;
-                            targetTagId?: null | string;
-                            pageId?: null | string;
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        color: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    deleteTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        color: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    updateTag: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                tagId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    description?: string;
-                    color?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    description?: string;
-                    color?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        mentions: {
-                            targetId: string;
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        mentionedIn: {
-                            sourceId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        description: string;
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        color: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
     bulkDeleteEntities: {
         parameters: {
             query?: never;
@@ -5953,669 +3869,6 @@ export interface operations {
             cookie?: never;
         };
         requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    createWorldEvent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    id?: string;
-                    name: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich: string;
-                    /** Format: bigint */
-                    timestamp: string;
-                    revokedAt?: null | string;
-                    customName?: boolean;
-                    externalLink?: string;
-                    worldEventTrackId?: null | string;
-                    parentFolderId?: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    id?: string;
-                    name: string;
-                    icon?: string;
-                    color?: string;
-                    contentRich: string;
-                    /** Format: bigint */
-                    timestamp: string;
-                    revokedAt?: null | string;
-                    customName?: boolean;
-                    externalLink?: string;
-                    worldEventTrackId?: null | string;
-                    parentFolderId?: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        pages: {
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            targetId: string;
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        mentionedIn: {
-                            sourceId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        deltaStates: {
-                            description?: null | string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name?: null | string;
-                            /** Format: bigint */
-                            timestamp: string;
-                            descriptionRich?: null | string;
-                            worldEventId: string;
-                        }[];
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                        /** Format: bigint */
-                        timestamp: string;
-                        revokedAt?: null | string;
-                        worldEventTrackId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    deleteWorldEvent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        count: number;
-                    };
-                };
-            };
-        };
-    };
-    updateWorldEvent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    icon?: string;
-                    color?: string;
-                    /** Format: bigint */
-                    timestamp?: string;
-                    revokedAt?: null | string;
-                    externalLink?: string;
-                    worldEventTrackId?: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    icon?: string;
-                    color?: string;
-                    /** Format: bigint */
-                    timestamp?: string;
-                    revokedAt?: null | string;
-                    externalLink?: string;
-                    worldEventTrackId?: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        pages: {
-                            id: string;
-                            name: string;
-                        }[];
-                        mentions: {
-                            targetId: string;
-                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        mentionedIn: {
-                            sourceId: string;
-                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        }[];
-                        deltaStates: {
-                            description?: null | string;
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name?: null | string;
-                            /** Format: bigint */
-                            timestamp: string;
-                            descriptionRich?: null | string;
-                            worldEventId: string;
-                        }[];
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                        /** Format: bigint */
-                        timestamp: string;
-                        revokedAt?: null | string;
-                        worldEventTrackId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    revokeWorldEvent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /** Format: bigint */
-                    revokedAt: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    /** Format: bigint */
-                    revokedAt: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                        /** Format: bigint */
-                        timestamp: string;
-                        revokedAt?: null | string;
-                        worldEventTrackId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    unrevokeWorldEvent: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentFolderId?: null | string;
-                        parentFolderPosition: number;
-                        /** Format: bigint */
-                        timestamp: string;
-                        revokedAt?: null | string;
-                        worldEventTrackId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    createWorldEventDelta: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /** Format: bigint */
-                    timestamp: string;
-                    name: null | string;
-                    description: null | string;
-                    descriptionRich: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    /** Format: bigint */
-                    timestamp: string;
-                    name: null | string;
-                    description: null | string;
-                    descriptionRich: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    deleteWorldEventDelta: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-                /** @description Any string value */
-                deltaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        description?: null | string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name?: null | string;
-                        /** Format: bigint */
-                        timestamp: string;
-                        descriptionRich?: null | string;
-                        worldEventId: string;
-                    };
-                };
-            };
-        };
-    };
-    updateWorldEventDelta: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-                /** @description Any string value */
-                deltaId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    /** Format: bigint */
-                    timestamp?: string;
-                    name?: null | string;
-                    description?: null | string;
-                    descriptionRich?: null | string;
-                };
-                "application/x-www-form-urlencoded": {
-                    /** Format: bigint */
-                    timestamp?: string;
-                    name?: null | string;
-                    description?: null | string;
-                    descriptionRich?: null | string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        description?: null | string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name?: null | string;
-                        /** Format: bigint */
-                        timestamp: string;
-                        descriptionRich?: null | string;
-                        worldEventId: string;
-                    };
-                };
-            };
-        };
-    };
-    getWorldEventBacklinks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                eventId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        type: "Actor" | "Event" | "Article" | "Tag" | "Node";
-                        id: string;
-                        name: string;
-                    }[];
-                };
-            };
-        };
-    };
-    getWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        worldId: string;
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        position: number;
-                        visible: boolean;
-                    }[];
-                };
-            };
-        };
-    };
-    createWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name: string;
-                    position?: number;
-                    assignOrphans: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    deleteWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    updateWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-                /** @description Any string value */
-                trackId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-                "application/x-www-form-urlencoded": {
-                    name?: string;
-                    position?: number;
-                    visible?: boolean;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                    };
-                };
-            };
-        };
-    };
-    swapWorldEventTracks: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    trackA: string;
-                    trackB: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    trackA: string;
-                    trackB: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    moveWorldEventTrack: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value */
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    trackId: string;
-                    position: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    trackId: string;
-                    position: number;
-                };
-            };
-        };
         responses: {
             204: {
                 headers: {
@@ -7692,6 +4945,3276 @@ export interface operations {
             };
         };
     };
+    getUserWorldAccessLevel: {
+        parameters: {
+            query: {
+                /** @description Any string value with at least one character */
+                worldId: string;
+            };
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        owner: boolean;
+                        write: boolean;
+                        read: boolean;
+                    };
+                };
+            };
+        };
+    };
+    createActor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    title?: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich?: string;
+                    parentFolderId?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    title?: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich?: string;
+                    parentFolderId?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        mentionedIn: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        title: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    deleteActor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                actorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        title: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    updateActor: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                actorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    title?: string;
+                    icon?: string;
+                    color?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    title?: string;
+                    icon?: string;
+                    color?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        mentionedIn: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        title: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    getActorBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                actorId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        id: string;
+                        name: string;
+                    }[];
+                };
+            };
+        };
+    };
+    adminGetFeatureFlags: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
+                };
+            };
+        };
+    };
+    adminSetFeatureFlag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    flag: "GlobalSearch" | "MindmapRework";
+                    userId: string;
+                    enable: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    flag: "GlobalSearch" | "MindmapRework";
+                    userId: string;
+                    enable: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminGetDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
+                        }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
+                        fileSystemStats: {
+                            root: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                            database: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminGetAuditLogs: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        logs: {
+                            data: string;
+                            user: null | {
+                                id: string;
+                                email: string;
+                                username: string;
+                            };
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            userId?: null | string;
+                            requestIp: string;
+                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
+                            dedupeKey?: null | string;
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUsers: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        users: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
+                            activity: {
+                                activeDays: number;
+                                regular: boolean;
+                                lastActiveAt?: null | string;
+                            };
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
+                        };
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
+                        }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminDeleteUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        deletedAt?: null | string;
+                        deletionScheduledAt?: null | string;
+                        email: string;
+                        username: string;
+                        password: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        avatarId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    adminUpdateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        deletedAt?: null | string;
+                        deletionScheduledAt?: null | string;
+                        email: string;
+                        username: string;
+                        password: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        avatarId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    adminImpersonateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            deletedAt?: null | string;
+                            deletionScheduledAt?: null | string;
+                            email: string;
+                            username: string;
+                            password: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            avatarId?: null | string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminSetUserLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+                "application/x-www-form-urlencoded": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        deletedAt?: null | string;
+                        deletionScheduledAt?: null | string;
+                        email: string;
+                        username: string;
+                        password: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        avatarId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    adminSetUserPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    password: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        deletedAt?: null | string;
+                        deletionScheduledAt?: null | string;
+                        email: string;
+                        username: string;
+                        password: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        avatarId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    getAsset: {
+        parameters: {
+            query?: {
+                disposition?: "inline" | "attachment";
+            };
+            header?: never;
+            path: {
+                /** @description Any string value */
+                assetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        url: string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
+                    };
+                };
+            };
+        };
+    };
+    deleteAsset: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                assetId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    listUserAssets: {
+        parameters: {
+            query?: {
+                offset?: number;
+                limit?: number;
+                sortField?: string;
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        assets: {
+                            previewUrl?: null | string;
+                            _count: {
+                                references: number;
+                            };
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            ownerId: string;
+                            size: number;
+                            expiresAt?: null | string;
+                            bucketKey: string;
+                            originalFileName: string;
+                            originalFileExtension: string;
+                            contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                            status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
+                        }[];
+                        total: number;
+                    };
+                };
+            };
+        };
+    };
+    requestPresignedUrl: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    fileName: string;
+                    fileSize: number;
+                    assetType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                };
+                "application/x-www-form-urlencoded": {
+                    fileName: string;
+                    fileSize: number;
+                    assetType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        asset: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            ownerId: string;
+                            size: number;
+                            expiresAt?: null | string;
+                            bucketKey: string;
+                            originalFileName: string;
+                            originalFileExtension: string;
+                            contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                            status: "Pending" | "Finalized" | "Failed";
+                            contentDescription?: null | string;
+                            imageWidth?: null | number;
+                            imageHeight?: null | number;
+                        };
+                        url: string;
+                        fields: {
+                            [key: string]: string;
+                        };
+                    };
+                };
+            };
+        };
+    };
+    finalizeAssetUpload: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    assetId: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    assetId: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        ownerId: string;
+                        size: number;
+                        expiresAt?: null | string;
+                        bucketKey: string;
+                        originalFileName: string;
+                        originalFileExtension: string;
+                        contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
+                        status: "Pending" | "Finalized" | "Failed";
+                        contentDescription?: null | string;
+                        imageWidth?: null | number;
+                        imageHeight?: null | number;
+                    };
+                };
+            };
+        };
+    };
+    getEntityContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        contentHtml: string;
+                    };
+                };
+            };
+        };
+    };
+    putEntityContent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    content: string;
+                    reloadClients?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    content: string;
+                    reloadClients?: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getEntityContentPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+                /** @description Any string value */
+                pageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        contentHtml: string;
+                    };
+                };
+            };
+        };
+    };
+    putEntityContentPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+                /** @description Any string value */
+                pageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    content: string;
+                    reloadClients?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    content: string;
+                    reloadClients?: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    deleteEntityContentPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+                /** @description Any string value */
+                pageId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    createEntityContentPage: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                entityType: "actor" | "event" | "article" | "node";
+                /** @description Any string value */
+                entityId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        parentNodeId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    validateImportUserData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    assetId: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    assetId: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    importUserData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    assetId: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    assetId: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    exportUserData: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        url: string;
+                    };
+                };
+            };
+        };
+    };
+    exportUserDataInline: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        version: number;
+                        user: {
+                            id: string;
+                            calendars: {
+                                units: {
+                                    children: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        position: number;
+                                        calendarId: string;
+                                        label?: null | string;
+                                        shortLabel?: null | string;
+                                        repeats: number;
+                                        parentUnitId: string;
+                                        childUnitId: string;
+                                    }[];
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    position: number;
+                                    calendarId: string;
+                                    formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                    negativeFormat: "MinusSign" | "AbsoluteValue";
+                                    displayName?: null | string;
+                                    displayNameShort?: null | string;
+                                    displayNamePlural?: null | string;
+                                    formatShorthand?: null | string;
+                                    /** Format: bigint */
+                                    duration: string;
+                                    treeDepth: number;
+                                }[];
+                                seasons: {
+                                    intervals: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        calendarId: string;
+                                        leftIndex: number;
+                                        rightIndex: number;
+                                        seasonId: string;
+                                    }[];
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    position: number;
+                                    calendarId: string;
+                                    formatShorthand?: null | string;
+                                }[];
+                                presentations: {
+                                    units: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        position: number;
+                                        calendarId: string;
+                                        formatString: string;
+                                        subdivision: number;
+                                        labeledIndices: number[];
+                                        unitId: string;
+                                        presentationId: string;
+                                    }[];
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    calendarId: string;
+                                    compression: number;
+                                    scaleFactor: number;
+                                    baselineUnitId?: null | string;
+                                }[];
+                                description: string;
+                                worldId?: null | string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                ownerId?: null | string;
+                                position: number;
+                                /** Format: bigint */
+                                originTime: string;
+                                dateFormat?: null | string;
+                            }[];
+                            worlds: {
+                                actors: {
+                                    pages: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        content: string;
+                                        contentRich: string;
+                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                        parentNodeId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        sourceNodeId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                        pageId?: null | string;
+                                    }[];
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    title: string;
+                                    icon: string;
+                                    color: string;
+                                    content: string;
+                                    contentRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                events: {
+                                    pages: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        content: string;
+                                        contentRich: string;
+                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                        parentNodeId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        sourceNodeId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                        pageId?: null | string;
+                                    }[];
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    content: string;
+                                    contentRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                    /** Format: bigint */
+                                    timestamp: string;
+                                    revokedAt?: null | string;
+                                    worldEventTrackId?: null | string;
+                                }[];
+                                articles: {
+                                    pages: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        content: string;
+                                        contentRich: string;
+                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                        parentNodeId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        sourceNodeId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                        pageId?: null | string;
+                                    }[];
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    content: string;
+                                    contentRich: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                folders: {
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    icon: string;
+                                    color: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                tags: {
+                                    mentions: {
+                                        id: string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        sourceNodeId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                        pageId?: null | string;
+                                    }[];
+                                    description: string;
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    color: string;
+                                    parentFolderId?: null | string;
+                                    parentFolderPosition: number;
+                                }[];
+                                mindmapNodes: {
+                                    pages: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        content: string;
+                                        contentRich: string;
+                                        parentType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        parentActorId?: null | string;
+                                        parentEventId?: null | string;
+                                        parentArticleId?: null | string;
+                                        parentNodeId?: null | string;
+                                    }[];
+                                    mentions: {
+                                        id: string;
+                                        sourceId: string;
+                                        targetId: string;
+                                        sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                                        sourceActorId?: null | string;
+                                        sourceEventId?: null | string;
+                                        sourceArticleId?: null | string;
+                                        sourceTagId?: null | string;
+                                        sourceNodeId?: null | string;
+                                        targetActorId?: null | string;
+                                        targetEventId?: null | string;
+                                        targetArticleId?: null | string;
+                                        targetTagId?: null | string;
+                                        pageId?: null | string;
+                                    }[];
+                                    links: {
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        content: string;
+                                        sourceNodeId: string;
+                                        targetNodeId: string;
+                                        direction: "Normal" | "Reversed" | "TwoWay";
+                                    }[];
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    content: string;
+                                    contentRich: string;
+                                    parentFolderId?: null | string;
+                                    parentActorId?: null | string;
+                                    parentEventId?: null | string;
+                                    parentArticleId?: null | string;
+                                    positionX: number;
+                                    positionY: number;
+                                    parentTagId?: null | string;
+                                }[];
+                                worldEventTracks: {
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    position: number;
+                                    visible: boolean;
+                                }[];
+                                worldCommonIconSets: {
+                                    worldId: string;
+                                    id: string;
+                                    iconSet: string;
+                                }[];
+                                savedColors: {
+                                    worldId: string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    value: string;
+                                    label?: null | string;
+                                }[];
+                                calendars: {
+                                    units: {
+                                        children: {
+                                            id: string;
+                                            /** Format: date-time */
+                                            createdAt: string;
+                                            /** Format: date-time */
+                                            updatedAt: string;
+                                            position: number;
+                                            calendarId: string;
+                                            label?: null | string;
+                                            shortLabel?: null | string;
+                                            repeats: number;
+                                            parentUnitId: string;
+                                            childUnitId: string;
+                                        }[];
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        position: number;
+                                        calendarId: string;
+                                        formatMode: "Name" | "NameOneIndexed" | "Numeric" | "NumericOneIndexed" | "Hidden";
+                                        negativeFormat: "MinusSign" | "AbsoluteValue";
+                                        displayName?: null | string;
+                                        displayNameShort?: null | string;
+                                        displayNamePlural?: null | string;
+                                        formatShorthand?: null | string;
+                                        /** Format: bigint */
+                                        duration: string;
+                                        treeDepth: number;
+                                    }[];
+                                    seasons: {
+                                        intervals: {
+                                            id: string;
+                                            /** Format: date-time */
+                                            createdAt: string;
+                                            /** Format: date-time */
+                                            updatedAt: string;
+                                            calendarId: string;
+                                            leftIndex: number;
+                                            rightIndex: number;
+                                            seasonId: string;
+                                        }[];
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        position: number;
+                                        calendarId: string;
+                                        formatShorthand?: null | string;
+                                    }[];
+                                    presentations: {
+                                        units: {
+                                            id: string;
+                                            /** Format: date-time */
+                                            createdAt: string;
+                                            /** Format: date-time */
+                                            updatedAt: string;
+                                            name: string;
+                                            position: number;
+                                            calendarId: string;
+                                            formatString: string;
+                                            subdivision: number;
+                                            labeledIndices: number[];
+                                            unitId: string;
+                                            presentationId: string;
+                                        }[];
+                                        id: string;
+                                        /** Format: date-time */
+                                        createdAt: string;
+                                        /** Format: date-time */
+                                        updatedAt: string;
+                                        name: string;
+                                        calendarId: string;
+                                        compression: number;
+                                        scaleFactor: number;
+                                        baselineUnitId?: null | string;
+                                    }[];
+                                    description: string;
+                                    worldId?: null | string;
+                                    id: string;
+                                    /** Format: date-time */
+                                    createdAt: string;
+                                    /** Format: date-time */
+                                    updatedAt: string;
+                                    name: string;
+                                    ownerId?: null | string;
+                                    position: number;
+                                    /** Format: bigint */
+                                    originTime: string;
+                                    dateFormat?: null | string;
+                                }[];
+                                description: string;
+                                id: string;
+                                /** Format: date-time */
+                                createdAt: string;
+                                /** Format: date-time */
+                                updatedAt: string;
+                                name: string;
+                                calendar?: null | "COUNTUP" | "EARTH" | "PF2E" | "RIMWORLD" | "EXETHER";
+                                /** Format: bigint */
+                                timeOrigin: string;
+                                ownerId: string;
+                                accessMode: "Private" | "PublicRead" | "PublicEdit";
+                            }[];
+                        };
+                    };
+                };
+            };
+        };
+    };
+    getMindmap: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        nodes: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentActorId?: null | string;
+                            parentEventId?: null | string;
+                            parentArticleId?: null | string;
+                            positionX: number;
+                            positionY: number;
+                            parentTagId?: null | string;
+                        }[];
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    createNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    id?: string;
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    id?: string;
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    deleteNodes: {
+        parameters: {
+            query: {
+                nodes: string[];
+            };
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count: number;
+                    };
+                };
+            };
+        };
+    };
+    updateNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    reparentNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    moveMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    }[];
+                };
+            };
+        };
+    };
+    createMindmapWires: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+                "application/x-www-form-urlencoded": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        created: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                        updated: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    deleteMindmapWires: {
+        parameters: {
+            query: {
+                wires: string[];
+            };
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
+                };
+            };
+        };
+    };
+    updateMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
+            };
+        };
+    };
+    splitMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        node: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentActorId?: null | string;
+                            parentEventId?: null | string;
+                            parentArticleId?: null | string;
+                            positionX: number;
+                            positionY: number;
+                            parentTagId?: null | string;
+                        };
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    createTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    description?: string;
+                    parentFolderId?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    description?: string;
+                    parentFolderId?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        mentionedIn: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    getTagDetails: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentionedBy: {
+                            type: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            id: string;
+                            sourceId: string;
+                            targetId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                            sourceActorId?: null | string;
+                            sourceEventId?: null | string;
+                            sourceArticleId?: null | string;
+                            sourceTagId?: null | string;
+                            sourceNodeId?: null | string;
+                            targetActorId?: null | string;
+                            targetEventId?: null | string;
+                            targetArticleId?: null | string;
+                            targetTagId?: null | string;
+                            pageId?: null | string;
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    deleteTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    updateTag: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                tagId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    description?: string;
+                    color?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    description?: string;
+                    color?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        mentions: {
+                            targetId: string;
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        mentionedIn: {
+                            sourceId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        description: string;
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        color: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                    };
+                };
+            };
+        };
+    };
+    createWorldEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    id?: string;
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich: string;
+                    /** Format: bigint */
+                    timestamp: string;
+                    revokedAt?: null | string;
+                    customName?: boolean;
+                    externalLink?: string;
+                    worldEventTrackId?: null | string;
+                    parentFolderId?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    id?: string;
+                    name: string;
+                    icon?: string;
+                    color?: string;
+                    contentRich: string;
+                    /** Format: bigint */
+                    timestamp: string;
+                    revokedAt?: null | string;
+                    customName?: boolean;
+                    externalLink?: string;
+                    worldEventTrackId?: null | string;
+                    parentFolderId?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            targetId: string;
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        mentionedIn: {
+                            sourceId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        deltaStates: {
+                            description?: null | string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name?: null | string;
+                            /** Format: bigint */
+                            timestamp: string;
+                            descriptionRich?: null | string;
+                            worldEventId: string;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        /** Format: bigint */
+                        timestamp: string;
+                        revokedAt?: null | string;
+                        worldEventTrackId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    deleteWorldEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count: number;
+                    };
+                };
+            };
+        };
+    };
+    updateWorldEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                    /** Format: bigint */
+                    timestamp?: string;
+                    revokedAt?: null | string;
+                    externalLink?: string;
+                    worldEventTrackId?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    icon?: string;
+                    color?: string;
+                    /** Format: bigint */
+                    timestamp?: string;
+                    revokedAt?: null | string;
+                    externalLink?: string;
+                    worldEventTrackId?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        pages: {
+                            id: string;
+                            name: string;
+                        }[];
+                        mentions: {
+                            targetId: string;
+                            targetType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        mentionedIn: {
+                            sourceId: string;
+                            sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        }[];
+                        deltaStates: {
+                            description?: null | string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name?: null | string;
+                            /** Format: bigint */
+                            timestamp: string;
+                            descriptionRich?: null | string;
+                            worldEventId: string;
+                        }[];
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        /** Format: bigint */
+                        timestamp: string;
+                        revokedAt?: null | string;
+                        worldEventTrackId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    revokeWorldEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: bigint */
+                    revokedAt: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    /** Format: bigint */
+                    revokedAt: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        /** Format: bigint */
+                        timestamp: string;
+                        revokedAt?: null | string;
+                        worldEventTrackId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    unrevokeWorldEvent: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        icon: string;
+                        color: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentFolderPosition: number;
+                        /** Format: bigint */
+                        timestamp: string;
+                        revokedAt?: null | string;
+                        worldEventTrackId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    createWorldEventDelta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: bigint */
+                    timestamp: string;
+                    name: null | string;
+                    description: null | string;
+                    descriptionRich: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    /** Format: bigint */
+                    timestamp: string;
+                    name: null | string;
+                    description: null | string;
+                    descriptionRich: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    deleteWorldEventDelta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+                /** @description Any string value */
+                deltaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description?: null | string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name?: null | string;
+                        /** Format: bigint */
+                        timestamp: string;
+                        descriptionRich?: null | string;
+                        worldEventId: string;
+                    };
+                };
+            };
+        };
+    };
+    updateWorldEventDelta: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+                /** @description Any string value */
+                deltaId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    /** Format: bigint */
+                    timestamp?: string;
+                    name?: null | string;
+                    description?: null | string;
+                    descriptionRich?: null | string;
+                };
+                "application/x-www-form-urlencoded": {
+                    /** Format: bigint */
+                    timestamp?: string;
+                    name?: null | string;
+                    description?: null | string;
+                    descriptionRich?: null | string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        description?: null | string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name?: null | string;
+                        /** Format: bigint */
+                        timestamp: string;
+                        descriptionRich?: null | string;
+                        worldEventId: string;
+                    };
+                };
+            };
+        };
+    };
+    getWorldEventBacklinks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                eventId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        type: "Actor" | "Event" | "Article" | "Tag" | "Node";
+                        id: string;
+                        name: string;
+                    }[];
+                };
+            };
+        };
+    };
+    getWorldEventTracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        position: number;
+                        visible: boolean;
+                    }[];
+                };
+            };
+        };
+    };
+    createWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name: string;
+                    position?: number;
+                    assignOrphans: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    deleteWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    updateWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+                /** @description Any string value */
+                trackId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+                "application/x-www-form-urlencoded": {
+                    name?: string;
+                    position?: number;
+                    visible?: boolean;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                    };
+                };
+            };
+        };
+    };
+    swapWorldEventTracks: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackA: string;
+                    trackB: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackA: string;
+                    trackB: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    moveWorldEventTrack: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value */
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    trackId: string;
+                    position: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    trackId: string;
+                    position: number;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
     getArticles: {
         parameters: {
             query?: never;
@@ -8202,529 +8725,6 @@ export interface operations {
                         color: string;
                         parentFolderId?: null | string;
                         parentFolderPosition: number;
-                    };
-                };
-            };
-        };
-    };
-    getUserWorldAccessLevel: {
-        parameters: {
-            query: {
-                /** @description Any string value with at least one character */
-                worldId: string;
-            };
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        owner: boolean;
-                        write: boolean;
-                        read: boolean;
-                    };
-                };
-            };
-        };
-    };
-    getMindmap: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        nodes: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            positionX: number;
-                            positionY: number;
-                            content: string;
-                            contentRich: string;
-                            parentActorId?: null | string;
-                            parentArticleId?: null | string;
-                            parentEventId?: null | string;
-                            parentFolderId?: null | string;
-                            parentTagId?: null | string;
-                        }[];
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    createNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    id?: string;
-                    positionX: number;
-                    positionY: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    id?: string;
-                    positionX: number;
-                    positionY: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    deleteNodes: {
-        parameters: {
-            query: {
-                nodes: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        count: number;
-                    };
-                };
-            };
-        };
-    };
-    updateNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    reparentNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX?: number;
-                    positionY?: number;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX?: number;
-                    positionY?: number;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    moveMindmapNodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    }[];
-                };
-            };
-        };
-    };
-    createMindmapWires: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-                "application/x-www-form-urlencoded": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        created: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                        updated: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    deleteMindmapWires: {
-        parameters: {
-            query: {
-                wires: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string[];
-                };
-            };
-        };
-    };
-    updateMindmapWire: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    };
-                };
-            };
-        };
-    };
-    splitMindmapWire: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX: number;
-                    positionY: number;
-                    name: string;
-                    direction: "Normal" | "Reversed" | "TwoWay";
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX: number;
-                    positionY: number;
-                    name: string;
-                    direction: "Normal" | "Reversed" | "TwoWay";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        node: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            positionX: number;
-                            positionY: number;
-                            content: string;
-                            contentRich: string;
-                            parentActorId?: null | string;
-                            parentArticleId?: null | string;
-                            parentEventId?: null | string;
-                            parentFolderId?: null | string;
-                            parentTagId?: null | string;
-                        };
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
                     };
                 };
             };

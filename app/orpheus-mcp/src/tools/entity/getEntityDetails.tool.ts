@@ -8,7 +8,7 @@ import { CONTENT_ENTITY_TYPES, ResolvedEntity, resolveEntityByName } from '@src/
 import { resolveSavedMentions } from '@src/utils/resolveSavedMentions.js'
 import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'get_entity_details'
 

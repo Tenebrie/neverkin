@@ -79,7 +79,7 @@ Greek mythology naming. Each service builds and deploys independently with its o
 | `app/chronos-backups` | Scheduled database backups |
 | `app/echo-desktop` | Desktop shell |
 | `app/ts-shared` | Types shared between services (symlinked into each) |
-| `library/` | `openapi-fetch`, `esoteric-date`, `tiptap-schema` |
+| `library/` | `openapi-fetch`, `esoteric-date`, `tiptap-schema`, `zod-schema` |
 | `test/e2e` | Playwright suite |
 
 Request flow: browser → gatekeeper → styx / rhea. Realtime: browser ⇄ calliope (WSS) ⇄ redis, with calliope persisting documents through Rhea's REST API.

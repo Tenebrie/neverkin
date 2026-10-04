@@ -5,7 +5,7 @@ import { findByName } from '@src/utils/findByName.js'
 import { Logger } from '@src/utils/Logger.js'
 import { CONTENT_ENTITY_TYPES, resolveEntityByName } from '@src/utils/resolveEntityByName.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'delete_entity_content_page'
 

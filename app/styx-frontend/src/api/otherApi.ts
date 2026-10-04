@@ -42,55 +42,6 @@ const injectedRtkApi = api
 					invalidatesTags: [],
 				},
 			),
-			getEntityContent: build.query<GetEntityContentApiResponse, GetEntityContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
-				}),
-				providesTags: [],
-			}),
-			putEntityContent: build.mutation<PutEntityContentApiResponse, PutEntityContentApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
-			getEntityContentPage: build.query<GetEntityContentPageApiResponse, GetEntityContentPageApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
-				}),
-				providesTags: [],
-			}),
-			putEntityContentPage: build.mutation<PutEntityContentPageApiResponse, PutEntityContentPageApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
-					method: 'PUT',
-					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
-			deleteEntityContentPage: build.mutation<
-				DeleteEntityContentPageApiResponse,
-				DeleteEntityContentPageApiArg
-			>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: [],
-			}),
-			createEntityContentPage: build.mutation<
-				CreateEntityContentPageApiResponse,
-				CreateEntityContentPageApiArg
-			>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
 			getHealth: build.query<GetHealthApiResponse, GetHealthApiArg>({
 				query: () => ({ url: `/health` }),
 				providesTags: [],
@@ -157,6 +108,66 @@ const injectedRtkApi = api
 				query: (queryArg) => ({ url: `/api/share-link-visit/${queryArg.slug}/accept`, method: 'POST' }),
 				invalidatesTags: [],
 			}),
+			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/internal/auth/${queryArg.userId}`,
+						params: {
+							worldId: queryArg.worldId,
+						},
+					}),
+					providesTags: [],
+				},
+			),
+			getEntityContent: build.query<GetEntityContentApiResponse, GetEntityContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
+				}),
+				providesTags: [],
+			}),
+			putEntityContent: build.mutation<PutEntityContentApiResponse, PutEntityContentApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
+			getEntityContentPage: build.query<GetEntityContentPageApiResponse, GetEntityContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+				}),
+				providesTags: [],
+			}),
+			putEntityContentPage: build.mutation<PutEntityContentPageApiResponse, PutEntityContentPageApiArg>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+					method: 'PUT',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
+			deleteEntityContentPage: build.mutation<
+				DeleteEntityContentPageApiResponse,
+				DeleteEntityContentPageApiArg
+			>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages/${queryArg.pageId}`,
+					method: 'DELETE',
+				}),
+				invalidatesTags: [],
+			}),
+			createEntityContentPage: build.mutation<
+				CreateEntityContentPageApiResponse,
+				CreateEntityContentPageApiArg
+			>({
+				query: (queryArg) => ({
+					url: `/api/world/${queryArg.worldId}/${queryArg.entityType}/${queryArg.entityId}/content/pages`,
+					method: 'POST',
+					body: queryArg.body,
+				}),
+				invalidatesTags: [],
+			}),
 			updateArticle: build.mutation<UpdateArticleApiResponse, UpdateArticleApiArg>({
 				query: (queryArg) => ({
 					url: `/api/world/${queryArg.worldId}/wiki/article/${queryArg.articleId}`,
@@ -171,17 +182,6 @@ const injectedRtkApi = api
 				}),
 				providesTags: ['worldWikiArticle'],
 			}),
-			getUserWorldAccessLevel: build.query<GetUserWorldAccessLevelApiResponse, GetUserWorldAccessLevelApiArg>(
-				{
-					query: (queryArg) => ({
-						url: `/api/internal/auth/${queryArg.userId}`,
-						params: {
-							worldId: queryArg.worldId,
-						},
-					}),
-					providesTags: [],
-				},
-			),
 		}),
 		overrideExisting: false,
 	})
@@ -221,87 +221,6 @@ export type SendContactFormMessageApiArg = {
 		email?: string
 		message: string
 		source?: string
-	}
-}
-export type GetEntityContentApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetEntityContentApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-}
-export type PutEntityContentApiResponse = unknown
-export type PutEntityContentApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type GetEntityContentPageApiResponse = /** status 200  */ {
-	contentHtml: string
-}
-export type GetEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-}
-export type PutEntityContentPageApiResponse = unknown
-export type PutEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-	body: {
-		content: string
-		reloadClients?: boolean
-	}
-}
-export type DeleteEntityContentPageApiResponse = unknown
-export type DeleteEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-	/** Any string value */
-	pageId: string
-}
-export type CreateEntityContentPageApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	content: string
-	contentRich: string
-	parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-	parentActorId?: null | string
-	parentEventId?: null | string
-	parentArticleId?: null | string
-	parentNodeId?: null | string
-}
-export type CreateEntityContentPageApiArg = {
-	/** Any string value */
-	worldId: string
-	entityType: 'actor' | 'event' | 'article' | 'node'
-	/** Any string value */
-	entityId: string
-	body: {
-		name: string
 	}
 }
 export type GetHealthApiResponse = unknown
@@ -429,6 +348,98 @@ export type AcceptWorldShareLinkApiArg = {
 	/** Any string value */
 	slug: string
 }
+export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
+	owner: boolean
+	write: boolean
+	read: boolean
+}
+export type GetUserWorldAccessLevelApiArg = {
+	/** Any string value with at least one character */
+	userId: string
+	/** Any string value with at least one character */
+	worldId: string
+}
+export type GetEntityContentApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+}
+export type PutEntityContentApiResponse = unknown
+export type PutEntityContentApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type GetEntityContentPageApiResponse = /** status 200  */ {
+	contentHtml: string
+}
+export type GetEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type PutEntityContentPageApiResponse = unknown
+export type PutEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+	body: {
+		content: string
+		reloadClients?: boolean
+	}
+}
+export type DeleteEntityContentPageApiResponse = unknown
+export type DeleteEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	/** Any string value */
+	pageId: string
+}
+export type CreateEntityContentPageApiResponse = /** status 200  */ {
+	id: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	content: string
+	contentRich: string
+	parentType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+	parentNodeId?: null | string
+}
+export type CreateEntityContentPageApiArg = {
+	/** Any string value */
+	worldId: string
+	entityType: 'actor' | 'event' | 'article' | 'node'
+	/** Any string value */
+	entityId: string
+	body: {
+		name: string
+	}
+}
 export type UpdateArticleApiResponse = /** status 200  */ {
 	worldId: string
 	id: string
@@ -464,17 +475,6 @@ export type GetArticleBacklinksApiArg = {
 	/** Any string value */
 	articleId: string
 }
-export type GetUserWorldAccessLevelApiResponse = /** status 200  */ {
-	owner: boolean
-	write: boolean
-	read: boolean
-}
-export type GetUserWorldAccessLevelApiArg = {
-	/** Any string value with at least one character */
-	userId: string
-	/** Any string value with at least one character */
-	worldId: string
-}
 export const {
 	useAdminGetUserLevelsQuery,
 	useLazyAdminGetUserLevelsQuery,
@@ -489,14 +489,6 @@ export const {
 	useListFeatureFlagsQuery,
 	useLazyListFeatureFlagsQuery,
 	useSendContactFormMessageMutation,
-	useGetEntityContentQuery,
-	useLazyGetEntityContentQuery,
-	usePutEntityContentMutation,
-	useGetEntityContentPageQuery,
-	useLazyGetEntityContentPageQuery,
-	usePutEntityContentPageMutation,
-	useDeleteEntityContentPageMutation,
-	useCreateEntityContentPageMutation,
 	useGetHealthQuery,
 	useLazyGetHealthQuery,
 	useGetApiHealthQuery,
@@ -513,9 +505,17 @@ export const {
 	useVisitWorldShareLinkQuery,
 	useLazyVisitWorldShareLinkQuery,
 	useAcceptWorldShareLinkMutation,
+	useGetUserWorldAccessLevelQuery,
+	useLazyGetUserWorldAccessLevelQuery,
+	useGetEntityContentQuery,
+	useLazyGetEntityContentQuery,
+	usePutEntityContentMutation,
+	useGetEntityContentPageQuery,
+	useLazyGetEntityContentPageQuery,
+	usePutEntityContentPageMutation,
+	useDeleteEntityContentPageMutation,
+	useCreateEntityContentPageMutation,
 	useUpdateArticleMutation,
 	useGetArticleBacklinksQuery,
 	useLazyGetArticleBacklinksQuery,
-	useGetUserWorldAccessLevelQuery,
-	useLazyGetUserWorldAccessLevelQuery,
 } = injectedRtkApi

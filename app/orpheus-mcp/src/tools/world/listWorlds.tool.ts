@@ -4,7 +4,7 @@ import { OAuthService } from '@src/services/OAuthService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { Logger } from '@src/utils/Logger.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'list_worlds'
 

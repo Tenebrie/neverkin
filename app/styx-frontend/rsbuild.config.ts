@@ -33,6 +33,7 @@ export default defineConfig({
 			'prosemirror-tables',
 			'yjs',
 			'y-protocols',
+			'zod',
 		],
 	},
 	plugins: [pluginReact()],

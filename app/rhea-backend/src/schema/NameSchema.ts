@@ -1,4 +1,4 @@
-import z from 'zod'
+import { z } from 'zod'
 
 export const EntityNameSchema = z
 	.union([z.string(), z.number(), z.boolean()])

@@ -9,7 +9,7 @@ RUN mkdir /.npm
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /.npm
 RUN mkdir /.cache
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /.cache
-RUN mkdir -p /library/tiptap-schema
+RUN mkdir -p /library/tiptap-schema /library/zod-schema
 RUN chown -R ${DOCKER_UID}:${DOCKER_GID} /library
 
 COPY ./app/styx-frontend/package.json /app/styx/
@@ -29,6 +29,10 @@ RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} (cd /a
 COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./library/tsconfig.json /library/
 COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./library/tiptap-schema/package.json /library/tiptap-schema/
 COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./library/tiptap-schema/tsconfig.json /library/tiptap-schema/
+
+# zod-schema: bake package.json and tsconfig files; dist is mounted at runtime
+COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./library/zod-schema/package.json /library/zod-schema/
+COPY --chown=${DOCKER_UID}:${DOCKER_GID} ./library/zod-schema/tsconfig.json /library/zod-schema/
 
 # Install styx dependencies
 RUN --mount=type=cache,target=/.cache,uid=${DOCKER_UID},gid=${DOCKER_GID} npm install

@@ -146,6 +146,24 @@ export default defineConfig(
 		},
 	},
 	{
+		files: ['**/*.{ts,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					paths: [
+						{
+							name: 'zod',
+							importNames: ['default'],
+							message:
+								"Use `import { z } from 'zod'`. The default import emits `z.z.core.*` into the .d.ts, which ts-morph (Moonflower) resolves to `any`.",
+						},
+					],
+				},
+			],
+		},
+	},
+	{
 		ignores: ['app/rhea-backend/**'],
 		extends: [eslintReact.configs['recommended-typescript']],
 		rules: {

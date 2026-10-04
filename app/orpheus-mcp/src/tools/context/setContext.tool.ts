@@ -5,7 +5,7 @@ import { ContextService } from '@src/services/ContextService.js'
 import { OAuthService } from '@src/services/OAuthService.js'
 import { RheaService } from '@src/services/RheaService.js'
 import { Logger } from '@src/utils/Logger.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'set_context'
 

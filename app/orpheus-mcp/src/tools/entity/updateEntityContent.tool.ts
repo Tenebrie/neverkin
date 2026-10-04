@@ -8,7 +8,7 @@ import { CONTENT_ENTITY_TYPES, resolveEntityByName } from '@src/utils/resolveEnt
 import { resolveShorthandMentions } from '@src/utils/resolveShorthandMentions.js'
 import { toAgentReadableText } from '@src/utils/toAgentReadableText.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'update_entity_content'
 

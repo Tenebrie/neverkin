@@ -17,7 +17,7 @@ export function registerReadmeTool(server: McpServer) {
 			const entries = [
 				[
 					'**Basic overview:**',
-					'- This set of tools allows you to interact with Timelines, an advanced note-taking and worldbuilding app.',
+					'- This set of tools allows you to interact with Neverkin, an advanced note-taking and worldbuilding app.',
 					'- In Neverkin you will encounter the following entities:',
 					'  - Worlds are projects that contain all other entities. No cross-world communication is possible.',
 					'  - Actors are characters, items, artifacts. They can typically move around, have relationships, be involved with events.',

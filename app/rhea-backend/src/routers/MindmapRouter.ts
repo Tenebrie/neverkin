@@ -7,7 +7,7 @@ import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
 import { Router, useApiEndpoint, usePathParams, useQueryParams, useRequestBody } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { mindmapGroupTag, mindmapNodeTag, mindmapWireTag } from './utils/tags.js'
 

@@ -8,6 +8,7 @@
 		"library/tiptap-schema",
 		"library/openapi-fetch",
 		"library/esoteric-date",
+		"library/zod-schema",
 		"app/styx-frontend",
 		"app/rhea-backend",
 		"app/calliope-websockets",
