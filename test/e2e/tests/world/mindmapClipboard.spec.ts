@@ -1,13 +1,17 @@
 import assert from 'node:assert'
 
 import { createNewUser, deleteAccount } from '@fixtures/auth'
+import { installClipboardMock } from '@fixtures/clipboard'
 import { createMindmapNode, createMindmapWires, multiselectWire } from '@fixtures/mindmap'
 import { createActor, createWorld, navigateToMindmap } from '@fixtures/world'
 import test, { expect } from '@playwright/test'
 import { multiselectModifier } from '@tests/utils'
 
 test.describe('Mindmap clipboard', () => {
-	test.beforeEach(async ({ page }) => {
+	test.beforeEach(async ({ page, browserName }) => {
+		if (browserName === 'firefox') {
+			await installClipboardMock(page.context())
+		}
 		await createNewUser(page)
 	})
 
