@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { mindmapApi, UpdateMindmapWireApiArg, useUpdateMindmapWireMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useUpdateMindmapWire() {
-	const worldId = useSelector(getWorldIdState)
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [updateMindmapWire, state] = useUpdateMindmapWireMutation()
 

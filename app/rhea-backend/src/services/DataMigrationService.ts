@@ -1,5 +1,5 @@
 import { BadRequestError } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { TransactionClient } from '../../prisma/client/internal/prismaNamespace.js'
 import { exportedUserDataSchema } from './DataMigrationService.schema.js'

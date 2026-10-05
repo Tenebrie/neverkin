@@ -53,5 +53,6 @@ export const HealthStatus = {
 }
 
 function checkDatabaseConnection() {
+	// eslint-disable-next-line no-restricted-properties
 	return getPrismaClient().$queryRaw`SELECT 1;`
 }

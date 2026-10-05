@@ -2,7 +2,7 @@ import { AdminAuthenticator } from '@src/middleware/auth/AdminAuthenticator.js'
 import { AllFeatureFlags, FeatureFlagService } from '@src/services/FeatureFlagService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { Router, useApiEndpoint, useAuth, usePathParams, useRequestBody } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { adminUsersTag } from './utils/tags.js'
 

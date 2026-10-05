@@ -8,7 +8,7 @@ import { ResizeGrabberPreferencesSchema } from '@/app/components/ResizeGrabber/R
 import usePersistentState from '@/app/hooks/usePersistentState'
 
 type Props = {
-	children: ReactNode | ReactNode[]
+	children: ReactNode
 }
 
 export function WikiOutlinerDrawer({ children }: Props) {

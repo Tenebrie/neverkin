@@ -44,8 +44,8 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 		const mouseState = {
 			isButtonDown: false,
 			canClick: true,
-			deltaX: 0,
-			deltaY: 0,
+			startClientX: 0,
+			startClientY: 0,
 			lastIntersectionCheckTimestamp: 0,
 		}
 
@@ -55,8 +55,6 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 				visible: false,
 			}))
 			mouseState.canClick = false
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
 		}
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -81,6 +79,8 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 			}
 			mouseState.canClick = true
 			mouseState.isButtonDown = true
+			mouseState.startClientX = event.clientX
+			mouseState.startClientY = event.clientY
 			event.preventDefault()
 		}
 
@@ -112,31 +112,27 @@ export function TimelineSelectionBox({ containerRef }: Props) {
 				return
 			}
 
-			mouseState.deltaX += event.movementX
-			mouseState.deltaY += event.movementY
+			const pointerOffsetX = event.clientX - mouseState.startClientX
+			const pointerOffsetY = event.clientY - mouseState.startClientY
 
-			if (mouseState.canClick && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
+			if (mouseState.canClick && (Math.abs(pointerOffsetX) > 3 || Math.abs(pointerOffsetY) > 3)) {
 				mouseState.canClick = false
 				// Mark that we're busy to block timeline click handler and tooltips
 				window.document.body.classList.add('mouse-busy')
 				const baseRect = container.getBoundingClientRect()
-				const x = event.clientX - mouseState.deltaX - baseRect.left
-				const y = event.clientY - mouseState.deltaY - baseRect.top
 				setSelectionRect({
 					visible: true,
-					x,
-					y,
-					width: mouseState.deltaX,
-					height: mouseState.deltaY,
+					x: mouseState.startClientX - baseRect.left,
+					y: mouseState.startClientY - baseRect.top,
+					width: pointerOffsetX,
+					height: pointerOffsetY,
 				})
-				mouseState.deltaX = 0
-				mouseState.deltaY = 0
 			} else if (!mouseState.canClick) {
 				setSelectionRect((prev) => {
 					const newRect = {
 						...prev,
-						width: prev.width + event.movementX,
-						height: prev.height + event.movementY,
+						width: pointerOffsetX,
+						height: pointerOffsetY,
 					}
 
 					// Throttle intersection checks to reduce rerenders

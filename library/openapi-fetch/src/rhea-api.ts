@@ -1854,8 +1854,7 @@ export interface paths {
         put?: never;
         /** @description Creates a new node */
         post: operations["createNode"];
-        /** @description Deletes the target nodes */
-        delete: operations["deleteNodes"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1912,6 +1911,40 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/world/{worldId}/mindmap/nodes/paste": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Handles clipboard pasting of nodes and wires */
+        post: operations["pasteMindmapNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Deletes the target nodes */
+        post: operations["deleteNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/world/{worldId}/mindmap/wires": {
         parameters: {
             query?: never;
@@ -1923,8 +1956,7 @@ export interface paths {
         put?: never;
         /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
         post: operations["createMindmapWires"];
-        /** @description Deletes specified mindmap wires */
-        delete: operations["deleteMindmapWires"];
+        delete?: never;
         options?: never;
         head?: never;
         patch?: never;
@@ -1958,6 +1990,23 @@ export interface paths {
         put?: never;
         /** @description Inserts a plain node linked two endpoints of the wire */
         post: operations["splitMindmapWire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Deletes specified mindmap wires */
+        post: operations["deleteMindmapWires"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2990,9 +3039,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3042,9 +3091,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
-                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
+                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3092,9 +3141,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
-                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
+                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3311,9 +3360,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
-                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
+                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3386,9 +3435,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            position: number;
                             calendarId: string;
                             presentationId: string;
+                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
@@ -3484,9 +3533,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            position: number;
                             calendarId: string;
                             presentationId: string;
+                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
@@ -3548,9 +3597,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
                         presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3588,9 +3637,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
                         presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3641,9 +3690,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
                         presentationId: string;
+                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3755,8 +3804,8 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                position: number;
                                 calendarId: string;
+                                position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3769,8 +3818,8 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                position: number;
                                 calendarId: string;
+                                position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3783,8 +3832,8 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            position: number;
                             calendarId: string;
+                            position: number;
                             displayName?: null | string;
                             displayNameShort?: null | string;
                             displayNamePlural?: null | string;
@@ -3803,9 +3852,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name: string;
-                                position: number;
                                 calendarId: string;
                                 presentationId: string;
+                                position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
@@ -3948,8 +3997,8 @@ export interface operations {
                         units: {
                             children: {
                                 id: string;
-                                position: number;
                                 calendarId: string;
+                                position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3958,8 +4007,8 @@ export interface operations {
                             }[];
                             parents: {
                                 id: string;
-                                position: number;
                                 calendarId: string;
+                                position: number;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3979,6 +4028,23 @@ export interface operations {
                             duration: string;
                             treeDepth: number;
                         }[];
+                        presentations: {
+                            units: {
+                                id: string;
+                                name: string;
+                                calendarId: string;
+                                position: number;
+                                formatString: string;
+                                subdivision: number;
+                                labeledIndices: number[];
+                                unitId: string;
+                            }[];
+                            id: string;
+                            name: string;
+                            compression: number;
+                            scaleFactor: number;
+                            baselineUnitId?: null | string;
+                        }[];
                         seasons: {
                             intervals: {
                                 id: string;
@@ -3995,23 +4061,6 @@ export interface operations {
                             name: string;
                             position: number;
                             formatShorthand?: null | string;
-                        }[];
-                        presentations: {
-                            units: {
-                                id: string;
-                                name: string;
-                                position: number;
-                                calendarId: string;
-                                formatString: string;
-                                subdivision: number;
-                                labeledIndices: number[];
-                                unitId: string;
-                            }[];
-                            id: string;
-                            name: string;
-                            compression: number;
-                            scaleFactor: number;
-                            baselineUnitId?: null | string;
                         }[];
                         description: string;
                         id: string;
@@ -4070,8 +4119,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
+                        position: number;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -4112,8 +4161,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
+                        position: number;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -4187,8 +4236,8 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            position: number;
                             calendarId: string;
+                            position: number;
                             label?: null | string;
                             shortLabel?: null | string;
                             repeats: number;
@@ -4201,8 +4250,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        position: number;
                         calendarId: string;
+                        position: number;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -6852,8 +6901,8 @@ export interface operations {
                             units: {
                                 children: {
                                     id: string;
-                                    position: number;
                                     calendarId: string;
+                                    position: number;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6862,8 +6911,8 @@ export interface operations {
                                 }[];
                                 parents: {
                                     id: string;
-                                    position: number;
                                     calendarId: string;
+                                    position: number;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6883,6 +6932,23 @@ export interface operations {
                                 duration: string;
                                 treeDepth: number;
                             }[];
+                            presentations: {
+                                units: {
+                                    id: string;
+                                    name: string;
+                                    calendarId: string;
+                                    position: number;
+                                    formatString: string;
+                                    subdivision: number;
+                                    labeledIndices: number[];
+                                    unitId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                compression: number;
+                                scaleFactor: number;
+                                baselineUnitId?: null | string;
+                            }[];
                             seasons: {
                                 intervals: {
                                     id: string;
@@ -6899,23 +6965,6 @@ export interface operations {
                                 name: string;
                                 position: number;
                                 formatShorthand?: null | string;
-                            }[];
-                            presentations: {
-                                units: {
-                                    id: string;
-                                    name: string;
-                                    position: number;
-                                    calendarId: string;
-                                    formatString: string;
-                                    subdivision: number;
-                                    labeledIndices: number[];
-                                    unitId: string;
-                                }[];
-                                id: string;
-                                name: string;
-                                compression: number;
-                                scaleFactor: number;
-                                baselineUnitId?: null | string;
                             }[];
                             description: string;
                             id: string;
@@ -8300,8 +8349,8 @@ export interface operations {
             content: {
                 "application/json": {
                     id?: string;
-                    positionX: number;
-                    positionY: number;
+                    positionX?: number;
+                    positionY?: number;
                     name?: string;
                     parentActorId?: string;
                     parentArticleId?: string;
@@ -8311,8 +8360,8 @@ export interface operations {
                 };
                 "application/x-www-form-urlencoded": {
                     id?: string;
-                    positionX: number;
-                    positionY: number;
+                    positionX?: number;
+                    positionY?: number;
                     name?: string;
                     parentActorId?: string;
                     parentArticleId?: string;
@@ -8345,31 +8394,6 @@ export interface operations {
                         parentEventId?: null | string;
                         parentFolderId?: null | string;
                         parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    deleteNodes: {
-        parameters: {
-            query: {
-                nodes: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        count: number;
                     };
                 };
             };
@@ -8538,6 +8562,144 @@ export interface operations {
             };
         };
     };
+    pasteMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    originX: number;
+                    originY: number;
+                    pasteData: {
+                        nodes: {
+                            tempId: string;
+                            offsetX: number;
+                            offsetY: number;
+                            parentId?: null | string;
+                            parentType: "actor" | "tag" | "node" | "article" | "event" | "folder";
+                            plainNodeName: string;
+                        }[];
+                        internalLinks: {
+                            sourceTempId: string;
+                            targetTempId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                        externalLinks: {
+                            sourceTempId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                    };
+                };
+                "application/x-www-form-urlencoded": {
+                    originX: number;
+                    originY: number;
+                    pasteData: {
+                        nodes: {
+                            tempId: string;
+                            offsetX: number;
+                            offsetY: number;
+                            parentId?: null | string;
+                            parentType: "actor" | "tag" | "node" | "article" | "event" | "folder";
+                            plainNodeName: string;
+                        }[];
+                        internalLinks: {
+                            sourceTempId: string;
+                            targetTempId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                        externalLinks: {
+                            sourceTempId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                    };
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        nodes: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            worldId: string;
+                            positionX: number;
+                            positionY: number;
+                            content: string;
+                            contentRich: string;
+                            parentActorId?: null | string;
+                            parentArticleId?: null | string;
+                            parentEventId?: null | string;
+                            parentFolderId?: null | string;
+                            parentTagId?: null | string;
+                        }[];
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    deleteNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodes: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    nodes: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count: number;
+                    };
+                };
+            };
+        };
+    };
     createMindmapWires: {
         parameters: {
             query?: never;
@@ -8593,29 +8755,6 @@ export interface operations {
                             targetNodeId: string;
                         }[];
                     };
-                };
-            };
-        };
-    };
-    deleteMindmapWires: {
-        parameters: {
-            query: {
-                wires: string[];
-            };
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": string[];
                 };
             };
         };
@@ -8726,6 +8865,36 @@ export interface operations {
                             targetNodeId: string;
                         }[];
                     };
+                };
+            };
+        };
+    };
+    deleteMindmapWires: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    wires: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    wires: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
                 };
             };
         };

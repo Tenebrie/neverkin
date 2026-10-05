@@ -1,18 +1,26 @@
-import { useEffect, useRef } from 'react'
+import { RefObject, useEffect } from 'react'
+
+const mousePosition: RefObject<{ x: number; y: number }> = { current: { x: 0, y: 0 } }
+let subscriberCount = 0
 
 export function useMousePositionRef() {
-	const mousePos = useRef({ x: 0, y: 0 })
-
 	useEffect(() => {
-		const onMouseMove = (event: MouseEvent) => {
-			mousePos.current = { x: event.clientX, y: event.clientY }
+		subscriberCount += 1
+		if (subscriberCount === 1) {
+			window.addEventListener('mousemove', onMouseMove)
 		}
 
-		window.addEventListener('mousemove', onMouseMove)
 		return () => {
-			window.removeEventListener('mousemove', onMouseMove)
+			subscriberCount -= 1
+			if (subscriberCount === 0) {
+				window.removeEventListener('mousemove', onMouseMove)
+			}
 		}
 	}, [])
 
-	return mousePos
+	return mousePosition
+}
+
+function onMouseMove(event: MouseEvent) {
+	mousePosition.current = { x: event.clientX, y: event.clientY }
 }

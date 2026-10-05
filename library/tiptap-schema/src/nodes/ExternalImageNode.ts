@@ -1,5 +1,5 @@
 import { Node } from '@tiptap/core'
-import z from 'zod'
+import { z } from 'zod'
 
 const PropsSchema = z.object({
 	sizeX: z.number().optional().nullable(),

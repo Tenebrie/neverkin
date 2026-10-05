@@ -5,7 +5,7 @@ import { CloudStorageService } from '@src/services/CloudStorageService.js'
 import { DataMigrationService } from '@src/services/DataMigrationService.js'
 import { toReadableDate } from '@src/utils/toReadableDate.js'
 import { BadRequestError, Router, useApiEndpoint, useRequestBody } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { assetTag, dataMigrationTag } from './utils/tags.js'
 

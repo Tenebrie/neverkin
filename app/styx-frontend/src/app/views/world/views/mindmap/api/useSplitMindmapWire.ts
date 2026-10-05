@@ -1,12 +1,11 @@
 import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
 
 import { SplitMindmapWireApiArg, useSplitMindmapWireMutation } from '@/api/mindmapApi'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
 export function useSplitMindmapWire() {
-	const worldId = useSelector(getWorldIdState)
+	const worldId = useCurrentWorldId()
 	const [splitMindmapWire, state] = useSplitMindmapWireMutation()
 
 	const perform = useCallback(

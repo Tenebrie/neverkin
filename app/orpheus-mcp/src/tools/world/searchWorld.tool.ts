@@ -7,7 +7,7 @@ import { Logger } from '@src/utils/Logger.js'
 import { resolveTimestamp } from '@src/utils/resolveTimestamp.js'
 import { getSessionId, ToolExtra } from '@src/utils/toolHelpers.js'
 import { toSummary } from '@src/utils/toSummary.js'
-import z from 'zod'
+import { z } from 'zod'
 
 const TOOL_NAME = 'search_world'
 

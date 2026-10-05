@@ -4,9 +4,9 @@ import { Plugin, PluginKey, TextSelection } from '@tiptap/pm/state'
 import { Decoration, DecorationSet } from '@tiptap/pm/view'
 import { ReactNodeViewRenderer } from '@tiptap/react'
 
+import { assimilate } from '@/app/features/richTextEditor/utils/assimilate'
 import { store } from '@/app/store'
 
-import { assimilate } from '../../../utils/assimilate'
 import { MentionView } from './MentionView'
 
 export { MentionNodeName }

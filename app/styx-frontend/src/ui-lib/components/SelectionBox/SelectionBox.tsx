@@ -11,8 +11,13 @@ export type SelectionRect = {
 	height: number
 }
 
+export type SelectionBoxHandle = {
+	scaleAround: (originX: number, originY: number, factor: number) => void
+}
+
 type Props = {
 	ref: RefObject<HTMLDivElement | null>
+	handle?: RefObject<SelectionBoxHandle | null>
 	onClick: (event: MouseEvent) => void
 	onUpdateSelection: (rect: SelectionRect, event: MouseEvent) => void
 	onFinalizeSelection: (rect: SelectionRect, event: MouseEvent) => void
@@ -20,7 +25,13 @@ type Props = {
 
 export const SelectionBox = memo(SelectionBoxComponent)
 
-export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinalizeSelection }: Props) {
+export function SelectionBoxComponent({
+	ref,
+	handle,
+	onClick,
+	onUpdateSelection,
+	onFinalizeSelection,
+}: Props) {
 	const selectionRect = useRef<SelectionRect>({
 		visible: false,
 		x: 0,
@@ -56,9 +67,15 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 			canClick: true,
 			startX: 0,
 			startY: 0,
-			deltaX: 0,
-			deltaY: 0,
 			lastIntersectionCheckTimestamp: 0,
+		}
+
+		const followCursor = (event: MouseEvent) => {
+			const containerRect = element.getBoundingClientRect()
+			const cursorX = event.clientX - containerRect.left - 2
+			const cursorY = event.clientY - containerRect.top - 3
+			selectionRect.current.width = cursorX - selectionRect.current.x
+			selectionRect.current.height = cursorY - selectionRect.current.y
 		}
 
 		const handleMouseDown = (event: MouseEvent) => {
@@ -75,8 +92,6 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 
 			mouseState.startX = event.clientX
 			mouseState.startY = event.clientY
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
 			mouseState.canClick = true
 		}
 
@@ -97,8 +112,6 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 			applySelectionBoxStyle()
 			mouseState.isButtonDown = false
 			mouseState.canClick = true
-			mouseState.deltaX = 0
-			mouseState.deltaY = 0
 		}
 
 		const handleMouseMove = (event: MouseEvent) => {
@@ -106,29 +119,25 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 				return
 			}
 
-			mouseState.deltaX += event.movementX
-			mouseState.deltaY += event.movementY
+			const pointerOffsetX = event.clientX - mouseState.startX
+			const pointerOffsetY = event.clientY - mouseState.startY
 
-			if (mouseState.canClick && (Math.abs(mouseState.deltaX) > 3 || Math.abs(mouseState.deltaY) > 3)) {
+			if (mouseState.canClick && (Math.abs(pointerOffsetX) > 3 || Math.abs(pointerOffsetY) > 3)) {
 				mouseState.canClick = false
 				if (mouseState.buttonDownMode === 'select') {
 					const baseRect = element.getBoundingClientRect()
-					const x = mouseState.startX - baseRect.left - 1
-					const y = mouseState.startY - baseRect.top - 3
 					selectionRect.current = {
 						visible: true,
-						x,
-						y,
-						width: event.clientX - mouseState.startX - 1,
-						height: event.clientY - mouseState.startY,
+						x: mouseState.startX - baseRect.left - 1,
+						y: mouseState.startY - baseRect.top - 3,
+						width: 0,
+						height: 0,
 					}
+					followCursor(event)
 					applySelectionBoxStyle()
 				}
-				mouseState.deltaX = 0
-				mouseState.deltaY = 0
 			} else if (!mouseState.canClick && mouseState.buttonDownMode === 'select') {
-				selectionRect.current.width += event.movementX
-				selectionRect.current.height += event.movementY
+				followCursor(event)
 				applySelectionBoxStyle()
 
 				// Throttle intersection checks
@@ -140,16 +149,32 @@ export function SelectionBoxComponent({ ref, onClick, onUpdateSelection, onFinal
 			}
 		}
 
+		if (handle) {
+			handle.current = {
+				scaleAround: (originX, originY, factor) => {
+					const rect = selectionRect.current
+					rect.x = originX + (rect.x - originX) * factor
+					rect.y = originY + (rect.y - originY) * factor
+					rect.width *= factor
+					rect.height *= factor
+					applySelectionBoxStyle()
+				},
+			}
+		}
+
 		element.addEventListener('mousedown', handleMouseDown)
 		window.addEventListener('mousemove', handleMouseMove)
 		window.addEventListener('mouseup', handleMouseUp)
 
 		return () => {
+			if (handle) {
+				handle.current = null
+			}
 			element.removeEventListener('mousedown', handleMouseDown)
 			window.removeEventListener('mousemove', handleMouseMove)
 			window.removeEventListener('mouseup', handleMouseUp)
 		}
-	}, [onClick, onUpdateSelection, onFinalizeSelection, ref])
+	}, [onClick, onUpdateSelection, onFinalizeSelection, ref, handle])
 
 	const theme = useCustomTheme()
 

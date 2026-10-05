@@ -1,13 +1,14 @@
+import { EntityNameSchema, MindmapPasteDataSchema } from '@neverkin/zod-schema'
 import { MindmapLinkDirection } from '@prisma/client'
 import { SessionMiddleware } from '@src/middleware/SessionMiddleware.js'
 import { UserAuthMiddleware } from '@src/middleware/UserAuthMiddleware.js'
-import { EntityNameSchema } from '@src/schema/NameSchema.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
+import { MindmapPasteService } from '@src/services/MindmapPasteService.js'
 import { MindmapService } from '@src/services/MindmapService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
-import { Router, useApiEndpoint, usePathParams, useQueryParams, useRequestBody } from 'moonflower'
-import z from 'zod'
+import { Router, useApiEndpoint, usePathParams, useRequestBody } from 'moonflower'
+import { z } from 'zod'
 
 import { mindmapGroupTag, mindmapNodeTag, mindmapWireTag } from './utils/tags.js'
 
@@ -169,7 +170,35 @@ router.post('/api/world/:worldId/mindmap/nodes/move', async (ctx) => {
 	return nodes
 })
 
-router.delete('/api/world/:worldId/mindmap/nodes', async (ctx) => {
+router.post('/api/world/:worldId/mindmap/nodes/paste', async (ctx) => {
+	useApiEndpoint({
+		name: 'pasteMindmapNodes',
+		description: 'Handles clipboard pasting of nodes and wires',
+		tags: [mindmapGroupTag, mindmapNodeTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const params = useRequestBody(ctx, {
+		originX: z.number(),
+		originY: z.number(),
+		pasteData: MindmapPasteDataSchema,
+	})
+
+	const result = await MindmapPasteService.pasteNodes(worldId, params)
+	const { nodes, wires } = result
+
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes })
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created: wires, updated: [] })
+
+	return result
+})
+
+router.post('/api/world/:worldId/mindmap/nodes/delete', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteNodes',
 		description: 'Deletes the target nodes',
@@ -180,7 +209,7 @@ router.delete('/api/world/:worldId/mindmap/nodes', async (ctx) => {
 		worldId: z.string(),
 	})
 
-	const { nodes } = useQueryParams(ctx, {
+	const { nodes } = useRequestBody(ctx, {
 		nodes: z.string().array(),
 	})
 
@@ -282,7 +311,7 @@ router.post('/api/world/:worldId/mindmap/wires/:wireId/split', async (ctx) => {
 	return { node, wires: created }
 })
 
-router.delete('/api/world/:worldId/mindmap/wires', async (ctx) => {
+router.post('/api/world/:worldId/mindmap/wires/delete', async (ctx) => {
 	useApiEndpoint({
 		name: 'deleteMindmapWires',
 		description: 'Deletes specified mindmap wires',
@@ -293,7 +322,7 @@ router.delete('/api/world/:worldId/mindmap/wires', async (ctx) => {
 		worldId: z.string(),
 	})
 
-	const { wires } = useQueryParams(ctx, {
+	const { wires } = useRequestBody(ctx, {
 		wires: z.string().array(),
 	})
 

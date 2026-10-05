@@ -186,13 +186,13 @@ function ArticleListItemInnerComponent({
 					}}
 					sx={{
 						background: tinted
-							? (theme) => alpha(theme.palette.primary.main, 0.18)
+							? () => alpha(theme.material.palette.primary.main, 0.18)
 							: article.type === 'folder'
 								? entityColor
 								: undefined,
 						'&:hover': {
 							background: tinted
-								? (theme) => alpha(theme.palette.primary.main, 0.26)
+								? () => alpha(theme.material.palette.primary.main, 0.26)
 								: article.type === 'folder'
 									? entityColorHover
 									: undefined,

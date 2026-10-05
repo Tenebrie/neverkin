@@ -8,6 +8,7 @@ import { makeSortWikiArticlesQuery as makeSortWikiArticlesQuery } from './dbQuer
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionData, MentionsService } from './MentionsService.js'
 import { MentionedByEntry } from './TagService.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 import { BulkActionService } from './WorldBulkActionService.js'
 
 export const WikiArticleService = {
@@ -61,6 +62,7 @@ export const WikiArticleService = {
 						id: true,
 						name: true,
 					},
+					orderBy: CommonOrderBy,
 				},
 				mentions: {
 					distinct: ['targetId'],
@@ -68,6 +70,7 @@ export const WikiArticleService = {
 						targetId: true,
 						targetType: true,
 					},
+					orderBy: { targetId: 'asc' },
 				},
 				mentionedIn: {
 					distinct: ['sourceId'],
@@ -75,11 +78,10 @@ export const WikiArticleService = {
 						sourceId: true,
 						sourceType: true,
 					},
+					orderBy: { sourceId: 'asc' },
 				},
 			},
-			orderBy: {
-				parentFolderPosition: 'asc',
-			},
+			orderBy: [{ parentFolderPosition: 'asc' }, ...CommonOrderBy],
 		})
 
 		return articles

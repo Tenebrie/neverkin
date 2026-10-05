@@ -1,0 +1,107 @@
+import { useCallback, useLayoutEffect, useState } from 'react'
+
+import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
+import {
+	useMindmapSelectionContext,
+	useMindmapWireIds,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { useMindmapPainter } from '@/app/views/world/views/mindmap/context/useMindmapPainter'
+import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+import { MindmapWireLine } from '@/app/views/world/views/mindmap/workspace/content/wires/MindmapWire'
+
+import { GLOW_WIDTH } from './canvas/MindmapCanvas'
+import { MindmapWireContextMenu, MindmapWireState } from './contextMenu/MindmapWireContextMenu'
+import { MindmapWireGhostContext } from './ghost/context/MindmapWireGhostContext'
+import { MindmapWireGhost } from './ghost/MindmapWireGhost'
+
+export function MindmapWireLayer() {
+	const wireIds = useMindmapWireIds()
+	const [svgGroup, setSvgGroup] = useState<SVGGElement | null>(null)
+	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
+
+	useLayoutEffect(() => {
+		svgGroup?.style.setProperty('--grid-scale', String(MindmapState.scale))
+		svgGroup?.style.setProperty('--wire-hit-width', getWireHitWidth(MindmapState.scale))
+	}, [svgGroup])
+
+	useEventBusSubscribe['mindmap/scale/commit']({
+		callback: ({ scale }) => {
+			svgGroup?.style.setProperty('--wire-hit-width', getWireHitWidth(scale))
+		},
+	})
+
+	const [popoverState, setPopoverState] = useState<Omit<MindmapWireState, 'onClose'>>({
+		open: false,
+		wireId: null,
+		position: { x: 0, y: 0 },
+		mode: 'doubleClick',
+	})
+
+	const onOpenPopover = useCallback(
+		({
+			wireId,
+			position,
+			mode,
+		}: {
+			wireId: string
+			position: { x: number; y: number }
+			mode: 'doubleClick' | 'contextMenu'
+		}) => {
+			const isBulkSelectContext = selectedNodes.size() + selectedWires.size() > 1
+			if (isBulkSelectContext) {
+				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
+					position,
+				})
+			} else {
+				setPopoverState({ open: true, wireId, position, mode })
+			}
+		},
+		[selectedNodes, selectedWires],
+	)
+
+	useMindmapPainter((navState) => {
+		svgGroup?.style.setProperty('--grid-scale', navState.gridScale.toString())
+	})
+
+	return (
+		<>
+			<svg width="1px" height="1px" style={{ position: 'absolute', top: 0, left: 0, overflow: 'visible' }}>
+				<g
+					ref={setSvgGroup}
+					style={{
+						transform: 'scale(var(--grid-scale))',
+						transformOrigin: '0 0',
+					}}
+				></g>
+			</svg>
+			{svgGroup && (
+				<>
+					{wireIds.map((wireId) => (
+						<MindmapWireLine
+							key={wireId}
+							wireId={wireId}
+							svgGroupPortal={svgGroup}
+							onOpenPopover={onOpenPopover}
+						/>
+					))}
+					<MindmapWireGhostContext>
+						<MindmapWireGhost svgGroupPortal={svgGroup} />
+					</MindmapWireGhostContext>
+				</>
+			)}
+			<MindmapWireContextMenu
+				{...popoverState}
+				onClose={() =>
+					setPopoverState((current) => ({
+						...current,
+						open: false,
+					}))
+				}
+			/>
+		</>
+	)
+}
+
+function getWireHitWidth(scale: number) {
+	return `${Math.max(16 / scale, GLOW_WIDTH)}px`
+}

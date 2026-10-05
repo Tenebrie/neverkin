@@ -8,13 +8,13 @@ import { useQuickCreateActor } from '@/api/hooks/useQuickCreateActor'
 import { useQuickCreateArticle } from '@/api/hooks/useQuickCreateArticle'
 import { useQuickCreateEvent } from '@/api/hooks/useQuickCreateEvent'
 import { useQuickCreateTag } from '@/api/hooks/useQuickCreateTag'
+import { useCreateFolder } from '@/app/views/world/api/useCreateFolder'
 import {
 	CreatePopoverButton,
 	CreatePopoverButtonProps,
 } from '@/ui-lib/components/PopoverButton/CreatePopoverButton'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { useCreateFolder } from '../../../api/useCreateFolder'
 import { useArticleCollapseControls } from './hooks/useArticleCollapseControls'
 
 type Props = Omit<CreatePopoverButtonProps, 'tooltip' | 'popoverBody' | 'onConfirm'> & {

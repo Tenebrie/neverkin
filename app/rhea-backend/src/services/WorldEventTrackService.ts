@@ -4,6 +4,7 @@ import { BadRequestError } from 'moonflower'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { makeSortEventTracksQuery } from './dbQueries/makeSortEventTracksQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 
 export const WorldEventTrackService = {
 	listEventTracks: async ({ worldId }: { worldId: string }) => {
@@ -11,6 +12,7 @@ export const WorldEventTrackService = {
 			where: {
 				worldId,
 			},
+			orderBy: CommonOrderBy,
 		})
 	},
 

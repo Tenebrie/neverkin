@@ -4,9 +4,11 @@ import { defineConfig } from 'eslint/config'
 import eslintConfigPrettier from 'eslint-config-prettier'
 import eslintPluginAstro from 'eslint-plugin-astro'
 import muiPathImports from 'eslint-plugin-mui-path-imports'
+import noRelativeImportPaths from 'eslint-plugin-no-relative-import-paths'
 import eslintPluginPrettierRecommended from 'eslint-plugin-prettier/recommended'
 import simpleImportSort from 'eslint-plugin-simple-import-sort'
 import unusedImports from 'eslint-plugin-unused-imports'
+import path from 'path'
 import tseslint from 'typescript-eslint'
 
 import noDirectContextAccess from './eslint-rules/no-direct-context-access.mjs'
@@ -60,7 +62,7 @@ export default defineConfig(
 		plugins: {
 			'simple-import-sort': simpleImportSort,
 			'unused-imports': unusedImports,
-			// 'no-relative-import-paths': noRelativeImportPaths,
+			'no-relative-import-paths': noRelativeImportPaths,
 			'mui-path-imports': muiPathImports,
 		},
 		rules: {
@@ -99,6 +101,20 @@ export default defineConfig(
 		},
 	},
 	{
+		files: ['app/styx-frontend/src/**/*.{ts,tsx}'],
+		rules: {
+			'no-relative-import-paths/no-relative-import-paths': [
+				'error',
+				{
+					allowSameFolder: true,
+					allowedDepth: 2,
+					rootDir: path.relative(process.cwd(), path.join(import.meta.dirname, 'app/styx-frontend/src')),
+					prefix: '@',
+				},
+			],
+		},
+	},
+	{
 		// Custom rules for rhea-backend to enforce moonflower patterns
 		files: ['app/rhea-backend/src/routers/**/*.ts'],
 		plugins: { neverkin },
@@ -120,6 +136,15 @@ export default defineConfig(
 		rules: {
 			'neverkin/no-opaque-destructive-filter': 'error',
 			'neverkin/no-transaction-escape': 'error',
+			'no-restricted-properties': [
+				'error',
+				...['$queryRaw', '$queryRawUnsafe', '$queryRawTyped', '$executeRaw', '$executeRawUnsafe'].map(
+					(property) => ({
+						property,
+						message: 'Raw SQL is forbidden. Use the typed Prisma query API.',
+					}),
+				),
+			],
 		},
 	},
 	{
@@ -127,6 +152,24 @@ export default defineConfig(
 		plugins: { neverkin },
 		rules: {
 			'neverkin/no-unknown-api-path': 'error',
+		},
+	},
+	{
+		files: ['**/*.{ts,tsx}'],
+		rules: {
+			'no-restricted-imports': [
+				'error',
+				{
+					paths: [
+						{
+							name: 'zod',
+							importNames: ['default'],
+							message:
+								"Use `import { z } from 'zod'`. The default import emits `z.z.core.*` into the .d.ts, which ts-morph (Moonflower) resolves to `any`.",
+						},
+					],
+				},
+			],
 		},
 	},
 	{

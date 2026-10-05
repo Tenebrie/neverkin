@@ -1,0 +1,26 @@
+{
+	"name": "@neverkin/zod-schema",
+	"version": "1.0.0",
+	"private": true,
+	"type": "module",
+	"main": "dist/index.js",
+	"types": "dist/index.d.ts",
+	"exports": {
+		".": {
+			"types": "./dist/index.d.ts",
+			"import": "./dist/index.js"
+		}
+	},
+	"scripts": {
+		"build": "tsc",
+		"tsc": "tsc --noEmit",
+		"lint": "eslint src/",
+		"lint:fix": "eslint src/ --fix"
+	},
+	"peerDependencies": {
+		"zod": "^4.6.5"
+	},
+	"devDependencies": {
+		"typescript": "^6.0.3"
+	}
+}

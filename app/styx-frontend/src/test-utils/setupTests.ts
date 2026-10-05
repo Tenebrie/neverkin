@@ -59,3 +59,8 @@ beforeAll(() => {
 	}
 })
 window.scrollTo = rstest.fn()
+Object.defineProperty(HTMLElement.prototype, 'isContentEditable', {
+	get(this: HTMLElement) {
+		return this.closest('[contenteditable]:not([contenteditable="false"])') !== null
+	},
+})

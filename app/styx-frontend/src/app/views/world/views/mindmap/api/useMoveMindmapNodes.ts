@@ -1,13 +1,13 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 
 import { mindmapApi, MoveMindmapNodesApiArg, useMoveMindmapNodesMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-export const useMoveMindmapNodes = () => {
-	const worldId = useSelector(getWorldIdState)
+export function useMoveMindmapNodes() {
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [moveMindmapNodes, state] = useMoveMindmapNodesMutation()
 

@@ -1,5 +1,5 @@
 import type { PayloadAction } from '@reduxjs/toolkit'
-import { createSlice } from '@reduxjs/toolkit'
+import { createSlice, original } from '@reduxjs/toolkit'
 
 import {
 	ActorDetails,
@@ -7,12 +7,14 @@ import {
 	TimelineEntity,
 	WorldAccessMode,
 	WorldCalendar,
+	WorldDetails,
 	WorldEvent,
 	WorldEventDelta,
 	WorldTag,
 } from '@/api/types/worldTypes'
 import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
+import { replaceChangedElements } from '@/app/utils/replaceChangedElements'
 
 import { ingestWorld } from '../../utils/ingestEntity'
 
@@ -75,10 +77,14 @@ export const worldSlice = createSlice({
 		loadWorld: (state, { payload }: PayloadAction<{ world: GetWorldInfoApiResponse }>) => {
 			const world = payload.world
 
-			const ingestedWorld = ingestWorld(world)
-			Object.entries(ingestedWorld).forEach(([key, value]) => {
-				Object.assign(state, { [key]: value })
-			})
+			const current = original(state)
+			const ingested = ingestWorld(world)
+			Object.assign(state, ingested, {
+				actors: replaceChangedElements(current.actors, ingested.actors),
+				calendars: replaceChangedElements(current.calendars, ingested.calendars),
+				events: replaceChangedElements(current.events, ingested.events),
+				tags: replaceChangedElements(current.tags, ingested.tags),
+			} satisfies Partial<WorldDetails>)
 
 			state.isLoaded = true
 			state.isUnauthorized = false
@@ -111,25 +117,6 @@ export const worldSlice = createSlice({
 		},
 		removeEvent: (state, { payload }: PayloadAction<string>) => {
 			state.events = state.events.filter((e) => e.id !== payload)
-		},
-		updateEventDelta: (
-			state,
-			{ payload }: PayloadAction<Pick<WorldEventDelta, 'id' | 'worldEventId'> & Partial<WorldEventDelta>>,
-		) => {
-			const event = state.events.find((e) => e.id === payload.worldEventId)
-			if (!event) {
-				return
-			}
-			const delta = event.deltaStates.find((d) => d.id === payload.id)
-			if (!delta) {
-				return
-			}
-
-			const newDelta = {
-				...delta,
-				...payload,
-			}
-			event.deltaStates.splice(event.deltaStates.indexOf(delta), 1, newDelta)
 		},
 		addActor: (state, { payload }: PayloadAction<ActorDetails>) => {
 			state.actors = state.actors.concat(payload).sort((a, b) => a.name.localeCompare(b.name))

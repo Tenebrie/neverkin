@@ -3,7 +3,7 @@ import { TagService } from './TagService.js'
 import { WikiArticleService } from './WikiArticleService.js'
 import { WorldEventService } from './WorldEventService.js'
 
-export type WorldEntityType = 'actor' | 'article' | 'event' | 'folder' | 'tag'
+export type WorldEntityType = 'actor' | 'article' | 'event' | 'folder' | 'node' | 'tag'
 
 export type BaselineActor = Awaited<ReturnType<typeof ActorService.findActorOrThrow>>
 export type BaselineArticle = Awaited<ReturnType<typeof WikiArticleService.findArticleByIdOrThrow>>

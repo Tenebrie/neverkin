@@ -4,19 +4,25 @@ import { BadRequestError } from 'moonflower'
 
 import { makeSortWikiArticlesQuery } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
+import { CommonOrderBy } from './utils/commonOrderBy.js'
 import { BulkActionService } from './WorldBulkActionService.js'
 
 export const WikiFolderService = {
 	listWikiFolders: async (params: Pick<WikiFolder, 'worldId'>) => {
+		const children = {
+			select: { id: true, parentFolderId: true, parentFolderPosition: true },
+			orderBy: CommonOrderBy,
+		}
 		const folders = await getPrismaClient().wikiFolder.findMany({
 			where: { worldId: params.worldId },
 			include: {
-				actors: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
-				articles: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
-				children: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
-				events: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
-				tags: { select: { id: true, parentFolderId: true, parentFolderPosition: true } },
+				actors: children,
+				articles: children,
+				children: children,
+				events: children,
+				tags: children,
 			},
+			orderBy: CommonOrderBy,
 		})
 
 		return folders

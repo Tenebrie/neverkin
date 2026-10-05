@@ -1,47 +1,28 @@
-import { useCallback } from 'react'
-import { useSelector } from 'react-redux'
+import { useCallback, useMemo } from 'react'
+import { useStore } from 'react-redux'
 
-import { useGetMindmapQuery } from '@/api/mindmapApi'
+import { mindmapApi } from '@/api/mindmapApi'
+import { RootState } from '@/app/store'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-import { getWorldIdState } from '../../../WorldSliceSelectors'
-import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
-import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
+import { useMindmapContext } from '../context/useMindmapContext'
 
 export function useNodeLinking() {
-	const worldId = useSelector(getWorldIdState)
-	const { data } = useGetMindmapQuery({ worldId }, { skip: !worldId })
+	const worldId = useCurrentWorldId()
+	const store = useStore<MindmapApiState>()
+	const { createWires, deleteWires } = useMindmapContext()
 
-	const [createMindmapWires] = useCreateMindmapWires()
-	const [deleteMindmapWires] = useDeleteMindmapWires()
+	const selectMindmapState = useMemo(() => mindmapApi.endpoints.getMindmap.select({ worldId }), [worldId])
 
-	const createLink = useCallback(
-		({ sourceId, targetId }: { sourceId: string; targetId: string }) => {
-			if (!data) {
-				return
-			}
-
-			const existingLink = data.wires.find(
-				(link) =>
-					(link.sourceNodeId === sourceId && link.targetNodeId === targetId) ||
-					(link.sourceNodeId === targetId && link.targetNodeId === sourceId),
-			)
-			if (existingLink) {
-				return deleteMindmapWires([existingLink.id])
-			}
-			const newLink = createMindmapWires([
-				{
-					sourceNodeId: sourceId,
-					targetNodeId: targetId,
-				},
-			])
-			return newLink
-		},
-		[createMindmapWires, data, deleteMindmapWires],
-	)
+	const getWires = useCallback(() => {
+		const state = store.getState()
+		return selectMindmapState(state).data?.wires
+	}, [store, selectMindmapState])
 
 	const createLinks = useCallback(
 		(newPairs: { sourceNodeId: string; targetNodeId: string }[]) => {
-			if (!data) {
+			const wires = getWires()
+			if (!wires) {
 				return
 			}
 
@@ -49,7 +30,7 @@ export function useNodeLinking() {
 
 			const existingLinks = validPairs
 				.map(({ sourceNodeId, targetNodeId }) =>
-					data.wires.find((link) => {
+					wires.find((link) => {
 						const isMatching =
 							link.sourceNodeId === sourceNodeId &&
 							link.targetNodeId === targetNodeId &&
@@ -64,32 +45,19 @@ export function useNodeLinking() {
 				.filter((link): link is NonNullable<typeof link> => !!link)
 
 			if (existingLinks.length === validPairs.length) {
-				return deleteMindmapWires(existingLinks.map((link) => link.id))
+				deleteWires(existingLinks.map((link) => link.id))
+				return
 			}
 
-			return createMindmapWires(validPairs)
+			createWires(validPairs)
 		},
-		[createMindmapWires, data, deleteMindmapWires],
-	)
-
-	const checkLinkExists = useCallback(
-		(sourceNodeId: string, targetNodeId: string) => {
-			if (!data) {
-				return false
-			}
-
-			return data.wires.some(
-				(link) =>
-					(link.sourceNodeId === sourceNodeId && link.targetNodeId === targetNodeId) ||
-					(link.sourceNodeId === targetNodeId && link.targetNodeId === sourceNodeId),
-			)
-		},
-		[data],
+		[createWires, deleteWires, getWires],
 	)
 
 	return {
-		createLink,
 		createLinks,
-		checkLinkExists,
 	}
 }
+
+type MindmapApiState = Parameters<ReturnType<typeof mindmapApi.endpoints.getMindmap.select>>[0] &
+	Pick<RootState, 'world'>

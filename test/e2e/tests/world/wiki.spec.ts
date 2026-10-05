@@ -24,7 +24,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 
 			// Open article
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
@@ -300,7 +300,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
@@ -321,7 +321,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 			await expect(page.getByTestId('EditableTitle').getByText('Testing article')).toBeVisible()
 
@@ -329,12 +329,18 @@ test.describe('Wiki View', () => {
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
 			await expect(textbox).toBeVisible()
 			await textbox.click()
+			await expect(textbox).toBeFocused()
 			await textbox.pressSequentially('Hello ', { delay: 10 })
 
 			// Click the @Mention button, type a name, and press Enter to create
 			await page.getByRole('button', { name: '@Mention' }).click()
+			await expect(textbox).toBeFocused()
+			await expect(textbox).toHaveText('Hello @')
 			await page.keyboard.type('NewActor', { delay: 10 })
-			await expect(page.getByText('Quick create')).toBeVisible()
+			await expect(textbox).toHaveText('Hello @NewActor')
+			await expect(
+				page.getByRole('menuitem').filter({ hasText: 'Actor:' }).filter({ hasText: 'NewActor' }),
+			).toHaveClass(/Mui-selected/)
 			await withCreatedActor(page, () => page.keyboard.press('Enter'))
 
 			// Expect the mention to be inserted (not a newline)
@@ -349,7 +355,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create and open an article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -395,7 +401,7 @@ test.describe('Wiki View', () => {
 			await navigateToWiki(page, 'createWorld')
 
 			// Create and open an article
-			await createArticleViaUI(page, 'Testing article')
+			await createArticleAsUser(page, 'Testing article')
 			await withYjsSocket(page, () => wikiListEntity(page, 'Testing article').click())
 
 			const textbox = page.getByTestId('RichTextEditor').getByRole('textbox')
@@ -505,7 +511,7 @@ test.describe('Wiki View', () => {
 		await dragRowToPoint(page, source, box.x + box.width / 2, box.y + box.height - 16)
 	}
 
-	async function createArticleViaUI(page: Page, name: string) {
+	async function createArticleAsUser(page: Page, name: string) {
 		await page.getByRole('button', { name: 'Create new object' }).click()
 		await page.getByRole('button', { name: 'Article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill(name)

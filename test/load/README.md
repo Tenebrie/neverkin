@@ -1,4 +1,4 @@
-# Timelines Load Testing Suite
+# Neverkin Load Testing Suite
 
 Load testing suite using [k6](https://k6.io/) for the Neverkin application.
 

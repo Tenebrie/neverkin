@@ -1,13 +1,6 @@
 import { GetWorldInfoApiResponse } from '@/api/worldDetailsApi'
 
-import {
-	ActorDetails,
-	WorldCalendar,
-	WorldDetails,
-	WorldEvent,
-	WorldEventDelta,
-	WorldTag,
-} from '../../api/types/worldTypes'
+import { ActorDetails, WorldCalendar, WorldDetails, WorldEvent, WorldTag } from '../../api/types/worldTypes'
 import { isNotNull } from './isNotNull'
 
 export const ingestWorld = (rawWorld: GetWorldInfoApiResponse): WorldDetails => {
@@ -15,6 +8,7 @@ export const ingestWorld = (rawWorld: GetWorldInfoApiResponse): WorldDetails => 
 		...rawWorld,
 		events: rawWorld.events.map(ingestEvent),
 		actors: [...rawWorld.actors].sort((a, b) => a.name.localeCompare(b.name)).map((a) => ingestActor(a)),
+		tags: rawWorld.tags.map(ingestTag),
 		timeOrigin: Number(rawWorld.timeOrigin),
 		calendars: rawWorld.calendars.map(ingestCalendar),
 	}
@@ -31,16 +25,6 @@ export const ingestEvent = (rawEvent: GetWorldInfoApiResponse['events'][number])
 		...rawEvent,
 		timestamp: Number(rawEvent.timestamp),
 		revokedAt: isNotNull(rawEvent.revokedAt) ? Number(rawEvent.revokedAt) : undefined,
-		deltaStates: [],
-	}
-}
-
-export const ingestEventDelta = (
-	rawDelta: GetWorldInfoApiResponse['events'][number]['deltaStates'][number],
-): WorldEventDelta => {
-	return {
-		...rawDelta,
-		timestamp: Number(rawDelta.timestamp),
 	}
 }
 

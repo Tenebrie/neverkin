@@ -1,14 +1,14 @@
 import { useCallback } from 'react'
-import { useDispatch, useSelector } from 'react-redux'
+import { useDispatch } from 'react-redux'
 import { v4 as getRandomId } from 'uuid'
 
 import { CreateNodeApiArg, mindmapApi, useCreateNodeMutation } from '@/api/mindmapApi'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-export const useCreateMindmapNode = () => {
-	const worldId = useSelector(getWorldIdState)
+export function useCreateMindmapNode() {
+	const worldId = useCurrentWorldId()
 	const dispatch = useDispatch<AppDispatch>()
 	const [createMindmapNode, state] = useCreateNodeMutation()
 
@@ -23,6 +23,8 @@ export const useCreateMindmapNode = () => {
 						contentRich: '',
 						createdAt: new Date().toISOString(),
 						updatedAt: new Date().toISOString(),
+						positionX: 0,
+						positionY: 0,
 						...body,
 						id,
 					})
@@ -34,8 +36,9 @@ export const useCreateMindmapNode = () => {
 
 	const perform = useCallback(
 		async (body: CreateNodeApiArg['body']) => {
-			body.id = body.id ?? getRandomId()
-			const patchResult = addCachedNode(body.id, body)
+			const id = body.id ?? getRandomId()
+			body.id = id
+			addCachedNode(id, body)
 
 			const { response, error } = parseApiResponse(
 				await createMindmapNode({
@@ -43,16 +46,16 @@ export const useCreateMindmapNode = () => {
 					body,
 				}),
 			)
-			patchResult.undo()
-			if (error) {
-				return
-			}
-
-			// Reapply patch to get the correct id
-			addCachedNode(response.id, body)
+			dispatch(
+				mindmapApi.util.updateQueryData('getMindmap', { worldId }, (draft) => {
+					draft.nodes = error
+						? draft.nodes.filter((node) => node.id !== id)
+						: draft.nodes.map((node) => (node.id === id ? response : node))
+				}),
+			)
 			return response
 		},
-		[addCachedNode, createMindmapNode, worldId],
+		[addCachedNode, createMindmapNode, dispatch, worldId],
 	)
 
 	return [perform, state] as const

@@ -18,7 +18,7 @@ import {
 	usePathParams,
 	useRequestBody,
 } from 'moonflower'
-import z from 'zod'
+import { z } from 'zod'
 
 import { SessionMiddleware } from '../middleware/SessionMiddleware.js'
 import { worldWikiArticleTag, worldWikiTag } from './utils/tags.js'

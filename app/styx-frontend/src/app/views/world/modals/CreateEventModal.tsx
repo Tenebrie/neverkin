@@ -9,19 +9,27 @@ import { useSelector } from 'react-redux'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { RichTextEditorSummoner } from '@/app/features/richTextEditor/portals/RichTextEditorPortal'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
-import { store } from '@/app/store'
 import { useCreateEvent } from '@/app/views/world/api/useCreateEvent'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
-import Modal, { ModalFooter, ModalHeader } from '@/ui-lib/components/Modal'
+import Modal, { ModalFooter, ModalHeader, useModalCleanup } from '@/ui-lib/components/Modal'
 
 export const CreateEventModal = () => {
-	const { isOpen, closeWithCleanup } = useModal('createEventModal')
+	const { isOpen } = useModal('createEventModal')
 	const [descriptionPlain, setDescriptionPlain] = useState('')
 	const [descriptionRich, setDescriptionRich] = useState('')
 	const [creationError, setCreationError] = useState<string | null>(null)
 	const [createEvent, { isLoading }] = useCreateEvent()
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
+
+	useModalCleanup({
+		isOpen,
+		onCleanup: () => {
+			setDescriptionPlain('')
+			setDescriptionRich('')
+			setCreationError(null)
+		},
+	})
 
 	const { selectedTime } = useSelector(getWorldState, (a, b) => a.selectedTime === b.selectedTime)
 
@@ -53,14 +61,6 @@ export const CreateEventModal = () => {
 			return
 		}
 
-		closeWithCleanup(
-			() => {
-				setDescriptionPlain('')
-				setDescriptionRich('')
-				setCreationError(null)
-			},
-			() => store.getState().modals['createEventModal'].isOpen,
-		)
 		navigate({
 			search: (prev) => ({
 				...prev,
@@ -73,14 +73,6 @@ export const CreateEventModal = () => {
 		if (isLoading) {
 			return
 		}
-		closeWithCleanup(
-			() => {
-				setDescriptionPlain('')
-				setDescriptionRich('')
-				setCreationError(null)
-			},
-			() => store.getState().modals['createEventModal'].isOpen,
-		)
 		navigate({
 			search: (prev) => ({
 				...prev,

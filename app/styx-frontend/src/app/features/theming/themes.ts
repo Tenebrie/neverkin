@@ -154,6 +154,20 @@ export const customLightTheme = {
 		hintText: 'rgb(0 0 0 / 60%)',
 		highlight: 'hsla(31, 100%, 50%, 1.00)',
 		brandGradient: 'linear-gradient(135deg, #b8860b 0%, #c56030 33%, #b4574b 66%, #9c3e4e 100%)',
+		wireGhost: {
+			free: {
+				start: 'rgba(0, 0, 0, 0.7)',
+				end: 'rgba(0, 0, 0, 0.3)',
+			},
+			snapped: {
+				start: 'rgba(30, 100, 200, 0.9)',
+				end: 'rgba(30, 100, 200, 0.4)',
+			},
+			duplicate: {
+				start: 'rgba(200, 30, 30, 0.9)',
+				end: 'rgba(200, 30, 30, 0.4)',
+			},
+		},
 		neutralBackground: {
 			contrastText: 'rgb(0 0 0 / 38%)',
 			normal: 'rgb(0 0 0 / 20%)',
@@ -191,6 +205,20 @@ export const customDarkTheme: typeof customLightTheme = {
 		hintText: 'rgb(255 255 255 / 50%)',
 		highlight: 'hsla(31, 100%, 50%, 1.00)',
 		brandGradient: 'linear-gradient(135deg, #f2edb6 0%, #f8c569 33%, #ce7259 66%, #9c3e4e 100%)',
+		wireGhost: {
+			free: {
+				start: 'rgba(255, 255, 255, 0.7)',
+				end: 'rgba(255, 255, 255, 0.3)',
+			},
+			snapped: {
+				start: 'rgba(100, 180, 255, 0.9)',
+				end: 'rgba(100, 180, 255, 0.4)',
+			},
+			duplicate: {
+				start: 'rgba(255, 100, 100, 0.9)',
+				end: 'rgba(255, 100, 100, 0.4)',
+			},
+		},
 		neutralBackground: {
 			contrastText: 'rgb(255, 255, 255, 38%)',
 			normal: 'rgb(255 255 255 / 10%)',

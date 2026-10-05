@@ -1,7 +1,7 @@
 import { createMemoryHistory, createRouter, RouterProvider } from '@tanstack/react-router'
 import { act, render, renderHook, RenderHookOptions } from '@testing-library/react'
 import userEvent from '@testing-library/user-event'
-import { ReactNode } from 'react'
+import { Fragment, ReactNode } from 'react'
 import { Provider as ReduxProvider } from 'react-redux'
 
 import { routeTree } from '@/routeTree.gen'
@@ -59,7 +59,11 @@ export const renderWithRouter = async (
 
 export const renderHookWithProviders = <Result, Props>(
 	hook: (initialProps: Props) => Result,
-	{ preloadedState, ...options }: RenderHookOptions<Props> & { preloadedState?: Partial<RootState> } = {},
+	{
+		preloadedState,
+		wrapper: Wrapper = Fragment,
+		...options
+	}: RenderHookOptions<Props> & { preloadedState?: Partial<RootState> } = {},
 ) => {
 	const store = generateStore({ preloadedState })
 	const router = createTestRouter()
@@ -68,7 +72,7 @@ export const renderHookWithProviders = <Result, Props>(
 		wrapper: ({ children }) => (
 			<ReduxProvider store={store}>
 				<RouterProvider router={router} />
-				{children}
+				<Wrapper>{children}</Wrapper>
 			</ReduxProvider>
 		),
 	})

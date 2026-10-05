@@ -3,7 +3,6 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
 import { useUpdateWorldEventMutation } from '@/api/worldEventApi'
-import { useUpdateWorldEventDeltaMutation } from '@/api/worldEventDeltaApi'
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useTimelineWorldTime } from '@/app/features/time/hooks/useTimelineWorldTime'
 import { binarySearchForClosest } from '@/app/utils/binarySearchForClosest'
@@ -19,13 +18,12 @@ type Props = {
 }
 
 export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
-	const { id: worldId, events } = useSelector(getWorldState, (a, b) => a.id === b.id && a.events === b.events)
+	const { id: worldId } = useSelector(getWorldState, (a, b) => a.id === b.id && a.events === b.events)
 	const { scaleLevel } = useSelector(getTimelineState, (a, b) => a.scaleLevel === b.scaleLevel)
 	const [updateWorldEvent] = useUpdateWorldEventMutation()
-	const [updateWorldEventDelta] = useUpdateWorldEventDeltaMutation()
 	const { scaledTimeToRealTime } = useTimelineWorldTime({ scaleLevel })
 
-	const { updateEvent, updateEventDelta } = worldSlice.actions
+	const { updateEvent } = worldSlice.actions
 	const dispatch = useDispatch()
 
 	const moveEventIssuedAt = useCallback(
@@ -100,67 +98,6 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 		[dispatch, track.baseModel, track.id, updateEvent, updateWorldEvent, worldId],
 	)
 
-	const moveEventDeltaState = useCallback(
-		async (entity: TimelineEntity<'deltaState'>, markerRealTime: number) => {
-			if ((entity.worldEventTrackId ?? 'default') === track.id) {
-				// Same track - update delta
-				dispatch(
-					updateEventDelta({
-						id: entity.id,
-						worldEventId: entity.eventId,
-						timestamp: markerRealTime,
-					}),
-				)
-				const { error } = parseApiResponse(
-					await updateWorldEventDelta({
-						body: {
-							timestamp: String(Math.round(markerRealTime)),
-						},
-						worldId,
-						eventId: entity.eventId,
-						deltaId: entity.id,
-					}),
-				)
-				if (error) {
-					dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
-					dispatch(updateEventDelta(entity.baseEntity))
-				}
-			} else {
-				// Another track - move event
-				dispatch(
-					updateEvent({
-						id: entity.eventId,
-						worldEventTrackId: track.id,
-					}),
-				)
-				const { error } = parseApiResponse(
-					await updateWorldEvent({
-						body: {
-							worldEventTrackId: track.baseModel ? track.id : null,
-						},
-						worldId,
-						eventId: entity.eventId,
-					}),
-				)
-				if (error) {
-					dispatch(updateEvent(events.find((e) => e.id === entity.eventId)!))
-					dispatch(updateEventDelta(entity.baseEntity))
-				}
-			}
-		},
-		[
-			dispatch,
-			events,
-			track.baseModel,
-			track.id,
-			updateEvent,
-			updateEventDelta,
-			updateWorldEvent,
-			updateWorldEventDelta,
-			worldId,
-		],
-	)
-
 	const { ref, getState } = useDragDropReceiver({
 		type: 'timelineEvent',
 		receiverRef,
@@ -176,8 +113,6 @@ export const useEventDragDropReceiver = ({ track, receiverRef }: Props) => {
 				moveEventIssuedAt(entity, snappedTimestamp)
 			} else if (entityIsOfType('revokedAt', entity)) {
 				moveEventRevokedAt(entity, snappedTimestamp)
-			} else if (entityIsOfType('deltaState', entity)) {
-				moveEventDeltaState(entity, snappedTimestamp)
 			}
 		},
 	})
