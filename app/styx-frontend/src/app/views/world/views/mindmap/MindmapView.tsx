@@ -1,10 +1,13 @@
 import { MindmapContext } from './context/MindmapContext'
+import { MindmapSelectionContext } from './context/MindmapSelectionContext'
 import { Mindmap } from './Mindmap'
 
 export function MindmapView() {
 	return (
-		<MindmapContext>
-			<Mindmap />
-		</MindmapContext>
+		<MindmapSelectionContext>
+			<MindmapContext>
+				<Mindmap />
+			</MindmapContext>
+		</MindmapSelectionContext>
 	)
 }

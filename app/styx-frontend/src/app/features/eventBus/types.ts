@@ -64,10 +64,6 @@ export type EventParams = {
 	'mindmap/wire/requestNodeTarget': {
 		sourceNodeIds: string[]
 	}
-	'mindmap/selection/changed': {
-		selectedNodeIds: Set<string>
-		selectedWireIds: Set<string>
-	}
 	'mindmap/hover/changed': {
 		hoveredNodeIds: Set<string>
 		hoveredWireIds: Set<string>

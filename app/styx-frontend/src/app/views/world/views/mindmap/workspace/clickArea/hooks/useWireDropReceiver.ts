@@ -1,17 +1,15 @@
 import { RefObject } from 'react'
-import { useStore } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
-import { RootState } from '@/app/store'
-import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import { useMindmapSelectionContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 
 type Props = {
 	ref: RefObject<HTMLDivElement | null>
 }
 
 export function useWireDropReceiver({ ref }: Props) {
-	const store = useStore<RootState>()
+	const { selectedNodes } = useMindmapSelectionContext()
 
 	useDragDropReceiver({
 		type: 'mindmapNodeLinking',
@@ -22,7 +20,7 @@ export function useWireDropReceiver({ ref }: Props) {
 			}
 
 			const sourceId = params.sourceNodeId
-			const selectedKeys = getSelectedNodeKeys(store.getState())
+			const selectedKeys = selectedNodes.keys()
 			const sourceNodeIds = selectedKeys.includes(sourceId) ? selectedKeys : [sourceId]
 
 			dispatchGlobalEvent['quickSelect/requestOpen']({

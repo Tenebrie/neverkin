@@ -1,48 +1,45 @@
 import { type MindmapPasteData } from '@neverkin/zod-schema'
-import { useMemo } from 'react'
-import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { useMousePositionRef } from '@/app/hooks/useMousePositionRef'
-import { RootState } from '@/app/store'
 
 import { usePasteMindmapNodes } from '../../api/usePasteMindmapNodes'
-import { useMindmapContext } from '../../context/useMindmapContext'
-import { mindmapSlice } from '../../MindmapSlice'
-import { getMindmapNodeParentId } from '../../utils/getMindmapNodeParentId'
+import { useMindmapContext, useMindmapSelectionContext } from '../../context/useMindmapContext'
 import { getWireDirection } from '../../utils/getWireDirection'
 import { toWorkspaceCoords } from '../../utils/toWorkspaceCoords'
 
 export function useMindmapPasteData() {
-	const store = useStore<RootState>()
-	const selectMindmapState = useMemo(() => (state: RootState) => mindmapSlice.selectSlice(state), [])
-
 	const [pasteNodes] = usePasteMindmapNodes()
 	const { nodes, nodeLayouts, wires } = useMindmapContext()
 
-	const { setNodeSelection, setWireSelection } = mindmapSlice.actions
-	const dispatch = useDispatch()
+	const {
+		selectedNodes: selectedNodesMap,
+		selectedWires: selectedWiresMap,
+		setNodeSelection,
+		setWireSelection,
+	} = useMindmapSelectionContext()
 
 	const mousePositionRef = useMousePositionRef()
 
 	const getCurrentSelection = useEvent(() => {
-		const reduxState = selectMindmapState(store.getState())
-		const selectedNodes = reduxState.selectedNodes
+		const selectedNodes = selectedNodesMap
+			.keys()
 			.map((node) => {
-				const parcel = nodes.get(node.key)
-				const layout = nodeLayouts.get(node.key)
+				const parcel = nodes.get(node)
+				const layout = nodeLayouts.get(node)
 				if (!parcel || !layout) {
 					return null
 				}
 				return {
-					id: node.key,
+					id: node,
 					parcel,
 					layout,
 				}
 			})
 			.filter((node) => node !== null)
 
-		const selectedWires = reduxState.selectedWires
+		const selectedWires = selectedWiresMap
+			.keys()
 			.map((wire) => {
 				const parcel = wires.get(wire)
 				if (!parcel) {
@@ -160,15 +157,8 @@ export function useMindmapPasteData() {
 			return
 		}
 
-		dispatch(
-			setNodeSelection(
-				response.nodes.map((node) => ({
-					key: node.id,
-					actorId: getMindmapNodeParentId(node) ?? node.id,
-				})),
-			),
-		)
-		dispatch(setWireSelection(response.wires.map((wire) => wire.id)))
+		setNodeSelection(response.nodes.map((node) => node.id))
+		setWireSelection(response.wires.map((wire) => wire.id))
 	})
 
 	return {

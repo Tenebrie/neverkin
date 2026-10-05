@@ -1,25 +1,28 @@
-import { useCallback, useLayoutEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
+import { useCallback, useEffect, useLayoutEffect, useRef } from 'react'
 
-import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import {
+	useMindmapContext,
+	useMindmapSelectionContext,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { WirePaint } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapWireBuffer'
 
 type Props = {
 	wireId: string
 	paint: WirePaint
-	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
+	onOpenPopover: (params: {
+		wireId: string
+		position: { x: number; y: number }
+		mode: 'doubleClick' | 'contextMenu'
+	}) => void
 }
 
 export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Props) {
-	const { wireBuffer, selectedWiresCache } = useMindmapContext()
-	const dispatch = useDispatch()
-	const { addWireToSelection, removeWireFromSelection, addWireToHover, removeWireFromHover } =
-		mindmapSlice.actions
+	const { wireBuffer } = useMindmapContext()
+	const { selectedWires, addWireToSelection, removeWireFromSelection, addWireToHover, removeWireFromHover } =
+		useMindmapSelectionContext()
 
 	const isHoveredRef = useRef(false)
 	const isActiveRef = useRef(false)
@@ -35,38 +38,36 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 		wireBuffer.publish(wireId, paint)
 	}, [paint, wireId, wireBuffer])
 
-	useEventBusSubscribe['mindmap/selection/changed']({
-		callback: ({ selectedWireIds }) => {
-			selectedRef.current = selectedWireIds.has(wireId)
-			applyVisualState()
-		},
-	})
 	useLayoutEffect(() => {
-		if (selectedWiresCache.current.includes(wireId)) {
+		if (selectedWires.has(wireId)) {
 			selectedRef.current = true
 			applyVisualState()
 		}
-	}, [applyVisualState, selectedWiresCache, wireId])
+		return selectedWires.subscribe(wireId, () => {
+			selectedRef.current = selectedWires.has(wireId)
+			applyVisualState()
+		})
+	}, [applyVisualState, selectedWires, wireId])
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean; event: React.MouseEvent }>({
 		onClick: ({ multiselect }) => {
 			if (selectedRef.current) {
-				dispatch(removeWireFromSelection(wireId))
+				removeWireFromSelection(wireId)
 			} else {
-				dispatch(addWireToSelection({ wireId, multiselect }))
+				addWireToSelection({ wireId, multiselect })
 			}
 		},
 		onDoubleClick: ({ event, multiselect }) => {
-			onOpenPopover({ x: event.clientX, y: event.clientY }, 'doubleClick')
-			dispatch(addWireToSelection({ wireId, multiselect }))
+			addWireToSelection({ wireId, multiselect })
+			onOpenPopover({ wireId, position: { x: event.clientX, y: event.clientY }, mode: 'doubleClick' })
 		},
 		ignoreDelay: true,
 	})
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
-			onOpenPopover({ x: event.clientX, y: event.clientY }, 'contextMenu')
-			dispatch(addWireToSelection({ wireId, multiselect: isMultiselectEvent(event) }))
+			addWireToSelection({ wireId, multiselect: isMultiselectEvent(event) })
+			onOpenPopover({ wireId, position: { x: event.clientX, y: event.clientY }, mode: 'contextMenu' })
 		},
 	})
 
@@ -77,13 +78,13 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 		onClick,
 		onMouseEnter: () => {
 			isHoveredRef.current = true
-			dispatch(addWireToHover(wireId))
+			addWireToHover(wireId)
 			applyVisualState()
 		},
 		onMouseLeave: () => {
 			isHoveredRef.current = false
 			isActiveRef.current = false
-			dispatch(removeWireFromHover(wireId))
+			removeWireFromHover(wireId)
 			applyVisualState()
 		},
 		onMouseDown: () => {
@@ -97,6 +98,13 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 			onMouseUp(event)
 		},
 	}
+
+	useEffect(
+		() => () => {
+			removeWireFromHover(wireId)
+		},
+		[removeWireFromHover, wireId],
+	)
 
 	const labelProps = { onClick, onMouseDown, onMouseUp }
 

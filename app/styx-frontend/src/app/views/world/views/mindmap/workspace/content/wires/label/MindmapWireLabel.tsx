@@ -6,7 +6,7 @@ import { useLayoutEffect, useRef } from 'react'
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { useMindmapSelectionContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 
 type Props = {
@@ -24,20 +24,18 @@ export function MindmapWireLabel({ wire, onClick, onMouseDown, onMouseUp }: Prop
 			? wire.content.slice(0, maxLabelLength) + '…'
 			: wire.content
 		: ''
-	const { selectedWiresCache } = useMindmapContext()
+	const { selectedWires } = useMindmapSelectionContext()
 
 	const containerRef = useRef<HTMLElement>(null)
-	useEventBusSubscribe['mindmap/selection/changed']({
-		callback: ({ selectedWireIds }) => {
-			const selected = selectedWireIds.has(wire.id)
-			containerRef.current?.setAttribute('data-selected', String(selected))
-		},
-	})
 	useLayoutEffect(() => {
-		if (selectedWiresCache.current.includes(wire.id)) {
+		if (selectedWires.has(wire.id)) {
 			containerRef.current?.setAttribute('data-selected', String(true))
 		}
-	}, [selectedWiresCache, wire.id])
+		return selectedWires.subscribe(wire.id, () => {
+			const selected = selectedWires.has(wire.id)
+			containerRef.current?.setAttribute('data-selected', String(selected))
+		})
+	}, [selectedWires, wire.id])
 
 	useEventBusSubscribe['mindmap/scale/changed']({
 		callback: ({ scale }) => {

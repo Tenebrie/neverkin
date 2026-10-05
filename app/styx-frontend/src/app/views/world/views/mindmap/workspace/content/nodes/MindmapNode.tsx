@@ -42,7 +42,6 @@ function MindmapNodeComponent({ parent, node }: NodeProps) {
 	const { handleMouseEnter, handleMouseLeave, cancelPendingHover, onDragStart, onDragEnd } =
 		useMindmapNodeHover({
 			nodeId: node.id,
-			entityId: parent.id,
 		})
 
 	const { selectedRef, onHeaderClick, onMouseDown, onMouseUp } = useMindmapNodeClicks({

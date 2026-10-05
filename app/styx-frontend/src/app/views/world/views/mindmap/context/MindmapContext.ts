@@ -1,17 +1,18 @@
 import { useInsertionEffect, useState } from 'react'
-import { useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
-import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 
+import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
+import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
-import { getMindmapState } from '../MindmapSliceSelectors'
+import { useSplitMindmapWire } from '../api/useSplitMindmapWire'
+import { useUpdateMindmapWire } from '../api/useUpdateMindmapWire'
 import { MindmapNavigationState, MindmapState } from '../MindmapState'
 import { MindmapNodeLayout, MindmapNodeParcel, MindmapWireParcel } from '../types'
 import { WireControlPoints } from '../workspace/content/wires/canvas/MindmapCanvasMath'
@@ -19,15 +20,16 @@ import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWire
 
 export const MindmapContext = createRealtimeContext(() => {
 	const [painters] = useState(() => new Set<(navState: MindmapNavigationState) => void>())
-	const [moveNodes] = useMoveMindmapNodes()
-	const [reparentNode] = useReparentMindmapNode()
-	const [createWires] = useCreateMindmapWires()
-	const [deleteWires] = useDeleteMindmapWires()
 
-	const { selectedNodes, selectedWires } = useSelector(
-		getMindmapState,
-		(a, b) => a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires,
-	)
+	const [moveNodes] = useMoveMindmapNodes()
+	const [createNode] = useCreateMindmapNode()
+	const [deleteNodes] = useDeleteMindmapNodes()
+	const [reparentNode] = useReparentMindmapNode()
+
+	const [createWires] = useCreateMindmapWires()
+	const [updateWire] = useUpdateMindmapWire()
+	const [splitWire] = useSplitMindmapWire()
+	const [deleteWires] = useDeleteMindmapWires()
 
 	const onPaint = useEvent((painter: (navState: MindmapNavigationState) => void) => {
 		painters.add(painter)
@@ -62,8 +64,6 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
 	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
-	const selectedNodesCache = useAutoRef(selectedNodes)
-	const selectedWiresCache = useAutoRef(selectedWires)
 
 	return {
 		nodes,
@@ -72,14 +72,19 @@ export const MindmapContext = createRealtimeContext(() => {
 		wires,
 		wireBuffer,
 		wireGeometry,
-		selectedNodesCache,
-		selectedWiresCache,
 		onPaint,
 		paint,
+
 		moveNodes,
+		createNode,
+		deleteNodes,
 		reparentNode,
+
 		createWires,
+		updateWire,
+		splitWire,
 		deleteWires,
+
 		workspaceRect,
 		updateWorkspaceRect,
 	}

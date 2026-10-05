@@ -1,5 +1,4 @@
 import { RefObject, useEffect } from 'react'
-import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -7,11 +6,11 @@ import { DragTrigger, matchesDragTrigger } from '@/app/features/dragDrop/DragTri
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useAutoRef } from '@/app/hooks/useAutoRef'
 import { usePointerCapture } from '@/app/hooks/usePointerCapture'
-import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
-import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import {
+	useMindmapContext,
+	useMindmapSelectionContext,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 
 import { getNodeLayout } from '../../wires/utils/getNodeLayout'
@@ -26,9 +25,8 @@ type Props = {
 }
 
 export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart, onDragEnd }: Props) {
-	const store = useStore<RootState>()
-	const dispatch = useDispatch()
 	const { moveNodes, nodeLayouts } = useMindmapContext()
+	const { selectedNodes, clearSelections } = useMindmapSelectionContext()
 	const nodeRef = useAutoRef(node)
 	const getPosition = useEvent(() => getNodeLayout(nodeLayouts, nodeRef.current))
 	const { capture: capturePointer, release: releasePointer } = usePointerCapture()
@@ -100,7 +98,7 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			}
 
 			if (!selectedRef.current && !isMultiselectEvent(event)) {
-				dispatch(mindmapSlice.actions.clearSelections())
+				clearSelections()
 			}
 
 			const { x, y } = getPosition()
@@ -171,7 +169,7 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			moveTo(snappedX, snappedY)
 
 			moveNodes({
-				nodeIds: [...new Set(getSelectedNodeKeys(store.getState()).concat(nodeRef.current.id))],
+				nodeIds: [...new Set(selectedNodes.keys()).add(nodeRef.current.id)],
 				deltaX: snappedX - nodeRef.current.positionX,
 				deltaY: snappedY - nodeRef.current.positionY,
 			})
@@ -203,13 +201,13 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 		getPosition,
 		selectedRef,
 		nodeRef,
-		store,
-		dispatch,
 		moveNodes,
 		moveTo,
 		startDragging,
 		stopDragging,
 		capturePointer,
 		releasePointer,
+		clearSelections,
+		selectedNodes,
 	])
 }

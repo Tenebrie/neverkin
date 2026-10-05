@@ -1,9 +1,10 @@
 import { useCallback, useLayoutEffect, useState } from 'react'
-import { useStore } from 'react-redux'
 
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
-import { RootState } from '@/app/store'
-import { useMindmapWireIds } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import {
+	useMindmapSelectionContext,
+	useMindmapWireIds,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { useMindmapPainter } from '@/app/views/world/views/mindmap/context/useMindmapPainter'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapWireLine } from '@/app/views/world/views/mindmap/workspace/content/wires/MindmapWire'
@@ -16,7 +17,7 @@ import { MindmapWireGhost } from './ghost/MindmapWireGhost'
 export function MindmapWireLayer() {
 	const wireIds = useMindmapWireIds()
 	const [svgGroup, setSvgGroup] = useState<SVGGElement | null>(null)
-	const store = useStore<RootState>()
+	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
 	useLayoutEffect(() => {
 		svgGroup?.style.setProperty('--grid-scale', String(MindmapState.scale))
@@ -31,23 +32,31 @@ export function MindmapWireLayer() {
 
 	const [popoverState, setPopoverState] = useState<Omit<MindmapWireState, 'onClose'>>({
 		open: false,
+		wireId: null,
 		position: { x: 0, y: 0 },
 		mode: 'doubleClick',
 	})
 
 	const onOpenPopover = useCallback(
-		(position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => {
-			const state = store.getState().mindmap
-			const isBulkSelectContext = state.selectedNodes.length + state.selectedWires.length > 1
+		({
+			wireId,
+			position,
+			mode,
+		}: {
+			wireId: string
+			position: { x: number; y: number }
+			mode: 'doubleClick' | 'contextMenu'
+		}) => {
+			const isBulkSelectContext = selectedNodes.size() + selectedWires.size() > 1
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position,
 				})
 			} else {
-				setPopoverState({ open: true, position, mode })
+				setPopoverState({ open: true, wireId, position, mode })
 			}
 		},
-		[store],
+		[selectedNodes, selectedWires],
 	)
 
 	useMindmapPainter((navState) => {

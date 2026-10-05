@@ -13,7 +13,11 @@ import { MindmapWireLabel } from './label/MindmapWireLabel'
 type Props = {
 	wireId: string
 	svgGroupPortal: SVGGElement
-	onOpenPopover: (position: { x: number; y: number }, mode: 'doubleClick' | 'contextMenu') => void
+	onOpenPopover: (params: {
+		wireId: string
+		position: { x: number; y: number }
+		mode: 'doubleClick' | 'contextMenu'
+	}) => void
 }
 
 export function MindmapWireLine({ wireId, ...props }: Props) {
