@@ -4,8 +4,7 @@ import { RefObject } from 'react'
 import { useClipboard } from '@/app/features/clipboard/useClipboard'
 import { pluralize } from '@/app/utils/pluralize'
 
-import { useDeleteMindmapNodes } from '../../api/useDeleteMindmapNodes'
-import { useDeleteMindmapWires } from '../../api/useDeleteMindmapWires'
+import { useMindmapContext } from '../../context/useMindmapContext'
 import { useMindmapPasteData } from './useMindmapPasteData'
 
 const STRUCTURED_DATA_TYPE = 'application/x-neverkin+json'
@@ -16,8 +15,7 @@ type Props = {
 
 export function MindmapClipboardManager({ containerRef }: Props) {
 	const { createPasteData, applyPasteData, getCurrentSelection } = useMindmapPasteData()
-	const [deleteNodes] = useDeleteMindmapNodes()
-	const [deleteWires] = useDeleteMindmapWires()
+	const { deleteNodes, deleteWires } = useMindmapContext()
 
 	useClipboard({
 		containerRef,

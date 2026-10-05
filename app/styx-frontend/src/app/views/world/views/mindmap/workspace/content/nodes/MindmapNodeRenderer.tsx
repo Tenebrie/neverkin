@@ -1,14 +1,12 @@
 import Box from '@mui/material/Box'
 import { darken, lighten } from '@mui/material/styles'
 import React, { memo, useCallback, useRef } from 'react'
-import { useStore } from 'react-redux'
 
 import { useDragDropReceiver } from '@/app/features/dragDrop/hooks/useDragDropReceiver'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
-import { RootState } from '@/app/store'
+import { useMindmapSelectionContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { useNodeLinking } from '@/app/views/world/views/mindmap/hooks/useNodeLinking'
-import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 
@@ -28,7 +26,7 @@ export const MindmapNodeRenderer = memo(MindmapNodeRendererComponent)
 
 function MindmapNodeRendererComponent({ parent, nodeId, onHeaderClick }: Props) {
 	const { createLinks } = useNodeLinking()
-	const store = useStore<RootState>()
+	const { selectedNodes } = useMindmapSelectionContext()
 
 	const theme = useCustomTheme()
 	const isStickyNote = parent.type === 'node' && parent.entity.content.length === 0
@@ -37,7 +35,7 @@ function MindmapNodeRendererComponent({ parent, nodeId, onHeaderClick }: Props) 
 		type: 'mindmapNodeLinking',
 		onDrop: (data) => {
 			const sourceNodeId = data.params.sourceNodeId
-			const selectedNodeKeys = getSelectedNodeKeys(store.getState())
+			const selectedNodeKeys = selectedNodes.keys()
 			const sourceIds = selectedNodeKeys.includes(sourceNodeId)
 				? [...new Set(selectedNodeKeys)]
 				: [sourceNodeId]

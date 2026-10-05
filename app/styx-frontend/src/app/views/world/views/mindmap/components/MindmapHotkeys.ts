@@ -1,25 +1,21 @@
-import { useDispatch, useSelector } from 'react-redux'
-
 import { dispatchGlobalEvent } from '@/app/features/eventBus'
+import { useReactiveMapKeys } from '@/app/features/reactivity/useReactiveMap'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
-import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
-import { useMindmapContext } from '../context/useMindmapContext'
-import { mindmapSlice } from '../MindmapSlice'
-import { getSelectedNodeKeys, getSelectedWireKeys } from '../MindmapSliceSelectors'
+import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
 
 export function MindmapHotkeys() {
-	const selectedNodes = useSelector(getSelectedNodeKeys)
-	const selectedWires = useSelector(getSelectedWireKeys)
-	const [deleteMindmapNodes] = useDeleteMindmapNodes()
-	const [deleteMindmapWires] = useDeleteMindmapWires()
-	const { nodes } = useMindmapContext()
+	const { nodes, deleteNodes, deleteWires } = useMindmapContext()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
-	const { clearSelections } = mindmapSlice.actions
-	const dispatch = useDispatch()
+	const {
+		selectedNodes: selectedNodesMap,
+		selectedWires: selectedWiresMap,
+		clearSelections,
+	} = useMindmapSelectionContext()
+	const selectedNodes = useReactiveMapKeys(selectedNodesMap)
+	const selectedWires = useReactiveMapKeys(selectedWiresMap)
 
 	useShortcut(
 		Shortcut.EditSelected,
@@ -42,12 +38,12 @@ export function MindmapHotkeys() {
 		Shortcut.DeleteSelected,
 		() => {
 			if (selectedNodes.length > 0) {
-				deleteMindmapNodes(selectedNodes)
+				deleteNodes(selectedNodes)
 			}
 			if (selectedWires.length > 0) {
-				deleteMindmapWires(selectedWires)
+				deleteWires(selectedWires)
 			}
-			dispatch(clearSelections())
+			clearSelections()
 		},
 		selectedNodes.length > 0 || selectedWires.length > 0,
 	)

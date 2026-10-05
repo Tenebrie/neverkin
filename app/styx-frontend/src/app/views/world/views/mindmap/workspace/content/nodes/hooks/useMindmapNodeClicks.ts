@@ -1,14 +1,11 @@
 import { RefObject, useCallback, useLayoutEffect, useRef } from 'react'
-import { useDispatch, useStore } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
-import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
+import { dispatchGlobalEvent } from '@/app/features/eventBus'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
 import { useDraggableClick } from '@/app/hooks/useDraggableClick'
-import { RootState } from '@/app/store'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import { useMindmapSelectionContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
@@ -21,39 +18,33 @@ type Props = {
 
 export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const store = useStore<RootState>()
-	const dispatch = useDispatch()
-	const { addNodeToSelection, removeNodeFromSelection } = mindmapSlice.actions
+	const { selectedNodes, selectedWires, addNodeToSelection, removeNodeFromSelection } =
+		useMindmapSelectionContext()
 	const selectedRef = useRef(false)
-	const { selectedNodesCache } = useMindmapContext()
-
-	// TODO: Unify the two paths into a ReactiveMap in context
-	useEventBusSubscribe['mindmap/selection/changed']({
-		callback: ({ selectedNodeIds }) => {
-			const isSelected = selectedNodeIds.has(node.id)
-			selectedRef.current = isSelected
-			ref.current?.setAttribute('data-selected', String(isSelected))
-		},
-	})
 
 	useLayoutEffect(() => {
-		if (selectedNodesCache.current.some((entry) => entry.key === node.id)) {
+		if (selectedNodes.has(node.id)) {
 			selectedRef.current = true
 			ref.current?.setAttribute('data-selected', 'true')
 		}
-	}, [node.id, ref, selectedNodesCache])
+		return selectedNodes.subscribe(node.id, () => {
+			const isSelected = selectedNodes.has(node.id)
+			selectedRef.current = isSelected
+			ref.current?.setAttribute('data-selected', String(isSelected))
+		})
+	}, [node.id, ref, selectedNodes])
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			onClick()
 			if (selectedRef.current) {
-				dispatch(removeNodeFromSelection(node.id))
+				removeNodeFromSelection(node.id)
 			} else {
-				dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect }))
+				addNodeToSelection({ id: node.id, multiselect })
 			}
 		},
 		onDoubleClick: () => {
-			dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect: false }))
+			addNodeToSelection({ id: node.id, multiselect: false })
 			if (parent.type === 'folder') {
 				return
 			}
@@ -78,10 +69,8 @@ export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
-			const state = store.getState().mindmap
 			const isBulkSelectContext =
-				state.selectedNodes.length + state.selectedWires.length > 1 &&
-				state.selectedNodes.some((selectedNode) => selectedNode.key === node.id)
+				selectedNodes.size() + selectedWires.size() > 1 && selectedNodes.has(node.id)
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position: {
@@ -90,7 +79,7 @@ export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 					},
 				})
 			} else {
-				dispatch(addNodeToSelection({ key: node.id, actorId: parent.id, multiselect: false }))
+				addNodeToSelection({ id: node.id, multiselect: false })
 				dispatchGlobalEvent['mindmap/node/requestOpenContextMenu']({
 					position: {
 						x: event.clientX,

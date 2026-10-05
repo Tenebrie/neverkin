@@ -5,15 +5,13 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useState } from 'react'
-import { useDispatch } from 'react-redux'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
-import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
-import { mindmapSlice } from '../MindmapSlice'
+import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
 import { MindmapNodeParentParcel } from '../types'
 
 export function MindmapNodeContextMenu() {
@@ -21,12 +19,11 @@ export function MindmapNodeContextMenu() {
 	const [position, setPosition] = useState({ x: 0, y: 0 })
 	const [node, setNode] = useState<MindmapNode | null>(null)
 	const [parent, setParent] = useState<MindmapNodeParentParcel | null>(null)
-	const dispatch = useDispatch()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
+	const { deleteNodes } = useMindmapContext()
+	const { clearSelections } = useMindmapSelectionContext()
 
 	const { open: openBulkDeleteEntitiesModal } = useModal('bulkDeleteEntitiesModal')
-
-	const [deleteNode] = useDeleteMindmapNodes()
 
 	useEventBusSubscribe['mindmap/node/requestOpenContextMenu']({
 		callback: (params) => {
@@ -54,7 +51,7 @@ export function MindmapNodeContextMenu() {
 			onClose={(_, reason) => {
 				setOpen(false)
 				if (reason === 'backdropClick') {
-					dispatch(mindmapSlice.actions.clearSelections())
+					clearSelections()
 				}
 			}}
 			disableAutoFocusItem
@@ -81,7 +78,7 @@ export function MindmapNodeContextMenu() {
 			<MenuItem
 				color="error"
 				onClick={() => {
-					deleteNode([node.id])
+					deleteNodes([node.id])
 					setOpen(false)
 				}}
 			>

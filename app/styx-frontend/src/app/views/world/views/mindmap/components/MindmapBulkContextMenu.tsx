@@ -4,42 +4,38 @@ import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useMemo, useState } from 'react'
-import { useSelector } from 'react-redux'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
 
-import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
-import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
-import { getMindmapState } from '../MindmapSliceSelectors'
+import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
 
 export function MindmapBulkContextMenu() {
 	const [open, setOpen] = useState(false)
 	const [position, setPosition] = useState({ x: 0, y: 0 })
+	const [targetNodes, setTargetNodes] = useState<string[]>([])
+	const [targetWires, setTargetWires] = useState<string[]>([])
+	const { deleteNodes, deleteWires } = useMindmapContext()
 
-	const { selectedNodes, selectedWires } = useSelector(
-		getMindmapState,
-		(a, b) => a.selectedNodes === b.selectedNodes && a.selectedWires === b.selectedWires,
-	)
-
-	const [deleteMindmapNodes] = useDeleteMindmapNodes()
-	const [deleteMindmapWires] = useDeleteMindmapWires()
+	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
 	useEventBusSubscribe['mindmap/bulk/requestOpenContextMenu']({
 		callback: (params) => {
 			setOpen(true)
 			setPosition(params.position)
+			setTargetNodes(selectedNodes.keys())
+			setTargetWires(selectedWires.keys())
 		},
 	})
 
 	const bulkDeleteLabel = useMemo(() => {
-		if (selectedNodes.length > 0 && selectedWires.length === 0) {
-			return `Delete ${selectedNodes.length} nodes`
+		if (targetNodes.length > 0 && targetWires.length === 0) {
+			return `Delete ${targetNodes.length} nodes`
 		}
-		if (selectedWires.length > 0 && selectedNodes.length === 0) {
-			return `Delete ${selectedWires.length} links`
+		if (targetWires.length > 0 && targetNodes.length === 0) {
+			return `Delete ${targetWires.length} links`
 		}
-		return `Delete ${selectedNodes.length + selectedWires.length} items`
-	}, [selectedNodes, selectedWires])
+		return `Delete ${targetNodes.length + targetWires.length} items`
+	}, [targetNodes, targetWires])
 
 	return (
 		<Menu
@@ -57,8 +53,8 @@ export function MindmapBulkContextMenu() {
 			<MenuItem
 				color="error"
 				onClick={() => {
-					deleteMindmapNodes(selectedNodes.map((node) => node.key))
-					deleteMindmapWires(selectedWires)
+					deleteNodes(targetNodes)
+					deleteWires(targetWires)
 					setOpen(false)
 				}}
 			>

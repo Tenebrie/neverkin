@@ -6,6 +6,10 @@ export class ReactiveMap<Key, Value> {
 	private listeners = new Map<Key, Set<Listener>>()
 	private keyListeners = new Set<Listener>()
 
+	has(key: Key) {
+		return this.data.has(key)
+	}
+
 	get(key: Key) {
 		return this.data.get(key)
 	}
@@ -13,6 +17,10 @@ export class ReactiveMap<Key, Value> {
 	keys() {
 		this.keyList ??= [...this.data.keys()]
 		return this.keyList
+	}
+
+	size() {
+		return this.keys().length
 	}
 
 	values() {

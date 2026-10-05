@@ -1,12 +1,12 @@
 import { useRef } from 'react'
-import { useDispatch, useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { RootState } from '@/app/store'
 import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import {
+	useMindmapContext,
+	useMindmapSelectionContext,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 import {
@@ -14,7 +14,6 @@ import {
 	WireControlPoints,
 } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 import { WORKSPACE_SIZE } from '@/app/views/world/views/mindmap/workspace/MindmapWorkspace'
-import { deduplicateBy } from '@/ts-shared/utils/deduplicateBy'
 import {
 	SelectionBox,
 	SelectionBoxHandle,
@@ -26,9 +25,9 @@ type Props = {
 }
 
 export function MindmapSelectionBox({ ref }: Props) {
-	const store = useStore<RootState>()
-	const dispatch = useDispatch()
 	const { wireGeometry } = useMindmapContext()
+	const { selectedNodes, selectedWires, setNodeSelection, setWireSelection, clearSelections } =
+		useMindmapSelectionContext()
 	const selectionBoxHandle = useRef<SelectionBoxHandle>(null)
 	const lastScale = useRef(MindmapState.scale)
 
@@ -47,25 +46,23 @@ export function MindmapSelectionBox({ ref }: Props) {
 		if (isMultiselectEvent(event)) {
 			return
 		}
-		dispatch(mindmapSlice.actions.clearSelections())
+		clearSelections()
 	})
 
 	const onUpdateSelection = useEvent((rect: SelectionRect, event: MouseEvent) => {
-		const { selectedNodes, selectedWires } = store.getState().mindmap
-
 		const intersectingNodes = checkNodeIntersection(ref.current, rect)
 		const intersectingWires = checkWireIntersection(ref.current, rect, wireGeometry)
 		let newSelectedNodes: ReturnType<typeof checkNodeIntersection> = []
 		let newSelectedWires: ReturnType<typeof checkWireIntersection> = []
 
 		if (isMultiselectEvent(event)) {
-			newSelectedNodes.push(...selectedNodes)
-			newSelectedWires.push(...selectedWires)
+			newSelectedNodes.push(...selectedNodes.keys())
+			newSelectedWires.push(...selectedWires.keys())
 		}
 
 		if (isMultiselectAltEvent(event)) {
 			newSelectedNodes = newSelectedNodes.filter(
-				(node) => !intersectingNodes.some((intersectingNode) => intersectingNode.key === node.key),
+				(node) => !intersectingNodes.some((intersectingNode) => intersectingNode === node),
 			)
 			newSelectedWires = newSelectedWires.filter(
 				(wireId) => !intersectingWires.some((intersectingWireId) => intersectingWireId === wireId),
@@ -75,22 +72,11 @@ export function MindmapSelectionBox({ ref }: Props) {
 			newSelectedWires.push(...intersectingWires)
 		}
 
-		newSelectedNodes = deduplicateBy(newSelectedNodes, (node) => node.key)
+		newSelectedNodes = [...new Set(newSelectedNodes)]
 		newSelectedWires = [...new Set(newSelectedWires)]
 
-		const nodesChanged =
-			selectedNodes.length !== newSelectedNodes.length ||
-			!selectedNodes.every((node) => newSelectedNodes.some((newNode) => newNode.key === node.key))
-		const wiresChanged =
-			selectedWires.length !== newSelectedWires.length ||
-			!selectedWires.every((wireId, i) => wireId === newSelectedWires[i])
-
-		if (nodesChanged) {
-			dispatch(mindmapSlice.actions.setNodeSelection(newSelectedNodes))
-		}
-		if (wiresChanged) {
-			dispatch(mindmapSlice.actions.setWireSelection(newSelectedWires))
-		}
+		setNodeSelection(newSelectedNodes)
+		setWireSelection(newSelectedWires)
 	})
 
 	return (
@@ -109,7 +95,7 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 		return []
 	}
 	const nodes = document.querySelectorAll('[data-mindmap-node]')
-	const selectedNodeIds = [] as { key: string; actorId: string }[]
+	const selectedNodeIds = [] as string[]
 
 	// Normalize selection box coordinates (handle negative width/height)
 	const boxLeft = selectionBox.width < 0 ? selectionBox.x + selectionBox.width : selectionBox.x
@@ -134,14 +120,13 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 
 		if (intersects) {
 			const nodeId = nodeElement.getAttribute('data-mindmap-node')
-			const actorId = nodeElement.getAttribute('data-entity-id')
-			if (nodeId && actorId) {
-				selectedNodeIds.push({ key: nodeId, actorId })
+			if (nodeId) {
+				selectedNodeIds.push(nodeId)
 			}
 		}
 	})
 
-	return deduplicateBy(selectedNodeIds, (item) => item.key)
+	return [...new Set(selectedNodeIds)]
 }
 
 function checkWireIntersection(

@@ -1,17 +1,14 @@
 import { useEffect, useRef } from 'react'
-import { useDispatch } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
-import { mindmapSlice } from '@/app/views/world/views/mindmap/MindmapSlice'
+import { useMindmapSelectionContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 
 type Props = {
 	nodeId: string
-	entityId: string
 }
 
-export function useMindmapNodeHover({ nodeId, entityId }: Props) {
-	const dispatch = useDispatch()
-	const { addNodeToHover, removeNodeFromHover } = mindmapSlice.actions
+export function useMindmapNodeHover({ nodeId }: Props) {
+	const { addNodeToHover, removeNodeFromHover } = useMindmapSelectionContext()
 	const isDraggingRef = useRef(false)
 	const isHoverSuppressedRef = useRef(false)
 	const hoverTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null)
@@ -20,12 +17,12 @@ export function useMindmapNodeHover({ nodeId, entityId }: Props) {
 		clearTimeout(hoverTimeoutRef.current ?? undefined)
 		hoverTimeoutRef.current = null
 
-		const action = isHovered ? addNodeToHover({ key: nodeId, entityId }) : removeNodeFromHover(nodeId)
+		const action = isHovered ? () => addNodeToHover(nodeId) : () => removeNodeFromHover(nodeId)
 
 		if (delay === 0) {
-			dispatch(action)
+			action()
 		} else {
-			hoverTimeoutRef.current = setTimeout(() => dispatch(action), delay)
+			hoverTimeoutRef.current = setTimeout(action, delay)
 		}
 	})
 
@@ -63,9 +60,9 @@ export function useMindmapNodeHover({ nodeId, entityId }: Props) {
 	useEffect(
 		() => () => {
 			clearTimeout(hoverTimeoutRef.current ?? undefined)
-			dispatch(mindmapSlice.actions.removeNodeFromHover(nodeId))
+			removeNodeFromHover(nodeId)
 		},
-		[dispatch, nodeId],
+		[nodeId, removeNodeFromHover],
 	)
 
 	return { handleMouseEnter, handleMouseLeave, cancelPendingHover, onDragStart, onDragEnd }

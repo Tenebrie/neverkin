@@ -1,6 +1,5 @@
 import { useEffect, useRef, useState } from 'react'
 import { createPortal } from 'react-dom'
-import { useStore } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
@@ -9,10 +8,11 @@ import { useDragDropEnded } from '@/app/features/dragDrop/hooks/useDragDropEnded
 import { useDragDropStarted } from '@/app/features/dragDrop/hooks/useDragDropStarted'
 import { useDragDropState } from '@/app/features/dragDrop/hooks/useDragDropState'
 import { useEventBusSubscribe } from '@/app/features/eventBus'
-import { RootState } from '@/app/store'
 import { isNotNull } from '@/app/utils/isNotNull'
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { getSelectedNodeKeys } from '@/app/views/world/views/mindmap/MindmapSliceSelectors'
+import {
+	useMindmapContext,
+	useMindmapSelectionContext,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 
 import { getNodeLayout } from '../utils/getNodeLayout'
@@ -25,7 +25,7 @@ type Props = {
 
 export function MindmapWireGhost({ svgGroupPortal }: Props) {
 	const { nodes, nodeLayouts, wires } = useMindmapContext()
-	const store = useStore<RootState>()
+	const { selectedNodes } = useMindmapSelectionContext()
 	const { paint } = useRealtimeContext(MindmapWireGhostContext)
 
 	const [sourceNodes, setSourceNodes] = useState<MindmapNode[]>([])
@@ -43,7 +43,7 @@ export function MindmapWireGhost({ svgGroupPortal }: Props) {
 		type: 'mindmapNodeLinking',
 		callback: ({ params }) => {
 			const sourceId = params.sourceNodeId
-			const selectedKeys = getSelectedNodeKeys(store.getState())
+			const selectedKeys = selectedNodes.keys()
 			const sourceIds = selectedKeys.includes(sourceId) ? selectedKeys : [sourceId]
 
 			wirePairs.current = new Set(

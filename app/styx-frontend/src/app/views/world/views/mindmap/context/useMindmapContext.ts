@@ -2,9 +2,14 @@ import { useRealtimeContext } from '@/app/components/RealtimeContext/useRealtime
 import { useReactiveMapKeys, useReactiveMapValue } from '@/app/features/reactivity/useReactiveMap'
 
 import { MindmapContext } from './MindmapContext'
+import { MindmapSelectionContext } from './MindmapSelectionContext'
 
 export function useMindmapContext() {
 	return useRealtimeContext(MindmapContext)
+}
+
+export function useMindmapSelectionContext() {
+	return useRealtimeContext(MindmapSelectionContext)
 }
 
 export function useMindmapNode(id: string) {
