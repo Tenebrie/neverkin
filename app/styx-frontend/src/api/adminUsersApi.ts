@@ -141,15 +141,23 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			nodes: {
+			worlds: {
 				total: number
 				created: number[]
 			}
-			actors: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			assets: {
 				total: number
 				created: number[]
 			}
 			events: {
+				total: number
+				created: number[]
+			}
+			actors: {
 				total: number
 				created: number[]
 			}
@@ -165,15 +173,7 @@ export type AdminGetDashboardApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			worlds: {
-				total: number
-				created: number[]
-			}
-			assets: {
+			nodes: {
 				total: number
 				created: number[]
 			}
@@ -338,15 +338,23 @@ export type AdminGetUserApiResponse = /** status 200  */ {
 	contentStats: {
 		days: string[]
 		entities: {
-			nodes: {
+			worlds: {
 				total: number
 				created: number[]
 			}
-			actors: {
+			calendars: {
+				total: number
+				created: number[]
+			}
+			assets: {
 				total: number
 				created: number[]
 			}
 			events: {
+				total: number
+				created: number[]
+			}
+			actors: {
 				total: number
 				created: number[]
 			}
@@ -362,15 +370,7 @@ export type AdminGetUserApiResponse = /** status 200  */ {
 				total: number
 				created: number[]
 			}
-			calendars: {
-				total: number
-				created: number[]
-			}
-			worlds: {
-				total: number
-				created: number[]
-			}
-			assets: {
+			nodes: {
 				total: number
 				created: number[]
 			}
@@ -393,19 +393,7 @@ export type AdminGetUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
 }
-export type AdminDeleteUserApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	deletedAt?: null | string
-	deletionScheduledAt?: null | string
-	email: string
-	username: string
-	password: string
-	bio: string
-	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	avatarId?: null | string
-}
+export type AdminDeleteUserApiResponse = unknown
 export type AdminDeleteUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
@@ -414,14 +402,11 @@ export type AdminUpdateUserApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	deletedAt?: null | string
-	deletionScheduledAt?: null | string
 	email: string
 	username: string
-	password: string
 	bio: string
 	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	avatarId?: null | string
+	featureFlags: string[]
 }
 export type AdminUpdateUserApiArg = {
 	/** Any string value with at least one character */
@@ -432,21 +417,7 @@ export type AdminUpdateUserApiArg = {
 		bio?: string
 	}
 }
-export type AdminImpersonateUserApiResponse = /** status 200  */ {
-	user: {
-		id: string
-		createdAt: string
-		updatedAt: string
-		deletedAt?: null | string
-		deletionScheduledAt?: null | string
-		email: string
-		username: string
-		password: string
-		bio: string
-		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-		avatarId?: null | string
-	}
-}
+export type AdminImpersonateUserApiResponse = unknown
 export type AdminImpersonateUserApiArg = {
 	/** Any string value with at least one character */
 	userId: string
@@ -455,14 +426,11 @@ export type AdminSetUserLevelApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	deletedAt?: null | string
-	deletionScheduledAt?: null | string
 	email: string
 	username: string
-	password: string
 	bio: string
 	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	avatarId?: null | string
+	featureFlags: string[]
 }
 export type AdminSetUserLevelApiArg = {
 	/** Any string value with at least one character */
@@ -471,19 +439,7 @@ export type AdminSetUserLevelApiArg = {
 		level: 'Guest' | 'Free' | 'Premium' | 'Admin'
 	}
 }
-export type AdminSetUserPasswordApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	deletedAt?: null | string
-	deletionScheduledAt?: null | string
-	email: string
-	username: string
-	password: string
-	bio: string
-	level: 'Guest' | 'Free' | 'Premium' | 'Admin'
-	avatarId?: null | string
-}
+export type AdminSetUserPasswordApiResponse = unknown
 export type AdminSetUserPasswordApiArg = {
 	/** Any string value with at least one character */
 	userId: string

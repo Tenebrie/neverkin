@@ -162,10 +162,6 @@ router.post('/api/admin/user/:userId/impersonate', async (ctx) => {
 			impersonatedUserId: user.id,
 		},
 	})
-
-	return {
-		user,
-	}
 })
 
 router.post('/api/admin/users/:userId/level', async (ctx) => {
@@ -212,7 +208,7 @@ router.delete('/api/admin/users/:userId', async (ctx) => {
 		},
 	})
 
-	return await AdminService.deleteUser(userId)
+	await AdminService.deleteUser(userId)
 })
 
 router.patch('/api/admin/users/:userId', async (ctx) => {
@@ -276,7 +272,7 @@ router.post('/api/admin/users/:userId/password', async (ctx) => {
 		},
 	})
 
-	return await AdminService.setUserPassword(userId, password)
+	await AdminService.setUserPassword(userId, password)
 })
 
 export const AdminRouter = router
