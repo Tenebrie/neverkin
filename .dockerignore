@@ -1,6 +1,8 @@
 **/node_modules
 app/**/dist
 test/**/dist
+library/**/dist
+**/*.tsbuildinfo
 **/.idea
 .vscode/
 .github/
