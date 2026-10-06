@@ -190,9 +190,7 @@ services:
 
     rhea-migrate:
         image: timelines-rhea:dev
-        build:
-            context: ./
-            dockerfile: ./app/rhea-backend/Dockerfile
+        pull_policy: never
         environment:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         volumes:
