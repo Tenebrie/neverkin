@@ -25,7 +25,7 @@
 		"migrate": "./scripts/dev-migrate.sh",
 		"dev": "npm run docker:start",
 		"docker": "npm run docker:start",
-		"docker:start": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up --build",
+		"docker:start": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml up",
 		"docker:build": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml build --no-cache",
 		"docker:preview": "docker compose -f docker-compose.ci.yml up --build",
 		"docker:down": ". ./scripts/prepare-local-dev.sh && docker compose -f docker-compose.common.yml -f docker-compose.dev.yml down",
