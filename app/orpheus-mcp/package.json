@@ -19,7 +19,7 @@
 		"inspector": "npx @modelcontextprotocol/inspector"
 	},
 	"dependencies": {
-		"@modelcontextprotocol/sdk": "^1.30.0",
+		"@modelcontextprotocol/sdk": "^1.32.1",
 		"@neverkin/esoteric-date": "file:../../library/esoteric-date",
 		"@types/jsonwebtoken": "^9.0.10",
 		"@types/ws": "^8.5.10",
