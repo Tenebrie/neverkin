@@ -12,7 +12,7 @@
 		}
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "tsc -b",
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix",
 		"test": "vitest --run src/**",

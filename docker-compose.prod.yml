@@ -83,12 +83,6 @@ services:
             - s3-access-key-secret
             - webhook-contact-form-url
             - imagen-google-api-key
-        healthcheck:
-            test: ["CMD", "curl", "-f", "http://localhost:3000/health"]
-            interval: 15s
-            timeout: 30s
-            retries: 3
-            start_period: 30s
     calliope:
         image: tenebrie/timelines-calliope:${VERSION}
         build:

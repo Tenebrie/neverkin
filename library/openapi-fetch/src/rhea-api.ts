@@ -90,130 +90,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/dashboard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for the admin panel */
-        get: operations["adminGetDashboard"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/audit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch audit logs */
-        get: operations["adminGetAuditLogs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets list of all registered users */
-        get: operations["adminGetUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for a single user */
-        get: operations["adminGetUser"];
-        put?: never;
-        post?: never;
-        /** @description Deletes the user with the given ID */
-        delete: operations["adminDeleteUser"];
-        options?: never;
-        head?: never;
-        /** @description Updates the user information for the given user */
-        patch: operations["adminUpdateUser"];
-        trace?: never;
-    };
-    "/api/admin/user/{userId}/impersonate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Admin impersonate user endpoint
-         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
-         */
-        post: operations["adminImpersonateUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/level": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the user level for the given user */
-        post: operations["adminSetUserLevel"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the password for the given user */
-        post: operations["adminSetUserPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
     "/api/announcements": {
         parameters: {
             query?: never;
@@ -979,6 +855,193 @@ export interface paths {
         get: operations["getImageGenerationHistory"];
         put?: never;
         post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets the mindmap for the target world */
+        get: operations["getMindmap"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates a new node */
+        post: operations["createNode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/{nodeId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Updates the target node */
+        patch: operations["updateNode"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/{nodeId}/reparent": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Updates the target node parent */
+        post: operations["reparentNode"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/move": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Moves multiple nodes by a delta in a single transaction */
+        post: operations["moveMindmapNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/paste": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Handles clipboard pasting of nodes and wires */
+        post: operations["pasteMindmapNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/nodes/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Deletes the target nodes */
+        post: operations["deleteNodes"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
+        post: operations["createMindmapWires"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires/{wireId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        /** @description Updates the target mindmap wire */
+        patch: operations["updateMindmapWire"];
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires/{wireId}/split": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Inserts a plain node linked two endpoints of the wire */
+        post: operations["splitMindmapWire"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/wires/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Deletes specified mindmap wires */
+        post: operations["deleteMindmapWires"];
         delete?: never;
         options?: never;
         head?: never;
@@ -1826,15 +1889,15 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap": {
+    "/api/admin/dashboard": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        /** @description Gets the mindmap for the target world */
-        get: operations["getMindmap"];
+        /** @description Gets dashboard information for the admin panel */
+        get: operations["adminGetDashboard"];
         put?: never;
         post?: never;
         delete?: never;
@@ -1843,143 +1906,60 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/nodes": {
+    "/api/admin/audit": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** @description Creates a new node */
-        post: operations["createNode"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/{nodeId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
+        /** @description Fetch audit logs */
+        get: operations["adminGetAuditLogs"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** @description Updates the target node */
-        patch: operations["updateNode"];
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/{nodeId}/reparent": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Updates the target node parent */
-        post: operations["reparentNode"];
-        delete?: never;
-        options?: never;
-        head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/nodes/move": {
+    "/api/admin/users": {
         parameters: {
             query?: never;
             header?: never;
             path?: never;
             cookie?: never;
         };
-        get?: never;
-        put?: never;
-        /** @description Moves multiple nodes by a delta in a single transaction */
-        post: operations["moveMindmapNodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/paste": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Handles clipboard pasting of nodes and wires */
-        post: operations["pasteMindmapNodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/nodes/delete": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Deletes the target nodes */
-        post: operations["deleteNodes"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/wires": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Creates new mindmap wires between nodes, or updates existing ones if the direction is changed */
-        post: operations["createMindmapWires"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/wires/{wireId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
+        /** @description Gets list of all registered users */
+        get: operations["adminGetUsers"];
         put?: never;
         post?: never;
         delete?: never;
         options?: never;
         head?: never;
-        /** @description Updates the target mindmap wire */
-        patch: operations["updateMindmapWire"];
+        patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/wires/{wireId}/split": {
+    "/api/admin/users/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets dashboard information for a single user */
+        get: operations["adminGetUser"];
+        put?: never;
+        post?: never;
+        /** @description Deletes the user with the given ID */
+        delete: operations["adminDeleteUser"];
+        options?: never;
+        head?: never;
+        /** @description Updates the user information for the given user */
+        patch: operations["adminUpdateUser"];
+        trace?: never;
+    };
+    "/api/admin/user/{userId}/impersonate": {
         parameters: {
             query?: never;
             header?: never;
@@ -1988,15 +1968,18 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Inserts a plain node linked two endpoints of the wire */
-        post: operations["splitMindmapWire"];
+        /**
+         * Admin impersonate user endpoint
+         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
+         */
+        post: operations["adminImpersonateUser"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/wires/delete": {
+    "/api/admin/users/{userId}/level": {
         parameters: {
             query?: never;
             header?: never;
@@ -2005,8 +1988,25 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Deletes specified mindmap wires */
-        post: operations["deleteMindmapWires"];
+        /** @description Sets the user level for the given user */
+        post: operations["adminSetUserLevel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets the password for the given user */
+        post: operations["adminSetUserPassword"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2329,572 +2329,6 @@ export interface operations {
             };
         };
     };
-    adminGetDashboard: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                        fileSystemStats: {
-                            root: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                            database: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminGetAuditLogs: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        logs: {
-                            data: string;
-                            user: null | {
-                                id: string;
-                                email: string;
-                                username: string;
-                            };
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            userId?: null | string;
-                            requestIp: string;
-                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
-                            dedupeKey?: null | string;
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUsers: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
-                sortDirection?: "asc" | "desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        users: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                            activity: {
-                                activeDays: number;
-                                regular: boolean;
-                                lastActiveAt?: null | string;
-                            };
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                        };
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminDeleteUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminUpdateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminImpersonateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            deletedAt?: null | string;
-                            deletionScheduledAt?: null | string;
-                            email: string;
-                            username: string;
-                            password: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            avatarId?: null | string;
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminSetUserLevel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-                "application/x-www-form-urlencoded": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    adminSetUserPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    password: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        deletedAt?: null | string;
-                        deletionScheduledAt?: null | string;
-                        email: string;
-                        username: string;
-                        password: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        avatarId?: null | string;
-                    };
-                };
-            };
-        };
-    };
     getAnnouncements: {
         parameters: {
             query?: never;
@@ -3039,9 +2473,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3091,9 +2525,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             ownerId: string;
+                            size: number;
                             expiresAt?: null | string;
                             bucketKey: string;
-                            size: number;
                             originalFileName: string;
                             originalFileExtension: string;
                             contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3141,9 +2575,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         ownerId: string;
+                        size: number;
                         expiresAt?: null | string;
                         bucketKey: string;
-                        size: number;
                         originalFileName: string;
                         originalFileExtension: string;
                         contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3360,9 +2794,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 ownerId: string;
+                                size: number;
                                 expiresAt?: null | string;
                                 bucketKey: string;
-                                size: number;
                                 originalFileName: string;
                                 originalFileExtension: string;
                                 contentType: "Avatar" | "ImageConversion" | "ImageGeneration" | "DataMigrationExport" | "DataMigrationImport" | "ImageEmbed";
@@ -3435,9 +2869,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            position: number;
                             calendarId: string;
                             presentationId: string;
-                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
@@ -3533,9 +2967,9 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            position: number;
                             calendarId: string;
                             presentationId: string;
-                            position: number;
                             formatString: string;
                             subdivision: number;
                             labeledIndices: number[];
@@ -3597,9 +3031,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        position: number;
                         calendarId: string;
                         presentationId: string;
-                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3637,9 +3071,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        position: number;
                         calendarId: string;
                         presentationId: string;
-                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3690,9 +3124,9 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        position: number;
                         calendarId: string;
                         presentationId: string;
-                        position: number;
                         formatString: string;
                         subdivision: number;
                         labeledIndices: number[];
@@ -3804,8 +3238,8 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                calendarId: string;
                                 position: number;
+                                calendarId: string;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3818,8 +3252,8 @@ export interface operations {
                                 createdAt: string;
                                 /** Format: date-time */
                                 updatedAt: string;
-                                calendarId: string;
                                 position: number;
+                                calendarId: string;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -3832,8 +3266,8 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
-                            calendarId: string;
                             position: number;
+                            calendarId: string;
                             displayName?: null | string;
                             displayNameShort?: null | string;
                             displayNamePlural?: null | string;
@@ -3852,9 +3286,9 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name: string;
+                                position: number;
                                 calendarId: string;
                                 presentationId: string;
-                                position: number;
                                 formatString: string;
                                 subdivision: number;
                                 labeledIndices: number[];
@@ -3997,8 +3431,8 @@ export interface operations {
                         units: {
                             children: {
                                 id: string;
-                                calendarId: string;
                                 position: number;
+                                calendarId: string;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -4007,8 +3441,8 @@ export interface operations {
                             }[];
                             parents: {
                                 id: string;
-                                calendarId: string;
                                 position: number;
+                                calendarId: string;
                                 label?: null | string;
                                 shortLabel?: null | string;
                                 repeats: number;
@@ -4028,23 +3462,6 @@ export interface operations {
                             duration: string;
                             treeDepth: number;
                         }[];
-                        presentations: {
-                            units: {
-                                id: string;
-                                name: string;
-                                calendarId: string;
-                                position: number;
-                                formatString: string;
-                                subdivision: number;
-                                labeledIndices: number[];
-                                unitId: string;
-                            }[];
-                            id: string;
-                            name: string;
-                            compression: number;
-                            scaleFactor: number;
-                            baselineUnitId?: null | string;
-                        }[];
                         seasons: {
                             intervals: {
                                 id: string;
@@ -4061,6 +3478,23 @@ export interface operations {
                             name: string;
                             position: number;
                             formatShorthand?: null | string;
+                        }[];
+                        presentations: {
+                            units: {
+                                id: string;
+                                name: string;
+                                position: number;
+                                calendarId: string;
+                                formatString: string;
+                                subdivision: number;
+                                labeledIndices: number[];
+                                unitId: string;
+                            }[];
+                            id: string;
+                            name: string;
+                            compression: number;
+                            scaleFactor: number;
+                            baselineUnitId?: null | string;
                         }[];
                         description: string;
                         id: string;
@@ -4119,8 +3553,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendarId: string;
                         position: number;
+                        calendarId: string;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -4161,8 +3595,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendarId: string;
                         position: number;
+                        calendarId: string;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -4236,8 +3670,8 @@ export interface operations {
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            calendarId: string;
                             position: number;
+                            calendarId: string;
                             label?: null | string;
                             shortLabel?: null | string;
                             repeats: number;
@@ -4250,8 +3684,8 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
-                        calendarId: string;
                         position: number;
+                        calendarId: string;
                         displayName?: null | string;
                         displayNameShort?: null | string;
                         displayNamePlural?: null | string;
@@ -5463,6 +4897,620 @@ export interface operations {
                         size: number;
                         pageCount: number;
                     };
+                };
+            };
+        };
+    };
+    getMindmap: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        nodes: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentActorId?: null | string;
+                            parentEventId?: null | string;
+                            parentArticleId?: null | string;
+                            positionX: number;
+                            positionY: number;
+                            parentTagId?: null | string;
+                        }[];
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    createNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    id?: string;
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    id?: string;
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    updateNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    name?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    reparentNode: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                nodeId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX?: number;
+                    positionY?: number;
+                    parentActorId?: string;
+                    parentArticleId?: string;
+                    parentEventId?: string;
+                    parentFolderId?: string;
+                    parentTagId?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    };
+                };
+            };
+        };
+    };
+    moveMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+                "application/x-www-form-urlencoded": {
+                    nodeIds: string[];
+                    deltaX: number;
+                    deltaY: number;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        worldId: string;
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        name: string;
+                        content: string;
+                        contentRich: string;
+                        parentFolderId?: null | string;
+                        parentActorId?: null | string;
+                        parentEventId?: null | string;
+                        parentArticleId?: null | string;
+                        positionX: number;
+                        positionY: number;
+                        parentTagId?: null | string;
+                    }[];
+                };
+            };
+        };
+    };
+    pasteMindmapNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    originX: number;
+                    originY: number;
+                    pasteData: {
+                        nodes: {
+                            tempId: string;
+                            offsetX: number;
+                            offsetY: number;
+                            parentId?: null | string;
+                            parentType: "actor" | "tag" | "event" | "article" | "node" | "folder";
+                            plainNodeName: string;
+                        }[];
+                        internalLinks: {
+                            sourceTempId: string;
+                            targetTempId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                        externalLinks: {
+                            sourceTempId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                    };
+                };
+                "application/x-www-form-urlencoded": {
+                    originX: number;
+                    originY: number;
+                    pasteData: {
+                        nodes: {
+                            tempId: string;
+                            offsetX: number;
+                            offsetY: number;
+                            parentId?: null | string;
+                            parentType: "actor" | "tag" | "event" | "article" | "node" | "folder";
+                            plainNodeName: string;
+                        }[];
+                        internalLinks: {
+                            sourceTempId: string;
+                            targetTempId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                        externalLinks: {
+                            sourceTempId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                        }[];
+                    };
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        nodes: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentActorId?: null | string;
+                            parentEventId?: null | string;
+                            parentArticleId?: null | string;
+                            positionX: number;
+                            positionY: number;
+                            parentTagId?: null | string;
+                        }[];
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    deleteNodes: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    nodes: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    nodes: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        count: number;
+                    };
+                };
+            };
+        };
+    };
+    createMindmapWires: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+                "application/x-www-form-urlencoded": {
+                    wires: {
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        created: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                        updated: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    updateMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    direction?: "Normal" | "Reversed" | "TwoWay";
+                    content?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                    };
+                };
+            };
+        };
+    };
+    splitMindmapWire: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+                wireId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+                "application/x-www-form-urlencoded": {
+                    positionX: number;
+                    positionY: number;
+                    name: string;
+                    direction: "Normal" | "Reversed" | "TwoWay";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        node: {
+                            worldId: string;
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            content: string;
+                            contentRich: string;
+                            parentFolderId?: null | string;
+                            parentActorId?: null | string;
+                            parentEventId?: null | string;
+                            parentArticleId?: null | string;
+                            positionX: number;
+                            positionY: number;
+                            parentTagId?: null | string;
+                        };
+                        wires: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                        }[];
+                    };
+                };
+            };
+        };
+    };
+    deleteMindmapWires: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    wires: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    wires: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": string[];
                 };
             };
         };
@@ -6901,8 +6949,8 @@ export interface operations {
                             units: {
                                 children: {
                                     id: string;
-                                    calendarId: string;
                                     position: number;
+                                    calendarId: string;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6911,8 +6959,8 @@ export interface operations {
                                 }[];
                                 parents: {
                                     id: string;
-                                    calendarId: string;
                                     position: number;
+                                    calendarId: string;
                                     label?: null | string;
                                     shortLabel?: null | string;
                                     repeats: number;
@@ -6932,23 +6980,6 @@ export interface operations {
                                 duration: string;
                                 treeDepth: number;
                             }[];
-                            presentations: {
-                                units: {
-                                    id: string;
-                                    name: string;
-                                    calendarId: string;
-                                    position: number;
-                                    formatString: string;
-                                    subdivision: number;
-                                    labeledIndices: number[];
-                                    unitId: string;
-                                }[];
-                                id: string;
-                                name: string;
-                                compression: number;
-                                scaleFactor: number;
-                                baselineUnitId?: null | string;
-                            }[];
                             seasons: {
                                 intervals: {
                                     id: string;
@@ -6965,6 +6996,23 @@ export interface operations {
                                 name: string;
                                 position: number;
                                 formatShorthand?: null | string;
+                            }[];
+                            presentations: {
+                                units: {
+                                    id: string;
+                                    name: string;
+                                    position: number;
+                                    calendarId: string;
+                                    formatString: string;
+                                    subdivision: number;
+                                    labeledIndices: number[];
+                                    unitId: string;
+                                }[];
+                                id: string;
+                                name: string;
+                                compression: number;
+                                scaleFactor: number;
+                                baselineUnitId?: null | string;
                             }[];
                             description: string;
                             id: string;
@@ -8285,12 +8333,235 @@ export interface operations {
             };
         };
     };
-    getMindmap: {
+    adminGetDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
+                        }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
+                        fileSystemStats: {
+                            root: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                            database: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminGetAuditLogs: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        logs: {
+                            data: string;
+                            user: null | {
+                                id: string;
+                                email: string;
+                                username: string;
+                            };
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            userId?: null | string;
+                            requestIp: string;
+                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
+                            dedupeKey?: null | string;
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUsers: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        users: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
+                            activity: {
+                                activeDays: number;
+                                regular: boolean;
+                                lastActiveAt?: null | string;
+                            };
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUser: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                worldId: string;
+                /** @description Any string value with at least one character */
+                userId: string;
             };
             cookie?: never;
         };
@@ -8302,589 +8573,160 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        nodes: {
+                        user: {
                             id: string;
                             /** Format: date-time */
                             createdAt: string;
                             /** Format: date-time */
                             updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            positionX: number;
-                            positionY: number;
-                            content: string;
-                            contentRich: string;
-                            parentActorId?: null | string;
-                            parentArticleId?: null | string;
-                            parentEventId?: null | string;
-                            parentFolderId?: null | string;
-                            parentTagId?: null | string;
-                        }[];
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    createNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    id?: string;
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    id?: string;
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    updateNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX?: number;
-                    positionY?: number;
-                    name?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    reparentNode: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                nodeId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX?: number;
-                    positionY?: number;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX?: number;
-                    positionY?: number;
-                    parentActorId?: string;
-                    parentArticleId?: string;
-                    parentEventId?: string;
-                    parentFolderId?: string;
-                    parentTagId?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    };
-                };
-            };
-        };
-    };
-    moveMindmapNodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    nodeIds: string[];
-                    deltaX: number;
-                    deltaY: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    }[];
-                };
-            };
-        };
-    };
-    pasteMindmapNodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    originX: number;
-                    originY: number;
-                    pasteData: {
-                        nodes: {
-                            tempId: string;
-                            offsetX: number;
-                            offsetY: number;
-                            parentId?: null | string;
-                            parentType: "actor" | "tag" | "node" | "article" | "event" | "folder";
-                            plainNodeName: string;
-                        }[];
-                        internalLinks: {
-                            sourceTempId: string;
-                            targetTempId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                        }[];
-                        externalLinks: {
-                            sourceTempId: string;
-                            targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                        }[];
-                    };
-                };
-                "application/x-www-form-urlencoded": {
-                    originX: number;
-                    originY: number;
-                    pasteData: {
-                        nodes: {
-                            tempId: string;
-                            offsetX: number;
-                            offsetY: number;
-                            parentId?: null | string;
-                            parentType: "actor" | "tag" | "node" | "article" | "event" | "folder";
-                            plainNodeName: string;
-                        }[];
-                        internalLinks: {
-                            sourceTempId: string;
-                            targetTempId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                        }[];
-                        externalLinks: {
-                            sourceTempId: string;
-                            targetNodeId: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                        }[];
-                    };
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        nodes: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            positionX: number;
-                            positionY: number;
-                            content: string;
-                            contentRich: string;
-                            parentActorId?: null | string;
-                            parentArticleId?: null | string;
-                            parentEventId?: null | string;
-                            parentFolderId?: null | string;
-                            parentTagId?: null | string;
-                        }[];
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    deleteNodes: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    nodes: string[];
-                };
-                "application/x-www-form-urlencoded": {
-                    nodes: string[];
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        count: number;
-                    };
-                };
-            };
-        };
-    };
-    createMindmapWires: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-                "application/x-www-form-urlencoded": {
-                    wires: {
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        created: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                        updated: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
-                        }[];
-                    };
-                };
-            };
-        };
-    };
-    updateMindmapWire: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    direction?: "Normal" | "Reversed" | "TwoWay";
-                    content?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    };
-                };
-            };
-        };
-    };
-    splitMindmapWire: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    positionX: number;
-                    positionY: number;
-                    name: string;
-                    direction: "Normal" | "Reversed" | "TwoWay";
-                };
-                "application/x-www-form-urlencoded": {
-                    positionX: number;
-                    positionY: number;
-                    name: string;
-                    direction: "Normal" | "Reversed" | "TwoWay";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        node: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            name: string;
-                            worldId: string;
-                            positionX: number;
-                            positionY: number;
-                            content: string;
-                            contentRich: string;
-                            parentActorId?: null | string;
-                            parentArticleId?: null | string;
-                            parentEventId?: null | string;
-                            parentFolderId?: null | string;
-                            parentTagId?: null | string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
                         };
-                        wires: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            direction: "Normal" | "Reversed" | "TwoWay";
-                            content: string;
-                            sourceNodeId: string;
-                            targetNodeId: string;
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
                         }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
                     };
                 };
             };
         };
     };
-    deleteMindmapWires: {
+    adminDeleteUser: {
         parameters: {
             query?: never;
             header?: never;
             path: {
-                worldId: string;
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
             };
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    wires: string[];
+                    email?: string;
+                    username?: string;
+                    bio?: string;
                 };
                 "application/x-www-form-urlencoded": {
-                    wires: string[];
+                    email?: string;
+                    username?: string;
+                    bio?: string;
                 };
             };
         };
@@ -8894,8 +8736,110 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content: {
-                    "application/json": string[];
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        email: string;
+                        username: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        featureFlags: string[];
+                    };
                 };
+            };
+        };
+    };
+    adminImpersonateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminSetUserLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+                "application/x-www-form-urlencoded": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        email: string;
+                        username: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        featureFlags: string[];
+                    };
+                };
+            };
+        };
+    };
+    adminSetUserPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    password: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    password: string;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
             };
         };
     };
