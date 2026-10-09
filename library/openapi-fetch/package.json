@@ -13,7 +13,7 @@
 	},
 	"scripts": {
 		"openapi": "openapi-typescript http://localhost:3000/api-json -o ./src/rhea-api.ts",
-		"build": "tsc",
+		"build": "tsc -b",
 		"lint": "eslint src/",
 		"lint:fix": "eslint src/ --fix"
 	},

@@ -11,11 +11,6 @@ networks:
 
 services:
     gatekeeper:
-        depends_on:
-            - styx
-            - rhea
-            - calliope
-            - thetis
         tty: false
         networks:
             - frontend-styx
@@ -25,23 +20,30 @@ services:
             - backend-orpheus
     styx:
         working_dir: /app/styx
-        depends_on:
-            - rhea
         networks:
             - frontend-styx
     rhea:
         working_dir: /app/rhea
         depends_on:
-            - rhea-postgres
-            - redis
+            rhea-postgres:
+                condition: service_healthy
+            redis:
+                condition: service_healthy
         networks:
             - backend-rhea
             - backend-rhea-db
             - backend-redis
+        healthcheck:
+            test: ["CMD", "wget", "-q", "--spider", "http://localhost:3000/health"]
+            interval: 15s
+            timeout: 30s
+            retries: 3
+            start_period: 30s
     calliope:
         working_dir: /app/calliope
         depends_on:
-            - redis
+            redis:
+                condition: service_healthy
         networks:
             - backend-rhea
             - backend-calliope
@@ -49,8 +51,8 @@ services:
     orpheus:
         working_dir: /app/orpheus
         depends_on:
-            - rhea
-            - redis
+            redis:
+                condition: service_healthy
         networks:
             - backend-rhea
             - backend-orpheus
@@ -77,6 +79,11 @@ services:
         image: redis:8-alpine
         networks:
             - backend-redis
+        healthcheck:
+            test: ["CMD-SHELL", "redis-cli ping | grep -q PONG"]
+            interval: 5s
+            timeout: 3s
+            retries: 5
     chronos:
         environment:
             POSTGRES_HOST: rhea-postgres
@@ -84,6 +91,7 @@ services:
             POSTGRES_PASSWORD: docker
             POSTGRES_DB: db
         depends_on:
-            - rhea-postgres
+            rhea-postgres:
+                condition: service_healthy
         networks:
             - backend-rhea-db

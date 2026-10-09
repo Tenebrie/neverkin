@@ -185,23 +185,27 @@ export const AdminService = {
 	},
 
 	setUserLevel: async (userId: string, level: UserLevel) => {
-		return getPrismaClient().user.update({
+		const user = await getPrismaClient().user.update({
 			where: {
 				id: userId,
 			},
 			data: {
 				level,
 			},
+			select: adminUserSelect,
 		})
+		return flattenFeatureFlags(user)
 	},
 
 	updateUser: async (userId: string, data: UserUncheckedUpdateInput) => {
-		return getPrismaClient().user.update({
+		const user = await getPrismaClient().user.update({
 			where: {
 				id: userId,
 			},
 			data,
+			select: adminUserSelect,
 		})
+		return flattenFeatureFlags(user)
 	},
 
 	setUserPassword: async (userId: string, password: string) => {

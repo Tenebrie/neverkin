@@ -11,10 +11,7 @@ import { useCallback, useMemo, useState } from 'react'
 import { MindmapWireDirection } from '@/api/types/mindmapTypes'
 import { Shortcut, ShortcutPriorities, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapData'
-import {
-	useMindmapContext,
-	useMindmapSelectionContext,
-} from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 
 import { NODE_FALLBACK_H, NODE_W } from '../../nodes/MindmapNodeRenderer'
 import { midpointOf } from '../canvas/MindmapCanvasMath'
@@ -31,8 +28,6 @@ export type MindmapWireState = {
 export function MindmapWireContextMenu({ open, wireId, position, onClose }: MindmapWireState) {
 	const { wires } = useMindmapData()
 	const { wireGeometry, splitWire, updateWire, deleteWires } = useMindmapContext()
-
-	const { selectedWires } = useMindmapSelectionContext()
 
 	const currentWire = useMemo(() => wires.find((wire) => wire.id === wireId), [wireId, wires])
 
@@ -78,7 +73,6 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 			}}
 			onContextMenu={(event) => {
 				event.preventDefault()
-				handleClose()
 			}}
 		>
 			{currentWire && (

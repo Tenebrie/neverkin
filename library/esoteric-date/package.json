@@ -12,7 +12,7 @@
 		}
 	},
 	"scripts": {
-		"build": "tsc",
+		"build": "tsc -b",
 		"tsc": "tsc --noEmit",
 		"test": "vitest --run src/**",
 		"test:watch": "vitest src/**",

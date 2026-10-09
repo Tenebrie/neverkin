@@ -1,6 +1,6 @@
 import { useEffect } from 'react'
 
-export function useCloseMenusOnRightClick() {
+export function usePreventDefaultOnRightClick() {
 	useEffect(() => {
 		function handleContextMenu(event: MouseEvent) {
 			if (event.shiftKey) {
@@ -18,8 +18,6 @@ export function useCloseMenusOnRightClick() {
 			}
 
 			event.preventDefault()
-
-			backdrops.forEach((backdrop) => backdrop.click())
 		}
 
 		document.addEventListener('contextmenu', handleContextMenu, true)

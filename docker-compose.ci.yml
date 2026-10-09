@@ -118,7 +118,7 @@ services:
         depends_on:
             rhea-postgres:
                 condition: service_healthy
-        command: sh -c "npx prisma migrate deploy"
+        command: sh -c "npx prisma migrate deploy && node dist/prisma/seed.js"
         networks:
             - dev-playwright
 

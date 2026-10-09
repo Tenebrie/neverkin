@@ -91,6 +91,8 @@ services:
         ports:
             - 3000:3000
         command: npm run start
+        healthcheck:
+            start_interval: 1s
         tty: true
         restart: unless-stopped
         networks:
@@ -186,13 +188,13 @@ services:
             - 5432:5432
         volumes:
             - rhea-db:/var/lib/postgresql/data/:cached
+        healthcheck:
+            start_interval: 1s
         restart: unless-stopped
 
     rhea-migrate:
         image: timelines-rhea:dev
-        build:
-            context: ./
-            dockerfile: ./app/rhea-backend/Dockerfile
+        pull_policy: never
         environment:
             DATABASE_URL: postgresql://docker:docker@rhea-postgres:5432/db?schema=public
         volumes:
@@ -222,6 +224,9 @@ services:
     redis:
         ports:
             - "6379:6379"
+        healthcheck:
+            start_period: 10s
+            start_interval: 1s
 
     s3-minio:
         image: pgsty/minio:RELEASE.2026-08-04T00-00-00Z
@@ -241,6 +246,8 @@ services:
             interval: 5s
             timeout: 5s
             retries: 3
+            start_period: 10s
+            start_interval: 1s
         networks:
             - dev-minio
 
