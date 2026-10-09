@@ -73,7 +73,6 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 			}}
 			onContextMenu={(event) => {
 				event.preventDefault()
-				handleClose()
 			}}
 		>
 			{currentWire && (

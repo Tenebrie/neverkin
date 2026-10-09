@@ -82,7 +82,6 @@ export function QuickSelectListComponent(props: Props) {
 					return
 				}
 				event.preventDefault()
-				close()
 			}}
 		>
 			<QuickSelectListContent pos={pos} query={query} {...props} />

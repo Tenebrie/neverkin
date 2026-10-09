@@ -19,7 +19,7 @@ import { useSavedPreferences } from './features/preferences/hooks/useSavedPrefer
 import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
 import { CustomThemeProvider } from './features/theming/context/CustomThemeProvider'
 import { UndoRedoManager } from './features/undoRedo/UndoRedoManager'
-import { useCloseMenusOnRightClick } from './hooks/useCloseMenusOnRightClick'
+import { usePreventDefaultOnRightClick } from './hooks/usePreventDefaultOnRightClick'
 import { useShortcutManager } from './hooks/useShortcut/useShortcutManager'
 import { DeleteAccountModal } from './views/profile/modals/DeleteAccountModal'
 import { DeleteAssetModal } from './views/profile/modals/DeleteAssetModal'
@@ -37,7 +37,7 @@ const App = () => {
 	useLiveUpdates()
 	useSavedPreferences()
 	useShortcutManager()
-	useCloseMenusOnRightClick()
+	usePreventDefaultOnRightClick()
 
 	useEffect(() => {
 		if (process.env.NODE_ENV === 'development') {
