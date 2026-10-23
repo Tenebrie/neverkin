@@ -4,8 +4,8 @@
 	"icons": [
 		{
 			"src": "favicon.ico",
-			"sizes": "64x64 32x32 24x24 16x16",
-			"type": "image/x-icon"
+			"type": "image/x-icon",
+			"sizes": "256x256"
 		},
 		{
 			"src": "logo192.png",
@@ -16,8 +16,23 @@
 			"src": "logo512.png",
 			"type": "image/png",
 			"sizes": "512x512"
+		},
+		{
+			"src": "logo-maskable.png",
+			"type": "image/png",
+			"sizes": "512x512",
+			"purpose": "maskable"
 		}
 	],
+	"screenshots": [
+		{
+			"src": "screenshot-wide.jpg",
+			"type": "image/jpeg",
+			"sizes": "1920x1002",
+			"form_factor": "wide"
+		}
+	],
+	"id": "/",
 	"start_url": ".",
 	"display": "standalone",
 	"theme_color": "#000000",
