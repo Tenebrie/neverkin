@@ -1,6 +1,7 @@
 {
-	"short_name": "Neverkin",
 	"name": "Neverkin",
+	"short_name": "Neverkin",
+	"description": "An open-source worldbuilding platform for people. Organize your lore, timelines and mindmaps in real-time with friends. Just write something neat.",
 	"icons": [
 		{
 			"src": "favicon.ico",
