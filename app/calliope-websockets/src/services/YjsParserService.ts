@@ -2,7 +2,7 @@ import { createTiptapExtensionSchema } from '@neverkin/tiptap-schema'
 import type { Extensions } from '@tiptap/core'
 import { getSchema } from '@tiptap/core'
 import { generateHTML, generateJSON } from '@tiptap/html'
-import { prosemirrorJSONToYXmlFragment, yXmlFragmentToProseMirrorRootNode } from '@tiptap/y-tiptap'
+import { prosemirrorJSONToYXmlFragment, yXmlFragmentToProseMirrorFragment } from '@tiptap/y-tiptap'
 import type * as Y from 'yjs'
 
 const extensions = createTiptapExtensionSchema<Extensions>()
@@ -14,6 +14,6 @@ export function htmlToYDoc(html: string, doc: Y.Doc): void {
 }
 
 export function yDocToHtml(doc: Y.Doc): string {
-	const node = yXmlFragmentToProseMirrorRootNode(doc.getXmlFragment('default'), schema)
-	return generateHTML(node.toJSON(), extensions)
+	const content = yXmlFragmentToProseMirrorFragment(doc.getXmlFragment('default'), schema)
+	return generateHTML(schema.topNodeType.create(null, content).toJSON(), extensions)
 }
