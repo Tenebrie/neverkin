@@ -30,7 +30,7 @@
 		"zod": "^4.6.5"
 	},
 	"devDependencies": {
-		"@modelcontextprotocol/inspector": "^2.5.0",
+		"@modelcontextprotocol/inspector": "^2.11.0",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@types/node": "^25.6.2",
 		"@typescript-eslint/eslint-plugin": "^8.69.0",
