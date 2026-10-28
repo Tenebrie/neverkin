@@ -4,6 +4,7 @@ model MindmapNode {
   updatedAt DateTime @default(now()) @updatedAt
 
   name        String @default("")
+  color       String @default("#6b7a99")
   content     String @default("")
   contentRich String @default("")
   positionX   Int

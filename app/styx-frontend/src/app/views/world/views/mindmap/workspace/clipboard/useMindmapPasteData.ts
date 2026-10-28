@@ -114,6 +114,7 @@ export function useMindmapPasteData() {
 				offsetX: Math.round(nodeParcel.node.positionX - geometricCenter.x),
 				offsetY: Math.round(nodeParcel.node.positionY - geometricCenter.y),
 				plainNodeName: nodeParcel.node.name,
+				plainNodeColor: nodeParcel.node.color,
 			}
 
 			structuredData.nodes.push(stateEntry)

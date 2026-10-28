@@ -132,6 +132,7 @@ export function SavedColors({ currentColor, onSelectColor, size = 32, allowSave,
 					return (
 						<Tooltip key={savedColor.id} title={tooltipTitle} disableInteractive enterDelay={700}>
 							<Box
+								data-testid={`SavedColor/${savedColor.id}`}
 								onClick={() => onSelectColor(savedColor.value)}
 								onContextMenu={(e) => handleContextMenu(e, savedColor.id, savedColor.isBuiltin)}
 								sx={{

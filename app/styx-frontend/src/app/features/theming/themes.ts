@@ -168,6 +168,14 @@ export const customLightTheme = {
 				end: 'rgba(200, 30, 30, 0.4)',
 			},
 		},
+		userDefinedColor: {
+			fill: (color: string) => `oklch(from ${color} calc(0.85 + l * 0.07) calc(c * 0.3) h)`,
+			border: (color: string) => `oklch(from ${color} calc(0.7 + l * 0.1) calc(c * 0.45) h)`,
+			borderHover: (color: string) => `oklch(from ${color} calc(0.5 + l * 0.1) calc(c * 0.45) h)`,
+			borderActive: (color: string) => `oklch(from ${color} calc(0.6 + l * 0.1) calc(c * 0.45) h)`,
+			borderSelected: (color: string) => `oklch(from ${color} 0.32 calc(c * 0.45) h)`,
+			borderSelectedActive: (color: string) => `oklch(from ${color} 0.44 calc(c * 0.45) h)`,
+		},
 		neutralBackground: {
 			contrastText: 'rgb(0 0 0 / 38%)',
 			normal: 'rgb(0 0 0 / 20%)',
@@ -218,6 +226,14 @@ export const customDarkTheme: typeof customLightTheme = {
 				start: 'rgba(255, 100, 100, 0.9)',
 				end: 'rgba(255, 100, 100, 0.4)',
 			},
+		},
+		userDefinedColor: {
+			fill: (color: string) => `oklch(from ${color} calc(0.2 + l * 0.15) calc(c * 0.3) h)`,
+			border: (color: string) => `oklch(from ${color} calc(0.3 + l * 0.17) calc(c * 0.52) h)`,
+			borderHover: (color: string) => `oklch(from ${color} calc(0.46 + l * 0.17) calc(c * 0.52) h)`,
+			borderActive: (color: string) => `oklch(from ${color} calc(0.38 + l * 0.17) calc(c * 0.52) h)`,
+			borderSelected: (color: string) => `oklch(from ${color} 0.88 calc(c * 0.52) h)`,
+			borderSelectedActive: (color: string) => `oklch(from ${color} 0.74 calc(c * 0.52) h)`,
 		},
 		neutralBackground: {
 			contrastText: 'rgb(255, 255, 255, 38%)',

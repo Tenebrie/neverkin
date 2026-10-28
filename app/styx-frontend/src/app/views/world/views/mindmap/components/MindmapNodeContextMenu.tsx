@@ -1,5 +1,6 @@
 import Delete from '@mui/icons-material/Delete'
 import Edit from '@mui/icons-material/Edit'
+import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
@@ -9,6 +10,7 @@ import { useState } from 'react'
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { WikiContextMenuColorPicker } from '@/app/views/world/views/wiki/components/WikiContextMenuColorPicker'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
@@ -58,6 +60,8 @@ export function MindmapNodeContextMenu() {
 			disableRestoreFocus
 			disableEnforceFocus
 		>
+			<WikiContextMenuColorPicker article={parent} onClose={() => setOpen(false)} />
+			<Divider sx={{ my: 1 }} />
 			{parent.type !== 'folder' && (
 				<MenuItem
 					onClick={() => {

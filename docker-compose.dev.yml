@@ -34,9 +34,6 @@ services:
             - ./app/ts-shared/src:/app/ts-shared/src:cached
             - ./library:/library:cached
             - type: bind
-              source: ./app/styx-frontend/vite.config.ts
-              target: /app/styx/vite.config.ts
-            - type: bind
               source: ./app/styx-frontend/rsbuild.config.ts
               target: /app/styx/rsbuild.config.ts
             - type: bind
