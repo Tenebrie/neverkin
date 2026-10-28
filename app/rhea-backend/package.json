@@ -38,7 +38,7 @@
 		"redis": "^6.3.0",
 		"sharp": "^0.35.5",
 		"ws": "^8.22.0",
-		"zod": "^4.6.5"
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
 		"@prisma/internals": "^7.10.0",
