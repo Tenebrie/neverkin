@@ -228,8 +228,8 @@ export const customDarkTheme: typeof customLightTheme = {
 			},
 		},
 		userDefinedColor: {
-			fill: (color: string) => `oklch(from ${color} calc(0.2 + l * 0.15) calc(c * 0.3) h)`,
-			border: (color: string) => `oklch(from ${color} calc(0.3 + l * 0.17) calc(c * 0.52) h)`,
+			fill: (color: string) => `oklch(from ${color} calc(0.2 + l * 0.1) calc(c * 0.3) h)`,
+			border: (color: string) => `oklch(from ${color} calc(0.3 + l * 0.13) calc(c * 0.52) h)`,
 			borderHover: (color: string) => `oklch(from ${color} calc(0.46 + l * 0.17) calc(c * 0.52) h)`,
 			borderActive: (color: string) => `oklch(from ${color} calc(0.38 + l * 0.17) calc(c * 0.52) h)`,
 			borderSelected: (color: string) => `oklch(from ${color} 0.88 calc(c * 0.52) h)`,
