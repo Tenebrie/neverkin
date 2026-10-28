@@ -104,6 +104,7 @@ cmd_backup() {
     # Step 2: Create restic snapshot
     echo ""
     echo -e "${YELLOW}Step 2/3: Creating snapshot...${NC}"
+    restic -r "${RESTIC_REPOSITORY}" unlock
     restic -r "${RESTIC_REPOSITORY}" backup /data/backup
     
     # Step 3: Apply retention policy to keep the repository tidy

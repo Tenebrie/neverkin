@@ -11,7 +11,8 @@
 			"prunePolicy": {
 				"maxUnusedPercent": 25
 			},
-			"autoInitialize": true
+			"autoInitialize": true,
+			"autoUnlock": true
 		}
 	],
 	"plans": [
