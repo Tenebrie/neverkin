@@ -11,7 +11,7 @@ import { useSearch } from '@tanstack/react-router'
 import { useEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { RichTextEditorWordCountSlotContext } from '@/app/features/richTextEditor/portals/RichTextEditorWordCountSlotContext'
+import { WORD_COUNT_ANCHOR } from '@/app/features/richTextEditor/RichTextEditorWordCount'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 type Props = {
@@ -34,7 +34,6 @@ export function EntityEditorTabs({
 	const [tab, setTab] = useState(defaultTab)
 	const [mountedTabs, setMountedTabs] = useState<Set<number>>(new Set([defaultTab]))
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
-	const [wordCountSlot, setWordCountSlot] = useState<HTMLElement | null>(null)
 
 	const handleChange = useEvent((tab: number) => {
 		setTab(tab)
@@ -56,7 +55,13 @@ export function EntityEditorTabs({
 	}, [defaultTab])
 
 	return (
-		<Stack direction="row" width="100%" height="100%" gap={1} sx={{ flex: 1 }}>
+		<Stack
+			direction="row"
+			width="100%"
+			height="100%"
+			gap={1}
+			sx={{ flex: 1, anchorScope: WORD_COUNT_ANCHOR }}
+		>
 			<Box
 				sx={{
 					height: '100%',
@@ -64,9 +69,7 @@ export function EntityEditorTabs({
 					display: tab === 0 ? 'block' : 'none',
 				}}
 			>
-				<RichTextEditorWordCountSlotContext value={wordCountSlot}>
-					{mountedTabs.has(0) && contentTab}
-				</RichTextEditorWordCountSlotContext>
+				{mountedTabs.has(0) && contentTab}
 			</Box>
 			<Box
 				sx={{
@@ -143,12 +146,12 @@ export function EntityEditorTabs({
 					</Tooltip>
 				</Tabs>
 				<Box
-					ref={setWordCountSlot}
 					sx={{
 						display: tab === 0 ? 'block' : 'none',
-						paddingBlock: 1,
-						textAlign: 'center',
-						contain: 'inline-size',
+						height: 24,
+						marginBlock: 1,
+						anchorName: WORD_COUNT_ANCHOR,
+						pointerEvents: 'none',
 						...(fluidHeight && { position: 'sticky', bottom: 8 }),
 					}}
 				/>
