@@ -84,7 +84,7 @@ router.patch('/api/world/:worldId/mindmap/nodes/:nodeId', async (ctx) => {
 		positionX: z.number().optional(),
 		positionY: z.number().optional(),
 		name: EntityNameSchema.optional(),
-		color: z.string().max(16).optional(),
+		color: z.string().max(64).optional(),
 	})
 
 	const node = await MindmapService.updateNode(

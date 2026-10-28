@@ -3,8 +3,10 @@ import type { SetupServer } from 'msw/node'
 import { UpdateActorApiResponse } from '../actorListApi'
 import { GetAnnouncementsApiResponse } from '../announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from '../authApi'
+import { UpdateNodeApiResponse } from '../mindmapApi'
 import { ListWorldAccessModesApiResponse } from '../otherApi'
 import { GetWorldCollaboratorsApiResponse } from '../worldCollaboratorsApi'
+import { GetWorldColorsApiResponse } from '../worldColorApi'
 import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '../worldDetailsApi'
 import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from '../worldEventApi'
 import { CreateWorldApiResponse, DeleteWorldApiResponse, GetWorldsApiResponse } from '../worldListApi'
@@ -74,6 +76,21 @@ export const mockUpdateWorldEvent = (
 		path: `/api/world/${params.worldId}/event/${params.eventId}`,
 		...params,
 	})
+
+export const mockUpdateMindmapNode = (
+	server: SetupServer,
+	params: { worldId: string; nodeId: string } & MockParams<UpdateNodeApiResponse>,
+) =>
+	generateEndpointMock(server, {
+		method: 'patch',
+		path: `/api/world/${params.worldId}/mindmap/nodes/${params.nodeId}`,
+		...params,
+	})
+
+export const mockGetWorldColors = (
+	server: SetupServer,
+	params: { worldId: string } & MockParams<GetWorldColorsApiResponse>,
+) => generateEndpointMock(server, { method: 'get', path: `/api/worlds/${params.worldId}/colors`, ...params })
 
 export const mockDeleteWorldEvent = (
 	server: SetupServer,

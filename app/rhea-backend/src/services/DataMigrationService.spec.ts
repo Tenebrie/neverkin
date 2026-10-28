@@ -175,6 +175,7 @@ const makeMindmapNode = (
 		createdAt: now,
 		updatedAt: now,
 		name: '',
+		color: '#6b7a99',
 		content: '',
 		contentRich: '',
 		worldId,
@@ -1131,6 +1132,30 @@ describe('DataMigrationService', () => {
 
 			expect(tx.mindmapNode.createMany).toHaveBeenCalledWith({
 				data: [expect.objectContaining({ id: 'n1' }), expect.objectContaining({ id: 'n2' })],
+			})
+		})
+
+		it('imports mindmap node colors', async () => {
+			const world = makeWorld(userId)
+			world.mindmapNodes = [{ ...makeMindmapNode(world.id, 'n1'), color: '#ff3b30' }]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.mindmapNode.createMany).toHaveBeenCalledWith({
+				data: [expect.objectContaining({ id: 'n1', color: '#ff3b30' })],
+			})
+		})
+
+		it('imports mindmap nodes exported before node colors existed', async () => {
+			const world = makeWorld(userId)
+			const { color: _color, ...nodeWithoutColor } = makeMindmapNode(world.id, 'n1')
+			// @ts-expect-error Deliberate type mismatch
+			world.mindmapNodes = [nodeWithoutColor]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			expect(tx.mindmapNode.createMany).toHaveBeenCalledWith({
+				data: [expect.not.objectContaining({ color: expect.anything() })],
 			})
 		})
 

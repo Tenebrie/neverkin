@@ -562,6 +562,7 @@ export const exportedUserDataSchema = z.object({
 									createdAt: z.date(),
 									updatedAt: z.date(),
 									name: z.string(),
+									color: z.string().optional(),
 									content: z.string(),
 									contentRich: z.string(),
 									worldId: z.string(),

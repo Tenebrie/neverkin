@@ -145,6 +145,36 @@ describe('MindmapRouter', () => {
 			expect(nodes.map((node) => node.id)).not.toContain('b')
 		})
 
+		it.each([
+			'hsl(31, 100%, 50%)',
+			'hsla(31, 100%, 50%, 1.00)',
+			'hsl(31 100% 50% / 0.5)',
+			'#ff3b30',
+			'#f3b',
+			'#ff3b3080',
+			'rgb(255, 59, 48)',
+			'rgba(255, 59, 48, 0.5)',
+			'rgba(255, 59, 48, 0.50000000000000001)',
+			'rgb(255 59 48 / 50%)',
+			'oklch(0.63 0.26 29)',
+			'color(display-p3 1 0.2 0.1)',
+			'rebeccapurple',
+		])('keeps plain node color %s', async (color) => {
+			const response = await api.send({
+				originX: 0,
+				originY: 0,
+				pasteData: {
+					nodes: [plainNode({ tempId: 'a', plainNodeColor: color })],
+					internalLinks: [],
+					externalLinks: [],
+				},
+			})
+
+			expect(response.statusCode).toEqual(200)
+			const node = await db.mindmapNode.findFirstOrThrow()
+			expect(node.color).toEqual(color)
+		})
+
 		it('creates entity nodes with the matching parent column', async () => {
 			const actor = { id: randomUUID(), worldId: world.id, name: 'Actor' }
 			const article = { id: randomUUID(), worldId: world.id, name: 'Article' }

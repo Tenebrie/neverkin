@@ -14,6 +14,7 @@ export const MindmapPasteDataSchema = z.object({
 			parentId: z.string().nullable(),
 			parentType: z.enum(parentType),
 			plainNodeName: z.string(),
+			plainNodeColor: z.string().optional(),
 		}),
 	),
 	internalLinks: z.array(

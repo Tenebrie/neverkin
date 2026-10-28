@@ -3,6 +3,7 @@ import { useDispatch } from 'react-redux'
 import { v4 as getRandomId } from 'uuid'
 
 import { CreateNodeApiArg, mindmapApi, useCreateNodeMutation } from '@/api/mindmapApi'
+import { DefaultColors } from '@/app/features/colors/defaultColors'
 import { AppDispatch } from '@/app/store'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
@@ -19,6 +20,7 @@ export function useCreateMindmapNode() {
 					draft.nodes.push({
 						worldId,
 						name: '',
+						color: DefaultColors.node,
 						content: '',
 						contentRich: '',
 						createdAt: new Date().toISOString(),
