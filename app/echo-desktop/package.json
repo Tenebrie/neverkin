@@ -13,7 +13,7 @@
 		"start": "electron ."
 	},
 	"dependencies": {
-		"@electric-sql/pglite": "^0.5.10",
+		"@electric-sql/pglite": "^0.5.11",
 		"fengari": "^0.1.5",
 		"pglite-prisma-adapter": "^0.7.2"
 	},
