@@ -141,9 +141,9 @@ export function RichTextEditorComponent({
 	}, [value])
 
 	useEffect(() => {
-		const editable = !isReadOnly && (!collaboration || collabSynced)
+		const editable = !isReadOnly && (!collaboration?.documentId || collabSynced)
 		editor?.setEditable(editable)
-	}, [collabSynced, collaboration, editor, isReadOnly])
+	}, [collabSynced, collaboration?.documentId, editor, isReadOnly])
 
 	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {
