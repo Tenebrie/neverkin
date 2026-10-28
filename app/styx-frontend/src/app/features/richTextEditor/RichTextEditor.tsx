@@ -2,6 +2,7 @@ import Box from '@mui/material/Box'
 import { useEditor } from '@tiptap/react'
 import throttle from 'lodash.throttle'
 import { memo, useEffect, useMemo, useRef } from 'react'
+import { createPortal } from 'react-dom'
 import { useSelector } from 'react-redux'
 
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
@@ -16,6 +17,7 @@ import { useDocumentScrollMemory } from './hooks/useDocumentScrollMemory'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
+import { RichTextEditorWordCount } from './RichTextEditorWordCount'
 import { StyledContainer } from './styles'
 
 type Props = {
@@ -30,6 +32,7 @@ type Props = {
 	}
 	autoFocus?: boolean
 	surface?: string
+	wordCountSlot?: HTMLElement | null
 }
 
 export type RichTextEditorProps = Props
@@ -48,6 +51,7 @@ export function RichTextEditorComponent({
 	collaboration,
 	autoFocus,
 	surface = 'default',
+	wordCountSlot,
 }: Props) {
 	const theme = useCustomTheme()
 	const scrollbars = useBrowserSpecificScrollbars()
@@ -199,6 +203,9 @@ export function RichTextEditorComponent({
 					)
 				)}
 			</Box>
+			{wordCountSlot &&
+				displayedEditor &&
+				createPortal(<RichTextEditorWordCount editor={displayedEditor} />, wordCountSlot)}
 			<RichTextEditorQuickSelect editor={editor} />
 		</StyledContainer>
 	)
