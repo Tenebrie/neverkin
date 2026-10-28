@@ -101,6 +101,7 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
 		content: string
 		contentRich: string
 		parentFolderId?: null | string
@@ -130,6 +131,7 @@ export type CreateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
 	content: string
 	contentRich: string
 	parentFolderId?: null | string
@@ -160,6 +162,7 @@ export type UpdateNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
 	content: string
 	contentRich: string
 	parentFolderId?: null | string
@@ -177,6 +180,7 @@ export type UpdateNodeApiArg = {
 		positionX?: number
 		positionY?: number
 		name?: string
+		color?: string
 	}
 }
 export type ReparentNodeApiResponse = /** status 200  */ {
@@ -185,6 +189,7 @@ export type ReparentNodeApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
 	content: string
 	contentRich: string
 	parentFolderId?: null | string
@@ -214,6 +219,7 @@ export type MoveMindmapNodesApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	color: string
 	content: string
 	contentRich: string
 	parentFolderId?: null | string
@@ -239,6 +245,7 @@ export type PasteMindmapNodesApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
 		content: string
 		contentRich: string
 		parentFolderId?: null | string
@@ -350,6 +357,7 @@ export type SplitMindmapWireApiResponse = /** status 200  */ {
 		createdAt: string
 		updatedAt: string
 		name: string
+		color: string
 		content: string
 		contentRich: string
 		parentFolderId?: null | string

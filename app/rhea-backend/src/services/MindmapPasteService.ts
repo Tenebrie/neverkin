@@ -63,6 +63,7 @@ export const MindmapPasteService = {
 							positionX: originX + node.offsetX,
 							positionY: originY + node.offsetY,
 							name: node.parentId === null ? node.plainNodeName : undefined,
+							color: node.parentId === null ? node.plainNodeColor : undefined,
 							...EntityResolverService.resolveNodeParentId(node.parentType, node.parentId),
 						}) satisfies MindmapNodeUncheckedCreateInput,
 				),

@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@rstest/core'
-import { screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 import {
 	mockAuthenticatedUser,
@@ -95,9 +95,6 @@ describe('<Login />', () => {
 			// Type in the fields
 			await user.type(emailInput, 'admin@localhost')
 			await user.type(passwordInput, 'securepassword123')
-
-			// Wait a tick for form validation to complete
-			await new Promise((resolve) => setTimeout(resolve, 100))
 
 			await user.click(signInButton)
 
@@ -210,7 +207,6 @@ describe('<Login />', () => {
 			await user.type(screen.getByLabelText('Email'), '111')
 			await user.click(screen.getByLabelText('Password'))
 
-			await waitForElementToBeRemoved(() => screen.queryByText('Password invalid'))
 			expect(screen.queryByText('Password invalid')).not.toBeInTheDocument()
 		})
 	})

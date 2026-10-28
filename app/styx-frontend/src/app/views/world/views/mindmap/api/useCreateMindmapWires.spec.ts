@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@rstest/core'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { v4 as getRandomId } from 'uuid'
 
@@ -55,13 +55,17 @@ describe('useCreateMindmapWires', () => {
 		const { result } = renderHook(() => useCreateMindmapWires(), { wrapper: renderHookWrapper })
 		const [createWires] = result.current
 
-		const createAB = createWires([{ sourceNodeId: nodeAId, targetNodeId: nodeBId }])
-		const createCD = createWires([{ sourceNodeId: nodeCId, targetNodeId: nodeDId }])
+		const [createAB, createCD] = await act(() => [
+			createWires([{ sourceNodeId: nodeAId, targetNodeId: nodeBId }]),
+			createWires([{ sourceNodeId: nodeCId, targetNodeId: nodeDId }]),
+		])
 		await waitFor(() => expect(releaseResponse.size).toBe(2))
-		releaseResponse.get(nodeAId)?.()
-		await createAB
-		releaseResponse.get(nodeCId)?.()
-		await createCD
+		await act(async () => {
+			releaseResponse.get(nodeAId)?.()
+			await createAB
+			releaseResponse.get(nodeCId)?.()
+			await createCD
+		})
 
 		const mindmapQuery = store.dispatch(mindmapApi.endpoints.getMindmap.initiate({ worldId }))
 		const { data } = await mindmapQuery

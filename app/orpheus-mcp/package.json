@@ -27,10 +27,10 @@
 		"jsonwebtoken": "^9.0.3",
 		"openapi-fetch": "^0.17.0",
 		"redis": "^6.2.1",
-		"zod": "^4.6.5"
+		"zod": "^4.6.7"
 	},
 	"devDependencies": {
-		"@modelcontextprotocol/inspector": "^2.5.0",
+		"@modelcontextprotocol/inspector": "^2.11.0",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
 		"@types/node": "^25.6.2",
 		"@typescript-eslint/eslint-plugin": "^8.69.0",
@@ -47,7 +47,7 @@
 		"tsc-alias": "^1.9.4",
 		"tsx": "^4.23.13",
 		"typescript": "^6.0.3",
-		"vite": "^8.2.2",
+		"vite": "^8.3.5",
 		"vitest": "^4.1.6"
 	}
 }

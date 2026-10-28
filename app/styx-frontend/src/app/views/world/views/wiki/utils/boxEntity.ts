@@ -1,7 +1,6 @@
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { Actor, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { WikiArticle, WikiFolder } from '@/api/types/worldWikiTypes'
-import { DefaultColors } from '@/app/features/colors/defaultColors'
 
 import { PlainMindmapNodeParcel } from '../../mindmap/types'
 import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
@@ -68,6 +67,6 @@ export function boxPlainNode(node: MindmapNode): PlainMindmapNodeParcel {
 		entity: node,
 		name: node.name,
 		position: 0,
-		color: DefaultColors.node,
+		color: node.color,
 	}
 }

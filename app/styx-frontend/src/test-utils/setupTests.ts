@@ -14,6 +14,8 @@ globalThis.Response = Response
 import '@testing-library/jest-dom'
 
 import { beforeAll, rstest } from '@rstest/core'
+import { config } from 'react-transition-group'
+config.disabled = true
 
 console.debug = () => {}
 

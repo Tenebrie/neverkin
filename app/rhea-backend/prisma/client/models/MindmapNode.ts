@@ -41,6 +41,7 @@ export type MindmapNodeMinAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
+  color: string | null
   content: string | null
   contentRich: string | null
   positionX: number | null
@@ -58,6 +59,7 @@ export type MindmapNodeMaxAggregateOutputType = {
   createdAt: Date | null
   updatedAt: Date | null
   name: string | null
+  color: string | null
   content: string | null
   contentRich: string | null
   positionX: number | null
@@ -75,6 +77,7 @@ export type MindmapNodeCountAggregateOutputType = {
   createdAt: number
   updatedAt: number
   name: number
+  color: number
   content: number
   contentRich: number
   positionX: number
@@ -104,6 +107,7 @@ export type MindmapNodeMinAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  color?: true
   content?: true
   contentRich?: true
   positionX?: true
@@ -121,6 +125,7 @@ export type MindmapNodeMaxAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  color?: true
   content?: true
   contentRich?: true
   positionX?: true
@@ -138,6 +143,7 @@ export type MindmapNodeCountAggregateInputType = {
   createdAt?: true
   updatedAt?: true
   name?: true
+  color?: true
   content?: true
   contentRich?: true
   positionX?: true
@@ -242,6 +248,7 @@ export type MindmapNodeGroupByOutputType = {
   createdAt: Date
   updatedAt: Date
   name: string
+  color: string
   content: string
   contentRich: string
   positionX: number
@@ -282,6 +289,7 @@ export type MindmapNodeWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   name?: Prisma.StringFilter<"MindmapNode"> | string
+  color?: Prisma.StringFilter<"MindmapNode"> | string
   content?: Prisma.StringFilter<"MindmapNode"> | string
   contentRich?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
@@ -310,6 +318,7 @@ export type MindmapNodeOrderByWithRelationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
@@ -341,6 +350,7 @@ export type MindmapNodeWhereUniqueInput = Prisma.AtLeast<{
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   name?: Prisma.StringFilter<"MindmapNode"> | string
+  color?: Prisma.StringFilter<"MindmapNode"> | string
   content?: Prisma.StringFilter<"MindmapNode"> | string
   contentRich?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
@@ -369,6 +379,7 @@ export type MindmapNodeOrderByWithAggregationInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
@@ -394,6 +405,7 @@ export type MindmapNodeScalarWhereWithAggregatesInput = {
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"MindmapNode"> | Date | string
   name?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
+  color?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
   content?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
   contentRich?: Prisma.StringWithAggregatesFilter<"MindmapNode"> | string
   positionX?: Prisma.IntWithAggregatesFilter<"MindmapNode"> | number
@@ -411,6 +423,7 @@ export type MindmapNodeCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -433,6 +446,7 @@ export type MindmapNodeUncheckedCreateInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -455,6 +469,7 @@ export type MindmapNodeUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -477,6 +492,7 @@ export type MindmapNodeUncheckedUpdateInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -499,6 +515,7 @@ export type MindmapNodeCreateManyInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -516,6 +533,7 @@ export type MindmapNodeUpdateManyMutationInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -527,6 +545,7 @@ export type MindmapNodeUncheckedUpdateManyInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -559,6 +578,7 @@ export type MindmapNodeCountOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
@@ -581,6 +601,7 @@ export type MindmapNodeMaxOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
@@ -598,6 +619,7 @@ export type MindmapNodeMinOrderByAggregateInput = {
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   name?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   content?: Prisma.SortOrder
   contentRich?: Prisma.SortOrder
   positionX?: Prisma.SortOrder
@@ -953,6 +975,7 @@ export type MindmapNodeCreateWithoutParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -974,6 +997,7 @@ export type MindmapNodeUncheckedCreateWithoutParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1024,6 +1048,7 @@ export type MindmapNodeScalarWhereInput = {
   createdAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"MindmapNode"> | Date | string
   name?: Prisma.StringFilter<"MindmapNode"> | string
+  color?: Prisma.StringFilter<"MindmapNode"> | string
   content?: Prisma.StringFilter<"MindmapNode"> | string
   contentRich?: Prisma.StringFilter<"MindmapNode"> | string
   positionX?: Prisma.IntFilter<"MindmapNode"> | number
@@ -1041,6 +1066,7 @@ export type MindmapNodeCreateWithoutAssetRefsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1062,6 +1088,7 @@ export type MindmapNodeUncheckedCreateWithoutAssetRefsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1099,6 +1126,7 @@ export type MindmapNodeUpdateWithoutAssetRefsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1120,6 +1148,7 @@ export type MindmapNodeUncheckedUpdateWithoutAssetRefsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1141,6 +1170,7 @@ export type MindmapNodeCreateWithoutPagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1162,6 +1192,7 @@ export type MindmapNodeUncheckedCreateWithoutPagesInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1199,6 +1230,7 @@ export type MindmapNodeUpdateWithoutPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1220,6 +1252,7 @@ export type MindmapNodeUncheckedUpdateWithoutPagesInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1241,6 +1274,7 @@ export type MindmapNodeCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1262,6 +1296,7 @@ export type MindmapNodeUncheckedCreateWithoutMentionsInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1299,6 +1334,7 @@ export type MindmapNodeUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1320,6 +1356,7 @@ export type MindmapNodeUncheckedUpdateWithoutMentionsInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1341,6 +1378,7 @@ export type MindmapNodeCreateWithoutLinksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1362,6 +1400,7 @@ export type MindmapNodeUncheckedCreateWithoutLinksInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1388,6 +1427,7 @@ export type MindmapNodeCreateWithoutLinkedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1409,6 +1449,7 @@ export type MindmapNodeUncheckedCreateWithoutLinkedByInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1446,6 +1487,7 @@ export type MindmapNodeUpdateWithoutLinksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1467,6 +1509,7 @@ export type MindmapNodeUncheckedUpdateWithoutLinksInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1499,6 +1542,7 @@ export type MindmapNodeUpdateWithoutLinkedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1520,6 +1564,7 @@ export type MindmapNodeUncheckedUpdateWithoutLinkedByInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1541,6 +1586,7 @@ export type MindmapNodeCreateWithoutParentTagInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1562,6 +1608,7 @@ export type MindmapNodeUncheckedCreateWithoutParentTagInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1609,6 +1656,7 @@ export type MindmapNodeCreateWithoutParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1630,6 +1678,7 @@ export type MindmapNodeUncheckedCreateWithoutParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1677,6 +1726,7 @@ export type MindmapNodeCreateWithoutParentFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1698,6 +1748,7 @@ export type MindmapNodeUncheckedCreateWithoutParentFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1745,6 +1796,7 @@ export type MindmapNodeCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1766,6 +1818,7 @@ export type MindmapNodeUncheckedCreateWithoutWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1813,6 +1866,7 @@ export type MindmapNodeCreateWithoutParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1834,6 +1888,7 @@ export type MindmapNodeUncheckedCreateWithoutParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1881,6 +1936,7 @@ export type MindmapNodeCreateManyParentActorInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1897,6 +1953,7 @@ export type MindmapNodeUpdateWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1918,6 +1975,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1939,6 +1997,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentActorInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1955,6 +2014,7 @@ export type MindmapNodeCreateManyParentTagInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -1971,6 +2031,7 @@ export type MindmapNodeUpdateWithoutParentTagInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -1992,6 +2053,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentTagInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2013,6 +2075,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentTagInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2029,6 +2092,7 @@ export type MindmapNodeCreateManyParentArticleInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -2045,6 +2109,7 @@ export type MindmapNodeUpdateWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2066,6 +2131,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2087,6 +2153,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentArticleInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2103,6 +2170,7 @@ export type MindmapNodeCreateManyParentFolderInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -2119,6 +2187,7 @@ export type MindmapNodeUpdateWithoutParentFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2140,6 +2209,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2161,6 +2231,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentFolderInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2177,6 +2248,7 @@ export type MindmapNodeCreateManyWorldInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -2193,6 +2265,7 @@ export type MindmapNodeUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2214,6 +2287,7 @@ export type MindmapNodeUncheckedUpdateWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2235,6 +2309,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutWorldInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2251,6 +2326,7 @@ export type MindmapNodeCreateManyParentEventInput = {
   createdAt?: Date | string
   updatedAt?: Date | string
   name?: string
+  color?: string
   content?: string
   contentRich?: string
   positionX: number
@@ -2267,6 +2343,7 @@ export type MindmapNodeUpdateWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2288,6 +2365,7 @@ export type MindmapNodeUncheckedUpdateWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2309,6 +2387,7 @@ export type MindmapNodeUncheckedUpdateManyWithoutParentEventInput = {
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   name?: Prisma.StringFieldUpdateOperationsInput | string
+  color?: Prisma.StringFieldUpdateOperationsInput | string
   content?: Prisma.StringFieldUpdateOperationsInput | string
   contentRich?: Prisma.StringFieldUpdateOperationsInput | string
   positionX?: Prisma.IntFieldUpdateOperationsInput | number
@@ -2392,6 +2471,7 @@ export type MindmapNodeSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  color?: boolean
   content?: boolean
   contentRich?: boolean
   positionX?: boolean
@@ -2421,6 +2501,7 @@ export type MindmapNodeSelectCreateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  color?: boolean
   content?: boolean
   contentRich?: boolean
   positionX?: boolean
@@ -2444,6 +2525,7 @@ export type MindmapNodeSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.E
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  color?: boolean
   content?: boolean
   contentRich?: boolean
   positionX?: boolean
@@ -2467,6 +2549,7 @@ export type MindmapNodeSelectScalar = {
   createdAt?: boolean
   updatedAt?: boolean
   name?: boolean
+  color?: boolean
   content?: boolean
   contentRich?: boolean
   positionX?: boolean
@@ -2479,7 +2562,7 @@ export type MindmapNodeSelectScalar = {
   worldId?: boolean
 }
 
-export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "content" | "contentRich" | "positionX" | "positionY" | "parentActorId" | "parentArticleId" | "parentEventId" | "parentFolderId" | "parentTagId" | "worldId", ExtArgs["result"]["mindmapNode"]>
+export type MindmapNodeOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "createdAt" | "updatedAt" | "name" | "color" | "content" | "contentRich" | "positionX" | "positionY" | "parentActorId" | "parentArticleId" | "parentEventId" | "parentFolderId" | "parentTagId" | "worldId", ExtArgs["result"]["mindmapNode"]>
 export type MindmapNodeInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   parentActor?: boolean | Prisma.MindmapNode$parentActorArgs<ExtArgs>
   parentArticle?: boolean | Prisma.MindmapNode$parentArticleArgs<ExtArgs>
@@ -2531,6 +2614,7 @@ export type $MindmapNodePayload<ExtArgs extends runtime.Types.Extensions.Interna
     createdAt: Date
     updatedAt: Date
     name: string
+    color: string
     content: string
     contentRich: string
     positionX: number
@@ -2979,6 +3063,7 @@ export interface MindmapNodeFieldRefs {
   readonly createdAt: Prisma.FieldRef<"MindmapNode", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"MindmapNode", 'DateTime'>
   readonly name: Prisma.FieldRef<"MindmapNode", 'String'>
+  readonly color: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly content: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly contentRich: Prisma.FieldRef<"MindmapNode", 'String'>
   readonly positionX: Prisma.FieldRef<"MindmapNode", 'Int'>

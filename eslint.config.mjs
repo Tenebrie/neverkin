@@ -181,6 +181,7 @@ export default defineConfig(
 			// 'react-hooks/immutability': 'off',
 			// 'react-hooks/preserve-manual-memoization': 'off',
 			// 'react/prop-types': 'off',
+			'@eslint-react/no-context-provider': 'off',
 			'@eslint-react/no-array-index-key': 'off',
 			'@eslint-react/purity': 'off',
 			'@eslint-react/use-state': 'off',

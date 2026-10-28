@@ -62,7 +62,7 @@ export const RichTextService = {
 					entityType: 'actor',
 					entityId: props.actor,
 				})
-				$(element).text(`[${actorName}]`)
+				$(element).text(actorName)
 				mentions.push({
 					targetId: props.actor,
 					targetType: MentionedEntity.Actor,
@@ -74,7 +74,7 @@ export const RichTextService = {
 					entityType: 'event',
 					entityId: props.event,
 				})
-				$(element).text(`[${eventName}]`)
+				$(element).text(eventName)
 				mentions.push({
 					targetId: props.event,
 					targetType: MentionedEntity.Event,
@@ -86,7 +86,7 @@ export const RichTextService = {
 					entityType: 'article',
 					entityId: props.article,
 				})
-				$(element).text(`[${articleName}]`)
+				$(element).text(articleName)
 				mentions.push({
 					targetId: props.article,
 					targetType: MentionedEntity.Article,
@@ -98,7 +98,7 @@ export const RichTextService = {
 					entityType: 'tag',
 					entityId: props.tag,
 				})
-				$(element).text(`[${tagName}]`)
+				$(element).text(tagName)
 				mentions.push({
 					targetId: props.tag,
 					targetType: MentionedEntity.Tag,

@@ -1,5 +1,5 @@
 import { describe, expect, it } from '@rstest/core'
-import { renderHook, waitFor } from '@testing-library/react'
+import { act, renderHook, waitFor } from '@testing-library/react'
 import { http, HttpResponse } from 'msw'
 import { v4 as getRandomId } from 'uuid'
 
@@ -29,6 +29,7 @@ describe('useCreateMindmapNode', () => {
 						id: body.id ?? '',
 						worldId,
 						name: '',
+						color: '#6b7a99',
 						content: '',
 						contentRich: '',
 						createdAt: '2026-10-04T12:00:00.000Z',
@@ -43,13 +44,17 @@ describe('useCreateMindmapNode', () => {
 		const { result } = renderHook(() => useCreateMindmapNode(), { wrapper: renderHookWrapper })
 		const [createNode] = result.current
 
-		const createA = createNode({ id: nodeAId, positionX: 0, positionY: 0 })
-		const createB = createNode({ id: nodeBId, positionX: 300, positionY: 0 })
+		const [createA, createB] = await act(() => [
+			createNode({ id: nodeAId, positionX: 0, positionY: 0 }),
+			createNode({ id: nodeBId, positionX: 300, positionY: 0 }),
+		])
 		await waitFor(() => expect(releaseResponse.size).toBe(2))
-		releaseResponse.get(nodeAId)?.()
-		await createA
-		releaseResponse.get(nodeBId)?.()
-		await createB
+		await act(async () => {
+			releaseResponse.get(nodeAId)?.()
+			await createA
+			releaseResponse.get(nodeBId)?.()
+			await createB
+		})
 
 		const mindmapQuery = store.dispatch(mindmapApi.endpoints.getMindmap.initiate({ worldId }))
 		const { data } = await mindmapQuery

@@ -3,6 +3,7 @@ import { v4 as getRandomId } from 'uuid'
 import { DeepPartial } from '@/app/utils/DeepPartial'
 
 import { User } from '../../app/features/auth/AuthSlice'
+import { MindmapNode } from '../types/mindmapTypes'
 import { CollaboratingUser } from '../types/worldCollaboratorsTypes'
 import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/worldTypes'
 import { WorldEvent } from '../types/worldTypes'
@@ -79,6 +80,20 @@ export const mockActorModel = (actor: Partial<ActorDetails> = {}): ActorDetails 
 	parentFolderId: null,
 	parentFolderPosition: 0,
 	...actor,
+})
+
+export const mockMindmapNodeModel = (node: Partial<MindmapNode> = {}): MindmapNode => ({
+	id: getRandomId(),
+	worldId: 'world-1111-2222-3333-4444',
+	name: 'Node name',
+	color: '#6b7a99',
+	content: '',
+	contentRich: '',
+	positionX: 0,
+	positionY: 0,
+	createdAt: new Date(0).toISOString(),
+	updatedAt: new Date(0).toISOString(),
+	...node,
 })
 
 export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent => ({

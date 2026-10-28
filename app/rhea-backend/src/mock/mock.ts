@@ -125,6 +125,7 @@ export const mockMindmapNode = (data?: Partial<MindmapNode>): MindmapNode => ({
 	parentTagId: null,
 	worldId: 'world-1111',
 	name: 'Test Node',
+	color: '#6b7a99',
 	positionX: 0,
 	positionY: 0,
 	...data,

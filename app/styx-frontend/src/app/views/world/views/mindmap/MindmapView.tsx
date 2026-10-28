@@ -4,10 +4,10 @@ import { Mindmap } from './Mindmap'
 
 export function MindmapView() {
 	return (
-		<MindmapSelectionContext>
-			<MindmapContext>
+		<MindmapSelectionContext.Provider>
+			<MindmapContext.Provider>
 				<Mindmap />
-			</MindmapContext>
-		</MindmapSelectionContext>
+			</MindmapContext.Provider>
+		</MindmapSelectionContext.Provider>
 	)
 }

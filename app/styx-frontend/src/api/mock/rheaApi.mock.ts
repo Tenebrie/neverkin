@@ -3,8 +3,11 @@ import type { SetupServer } from 'msw/node'
 import { UpdateActorApiResponse } from '../actorListApi'
 import { GetAnnouncementsApiResponse } from '../announcementListApi'
 import { CheckAuthenticationApiResponse, CreateAccountApiResponse, PostLoginApiResponse } from '../authApi'
-import { ListWorldAccessModesApiResponse } from '../otherApi'
+import { ListCalendarsApiResponse } from '../calendarApi'
+import { UpdateNodeApiResponse } from '../mindmapApi'
+import { ListCalendarTemplatesApiResponse, ListWorldAccessModesApiResponse } from '../otherApi'
 import { GetWorldCollaboratorsApiResponse } from '../worldCollaboratorsApi'
+import { GetWorldColorsApiResponse } from '../worldColorApi'
 import { GetWorldBriefApiResponse, GetWorldInfoApiResponse } from '../worldDetailsApi'
 import { DeleteWorldEventApiResponse, UpdateWorldEventApiResponse } from '../worldEventApi'
 import { CreateWorldApiResponse, DeleteWorldApiResponse, GetWorldsApiResponse } from '../worldListApi'
@@ -16,7 +19,7 @@ import { generateEndpointMock, type MockParams } from './generateEndpointMock'
 export const mockCheckAuthentication = (
 	server: SetupServer,
 	params: MockParams<CheckAuthenticationApiResponse>,
-) => generateEndpointMock(server, { method: 'get', path: '/api/auth', ...params })
+) => generateEndpointMock(server, { method: 'get', path: '/api/auth/check', ...params })
 
 export const mockGetWorlds = (server: SetupServer, params: MockParams<GetWorldsApiResponse>) =>
 	generateEndpointMock(server, { method: 'get', path: '/api/worlds', ...params })
@@ -75,6 +78,21 @@ export const mockUpdateWorldEvent = (
 		...params,
 	})
 
+export const mockUpdateMindmapNode = (
+	server: SetupServer,
+	params: { worldId: string; nodeId: string } & MockParams<UpdateNodeApiResponse>,
+) =>
+	generateEndpointMock(server, {
+		method: 'patch',
+		path: `/api/world/${params.worldId}/mindmap/nodes/${params.nodeId}`,
+		...params,
+	})
+
+export const mockGetWorldColors = (
+	server: SetupServer,
+	params: { worldId: string } & MockParams<GetWorldColorsApiResponse>,
+) => generateEndpointMock(server, { method: 'get', path: `/api/worlds/${params.worldId}/colors`, ...params })
+
 export const mockDeleteWorldEvent = (
 	server: SetupServer,
 	params: { worldId: string; eventId: string } & MockParams<DeleteWorldEventApiResponse>,
@@ -109,6 +127,14 @@ export const mockListWorldAccessModes = (
 	server: SetupServer,
 	params: MockParams<ListWorldAccessModesApiResponse>,
 ) => generateEndpointMock(server, { method: 'get', path: '/api/constants/world-access-modes', ...params })
+
+export const mockListCalendars = (server: SetupServer, params: MockParams<ListCalendarsApiResponse>) =>
+	generateEndpointMock(server, { method: 'get', path: '/api/calendars', ...params })
+
+export const mockListCalendarTemplates = (
+	server: SetupServer,
+	params: MockParams<ListCalendarTemplatesApiResponse>,
+) => generateEndpointMock(server, { method: 'get', path: '/api/constants/calendar-templates', ...params })
 
 /**
  * Mock utility functions

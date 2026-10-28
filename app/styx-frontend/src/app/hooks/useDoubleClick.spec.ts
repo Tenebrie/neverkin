@@ -5,7 +5,7 @@ import { MouseEvent } from 'react'
 import { renderHookWithProviders } from '../../test-utils/renderWithProviders'
 import { useDoubleClick } from './useDoubleClick'
 
-describe.skip('useDoubleClick', () => {
+describe('useDoubleClick', () => {
 	beforeAll(() => {
 		rstest.useFakeTimers()
 	})

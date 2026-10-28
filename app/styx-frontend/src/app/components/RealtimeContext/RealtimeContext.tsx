@@ -12,7 +12,7 @@ export function createRealtimeContext<T extends object>(useValue: () => T) {
 		const [live] = useState(() => new Proxy(value, { get: (_, key) => Reflect.get(latest.current, key) }))
 		return <LiveContext value={live}>{children}</LiveContext>
 	}
-	Provider.context = LiveContext
+	// Provider.context = LiveContext
 
-	return Provider
+	return { Provider, context: LiveContext }
 }
