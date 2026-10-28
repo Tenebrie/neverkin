@@ -1,5 +1,5 @@
 import { beforeEach, describe, expect, it } from '@rstest/core'
-import { screen, waitForElementToBeRemoved } from '@testing-library/react'
+import { screen } from '@testing-library/react'
 
 import { mockAuthenticatedUser, mockNonAuthenticatedUser, mockPostRegister } from '@/api/mock/rheaApi.mock'
 import { renderWithRouter } from '@/test-utils/renderWithProviders'
@@ -189,7 +189,6 @@ describe('<CreateAccount />', () => {
 
 			await user.type(screen.getByLabelText('Email'), '111')
 
-			await waitForElementToBeRemoved(() => screen.queryByText('Unable to create account'))
 			expect(screen.queryByText('Unable to create account')).not.toBeInTheDocument()
 		})
 	})

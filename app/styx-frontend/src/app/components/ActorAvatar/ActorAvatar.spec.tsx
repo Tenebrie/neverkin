@@ -6,7 +6,7 @@ import { renderWithProviders } from '@/test-utils/renderWithProviders'
 
 import { ActorAvatar } from './ActorAvatar'
 
-describe.skip('ActorAvatar', () => {
+describe('ActorAvatar', () => {
 	it("renders the initials for actor with a name with 'the'", () => {
 		renderWithProviders(<ActorAvatar actor={mockActorModel({ name: 'Daren the Daringblade' })} />)
 

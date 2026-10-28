@@ -1,7 +1,12 @@
 import { afterAll, afterEach, beforeAll, beforeEach } from '@rstest/core'
 import { setupServer } from 'msw/node'
 
-import { mockGetAnnouncements, mockGetWorlds } from '../api/mock/rheaApi.mock'
+import {
+	mockGetAnnouncements,
+	mockGetWorlds,
+	mockListCalendars,
+	mockListCalendarTemplates,
+} from '../api/mock/rheaApi.mock'
 
 export const setupTestServer = () => {
 	const server = setupServer()
@@ -19,6 +24,17 @@ export const setupTestServer = () => {
 
 		mockGetAnnouncements(server, {
 			response: [],
+		})
+
+		mockListCalendars(server, {
+			response: [],
+		})
+
+		mockListCalendarTemplates(server, {
+			response: {
+				keys: [],
+				templates: [],
+			},
 		})
 	})
 	afterEach(() => {
