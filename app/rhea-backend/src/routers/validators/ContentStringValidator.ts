@@ -1,6 +1,6 @@
 import { RequiredParam } from 'moonflower'
 
-const MAX_CONTENT_LENGTH = 1_131_000
+import { MAX_CONTENT_LENGTH } from '../../ts-shared/const/constants.js'
 
 export const ContentStringValidator = RequiredParam({
 	parse: (v) => String(v).trim(),

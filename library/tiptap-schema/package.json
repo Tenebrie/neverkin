@@ -34,7 +34,7 @@
 		"@tiptap/pm": "^3.32.0",
 		"@tiptap/starter-kit": "^3.32.0",
 		"@tiptap/suggestion": "^3.32.0",
-		"@tiptap/y-tiptap": "^3.0.10",
+		"@tiptap/y-tiptap": "3.0.9",
 		"y-protocols": "^1.0.7",
 		"yjs": "^13.6.32",
 		"zod": "^4.6.5"

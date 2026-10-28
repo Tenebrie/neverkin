@@ -35,13 +35,14 @@ const getTagName = (node: ProseMirrorNode) => {
 	return store.getState().world.tags.find((tag) => tag.id === tagId)?.name ?? 'Unknown tag'
 }
 
+export const getMentionName = (node: ProseMirrorNode) =>
+	getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? getTagName(node) ?? 'Unknown entity'
+
 const mentionSelectionKey = new PluginKey('mentionSelectionDecoration')
 
 export const MentionNode = assimilate(MentionNodeBase).extend({
 	renderText({ node }) {
-		const name =
-			getActorName(node) ?? getEventName(node) ?? getArticleName(node) ?? getTagName(node) ?? 'Unknown entity'
-		return `[${name}]`
+		return getMentionName(node)
 	},
 
 	addProseMirrorPlugins() {

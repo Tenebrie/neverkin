@@ -1,1 +1,3 @@
-export const pluralize = (count: number, noun: string) => `${count} ${noun}${count === 1 ? '' : 's'}`
+export function pluralize(count: number, noun: string) {
+	return `${count.toLocaleString()} ${count === 1 ? noun : `${noun}s`}`
+}

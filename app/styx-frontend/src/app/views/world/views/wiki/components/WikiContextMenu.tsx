@@ -78,21 +78,37 @@ export function WikiContextMenu({ article, popupState }: Props) {
 						</MenuItem>
 					)}
 					{isMindmapView && article.type !== 'folder' && (
-						<MenuItem
-							onClick={() => {
-								navigate({
-									to: '/world/$worldId/wiki/$articleId',
-									params: { articleId: article.id },
-									search: true,
-								})
-								popupState.close()
-							}}
-						>
-							<ListItemIcon>
-								<WikiIcon />
-							</ListItemIcon>
-							<ListItemText>Edit in Wiki</ListItemText>
-						</MenuItem>
+						<>
+							<MenuItem
+								onClick={() => {
+									navigate({
+										to: '/world/$worldId/mindmap',
+										search: (prev) => ({ ...prev, navi: [article.id] }),
+									})
+									popupState.close()
+								}}
+							>
+								<ListItemIcon>
+									<Edit />
+								</ListItemIcon>
+								<ListItemText>Edit</ListItemText>
+							</MenuItem>
+							<MenuItem
+								onClick={() => {
+									navigate({
+										to: '/world/$worldId/wiki/$articleId',
+										params: { articleId: article.id },
+										search: true,
+									})
+									popupState.close()
+								}}
+							>
+								<ListItemIcon>
+									<WikiIcon />
+								</ListItemIcon>
+								<ListItemText>Edit in Wiki</ListItemText>
+							</MenuItem>
+						</>
 					)}
 					<MenuItem
 						onClick={() => {

@@ -35,7 +35,7 @@
 		"@tiptap/pm": "^3.32.0",
 		"@tiptap/starter-kit": "^3.32.0",
 		"@tiptap/suggestion": "^3.31.3",
-		"@tiptap/y-tiptap": "^3.0.10",
+		"@tiptap/y-tiptap": "3.0.9",
 		"@y/websocket-server": "0.1.1",
 		"chalk": "^6.0.1",
 		"happy-dom": "^20.14.5",

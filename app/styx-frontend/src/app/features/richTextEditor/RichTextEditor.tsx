@@ -16,6 +16,7 @@ import { useDocumentScrollMemory } from './hooks/useDocumentScrollMemory'
 import { useEditorPasteHandler } from './hooks/useEditorPasteHandler'
 import { RichTextEditorControls } from './RichTextEditorControls'
 import { RichTextEditorQuickSelect } from './RichTextEditorQuickSelect'
+import { RichTextEditorWordCount } from './RichTextEditorWordCount'
 import { StyledContainer } from './styles'
 
 type Props = {
@@ -137,9 +138,9 @@ export function RichTextEditorComponent({
 	}, [value])
 
 	useEffect(() => {
-		const editable = !isReadOnly && (!collaboration || collabSynced)
+		const editable = !isReadOnly && (!collaboration?.documentId || collabSynced)
 		editor?.setEditable(editable)
-	}, [collabSynced, collaboration, editor, isReadOnly])
+	}, [collabSynced, collaboration?.documentId, editor, isReadOnly])
 
 	useEventBusSubscribe['richEditor/requestFocus']({
 		callback: () => {
@@ -199,6 +200,7 @@ export function RichTextEditorComponent({
 					)
 				)}
 			</Box>
+			{displayedEditor && <RichTextEditorWordCount editor={displayedEditor} />}
 			<RichTextEditorQuickSelect editor={editor} />
 		</StyledContainer>
 	)

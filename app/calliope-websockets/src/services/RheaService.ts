@@ -1,5 +1,9 @@
 import type { paths } from '@neverkin/openapi-fetch'
-import { IMPERSONATED_USER_HEADER, SERVICE_AUTH_TOKEN_HEADER } from '@src/ts-shared/const/constants.js'
+import {
+	IMPERSONATED_USER_HEADER,
+	MAX_CONTENT_LENGTH,
+	SERVICE_AUTH_TOKEN_HEADER,
+} from '@src/ts-shared/const/constants.js'
 import { PermanentFlushError } from '@src/utils/PermanentFlushError.js'
 import chalk from 'chalk'
 import createClient from 'openapi-fetch'
@@ -80,7 +84,7 @@ export const RheaService = {
 		entityType: 'actor' | 'event' | 'article' | 'node'
 		contentRich: string
 	}) => {
-		if (contentRich.length >= 1_131_000) {
+		if (contentRich.length > MAX_CONTENT_LENGTH) {
 			throw new PermanentFlushError(
 				`${chalk.greenBright('[Calliope]')} Unable to flush ${entityType} ${chalk.blueBright(entityId)} (${contentRich.length} bytes)`,
 			)

@@ -49,7 +49,7 @@ describe('RichTextService', () => {
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
 
-		expect(result.content).toBe('Mentions [Named Actor]')
+		expect(result.content).toBe('Mentions Named Actor')
 		expect(result.mentions).toEqual([
 			{
 				targetId: '00000000',
@@ -80,7 +80,7 @@ describe('RichTextService', () => {
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mentionA)}"></span> and <span data-component-props="${toHtmlAttribute(mentionB)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
 
-		expect(result.content).toBe('Mentions [Unknown Actor] and [Named Actor]')
+		expect(result.content).toBe('Mentions Unknown Actor and Named Actor')
 		expect(result.mentions).toEqual([
 			{
 				targetId: '00000001',
@@ -108,7 +108,7 @@ describe('RichTextService', () => {
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
 
-		expect(result.content).toBe('Mentions [Named Article]')
+		expect(result.content).toBe('Mentions Named Article')
 		expect(result.mentions).toEqual([
 			{
 				targetId: '00000000',
@@ -136,7 +136,7 @@ describe('RichTextService', () => {
 		const contentString = `Mentions <span data-component-props="${toHtmlAttribute(mention)}"></span>`
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
 
-		expect(result.content).toBe('Mentions [Named Event]')
+		expect(result.content).toBe('Mentions Named Event')
 		expect(result.mentions).toEqual([
 			{
 				targetId: '00000000',
@@ -165,7 +165,7 @@ describe('RichTextService', () => {
 		const result = await RichTextService.parseContentString({ worldId: 'test-world', contentString })
 
 		expect(result.content).toBe(
-			"This is an example text\n\nThis is the target to find: [Actor name] \n\nIt's called a mention, and we need to parse them.\n\n[This is an example text] \n\n[New Article]",
+			"This is an example text\n\nThis is the target to find: Actor name \n\nIt's called a mention, and we need to parse them.\n\nThis is an example text \n\nNew Article",
 		)
 		expect(result.contentRich).toBe(contentString)
 
