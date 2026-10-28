@@ -90,6 +90,130 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
+    "/api/admin/dashboard": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets dashboard information for the admin panel */
+        get: operations["adminGetDashboard"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/audit": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Fetch audit logs */
+        get: operations["adminGetAuditLogs"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets list of all registered users */
+        get: operations["adminGetUsers"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /** @description Gets dashboard information for a single user */
+        get: operations["adminGetUser"];
+        put?: never;
+        post?: never;
+        /** @description Deletes the user with the given ID */
+        delete: operations["adminDeleteUser"];
+        options?: never;
+        head?: never;
+        /** @description Updates the user information for the given user */
+        patch: operations["adminUpdateUser"];
+        trace?: never;
+    };
+    "/api/admin/user/{userId}/impersonate": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Admin impersonate user endpoint
+         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
+         */
+        post: operations["adminImpersonateUser"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/level": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets the user level for the given user */
+        post: operations["adminSetUserLevel"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/api/admin/users/{userId}/password": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Sets the password for the given user */
+        post: operations["adminSetUserPassword"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
     "/api/announcements": {
         parameters: {
             query?: never;
@@ -1889,130 +2013,6 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/admin/dashboard": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for the admin panel */
-        get: operations["adminGetDashboard"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/audit": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Fetch audit logs */
-        get: operations["adminGetAuditLogs"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets list of all registered users */
-        get: operations["adminGetUsers"];
-        put?: never;
-        post?: never;
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        /** @description Gets dashboard information for a single user */
-        get: operations["adminGetUser"];
-        put?: never;
-        post?: never;
-        /** @description Deletes the user with the given ID */
-        delete: operations["adminDeleteUser"];
-        options?: never;
-        head?: never;
-        /** @description Updates the user information for the given user */
-        patch: operations["adminUpdateUser"];
-        trace?: never;
-    };
-    "/api/admin/user/{userId}/impersonate": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /**
-         * Admin impersonate user endpoint
-         * @description Allows admin to impersonate another user by their user ID. Returns a new nested session token for the impersonated user.
-         */
-        post: operations["adminImpersonateUser"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/level": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the user level for the given user */
-        post: operations["adminSetUserLevel"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/admin/users/{userId}/password": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Sets the password for the given user */
-        post: operations["adminSetUserPassword"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
 }
 export type webhooks = Record<string, never>;
 export interface components {
@@ -2317,6 +2317,516 @@ export interface operations {
                     flag: "GlobalSearch" | "MindmapRework";
                     userId: string;
                     enable: boolean;
+                };
+            };
+        };
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminGetDashboard: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
+                        }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
+                        fileSystemStats: {
+                            root: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                            database: {
+                                free: number;
+                                total: number;
+                                summary: string;
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminGetAuditLogs: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        logs: {
+                            data: string;
+                            user: null | {
+                                id: string;
+                                email: string;
+                                username: string;
+                            };
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            userId?: null | string;
+                            requestIp: string;
+                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
+                            dedupeKey?: null | string;
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUsers: {
+        parameters: {
+            query?: {
+                /** @description Any numeric value */
+                page?: number;
+                /** @description Any numeric value */
+                size?: number;
+                /** @description Any string value */
+                query?: string;
+                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
+                sortDirection?: "asc" | "desc";
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        users: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
+                            activity: {
+                                activeDays: number;
+                                regular: boolean;
+                                lastActiveAt?: null | string;
+                            };
+                        }[];
+                        page: number;
+                        size: number;
+                        pageCount: number;
+                    };
+                };
+            };
+        };
+    };
+    adminGetUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        user: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            email: string;
+                            username: string;
+                            bio: string;
+                            level: "Guest" | "Free" | "Premium" | "Admin";
+                            featureFlags: string[];
+                        };
+                        hourlyActivity: {
+                            hour: string;
+                            activeUsers: number;
+                            events: number;
+                        }[];
+                        auditStats: {
+                            uniqueUserLogins: number;
+                            dailyActiveUsers: number;
+                            weeklyActiveUsers: number;
+                            monthlyActiveUsers: number;
+                            regulars: number;
+                            activeUserDays: number;
+                            lastActiveAt?: null | string;
+                            hourly: {
+                                hour: string;
+                                dailyActiveUsers: number;
+                            }[];
+                            daily: {
+                                dailyActiveUsers: number;
+                                weeklyActiveUsers: number;
+                                monthlyActiveUsers: number;
+                                regulars: number;
+                                userAuthEvents: number;
+                                guestAccountsCreated: number;
+                                userAccountsCreated: number;
+                                passwordLogins: number;
+                                googleLogins: number;
+                                failedLogins: number;
+                                accountsDeleted: number;
+                                adminImpersonations: number;
+                                totalEvents: number;
+                                day: string;
+                            }[];
+                            userAuthEvents: number;
+                            guestAccountsCreated: number;
+                            userAccountsCreated: number;
+                            passwordLogins: number;
+                            googleLogins: number;
+                            failedLogins: number;
+                            accountsDeleted: number;
+                            adminImpersonations: number;
+                            totalEvents: number;
+                        };
+                        contentStats: {
+                            days: string[];
+                            entities: {
+                                nodes: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                actors: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                events: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                articles: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                folders: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                tags: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                calendars: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                worlds: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                assets: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                links: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                eventTracks: {
+                                    total: number;
+                                    created: number[];
+                                };
+                                contentPages: {
+                                    total: number;
+                                    created: number[];
+                                };
+                            };
+                        };
+                    };
+                };
+            };
+        };
+    };
+    adminDeleteUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminUpdateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    email?: string;
+                    username?: string;
+                    bio?: string;
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        email: string;
+                        username: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        featureFlags: string[];
+                    };
+                };
+            };
+        };
+    };
+    adminImpersonateUser: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            204: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content?: never;
+            };
+        };
+    };
+    adminSetUserLevel: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+                "application/x-www-form-urlencoded": {
+                    level: "Guest" | "Free" | "Premium" | "Admin";
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        email: string;
+                        username: string;
+                        bio: string;
+                        level: "Guest" | "Free" | "Premium" | "Admin";
+                        featureFlags: string[];
+                    };
+                };
+            };
+        };
+    };
+    adminSetUserPassword: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                /** @description Any string value with at least one character */
+                userId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    password: string;
+                };
+                "application/x-www-form-urlencoded": {
+                    password: string;
                 };
             };
         };
@@ -4488,6 +4998,7 @@ export interface operations {
                                     /** Format: date-time */
                                     updatedAt: string;
                                     name: string;
+                                    color: string;
                                     content: string;
                                     contentRich: string;
                                     parentFolderId?: null | string;
@@ -4926,6 +5437,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            color: string;
                             content: string;
                             contentRich: string;
                             parentFolderId?: null | string;
@@ -5001,6 +5513,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        color: string;
                         content: string;
                         contentRich: string;
                         parentFolderId?: null | string;
@@ -5031,11 +5544,13 @@ export interface operations {
                     positionX?: number;
                     positionY?: number;
                     name?: string;
+                    color?: string;
                 };
                 "application/x-www-form-urlencoded": {
                     positionX?: number;
                     positionY?: number;
                     name?: string;
+                    color?: string;
                 };
             };
         };
@@ -5053,6 +5568,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        color: string;
                         content: string;
                         contentRich: string;
                         parentFolderId?: null | string;
@@ -5113,6 +5629,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        color: string;
                         content: string;
                         contentRich: string;
                         parentFolderId?: null | string;
@@ -5164,6 +5681,7 @@ export interface operations {
                         /** Format: date-time */
                         updatedAt: string;
                         name: string;
+                        color: string;
                         content: string;
                         contentRich: string;
                         parentFolderId?: null | string;
@@ -5258,6 +5776,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            color: string;
                             content: string;
                             contentRich: string;
                             parentFolderId?: null | string;
@@ -5459,6 +5978,7 @@ export interface operations {
                             /** Format: date-time */
                             updatedAt: string;
                             name: string;
+                            color: string;
                             content: string;
                             contentRich: string;
                             parentFolderId?: null | string;
@@ -7448,6 +7968,7 @@ export interface operations {
                                 /** Format: date-time */
                                 updatedAt: string;
                                 name: string;
+                                color: string;
                                 content: string;
                                 contentRich: string;
                                 parentFolderId?: null | string;
@@ -8330,516 +8851,6 @@ export interface operations {
                         read: boolean;
                     };
                 };
-            };
-        };
-    };
-    adminGetDashboard: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                        fileSystemStats: {
-                            root: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                            database: {
-                                free: number;
-                                total: number;
-                                summary: string;
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminGetAuditLogs: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        logs: {
-                            data: string;
-                            user: null | {
-                                id: string;
-                                email: string;
-                                username: string;
-                            };
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            userId?: null | string;
-                            requestIp: string;
-                            action: "UserAuth" | "UserCreateAccount" | "UserLoginWithPassword" | "UserLoginWithGoogle" | "UserLoginFailed" | "UserDeleteAccount" | "UserExportData" | "UserExportDataFailed" | "UserValidateImportData" | "UserValidateImportDataFailed" | "UserImportData" | "UserImportDataFailed" | "GuestCreateAccount" | "AdminImpersonateUser" | "AdminUpdateUser" | "AdminSetUserLevel" | "AdminSetUserPassword" | "AdminDeleteUser" | "AdminBroadcastNotification";
-                            dedupeKey?: null | string;
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUsers: {
-        parameters: {
-            query?: {
-                /** @description Any numeric value */
-                page?: number;
-                /** @description Any numeric value */
-                size?: number;
-                /** @description Any string value */
-                query?: string;
-                sortField?: "createdAt" | "updatedAt" | "email" | "username" | "level";
-                sortDirection?: "asc" | "desc";
-            };
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        users: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                            activity: {
-                                activeDays: number;
-                                regular: boolean;
-                                lastActiveAt?: null | string;
-                            };
-                        }[];
-                        page: number;
-                        size: number;
-                        pageCount: number;
-                    };
-                };
-            };
-        };
-    };
-    adminGetUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        user: {
-                            id: string;
-                            /** Format: date-time */
-                            createdAt: string;
-                            /** Format: date-time */
-                            updatedAt: string;
-                            email: string;
-                            username: string;
-                            bio: string;
-                            level: "Guest" | "Free" | "Premium" | "Admin";
-                            featureFlags: string[];
-                        };
-                        hourlyActivity: {
-                            hour: string;
-                            activeUsers: number;
-                            events: number;
-                        }[];
-                        auditStats: {
-                            uniqueUserLogins: number;
-                            dailyActiveUsers: number;
-                            weeklyActiveUsers: number;
-                            monthlyActiveUsers: number;
-                            regulars: number;
-                            activeUserDays: number;
-                            lastActiveAt?: null | string;
-                            hourly: {
-                                hour: string;
-                                dailyActiveUsers: number;
-                            }[];
-                            daily: {
-                                dailyActiveUsers: number;
-                                weeklyActiveUsers: number;
-                                monthlyActiveUsers: number;
-                                regulars: number;
-                                userAuthEvents: number;
-                                guestAccountsCreated: number;
-                                userAccountsCreated: number;
-                                passwordLogins: number;
-                                googleLogins: number;
-                                failedLogins: number;
-                                accountsDeleted: number;
-                                adminImpersonations: number;
-                                totalEvents: number;
-                                day: string;
-                            }[];
-                            userAuthEvents: number;
-                            guestAccountsCreated: number;
-                            userAccountsCreated: number;
-                            passwordLogins: number;
-                            googleLogins: number;
-                            failedLogins: number;
-                            accountsDeleted: number;
-                            adminImpersonations: number;
-                            totalEvents: number;
-                        };
-                        contentStats: {
-                            days: string[];
-                            entities: {
-                                worlds: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                calendars: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                assets: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                events: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                actors: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                articles: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                folders: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                tags: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                nodes: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                links: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                eventTracks: {
-                                    total: number;
-                                    created: number[];
-                                };
-                                contentPages: {
-                                    total: number;
-                                    created: number[];
-                                };
-                            };
-                        };
-                    };
-                };
-            };
-        };
-    };
-    adminDeleteUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    adminUpdateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    email?: string;
-                    username?: string;
-                    bio?: string;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        email: string;
-                        username: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        featureFlags: string[];
-                    };
-                };
-            };
-        };
-    };
-    adminImpersonateUser: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
-            };
-        };
-    };
-    adminSetUserLevel: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-                "application/x-www-form-urlencoded": {
-                    level: "Guest" | "Free" | "Premium" | "Admin";
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        email: string;
-                        username: string;
-                        bio: string;
-                        level: "Guest" | "Free" | "Premium" | "Admin";
-                        featureFlags: string[];
-                    };
-                };
-            };
-        };
-    };
-    adminSetUserPassword: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                /** @description Any string value with at least one character */
-                userId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    password: string;
-                };
-                "application/x-www-form-urlencoded": {
-                    password: string;
-                };
-            };
-        };
-        responses: {
-            204: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content?: never;
             };
         };
     };

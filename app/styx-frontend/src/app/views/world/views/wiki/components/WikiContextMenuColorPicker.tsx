@@ -12,12 +12,12 @@ import { useUpdateArticle } from '@/app/views/world/api/useUpdateArticle'
 import { useUpdateEvent } from '@/app/views/world/api/useUpdateEvent'
 import { useUpdateFolder } from '@/app/views/world/api/useUpdateFolder'
 import { useUpdateTag } from '@/app/views/world/api/useUpdateTag'
+import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { Header } from '@/ui-lib/components/Header/Header'
 
-import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
-
 type Props = {
-	article: BoxedWikiEntity
+	article: MindmapNodeParentParcel
 	onClose: () => void
 }
 
@@ -27,6 +27,7 @@ export function WikiContextMenuColorPicker({ article, onClose }: Props) {
 	const [updateFolder] = useUpdateFolder()
 	const [updateEvent] = useUpdateEvent()
 	const [updateTag] = useUpdateTag()
+	const [updateNode] = useUpdateMindmapNode()
 
 	const { open: openCreateColorModal } = useModal('createColorModal')
 
@@ -46,6 +47,9 @@ export function WikiContextMenuColorPicker({ article, onClose }: Props) {
 				break
 			case 'folder':
 				updateFolder(article.id, { color })
+				break
+			case 'node':
+				updateNode(article.id, { color })
 				break
 		}
 		onClose()

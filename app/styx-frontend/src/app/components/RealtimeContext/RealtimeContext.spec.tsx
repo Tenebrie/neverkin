@@ -17,9 +17,9 @@ describe('RealtimeContext', () => {
 		const onRender = rstest.fn<(value: CounterValue) => void>()
 
 		render(
-			<CounterContext>
+			<CounterContext.Provider>
 				<Consumer onRender={onRender} />
-			</CounterContext>,
+			</CounterContext.Provider>,
 		)
 
 		expect(onRender.mock.lastCall?.[0].count).toEqual(0)
@@ -28,9 +28,9 @@ describe('RealtimeContext', () => {
 	it('does not re-render consumers when the value changes', () => {
 		const onRender = rstest.fn<(value: CounterValue) => void>()
 		render(
-			<CounterContext>
+			<CounterContext.Provider>
 				<Consumer onRender={onRender} />
-			</CounterContext>,
+			</CounterContext.Provider>,
 		)
 		const context = onRender.mock.calls[0][0]
 

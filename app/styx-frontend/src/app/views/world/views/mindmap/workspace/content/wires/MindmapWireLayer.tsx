@@ -84,9 +84,9 @@ export function MindmapWireLayer() {
 							onOpenPopover={onOpenPopover}
 						/>
 					))}
-					<MindmapWireGhostContext>
+					<MindmapWireGhostContext.Provider>
 						<MindmapWireGhost svgGroupPortal={svgGroup} />
-					</MindmapWireGhostContext>
+					</MindmapWireGhostContext.Provider>
 				</>
 			)}
 			<MindmapWireContextMenu
