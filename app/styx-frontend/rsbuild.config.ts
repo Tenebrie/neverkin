@@ -23,7 +23,6 @@ export default defineConfig({
 		dedupe: [
 			'@tiptap/core',
 			'@tiptap/pm',
-			'@tiptap/react',
 			'prosemirror-state',
 			'prosemirror-view',
 			'prosemirror-model',

@@ -29,9 +29,9 @@ export const ModalBackdrop = styled.div`
 	}
 `
 
-export const ModalContainer = styled(Paper)<{ $theme: CustomTheme }>`
+export const ModalContainer = styled(Paper)<{ $theme: CustomTheme; $width: number }>`
 	padding: 16px 32px;
-	max-width: 860px;
+	max-width: ${({ $width }) => $width}px;
 	width: 100%;
 	max-height: calc(100dvh - 32px);
 	border-radius: 8px;

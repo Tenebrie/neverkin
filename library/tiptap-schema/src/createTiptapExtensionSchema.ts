@@ -16,6 +16,7 @@ export const BaseExtensions = {
 	StarterKit: StarterKit.configure({
 		hardBreak: false,
 		undoRedo: false,
+		link: { openOnClick: false },
 	}),
 	CharacterCount: CharacterCount.configure({
 		limit: 1000000,
