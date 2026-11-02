@@ -80,10 +80,18 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 					]),
 				),
 
-				'& code': {
+				'& :not(pre) > code': {
 					padding: '4px 8px',
 					borderRadius: '4px',
-					background: '#00000033',
+					background: isDark ? '#00000022' : '#00000011',
+				},
+
+				'& pre': {
+					margin: '10px 0',
+					padding: '8px 12px',
+					borderRadius: '4px',
+					background: isDark ? '#00000022' : '#00000011',
+					tabSize: 2,
 				},
 
 				'& span[data-luminance="dark"]': isDark

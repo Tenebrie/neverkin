@@ -60,6 +60,9 @@ export const TabNode = Node.create<object, TabNodeStorage>({
 					this.storage.passNextTab = false
 					return false
 				}
+				if (this.editor.isActive('codeBlock')) {
+					return this.editor.commands.insertContent('\t')
+				}
 				if (this.editor.isActive('listItem')) {
 					this.editor.commands.sinkListItem('listItem')
 					// Consume Tab even when the item cannot sink so focus stays in the editor
