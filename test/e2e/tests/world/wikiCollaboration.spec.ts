@@ -18,7 +18,7 @@ test.describe('Wiki Collaboration', () => {
 
 		// Create article
 		await page.getByRole('button', { name: 'Create new object' }).click()
-		await page.getByRole('button', { name: 'Article', exact: true }).click()
+		await page.getByRole('button', { name: 'article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill('Testing article')
 		await page.getByRole('button', { name: 'Create', exact: true }).click()
 		await expect(page.getByTestId('ArticleListItem/Testing article/0')).toBeVisible()
