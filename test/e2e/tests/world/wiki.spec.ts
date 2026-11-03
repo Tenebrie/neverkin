@@ -433,7 +433,7 @@ test.describe('Wiki View', () => {
 			await page.getByRole('button', { name: 'Create new object' }).click()
 			await expect(page.getByText('Create new object', { exact: true })).toBeVisible()
 
-			await page.getByRole('button', { name: 'Article', exact: true }).click()
+			await page.getByRole('button', { name: 'article', exact: true }).click()
 			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Enter')
 			await expect(page.getByText('Create new object', { exact: true })).not.toBeVisible()
@@ -447,7 +447,7 @@ test.describe('Wiki View', () => {
 			await page.getByRole('button', { name: 'Create new object' }).click()
 			await expect(page.getByText('Create new object', { exact: true })).toBeVisible()
 
-			await page.getByRole('button', { name: 'Article', exact: true }).click()
+			await page.getByRole('button', { name: 'article', exact: true }).click()
 			await page.getByPlaceholder('Name').fill('Testing article')
 			await page.keyboard.press('Control+Enter')
 
@@ -513,7 +513,7 @@ test.describe('Wiki View', () => {
 
 	async function createArticleAsUser(page: Page, name: string) {
 		await page.getByRole('button', { name: 'Create new object' }).click()
-		await page.getByRole('button', { name: 'Article', exact: true }).click()
+		await page.getByRole('button', { name: 'article', exact: true }).click()
 		await page.getByPlaceholder('Name').fill(name)
 		await page.getByRole('button', { name: 'Create', exact: true }).click()
 		await expect(page.getByTestId(`ArticleListItem/${name}/0`)).toBeVisible()

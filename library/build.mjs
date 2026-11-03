@@ -22,10 +22,14 @@ for (const entry of readdirSync(libraryDir, { withFileTypes: true })) {
 		continue
 	}
 	console.info(`[library-build] watching ${entry.name}`)
-	const child = spawn(process.execPath, [tsc, '-b', '--watch', '--preserveWatchOutput'], {
-		cwd,
-		stdio: 'inherit',
-	})
+	const child = spawn(
+		process.execPath,
+		[tsc, '-b', '--watch', '--preserveWatchOutput', '--watchFile', 'useFsEventsOnParentDirectory'],
+		{
+			cwd,
+			stdio: 'inherit',
+		},
+	)
 	child.on('error', (err) => console.error(`[library-build] failed to start ${entry.name}:`, err))
 	child.on('exit', (code) => {
 		if (code !== 0) console.error(`[library-build] watcher for ${entry.name} exited with code ${code}`)

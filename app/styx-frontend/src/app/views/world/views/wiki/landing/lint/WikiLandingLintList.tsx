@@ -33,12 +33,9 @@ export function WikiLandingLintList({ entities }: Props) {
 				<WikiLandingRow
 					key={thread.key}
 					icon={
-						<EntityInitialsTile
-							name={thread.label}
-							color={palette.warning.main}
-							size={28}
-							icon={<Box sx={{ display: 'flex', '& svg': { fontSize: 16 } }}>{thread.icon}</Box>}
-						/>
+						<Box sx={{ height: 28 }}>
+							<EntityInitialsTile name={thread.label} color={palette.warning.main} icon={thread.icon} />
+						</Box>
 					}
 					label={thread.label}
 					meta={thread.message}

@@ -5,6 +5,11 @@ import { dispatchGlobalEvent } from '@/app/features/eventBus'
 
 export const mentionsSuggestions: Omit<SuggestionOptions, 'editor'> = {
 	allowSpaces: true,
+	allow: ({ state, range }) => {
+		const $from = state.doc.resolve(range.from)
+		const isInCodeMark = $from.nodeAfter?.marks.some((mark) => mark.type.spec.code)
+		return !$from.parent.type.spec.code && !isInCodeMark
+	},
 	render: () => {
 		const state = {
 			isOpen: false,

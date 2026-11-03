@@ -13,9 +13,10 @@ type Props = {
 	children: React.ReactNode
 	onClose: (reason: 'backdropClick' | 'escapeKey') => void
 	closeOnBackdropClick?: boolean
+	width?: number
 }
 
-const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Props) => {
+const Modal = ({ visible, children, onClose, closeOnBackdropClick = true, width = 860 }: Props) => {
 	const { reduceAnimations } = useSelector(
 		getTimelinePreferences,
 		(a, b) => a.reduceAnimations === b.reduceAnimations,
@@ -86,6 +87,7 @@ const Modal = ({ visible, children, onClose, closeOnBackdropClick = true }: Prop
 				ref={bodyRef}
 				tabIndex={-1}
 				$theme={theme}
+				$width={width}
 				onMouseDown={(e) => {
 					e.stopPropagation()
 				}}

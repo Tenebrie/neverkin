@@ -284,7 +284,7 @@ export const lightTheme = (props: Props): Theme => {
 			mode: 'light',
 			background: {
 				paper: '#fff',
-				default: 'hsl(250, 25%, 93%)',
+				default: '#F7F6FA',
 			},
 			primary: {
 				main: 'hsl(258, 45%, 48%)',

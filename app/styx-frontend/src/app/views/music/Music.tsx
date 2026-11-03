@@ -181,7 +181,7 @@ export const Music = () => {
 	return (
 		<>
 			<Stack justifyContent="space-between">
-				<Stack direction="row" gap={10} height="100vh">
+				<Stack direction="row" gap={10} height="100dvh">
 					<Stack justifyContent="space-between">
 						<StyledTabs
 							orientation="vertical"

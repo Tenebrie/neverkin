@@ -6,6 +6,8 @@ import useEvent from 'react-use-event-hook'
 import { WikiArticle } from '@/api/types/worldWikiTypes'
 import { useBrowserSpecificScrollbars } from '@/app/hooks/useBrowserSpecificScrollbars'
 import { useUpdateArticle } from '@/app/views/world/api/useUpdateArticle'
+import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
+import { boxArticle } from '@/app/views/world/views/wiki/utils/boxEntity'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { EntityEditorTabs } from '../../common/EntityEditorTabs'
@@ -37,7 +39,17 @@ export const ArticleDetails = ({ article, titleProps, isWikiTab, surface }: Prop
 				...scrollbars,
 			}}
 		>
-			<EditableTitle value={article.name} onSave={onSave} {...titleProps} />
+			<EditableTitle
+				value={article.name}
+				onSave={onSave}
+				{...titleProps}
+				startAdornment={
+					<Stack sx={{ height: 1, marginRight: 0.5 }} direction="row">
+						{titleProps?.startAdornment}
+						<ArticleListItemIcon article={boxArticle(article)} highlighted={false} />
+					</Stack>
+				}
+			/>
 			<Divider />
 			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0}>
 				<EntityEditorTabs

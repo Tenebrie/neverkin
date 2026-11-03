@@ -33,6 +33,7 @@ export const EditorExtensions: Extensions = [
 	...SharedExtensions,
 	Placeholder.configure({
 		placeholder: 'Content',
+		showOnlyWhenEditable: false,
 	}),
 	Mention.configure({
 		suggestion: mentionsSuggestions,

@@ -73,7 +73,7 @@ export function QuickSelectListComponent(props: Props) {
 
 	return (
 		<Box
-			sx={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100vh', zIndex: 100 }}
+			sx={{ position: 'fixed', top: 0, left: 0, width: '100vw', height: '100dvh', zIndex: 100 }}
 			onClick={() => {
 				close()
 			}}

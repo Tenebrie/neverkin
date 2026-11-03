@@ -16,6 +16,7 @@ import { useGuestLogin } from '@/app/features/auth/hooks/useGuestLogin'
 import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin'
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
+import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { Info } from '@/ui-lib/components/Info/Info'
 
@@ -26,6 +27,7 @@ export const CreateAccount = () => {
 
 	const handleUserLogin = useHandleUserLogin()
 	const [handleGuestLogin] = useGuestLogin()
+	const { isMobile } = useMobileLayout()
 
 	const registerForm = useAppForm({
 		defaultValues: {
@@ -61,9 +63,9 @@ export const CreateAccount = () => {
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], registerForm.handleSubmit)
 
 	return (
-		<Stack justifyContent="center" height="100%" alignItems="center">
-			<Stack sx={{ maxWidth: 500, width: '100%' }}>
-				<Paper elevation={2}>
+		<Stack justifyContent="safe center" height="100%" alignItems="center">
+			<Stack sx={{ maxWidth: isMobile ? 'none' : 500, width: '100%', minHeight: isMobile ? '100%' : 'auto' }}>
+				<Paper elevation={2} square={isMobile} sx={{ flexGrow: 1 }}>
 					<Stack
 						spacing={2}
 						justifyContent="center"
@@ -74,13 +76,19 @@ export const CreateAccount = () => {
 							registerForm.handleSubmit()
 						}}
 					>
-						<Stack alignItems="center">
-							<TenebrieLogo />
+						<Stack spacing={2} useFlexGap>
+							{!isMobile && (
+								<>
+									<Stack alignItems="center" sx={{ '@media (max-height: 500px)': { display: 'none' } }}>
+										<TenebrieLogo />
+									</Stack>
+									<Divider sx={{ '@media (max-height: 500px)': { display: 'none' } }} />
+								</>
+							)}
+							<Typography variant="h6" align="center" sx={{ padding: 1 }}>
+								Create new account
+							</Typography>
 						</Stack>
-						<Divider />
-						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-							Create new account
-						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={createAccountState} />
 						<registerForm.AppField name="email">

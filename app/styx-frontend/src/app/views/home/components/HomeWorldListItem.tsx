@@ -29,7 +29,9 @@ export function HomeWorldListItem({ world, owned, readonly }: Props) {
 	return (
 		<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }}>
 			<HomeRowItem ariaLabel={`Load world "${world.name}"`}>
-				<EntityInitialsTile name={world.name} color={getAccentColor(world.id)} />
+				<Box sx={{ height: 38 }}>
+					<EntityInitialsTile name={world.name} color={getAccentColor(world.id)} />
+				</Box>
 				<Stack flex={1} minWidth={0} gap={0.25}>
 					<Stack direction="row" alignItems="center" gap={1} minWidth={0}>
 						<Typography variant="body1" fontWeight={600} noWrap sx={{ minWidth: 0 }}>

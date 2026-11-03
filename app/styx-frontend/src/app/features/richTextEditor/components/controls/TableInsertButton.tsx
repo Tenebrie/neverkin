@@ -8,7 +8,8 @@ import { Editor, useEditorState } from '@tiptap/react'
 import { useCallback, useState } from 'react'
 
 import { ActiveButtonIndicator } from '@/app/features/richTextEditor/extensions/mentions/components/ActiveButtonIndicator'
-import { PopoverButton } from '@/ui-lib/components/PopoverButton/PopoverButton'
+
+import { ToolbarPopoverButton } from './ToolbarPopoverButton'
 
 type Props = {
 	editor: Editor
@@ -24,7 +25,7 @@ export function TableInsertButton({ editor }: Props) {
 	})
 
 	return (
-		<PopoverButton
+		<ToolbarPopoverButton
 			content={
 				<>
 					Table
@@ -33,10 +34,7 @@ export function TableInsertButton({ editor }: Props) {
 				</>
 			}
 			tooltip={isInTable ? 'Table options' : 'Insert table'}
-			color="secondary"
-			size="medium"
-			buttonVariant="text"
-			buttonSx={{ minHeight: 44, minWidth: 40, padding: '0 4px 0 8px', fontSize: '0.875rem' }}
+			buttonSx={{ padding: '0 4px 0 8px', fontSize: '0.875rem' }}
 			popoverBody={({ close }) =>
 				isInTable ? (
 					<TableOptionsList editor={editor} onClose={close} />

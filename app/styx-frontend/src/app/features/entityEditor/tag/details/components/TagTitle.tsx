@@ -1,17 +1,20 @@
 import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
-import { ColorIconPicker } from '@/app/components/ColorIconPicker/ColorIconPicker'
+import { WorldTag } from '@/api/types/worldTypes'
+import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
+import { boxTag } from '@/app/views/world/views/wiki/utils/boxEntity'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { TagDraft } from '../draft/useTagDraft'
 
 type Props = {
+	tag: WorldTag
 	draft: TagDraft
 	titleProps?: Partial<Parameters<typeof EditableTitle>[0]>
 }
 
-export const TagTitle = ({ draft, titleProps }: Props) => {
+export const TagTitle = ({ tag, draft, titleProps }: Props) => {
 	const onSave = useEvent((name: string) => {
 		draft.setName(name.trim())
 	})
@@ -25,14 +28,9 @@ export const TagTitle = ({ draft, titleProps }: Props) => {
 			placeholder="Tag name"
 			{...titleProps}
 			startAdornment={
-				<Stack sx={{ height: 1 }} direction="row">
+				<Stack sx={{ height: 1, marginRight: 0.5 }} direction="row">
 					{titleProps?.startAdornment}
-					<ColorIconPicker
-						icon="default"
-						defaultIcon="mdi:tag-outline"
-						color={'#9f2261'}
-						onClick={() => {}}
-					/>
+					<ArticleListItemIcon article={boxTag(tag)} highlighted={false} />
 				</Stack>
 			}
 		/>

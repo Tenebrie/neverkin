@@ -52,7 +52,7 @@ export function ActorDetailsComponent({ editedActor, titleProps, surface }: Prop
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<ActorTitle draft={draft} titleProps={titleProps} />
+			<ActorTitle actor={actor} draft={draft} titleProps={titleProps} />
 			<Divider />
 			<Box flexGrow={1} height={fluidHeight ? 'auto' : 0} sx={{ marginRight: 0 }}>
 				<EntityEditorTabs

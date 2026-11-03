@@ -40,7 +40,15 @@ describe('TabNode', () => {
 		expect(indentLevel()).toBe(0)
 	})
 
-	it('indents the paragraph when Tab is pressed right after a tab character', () => {
+	it('inserts another tab character when Tab is pressed after a mid-line tab character', () => {
+		press('Tab')
+		press('Tab')
+		expect(tabCount()).toBe(2)
+		expect(indentLevel()).toBe(0)
+	})
+
+	it('indents the paragraph when Tab is pressed right after a leading tab character', () => {
+		editor.commands.focus('start')
 		press('Tab')
 		press('Tab')
 		expect(tabCount()).toBe(1)
@@ -50,6 +58,7 @@ describe('TabNode', () => {
 	})
 
 	it('clamps the paragraph indent at the maximum level', () => {
+		editor.commands.focus('start')
 		press('Tab')
 		for (let i = 0; i < 12; i++) {
 			press('Tab')
@@ -65,6 +74,7 @@ describe('TabNode', () => {
 	})
 
 	it('Shift-Tab removes the adjacent tab character before unindenting the paragraph', () => {
+		editor.commands.focus('start')
 		press('Tab')
 		press('Tab')
 		expect(tabCount()).toBe(1)

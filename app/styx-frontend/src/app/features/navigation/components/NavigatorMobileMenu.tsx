@@ -25,10 +25,11 @@ import { useCheckRouteMatchExact } from '@/router-utils/hooks/useCheckRouteMatch
 import { getAuthState } from '../../auth/AuthSliceSelectors'
 import { getDocsUrl } from '../utils/getDocsUrl'
 
-export function HamburgerMenu() {
-	const { user } = useSelector(getAuthState)
+export function NavigatorMobileMenu() {
+	const { user } = useSelector(getAuthState, (a, b) => a.user === b.user)
 	const {
 		id: worldId,
+		name: worldName,
 		isLoaded,
 		isReadOnly,
 	} = useSelector(
@@ -104,7 +105,16 @@ export function HamburgerMenu() {
 					</NavigationLink>
 				)}
 				{hasWorld && [
-					<Divider key="divider" />,
+					<Divider key="divider-1" sx={{ my: 1 }} />,
+					<MenuItem disabled key="last-word-label">
+						<ListItemText
+							primary={worldName}
+							secondary="Last open world"
+							slotProps={{ primary: { noWrap: true } }}
+							sx={{ contain: 'inline-size' }}
+						/>
+					</MenuItem>,
+					<Divider key="divider-2" sx={{ my: 0 }} />,
 					<NavigationLink
 						key="timeline"
 						to="/world/$worldId/timeline"

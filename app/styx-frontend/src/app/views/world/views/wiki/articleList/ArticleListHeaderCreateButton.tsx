@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import ButtonGroup from '@mui/material/ButtonGroup'
 import TextField from '@mui/material/TextField'
@@ -92,10 +93,14 @@ export function ArticleListHeaderCreateButton({ folderId, slotProps, ...props }:
 								key={type}
 								variant={selectedType === type ? 'contained' : 'outlined'}
 								onClick={() => setSelectedType(type)}
-								startIcon={<EntityIcon variant={type} />}
 								color="secondary"
+								aria-label={type}
+								sx={{ minWidth: { xs: 0, sm: 64 }, gap: 0.75 }}
 							>
-								{type.charAt(0).toUpperCase() + type.slice(1)}
+								<EntityIcon variant={type} height={20} />
+								<Box component="span" sx={{ display: { xs: 'none', sm: 'inline' } }}>
+									{type.charAt(0).toUpperCase() + type.slice(1)}
+								</Box>
 							</Button>
 						))}
 					</ButtonGroup>

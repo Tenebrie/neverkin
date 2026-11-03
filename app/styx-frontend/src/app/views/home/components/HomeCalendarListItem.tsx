@@ -1,4 +1,5 @@
 import CalendarMonth from '@mui/icons-material/CalendarMonth'
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import Typography from '@mui/material/Typography'
 
@@ -19,11 +20,13 @@ export function HomeCalendarListItem({ calendar }: Props) {
 	return (
 		<NavigationLink to="/calendar/$calendarId" params={{ calendarId: calendar.id }}>
 			<HomeRowItem ariaLabel={`Load calendar "${calendar.name}"`}>
-				<EntityInitialsTile
-					name={calendar.name}
-					color={getAccentColor(calendar.id)}
-					icon={<CalendarMonth sx={{ fontSize: 18 }} />}
-				/>
+				<Box sx={{ height: 38 }}>
+					<EntityInitialsTile
+						name={calendar.name}
+						color={getAccentColor(calendar.id)}
+						icon={<CalendarMonth />}
+					/>
+				</Box>
 				<Stack flex={1} minWidth={0} gap={0.25}>
 					<Typography variant="body1" fontWeight={600} noWrap>
 						{calendar.name}

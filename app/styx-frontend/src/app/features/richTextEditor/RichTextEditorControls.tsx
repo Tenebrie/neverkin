@@ -13,6 +13,8 @@ import { BulletListButton } from './components/controls/BulletListButton'
 import { FontFamilySelect } from './components/controls/FontFamilySelect'
 import { HeadingSelect } from './components/controls/HeadingSelect'
 import { HorizontalRuleButton } from './components/controls/HorizontalRuleButton'
+import { InsertImageButton } from './components/controls/InsertImageButton'
+import { InsertLinkButton } from './components/controls/InsertLinkButton'
 import { ItalicButton } from './components/controls/ItalicButton'
 import { MentionActorButton } from './components/controls/MentionActorButton'
 import { OrderedListButton } from './components/controls/OrderedListButton'
@@ -70,6 +72,8 @@ export function RichTextEditorControlsComponent({ editor, sticky }: Props) {
 							<BlockquoteButton editor={editor} />
 							<HorizontalRuleButton editor={editor} />
 							<TableInsertButton editor={editor} />
+							<InsertLinkButton editor={editor} />
+							<InsertImageButton editor={editor} />
 							<ToolbarDivider />
 							<MentionActorButton editor={editor} />
 						</>

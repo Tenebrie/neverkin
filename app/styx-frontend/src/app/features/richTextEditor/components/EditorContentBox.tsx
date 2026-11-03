@@ -5,6 +5,8 @@ import { Editor } from '@tiptap/core'
 import { EditorContent } from '@tiptap/react'
 import { memo } from 'react'
 
+import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
+
 type Props = {
 	editor: Editor
 	mode: 'read' | 'edit'
@@ -18,6 +20,7 @@ export const EditorContentBox = memo(EditorContentBoxComponent)
 function EditorContentBoxComponent({ editor, mode, className, readOnly, children }: Props) {
 	const { palette } = useTheme()
 	const isDark = palette.mode === 'dark'
+	const theme = useCustomTheme()
 
 	return (
 		<Box
@@ -55,6 +58,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 					margin: 0,
 					padding: '10px 0px',
 					lineHeight: 1.55,
+					tabSize: '2em',
 					wordBreak: 'break-word',
 					color: isDark ? '#D8D8E0' : 'text.primary',
 				},
@@ -69,8 +73,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 				},
 
 				'& span[data-type="tab"]': {
-					display: 'inline-block',
-					width: '2em',
+					whiteSpace: 'pre-wrap',
 				},
 
 				...Object.fromEntries(
@@ -80,10 +83,27 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 					]),
 				),
 
-				'& code': {
+				'& :not(pre) > code': {
 					padding: '4px 8px',
 					borderRadius: '4px',
-					background: '#00000033',
+					background: theme.custom.palette.neutralBackground.soft,
+				},
+
+				'& pre': {
+					margin: '10px 0',
+					padding: '8px 12px',
+					borderRadius: '4px',
+					background: theme.custom.palette.neutralBackground.soft,
+					tabSize: 2,
+				},
+
+				'& blockquote': {
+					margin: '10px 0',
+					padding: '0 16px',
+					borderLeft: '4px solid',
+					borderRadius: '4px',
+					borderColor: 'secondary.main',
+					background: theme.custom.palette.neutralBackground.soft,
 				},
 
 				'& span[data-luminance="dark"]': isDark
