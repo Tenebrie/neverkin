@@ -50,7 +50,15 @@ export const BaseNavigator = () => {
 
 	const isShareLinkRoute = useCheckRouteMatch('/share/$shareLinkSlug')
 	const isGuestLoginRoute = useCheckRouteMatch('/guest-login')
+	const isHiddenOnMobile = useCheckRouteMatch([
+		'/login',
+		'/create-account',
+		'/world/$worldId/wiki/$articleId',
+	])
 	if ((isShareLinkRoute || isGuestLoginRoute) && !user) {
+		return null
+	}
+	if (isHiddenOnMobile && isNarrow) {
 		return null
 	}
 

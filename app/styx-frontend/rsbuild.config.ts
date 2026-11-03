@@ -62,7 +62,6 @@ export default defineConfig({
 	},
 	dev: {
 		client: {
-			host: 'app.localhost',
 			port: 8080,
 			protocol: 'ws',
 		},
