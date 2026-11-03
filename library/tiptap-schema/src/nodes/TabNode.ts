@@ -11,13 +11,14 @@ export const TabNode = Node.create<object, TabNodeStorage>({
 	inline: true,
 	group: 'inline',
 	atom: true,
+	selectable: false,
 
 	parseHTML() {
 		return [{ tag: 'span[data-type="tab"]' }]
 	},
 
 	renderHTML() {
-		return ['span', { 'data-type': 'tab' }]
+		return ['span', { 'data-type': 'tab' }, '\t']
 	},
 
 	addStorage() {
@@ -72,10 +73,11 @@ export const TabNode = Node.create<object, TabNodeStorage>({
 					return false
 				}
 				const { $from, empty } = this.editor.state.selection
-				if (empty && $from.nodeBefore?.type.name !== this.name) {
+				const afterLeadingTab = $from.index() === 1 && $from.nodeBefore?.type.name === this.name
+				if (empty && !afterLeadingTab) {
 					return this.editor.commands.insertContent({ type: this.name })
 				}
-				// Caret directly after a tab character, or a selection: indent the block(s)
+				// Caret directly after a leading tab character, or a selection: indent the block(s)
 				this.editor.commands.indent()
 				// Consume Tab even at max indent so focus stays in the editor
 				return true

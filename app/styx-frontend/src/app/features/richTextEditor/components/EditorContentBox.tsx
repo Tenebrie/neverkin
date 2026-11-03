@@ -58,6 +58,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 					margin: 0,
 					padding: '10px 0px',
 					lineHeight: 1.55,
+					tabSize: '2em',
 					wordBreak: 'break-word',
 					color: isDark ? '#D8D8E0' : 'text.primary',
 				},
@@ -72,8 +73,7 @@ function EditorContentBoxComponent({ editor, mode, className, readOnly, children
 				},
 
 				'& span[data-type="tab"]': {
-					display: 'inline-block',
-					width: '2em',
+					whiteSpace: 'pre-wrap',
 				},
 
 				...Object.fromEntries(
