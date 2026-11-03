@@ -30,7 +30,7 @@ export function TagDetailsComponent({ editedTag, titleProps }: Props) {
 				...useBrowserSpecificScrollbars(),
 			}}
 		>
-			<TagTitle draft={draft} titleProps={titleProps} />
+			<TagTitle tag={editedTag} draft={draft} titleProps={titleProps} />
 			<TagMentionedBy tagId={editedTag.id} />
 		</Stack>
 	)

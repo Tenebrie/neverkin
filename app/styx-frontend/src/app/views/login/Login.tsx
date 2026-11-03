@@ -17,6 +17,7 @@ import { useHandleUserLogin } from '@/app/features/auth/hooks/useHandleUserLogin
 import { BoundTextField } from '@/app/features/forms/components/BoundTextField'
 import { useAppForm } from '@/app/features/forms/useAppForm'
 import { useEffectOnce } from '@/app/hooks/useEffectOnce'
+import { useMobileLayout } from '@/app/hooks/useMobileLayout'
 import { Shortcut, useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { Info } from '@/ui-lib/components/Info/Info'
 
@@ -27,6 +28,7 @@ export function Login() {
 
 	const handleUserLogin = useHandleUserLogin()
 	const [handleGuestLogin] = useGuestLogin()
+	const { isMobile } = useMobileLayout()
 
 	const loginForm = useAppForm({
 		defaultValues: {
@@ -61,17 +63,23 @@ export function Login() {
 	useShortcut([Shortcut.Enter, Shortcut.CtrlEnter], loginForm.handleSubmit)
 
 	return (
-		<Stack justifyContent="center" height="100%" alignItems="center">
-			<Stack sx={{ maxWidth: 500, width: '100%' }}>
-				<Paper elevation={1}>
+		<Stack justifyContent="safe center" height="100%" alignItems="center">
+			<Stack sx={{ maxWidth: isMobile ? 'none' : 500, width: '100%', minHeight: isMobile ? '100%' : 'auto' }}>
+				<Paper elevation={1} square={isMobile} sx={{ flexGrow: 1 }}>
 					<Stack spacing={2} justifyContent="center" padding={4}>
-						<Stack alignItems="center">
-							<TenebrieLogo />
+						<Stack spacing={2} useFlexGap>
+							{!isMobile && (
+								<>
+									<Stack alignItems="center" sx={{ '@media (max-height: 500px)': { display: 'none' } }}>
+										<TenebrieLogo />
+									</Stack>
+									<Divider sx={{ '@media (max-height: 500px)': { display: 'none' } }} />
+								</>
+							)}
+							<Typography variant="h6" align="center" sx={{ padding: 1 }}>
+								Sign in to Neverkin
+							</Typography>
 						</Stack>
-						<Divider />
-						<Typography variant="h6" align="center" sx={{ padding: 1 }}>
-							Sign in to Neverkin
-						</Typography>
 						<AlreadyLoggedInAlert parentSpacing={2} />
 						<ApiErrorBanner apiState={loginState} />
 						<loginForm.AppField name="email">

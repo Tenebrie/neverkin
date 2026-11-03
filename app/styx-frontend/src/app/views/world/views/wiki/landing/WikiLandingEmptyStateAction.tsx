@@ -1,4 +1,5 @@
 import ChevronRightIcon from '@mui/icons-material/ChevronRight'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
 import Paper from '@mui/material/Paper'
 import Stack from '@mui/material/Stack'
@@ -27,11 +28,13 @@ export function WikiLandingEmptyStateAction({ type, title, body, buttonLabel, on
 		>
 			<Stack gap={1.5}>
 				<Stack direction="row" alignItems="center" gap={1.5}>
-					<EntityInitialsTile
-						name={title}
-						color={palette.primary.main}
-						icon={<EntityIcon variant={type} />}
-					/>
+					<Box sx={{ height: 38 }}>
+						<EntityInitialsTile
+							name={title}
+							color={palette.primary.main}
+							icon={<EntityIcon variant={type} />}
+						/>
+					</Box>
 					<Typography variant="body1" fontWeight={600}>
 						{title}
 					</Typography>

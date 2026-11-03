@@ -60,7 +60,11 @@ export function useArticleDragDrop({ article, isFolderExpanded }: Props) {
 
 			return (
 				<Button
-					startIcon={<ArticleListItemIcon article={article} highlighted={false} />}
+					startIcon={
+						<Box sx={{ height: 28 }}>
+							<ArticleListItemIcon article={article} highlighted={false} />
+						</Box>
+					}
 					color="secondary"
 					variant="contained"
 					sx={{ justifyContent: 'start', opacity: 0.3, width: '300px', filter: 'grayscale(100%)' }}

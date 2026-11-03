@@ -1,5 +1,7 @@
 import MenuIcon from '@mui/icons-material/Menu'
+import Box from '@mui/material/Box'
 import Button from '@mui/material/Button'
+import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
 import MenuItem from '@mui/material/MenuItem'
 import { useTheme } from '@mui/material/styles'
@@ -65,14 +67,14 @@ function WorldSelectorButtonComponent() {
 						sx: {
 							marginTop: '6px',
 							maxHeight: 400,
-							minWidth: 250,
+							minWidth: 350,
 							zIndex: 25,
 						},
 					},
 				}}
 			>
 				{ownedWorlds.length > 0 && (
-					<div>
+					<Box>
 						<MenuItem disabled sx={{ opacity: '1 !important' }}>
 							<Typography variant="caption" color="text.secondary">
 								Your worlds
@@ -81,11 +83,15 @@ function WorldSelectorButtonComponent() {
 						{ownedWorlds.map((world) => (
 							<NavigationLink to="/world/$worldId/wiki" params={{ worldId: world.id }} key={world.id}>
 								<MenuItem onClick={handleWorldSelect} selected={currentWorldId === world.id}>
-									<TruncatedSpan $lines={1}>{world.name}</TruncatedSpan>
+									<ListItemText
+										primary={world.name}
+										slotProps={{ primary: { noWrap: true } }}
+										sx={{ contain: 'inline-size' }}
+									/>
 								</MenuItem>
 							</NavigationLink>
 						))}
-					</div>
+					</Box>
 				)}
 				{contributableWorlds.length > 0 && (
 					<div>

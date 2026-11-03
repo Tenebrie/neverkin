@@ -165,7 +165,7 @@ function ArticleListItemInnerComponent({
 				<Button
 					role="button"
 					startIcon={
-						<Stack direction="row" alignItems="center" sx={{ gap: 0.5 }}>
+						<Stack direction="row" alignItems="center" sx={{ gap: 0.5, height: 28 }}>
 							{isBulkSelecting && (
 								<Checkbox
 									size="small"

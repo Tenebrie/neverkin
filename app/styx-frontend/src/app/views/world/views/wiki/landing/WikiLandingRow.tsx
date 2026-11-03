@@ -29,7 +29,7 @@ export function WikiLandingRow({ icon, label, meta, children, onClick }: Props) 
 				}}
 			>
 				{icon}
-				<Typography variant="body2" fontWeight={600} noWrap sx={{ maxWidth: '44%' }}>
+				<Typography variant="body2" fontWeight={500} noWrap sx={{ maxWidth: '44%', color: 'primary.main' }}>
 					{label}
 				</Typography>
 				<Typography

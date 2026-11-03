@@ -23,7 +23,6 @@ export default defineConfig({
 		dedupe: [
 			'@tiptap/core',
 			'@tiptap/pm',
-			'@tiptap/react',
 			'prosemirror-state',
 			'prosemirror-view',
 			'prosemirror-model',
@@ -63,7 +62,6 @@ export default defineConfig({
 	},
 	dev: {
 		client: {
-			host: 'app.localhost',
 			port: 8080,
 			protocol: 'ws',
 		},

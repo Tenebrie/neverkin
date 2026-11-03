@@ -1,3 +1,5 @@
+import Box from '@mui/material/Box'
+
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 
 import { ArticleListItemIcon } from '../articleList/icon/ArticleListItemIcon'
@@ -16,7 +18,11 @@ export function WikiLandingEntityRow({ entity, openedAt }: Props) {
 
 	return (
 		<WikiLandingRow
-			icon={<ArticleListItemIcon article={entity} highlighted={false} />}
+			icon={
+				<Box sx={{ height: 28 }}>
+					<ArticleListItemIcon article={entity} highlighted={false} />
+				</Box>
+			}
 			label={entity.name}
 			meta={<WikiLandingFolderLabel folderId={entity.entity.parentFolderId} />}
 			onClick={() =>

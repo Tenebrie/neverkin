@@ -13,7 +13,7 @@ import Modal from '@/ui-lib/components/Modal'
 import { EntityBreadcrumbs } from './EntityBreadcrumbs'
 import { useCurrentEntity } from './hooks/useCurrentEntity'
 
-export const EditEventModal = () => {
+export function EditEventModal() {
 	const { isOpen, entityStack } = useModal('editEventModal')
 	const navigate = useStableNavigate({ from: '/world/$worldId' })
 
@@ -73,7 +73,7 @@ export const EditEventModal = () => {
 	const currentEntity = useCurrentEntity()
 
 	return (
-		<Modal visible={isOpen} onClose={handleClose} closeOnBackdropClick>
+		<Modal visible={isOpen} onClose={handleClose} closeOnBackdropClick width={960}>
 			<Stack
 				direction={'column'}
 				gap={2}

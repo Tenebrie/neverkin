@@ -107,7 +107,7 @@ export async function createEventAsUser(page: Page, title: string) {
 export async function createActorAsUser(page: Page, name: string) {
 	await page.getByTestId('NavigateToMindmap').click()
 	await page.getByRole('button', { name: 'Create new object' }).click()
-	await page.getByRole('button', { name: 'Actor', exact: true }).click()
+	await page.getByRole('button', { name: 'actor', exact: true }).click()
 	await page.getByPlaceholder('Name').fill(name)
 	await withCreatedActor(
 		page,
@@ -118,7 +118,7 @@ export async function createActorAsUser(page: Page, name: string) {
 export async function createArticleAsUser(page: Page, name: string) {
 	await page.getByTestId('NavigateToWiki').click()
 	await page.getByRole('button', { name: 'Create new object' }).click()
-	await page.getByRole('button', { name: 'Article', exact: true }).click()
+	await page.getByRole('button', { name: 'article', exact: true }).click()
 	await page.getByPlaceholder('Name').fill(name)
 	await withCreatedArticle(
 		page,
