@@ -1,13 +1,13 @@
 import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
+import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { BoxedWikiEntity } from '../../hooks/useBoxedWikiContent'
 import { ArticleListItemCollapse } from '../ArticleListItemCollapse'
 
 type Props = {
-	article: BoxedWikiEntity
+	article: MindmapNodeParentParcel
 	highlighted: boolean
 	folderCollapseIcon?: boolean
 }
@@ -17,19 +17,15 @@ export function ArticleListItemIcon({ article, folderCollapseIcon }: Props) {
 		return <ArticleListItemCollapse entity={article} />
 	}
 
+	const customIcon = 'icon' in article.entity ? article.entity.icon : 'default'
 	const icon =
-		article.type === 'event' ? (
-			<CustomEntityIcon icon={article.entity.icon} color="currentColor" height={16} />
+		customIcon === 'default' ? (
+			<EntityIcon variant={article.type} />
 		) : (
-			<EntityIcon variant={article.type} height={16} />
+			<CustomEntityIcon icon={customIcon} color="currentColor" />
 		)
 
 	return (
-		<EntityInitialsTile
-			name={article.name}
-			color={article.color || getAccentColor(article.id)}
-			size={28}
-			icon={icon}
-		/>
+		<EntityInitialsTile name={article.name} color={article.color || getAccentColor(article.id)} icon={icon} />
 	)
 }

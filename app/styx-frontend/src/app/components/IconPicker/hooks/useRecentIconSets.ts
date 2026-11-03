@@ -1,3 +1,4 @@
+import { useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 import useEvent from 'react-use-event-hook'
 
@@ -7,6 +8,8 @@ import { getIconSetPreferences } from '@/app/features/preferences/PreferencesSli
 export function useRecentIconSets() {
 	const { recent } = useSelector(getIconSetPreferences, (a, b) => a.recent === b.recent)
 
+	const recentSnapshot = useRef(recent)
+
 	const dispatch = useDispatch()
 	const { setRecentIconSets } = preferencesSlice.actions
 
@@ -15,5 +18,5 @@ export function useRecentIconSets() {
 		dispatch(setRecentIconSets(filteredIconSets))
 	})
 
-	return [recent, updateRecentIconSets] as const
+	return [recentSnapshot.current, updateRecentIconSets] as const
 }

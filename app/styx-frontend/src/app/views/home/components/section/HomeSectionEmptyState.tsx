@@ -1,3 +1,4 @@
+import Box from '@mui/material/Box'
 import Stack from '@mui/material/Stack'
 import { useTheme } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
@@ -20,7 +21,9 @@ export function HomeSectionEmptyState({ icon, title, cta, description, action }:
 	return (
 		<ListSection label={title} count={0}>
 			<Stack direction="row" alignItems="center" gap={2} sx={{ p: 2 }}>
-				<EntityInitialsTile name={cta} color={palette.primary.main} icon={icon} />
+				<Box sx={{ height: 38 }}>
+					<EntityInitialsTile name={cta} color={palette.primary.main} icon={icon} />
+				</Box>
 				<Stack flex={1} minWidth={0} gap={0.25}>
 					<Typography variant="body1" fontWeight={600}>
 						{cta}

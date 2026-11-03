@@ -2,7 +2,8 @@ import Stack from '@mui/material/Stack'
 import useEvent from 'react-use-event-hook'
 
 import { WorldEvent } from '@/api/types/worldTypes'
-import { EventColorIconPicker } from '@/app/components/ColorIconPicker/EventColorIconPicker'
+import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
+import { boxEvent } from '@/app/views/world/views/wiki/utils/boxEntity'
 import { EditableTitle } from '@/ui-lib/components/EditableTitle/EditableTitle'
 
 import { EventDraft } from '../draft/useEventDraft'
@@ -28,9 +29,12 @@ export const EventTitle = ({ event, draft, titleProps }: Props) => {
 			placeholder="Custom name"
 			{...titleProps}
 			startAdornment={
-				<Stack sx={{ height: 1 }} direction="row">
+				<Stack sx={{ height: 1, marginRight: 0.5 }} direction="row">
 					{titleProps?.startAdornment}
-					<EventColorIconPicker draft={draft} />
+					<ArticleListItemIcon
+						article={boxEvent({ ...event, icon: draft.icon, color: draft.color })}
+						highlighted={false}
+					/>
 				</Stack>
 			}
 		/>

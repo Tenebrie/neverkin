@@ -8,24 +8,24 @@ type Props = {
 	name: string
 	color: string
 	icon?: ReactNode
-	size?: number
 }
 
 /**
  * Square tile standing in for an entity, tinted with its accent color. Shows the entity's initials
- * unless an icon is given.
+ * unless an icon is given. Fills the height of its container.
  */
-export function EntityInitialsTile({ name, color, icon, size = 38 }: Props) {
+export function EntityInitialsTile({ name, color, icon }: Props) {
 	const { palette } = useTheme()
 	const isDark = palette.mode === 'dark'
 
 	return (
 		<Box
 			sx={{
-				width: size,
-				height: size,
+				height: '100%',
+				aspectRatio: 1,
+				containerType: 'size',
 				flex: '0 0 auto',
-				borderRadius: 1.25,
+				borderRadius: '0.4rem',
 				display: 'grid',
 				placeItems: 'center',
 				typography: 'caption',
@@ -36,6 +36,10 @@ export function EntityInitialsTile({ name, color, icon, size = 38 }: Props) {
 				color: isDark
 					? `color-mix(in oklab, ${color} 82%, white)`
 					: `color-mix(in oklab, ${color} 38%, black)`,
+				'& svg': {
+					width: '57cqh',
+					height: '57cqh',
+				},
 			}}
 		>
 			{icon ?? getInitials(name)}
