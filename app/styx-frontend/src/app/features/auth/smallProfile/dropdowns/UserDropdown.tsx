@@ -107,7 +107,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<AccountCircle />
 						</ListItemIcon>
-						Profile
+						<ListItemText>Profile</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/preferences">
@@ -120,7 +120,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<Tune />
 						</ListItemIcon>
-						Preferences
+						<ListItemText>Preferences</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/storage">
@@ -133,7 +133,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<Storage />
 						</ListItemIcon>
-						Storage
+						<ListItemText>Storage</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/migration">
@@ -146,7 +146,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<ImportExportIcon />
 						</ListItemIcon>
-						Import / Export
+						<ListItemText>Import / Export</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/security">
@@ -159,7 +159,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<LockResetIcon />
 						</ListItemIcon>
-						Security
+						<ListItemText>Security</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<NavigationLink to="/profile/feedback">
@@ -172,7 +172,7 @@ export function UserDropdown({ user }: Props) {
 						<ListItemIcon>
 							<FeedbackIcon />
 						</ListItemIcon>
-						Feedback
+						<ListItemText>Feedback</ListItemText>
 					</MenuItem>
 				</NavigationLink>
 				<Divider sx={{ my: 1 }} />
@@ -185,7 +185,7 @@ export function UserDropdown({ user }: Props) {
 					<ListItemIcon>
 						<Logout />
 					</ListItemIcon>
-					Logout
+					<ListItemText>Logout</ListItemText>
 				</MenuItem>
 			</Menu>
 		</Stack>

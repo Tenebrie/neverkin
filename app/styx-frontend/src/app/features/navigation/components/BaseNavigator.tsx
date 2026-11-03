@@ -22,10 +22,10 @@ import { GlobalSearch } from '../../globalSearch/GlobalSearch'
 import { ThemeModeToggle } from '../../theming/components/ThemeModeToggle'
 import { CustomTheme, useCustomTheme } from '../../theming/hooks/useCustomTheme'
 import { DocsNavigatorButton } from './DocsNavigatorButton'
-import { HamburgerMenu } from './HamburgerMenu'
 import { LandingPageNavigatorButton } from './LandingPageNavigatorButton'
 import { LastWorldNavigatorButton } from './LastWorldNavigatorButton'
 import { NavigatorButton } from './NavigatorButton'
+import { NavigatorMobileMenu } from './NavigatorMobileMenu'
 import { WorldSelectorButton } from './WorldSelectorButton'
 
 const Container = styled(Paper)<{ $theme: CustomTheme }>`
@@ -67,7 +67,7 @@ export const BaseNavigator = () => {
 			<Box>
 				{user && (
 					<Stack direction="row" height="100%" gap={1} alignItems="center">
-						{isNarrow && <HamburgerMenu />}
+						{isNarrow && <NavigatorMobileMenu />}
 						{!isNarrow && (
 							<>
 								<Stack
