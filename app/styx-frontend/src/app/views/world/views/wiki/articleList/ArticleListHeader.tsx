@@ -8,6 +8,7 @@ import Typography from '@mui/material/Typography'
 import { useDispatch, useSelector } from 'react-redux'
 
 import { useModal } from '@/app/features/modals/ModalsSlice'
+import { Shortcut } from '@/app/hooks/useShortcut/useShortcut'
 import { useIsReadOnly } from '@/app/views/world/hooks/useIsReadOnly'
 import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { getAllWikiEntityIds, getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
@@ -53,7 +54,7 @@ export const ArticleListHeader = () => {
 					onChange={() => onChange()}
 				/>
 			)}
-			<Stack direction="row" justifyContent="space-between" width="100%" sx={{ minWidth: 0 }}>
+			<Stack direction="row" justifyContent="space-between" width="100%" gap={1} sx={{ minWidth: 0 }}>
 				<Typography variant="h6" marginLeft={1} sx={{ minWidth: 0, flex: 1, overflow: 'hidden' }}>
 					{!isBulkSelecting && (
 						<Box
@@ -69,7 +70,18 @@ export const ArticleListHeader = () => {
 				</Typography>
 				{!isBulkSelecting && !isReadOnly && (
 					<Box sx={{ flexShrink: 0 }}>
-						<ArticleListHeaderCreateButton folderId={null} />
+						<ArticleListHeaderCreateButton
+							folderId={null}
+							shortcut={Shortcut.CreateNew}
+							label={<span className="create-button-label">Create new...</span>}
+							buttonSx={{
+								'@container outliner-drawer (width < 320px)': {
+									minWidth: 0,
+									'& .MuiButton-startIcon': { margin: 0 },
+									'& .create-button-label': { display: 'none' },
+								},
+							}}
+						/>
 					</Box>
 				)}
 				{isBulkSelecting && (
