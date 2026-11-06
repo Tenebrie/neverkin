@@ -12,6 +12,7 @@ export function boxActor(actor: Actor): BoxedWikiEntity {
 		entity: actor,
 		name: actor.name,
 		position: actor.parentFolderPosition,
+		icon: actor.icon,
 		color: actor.color,
 	}
 }
@@ -23,6 +24,7 @@ export function boxArticle(article: WikiArticle): BoxedWikiEntity {
 		entity: article,
 		name: article.name,
 		position: article.parentFolderPosition,
+		icon: article.icon,
 		color: article.color,
 	}
 }
@@ -34,6 +36,7 @@ export function boxEvent(event: WorldEvent): BoxedWikiEntity {
 		entity: event,
 		name: event.name,
 		position: event.parentFolderPosition,
+		icon: event.icon,
 		color: event.color,
 	}
 }
@@ -45,6 +48,7 @@ export function boxFolder(folder: WikiFolder): BoxedWikiEntity {
 		entity: folder,
 		name: folder.name,
 		position: folder.parentFolderPosition,
+		icon: folder.icon,
 		color: folder.color,
 	}
 }
@@ -56,6 +60,7 @@ export function boxTag(tag: WorldTag): BoxedWikiEntity {
 		entity: tag,
 		name: tag.name,
 		position: tag.parentFolderPosition,
+		icon: 'default',
 		color: tag.color,
 	}
 }
@@ -67,6 +72,7 @@ export function boxPlainNode(node: MindmapNode): PlainMindmapNodeParcel {
 		entity: node,
 		name: node.name,
 		position: 0,
+		icon: 'default',
 		color: node.color,
 	}
 }

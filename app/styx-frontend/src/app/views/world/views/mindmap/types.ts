@@ -27,6 +27,7 @@ export type PlainMindmapNodeParcel = {
 	id: string
 	name: string
 	position: number
+	icon: string
 	color: string
 }
 

@@ -23,7 +23,6 @@ export const fetchWorldEventDetailsOrThrow = async (eventId: string, prisma?: Pr
 					sourceType: true,
 				},
 			},
-			deltaStates: true,
 			pages: {
 				select: {
 					id: true,

@@ -428,7 +428,8 @@ export const ModelName = {
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
   WorldEventTrack: 'WorldEventTrack',
-  WorldShareLink: 'WorldShareLink'
+  WorldShareLink: 'WorldShareLink',
+  WorldSearchEntry: 'WorldSearchEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -444,7 +445,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink" | "worldSearchEntry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -2816,6 +2817,44 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    WorldSearchEntry: {
+      payload: Prisma.$WorldSearchEntryPayload<ExtArgs>
+      fields: Prisma.WorldSearchEntryFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.WorldSearchEntryFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.WorldSearchEntryFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload>
+        }
+        findFirst: {
+          args: Prisma.WorldSearchEntryFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.WorldSearchEntryFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload>
+        }
+        findMany: {
+          args: Prisma.WorldSearchEntryFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload>[]
+        }
+        aggregate: {
+          args: Prisma.WorldSearchEntryAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateWorldSearchEntry>
+        }
+        groupBy: {
+          args: Prisma.WorldSearchEntryGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldSearchEntryGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.WorldSearchEntryCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.WorldSearchEntryCountAggregateOutputType> | number
+        }
+      }
+    }
   }
 } & {
   other: {
@@ -3325,6 +3364,18 @@ export const WorldShareLinkScalarFieldEnum = {
 } as const
 
 export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnum)[keyof typeof WorldShareLinkScalarFieldEnum]
+
+
+export const WorldSearchEntryScalarFieldEnum = {
+  id: 'id',
+  worldId: 'worldId',
+  entityType: 'entityType',
+  name: 'name',
+  searchableText: 'searchableText',
+  timestamp: 'timestamp'
+} as const
+
+export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]
 
 
 export const SortOrder = {
@@ -3842,6 +3893,7 @@ export type GlobalOmitConfig = {
   worldEventDelta?: Prisma.WorldEventDeltaOmit
   worldEventTrack?: Prisma.WorldEventTrackOmit
   worldShareLink?: Prisma.WorldShareLinkOmit
+  worldSearchEntry?: Prisma.WorldSearchEntryOmit
 }
 
 /* Types for Logging */

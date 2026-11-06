@@ -23,7 +23,6 @@ export function mockWorldEvent(
 		pages: [],
 		mentions: [],
 		mentionedIn: [],
-		deltaStates: [],
 		parentFolderId: null,
 		parentFolderPosition: 0,
 		...overrides,

@@ -4,19 +4,17 @@ import { useSelector } from 'react-redux'
 import { ShowHideChevron } from '@/app/components/ShowHideChevron'
 import { getWikiPreferences } from '@/app/features/preferences/PreferencesSliceSelectors'
 
-import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
-
 type Props = {
-	entity: BoxedWikiEntity
+	id: string
 }
 
-export function ArticleListItemCollapse({ entity }: Props) {
+export function ArticleListItemFolderCollapse({ id }: Props) {
 	const { expandedFolders } = useSelector(
 		getWikiPreferences,
 		(a, b) => a.expandedFolders === b.expandedFolders,
 	)
 
-	const collapsed = !expandedFolders.includes(entity.id)
+	const collapsed = !expandedFolders.includes(id)
 
 	return (
 		<Stack

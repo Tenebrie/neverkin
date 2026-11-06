@@ -1,23 +1,29 @@
+import { WikiEntityType } from '@/api/types/worldTypes'
 import { EntityInitialsTile } from '@/app/components/EntityInitialsTile'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
-import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { CustomEntityIcon } from '@/ui-lib/icons/CustomEntityIcon'
 import { EntityIcon } from '@/ui-lib/icons/EntityIcon'
 
-import { ArticleListItemCollapse } from '../ArticleListItemCollapse'
+import { ArticleListItemFolderCollapse } from '../ArticleListItemFolderCollapse'
 
 type Props = {
-	article: MindmapNodeParentParcel
+	article: {
+		id: string
+		name: string
+		type: WikiEntityType | 'node'
+		icon: string | undefined
+		color: string | undefined
+	}
 	highlighted: boolean
 	folderCollapseIcon?: boolean
 }
 
 export function ArticleListItemIcon({ article, folderCollapseIcon }: Props) {
 	if (article.type === 'folder' && folderCollapseIcon) {
-		return <ArticleListItemCollapse entity={article} />
+		return <ArticleListItemFolderCollapse id={article.id} />
 	}
 
-	const customIcon = 'icon' in article.entity ? article.entity.icon : 'default'
+	const customIcon = article.icon ?? 'default'
 	const icon =
 		customIcon === 'default' ? (
 			<EntityIcon variant={article.type} />

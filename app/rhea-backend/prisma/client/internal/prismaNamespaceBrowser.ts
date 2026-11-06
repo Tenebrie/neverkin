@@ -82,7 +82,8 @@ export const ModelName = {
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
   WorldEventTrack: 'WorldEventTrack',
-  WorldShareLink: 'WorldShareLink'
+  WorldShareLink: 'WorldShareLink',
+  WorldSearchEntry: 'WorldSearchEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -571,6 +572,18 @@ export const WorldShareLinkScalarFieldEnum = {
 } as const
 
 export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnum)[keyof typeof WorldShareLinkScalarFieldEnum]
+
+
+export const WorldSearchEntryScalarFieldEnum = {
+  id: 'id',
+  worldId: 'worldId',
+  entityType: 'entityType',
+  name: 'name',
+  searchableText: 'searchableText',
+  timestamp: 'timestamp'
+} as const
+
+export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]
 
 
 export const SortOrder = {

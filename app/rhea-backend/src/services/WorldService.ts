@@ -199,9 +199,6 @@ export const WorldService = {
 							},
 							orderBy: { sourceId: 'asc' },
 						},
-						deltaStates: {
-							orderBy: [{ timestamp: 'asc' }, ...CommonOrderBy],
-						},
 					},
 				},
 				calendars: {

@@ -35,6 +35,7 @@ export type BoxedWikiEntity = EntityWrapper & {
 	id: string
 	name: string
 	position: number
+	icon: string
 	color: string | undefined
 }
 

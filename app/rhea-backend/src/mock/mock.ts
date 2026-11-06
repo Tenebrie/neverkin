@@ -91,7 +91,6 @@ export const mockWorldEvent = (data?: Partial<BaselineWorldEvent>): BaselineWorl
 	pages: [],
 	mentions: [],
 	mentionedIn: [],
-	deltaStates: [],
 	parentFolderId: null,
 	parentFolderPosition: 0,
 	...data,

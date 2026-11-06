@@ -1,0 +1,8 @@
+view WorldSearchEntry {
+  id             String          @unique
+  worldId        String
+  entityType     MentionedEntity
+  name           String
+  searchableText String
+  timestamp      BigInt?
+}

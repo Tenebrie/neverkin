@@ -4,7 +4,6 @@ import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { RichTextService } from '@src/services/RichTextService.js'
 import { ValidationService } from '@src/services/ValidationService.js'
-import { WorldEventDeltaService } from '@src/services/WorldEventDeltaService.js'
 import { WorldEventService } from '@src/services/WorldEventService.js'
 import {
 	BadRequestError,
@@ -21,10 +20,9 @@ import {
 } from 'moonflower'
 import { z } from 'zod'
 
-import { worldDetailsTag, worldEventDeltaTag, worldEventTag } from './utils/tags.js'
+import { worldDetailsTag, worldEventTag } from './utils/tags.js'
 import { ContentStringValidator } from './validators/ContentStringValidator.js'
 import { NullableEventTrackValidator } from './validators/NullableEventTrackValidator.js'
-import { NullableNameStringValidator } from './validators/NullableNameStringValidator.js'
 import { OptionalNameStringValidator } from './validators/OptionalNameStringValidator.js'
 import { OptionalURLStringValidator } from './validators/OptionalURLStringValidator.js'
 import { NullableTimestampValidator, TimestampValidator } from './validators/TimestampValidator.js'
@@ -185,7 +183,6 @@ router.post('/api/world/:worldId/event/:eventId/revoke', async (ctx) => {
 
 	await AuthorizationService.checkUserWriteAccessById(user, worldId)
 	await ValidationService.checkEventValidity(eventId)
-	await ValidationService.checkIfEventIsRevokableAt(eventId, revokedAt)
 
 	const { statement, world } = await WorldEventService.revokeWorldEvent({
 		worldId,
@@ -223,115 +220,6 @@ router.post('/api/world/:worldId/event/:eventId/unrevoke', async (ctx) => {
 	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
 
 	return statement
-})
-
-/**
- * World event delta
- */
-router.post('/api/world/:worldId/event/:eventId/delta', async (ctx) => {
-	useApiEndpoint({
-		name: 'createWorldEventDelta',
-		description: 'Creates a new delta state for given event.',
-		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, eventId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		eventId: PathParam(StringValidator),
-	})
-
-	const params = useRequestBody(ctx, {
-		timestamp: RequiredParam(TimestampValidator),
-		name: RequiredParam(NullableNameStringValidator),
-		description: RequiredParam(NullableNameStringValidator),
-		descriptionRich: RequiredParam(NullableNameStringValidator),
-	})
-
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-	await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp)
-
-	const { deltaState, world } = await WorldEventDeltaService.createEventDeltaState({
-		worldId,
-		eventId,
-		data: params,
-	})
-
-	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
-
-	return deltaState
-})
-
-router.patch('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) => {
-	useApiEndpoint({
-		name: 'updateWorldEventDelta',
-		description: 'Updates the target world event delta state',
-		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, eventId, deltaId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		eventId: PathParam(StringValidator),
-		deltaId: PathParam(StringValidator),
-	})
-
-	const params = useRequestBody(ctx, {
-		timestamp: OptionalParam(TimestampValidator),
-		name: OptionalParam(NullableNameStringValidator),
-		description: OptionalParam(NullableNameStringValidator),
-		descriptionRich: OptionalParam(NullableNameStringValidator),
-	})
-
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-	await ValidationService.checkEventValidity(eventId)
-	await ValidationService.checkEventDeltaStateValidity(deltaId)
-	if (params.timestamp !== undefined) {
-		await ValidationService.checkIfEventDeltaStateIsCreatableAt(eventId, params.timestamp, [deltaId])
-	}
-
-	const { deltaState } = await WorldEventDeltaService.updateEventDeltaState({
-		worldId,
-		deltaId,
-		params: {
-			timestamp: params.timestamp,
-			name: params.name,
-			description: params.description,
-			descriptionRich: params.descriptionRich,
-		},
-	})
-
-	RedisService.notifyAboutWorldEventDeltaUpdate(ctx, { worldId, delta: deltaState })
-
-	return deltaState
-})
-
-router.delete('/api/world/:worldId/event/:eventId/delta/:deltaId', async (ctx) => {
-	useApiEndpoint({
-		name: 'deleteWorldEventDelta',
-		description: 'Deletes the target world event delta state.',
-		tags: [worldEventDeltaTag, worldEventTag, worldDetailsTag],
-	})
-
-	const user = await useAuth(ctx, UserAuthenticator)
-
-	const { worldId, eventId, deltaId } = usePathParams(ctx, {
-		worldId: PathParam(StringValidator),
-		eventId: PathParam(StringValidator),
-		deltaId: PathParam(StringValidator),
-	})
-
-	await AuthorizationService.checkUserWriteAccessById(user, worldId)
-	await ValidationService.checkEventValidity(eventId)
-	await ValidationService.checkEventDeltaStateValidity(deltaId)
-
-	const { deltaState, world } = await WorldEventDeltaService.deleteEventDeltaState({ worldId, deltaId })
-
-	RedisService.notifyAboutWorldUpdate(ctx, { worldId, timestamp: world.updatedAt })
-
-	return deltaState
 })
 
 router.get('/api/world/:worldId/event/:eventId/backlinks', async (ctx) => {

@@ -5,7 +5,7 @@ import { DeepPartial } from '@/app/utils/DeepPartial'
 import { User } from '../../app/features/auth/AuthSlice'
 import { MindmapNode } from '../types/mindmapTypes'
 import { CollaboratingUser } from '../types/worldCollaboratorsTypes'
-import { ActorDetails, WorldBrief, WorldDetails, WorldEventDelta, WorldItem } from '../types/worldTypes'
+import { ActorDetails, WorldBrief, WorldDetails, WorldItem } from '../types/worldTypes'
 import { WorldEvent } from '../types/worldTypes'
 import { GetWorldInfoApiResponse } from '../worldDetailsApi'
 
@@ -116,19 +116,6 @@ export const mockEventModel = (statement: Partial<WorldEvent> = {}): WorldEvent 
 	...statement,
 })
 
-export const mockEventDeltaModel = (
-	provided: Partial<WorldEventDelta> & Pick<WorldEventDelta, 'worldEventId'>,
-): WorldEventDelta => ({
-	id: getRandomId(),
-	createdAt: new Date(0).toISOString(),
-	updatedAt: new Date(0).toISOString(),
-	timestamp: '0',
-	name: 'Delta name',
-	description: 'Delta description',
-	descriptionRich: '<p>Delta description</p>',
-	...provided,
-})
-
 export const mockApiWorldDetailsModel = (
 	world: Partial<GetWorldInfoApiResponse> = {},
 ): GetWorldInfoApiResponse => ({
@@ -163,7 +150,6 @@ export const mockApiEventModel = (
 	updatedAt: new Date(0).toISOString(),
 	mentions: [],
 	mentionedIn: [],
-	deltaStates: [],
 	revokedAt: null,
 	worldEventTrackId: null,
 	color: '#008080',
