@@ -1,12 +1,13 @@
 import AddIcon from '@mui/icons-material/Add'
 import Button from '@mui/material/Button'
+import { ReactNode } from 'react'
 
 import { PopoverButton, PopoverButtonProps } from './PopoverButton'
 
 type Props = Omit<PopoverButtonProps, 'content' | 'popoverAction'> & {
 	onConfirm: () => void | boolean | Promise<void | boolean>
 	confirmDisabled?: boolean
-	label?: string
+	label?: ReactNode
 }
 export type CreatePopoverButtonProps = Props
 

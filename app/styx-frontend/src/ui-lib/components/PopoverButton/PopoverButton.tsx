@@ -3,7 +3,7 @@ import IconButton from '@mui/material/IconButton'
 import Popover from '@mui/material/Popover'
 import Stack from '@mui/material/Stack'
 import { bindPopover, bindTrigger, usePopupState } from 'material-ui-popup-state/hooks'
-import { ReactNode } from 'react'
+import { ReactNode, useRef } from 'react'
 
 import { useShortcut } from '@/app/hooks/useShortcut/useShortcut'
 import Tooltip from '@/ui-lib/components/Tooltip'
@@ -61,7 +61,10 @@ export function PopoverButton({
 
 	const popoverActionResult = popoverAction({ close: popupState.close })
 
+	const buttonRef = useRef<HTMLButtonElement>(null)
+
 	const sharedButtonProps = {
+		ref: buttonRef,
 		'aria-label': tooltip,
 		...bindTrigger(popupState),
 		onMouseDown: (e: React.MouseEvent) => e.stopPropagation(),
@@ -73,9 +76,14 @@ export function PopoverButton({
 		},
 	}
 
-	useShortcut(shortcut, () => {
-		popupState.open()
-	})
+	useShortcut(
+		shortcut,
+		() => {
+			onCleanup?.()
+			popupState.open(buttonRef.current)
+		},
+		!popupState.isOpen,
+	)
 
 	useShortcut(
 		['Enter', 'Ctrl+Enter'],
