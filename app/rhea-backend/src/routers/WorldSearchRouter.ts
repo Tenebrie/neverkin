@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { SearchModeShape, WorldSearchService } from '@src/services/WorldSearchService.js'
 import {
 	OptionalParam,
@@ -26,12 +27,14 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 		tags: [worldSearchTag, worldDetailsTag, tagEntityTag],
 	})
 
-	await useAuth(ctx, UserAuthenticator)
+	const user = await useAuth(ctx, UserAuthenticator)
 
 	const { worldId, query } = usePathParams(ctx, {
 		worldId: z.string(),
 		query: z.string(),
 	})
+
+	await AuthorizationService.checkUserReadAccessById(user, worldId)
 
 	const { mode, minTime, maxTime } = useQueryParams(ctx, {
 		mode: OptionalParam(SearchModeValidator),

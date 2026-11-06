@@ -114,7 +114,7 @@ export const WorldSearchService = {
 				worldId,
 				OR: [
 					{ name: { contains: query, mode: 'insensitive' } },
-					{ contentRich: { contains: query, mode: 'insensitive' } },
+					{ content: { contains: query, mode: 'insensitive' } },
 					{
 						pages: {
 							some: {
