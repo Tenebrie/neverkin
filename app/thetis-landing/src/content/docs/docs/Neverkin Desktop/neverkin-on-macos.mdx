@@ -19,3 +19,9 @@ xattr -dr com.apple.quarantine Neverkin.app
 ```
 
 After doing this once, the application will launch normally until you install an update.
+
+## Data location
+
+Your data is stored in `~/Library/Application Support/Neverkin`.
+
+You can override the location by setting the `NEVERKIN_DESKTOP_DATA` environment variable before launching the app.
