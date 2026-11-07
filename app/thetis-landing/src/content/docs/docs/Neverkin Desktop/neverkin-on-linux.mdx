@@ -14,3 +14,11 @@ Neverkin Desktop doesn't currently have any known issues on Linux and should run
 ## Package managers
 
 Neverkin is currently not available on any package managers' repositories. Send your suggestion to the dev through the usual channels if you'd like to see it added!
+
+## Data location
+
+Your data is stored in `~/.local/share/neverkin` by default.
+
+You can override the location by setting the `NEVERKIN_DESKTOP_DATA` environment variable before launching the app.
+
+If you have the `XDG_DATA_HOME` set, then the data directory becomes `$XDG_DATA_HOME/neverkin`.
