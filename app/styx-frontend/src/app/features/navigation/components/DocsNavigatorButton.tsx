@@ -1,4 +1,4 @@
-import DescriptionIcon from '@mui/icons-material/Description'
+import HelpIcon from '@mui/icons-material/HelpOutline'
 import OpenInNew from '@mui/icons-material/OpenInNew'
 import Button from '@mui/material/Button'
 import Link from '@mui/material/Link'
@@ -16,9 +16,9 @@ export function DocsNavigatorButton({ iconOnly }: Props) {
 
 	return (
 		<Link href={targetUrl} target="_blank" rel="noopener noreferrer">
-			<Tooltip title={iconOnly ? 'Docs' : ''}>
+			<Tooltip title={iconOnly ? 'Help & Documentation' : ''}>
 				<Button
-					aria-label="Docs"
+					aria-label="Help"
 					variant="text"
 					sx={{
 						gap: 0.5,
@@ -28,7 +28,7 @@ export function DocsNavigatorButton({ iconOnly }: Props) {
 						textDecoration: 'none',
 					}}
 				>
-					<DescriptionIcon /> {!iconOnly && 'Docs'} <OpenInNew sx={{ fontSize: 14, opacity: 0.6 }} />
+					<HelpIcon /> {!iconOnly && 'Help'} <OpenInNew sx={{ fontSize: 14, opacity: 0.6 }} />
 				</Button>
 			</Tooltip>
 		</Link>
