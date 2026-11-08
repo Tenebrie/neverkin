@@ -18,9 +18,9 @@
 		"test:watch": "vitest"
 	},
 	"dependencies": {
-		"@aws-sdk/client-s3": "^3.1161.0",
-		"@aws-sdk/s3-presigned-post": "^3.1161.0",
-		"@aws-sdk/s3-request-presigner": "^3.1161.0",
+		"@aws-sdk/client-s3": "^3.1163.0",
+		"@aws-sdk/s3-presigned-post": "^3.1163.0",
+		"@aws-sdk/s3-request-presigner": "^3.1163.0",
 		"@google/genai": "^2.32.0",
 		"@koa/router": "^15.7.1",
 		"@neverkin/zod-schema": "file:../../library/zod-schema",
@@ -29,9 +29,9 @@
 		"bcrypt": "^6.0.0",
 		"chalk": "^6.0.1",
 		"cheerio": "^1.2.0",
-		"google-auth-library": "^11.3.2",
+		"google-auth-library": "^11.3.3",
 		"jsonwebtoken": "^9.0.3",
-		"koa": "^3.2.1",
+		"koa": "^3.3.0",
 		"koa-bodyparser": "^4.4.1",
 		"moonflower": "^1.7.4",
 		"prisma": "^7.10.1",
@@ -67,7 +67,7 @@
 		"tsc-alias": "^1.9.10",
 		"tsx": "^4.23.15",
 		"typescript": "^6.0.3",
-		"vite": "^8.3.5",
-		"vitest": "^5.0.5"
+		"vite": "^8.3.6",
+		"vitest": "^5.1.0"
 	}
 }
