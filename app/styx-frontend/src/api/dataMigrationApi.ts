@@ -302,6 +302,7 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
+				icon: string
 				color: string
 				parentFolderId?: null | string
 				parentFolderPosition: number

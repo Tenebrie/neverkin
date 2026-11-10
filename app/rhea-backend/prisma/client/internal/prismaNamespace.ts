@@ -3193,6 +3193,7 @@ export const TagScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   description: 'description',
+  icon: 'icon',
   color: 'color',
   worldId: 'worldId',
   parentFolderId: 'parentFolderId',
@@ -3368,7 +3369,9 @@ export const WorldSearchEntryScalarFieldEnum = {
   content: 'content',
   timestamp: 'timestamp',
   createdAt: 'createdAt',
-  updatedAt: 'updatedAt'
+  updatedAt: 'updatedAt',
+  icon: 'icon',
+  color: 'color'
 } as const
 
 export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]

@@ -5,6 +5,7 @@ model Tag {
 
     name        String
     description String @default("")
+    icon        String @default("default")
     color       String @default("#9f2261")
 
     mentions    Mention[]        @relation("TagMentionSource")

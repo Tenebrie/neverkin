@@ -30,7 +30,7 @@ export const WorldSearchService = {
 			take: take ?? 100,
 			skip: skip ?? 0,
 		}
-		return prisma.worldSearchEntry.findMany({
+		const hits = await prisma.worldSearchEntry.findMany({
 			...params,
 			where: {
 				worldId: {
@@ -46,6 +46,8 @@ export const WorldSearchService = {
 				updatedAt: 'desc',
 			},
 		})
+
+		return { hits }
 	},
 
 	async detailedSearch({

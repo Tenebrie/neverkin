@@ -8,7 +8,7 @@ import { getWikiFolderCounts } from '../../WikiSliceSelectors'
 
 type Props = {
 	id: string
-	entityType: WikiEntityType
+	entityType: WikiEntityType | 'node'
 }
 
 export function useFolderEntityCount({ id, entityType }: Props) {

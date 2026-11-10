@@ -1,27 +1,35 @@
-import SearchIcon from '@mui/icons-material/Search'
-import InputAdornment from '@mui/material/InputAdornment'
-import Popover from '@mui/material/Popover'
-import TextField from '@mui/material/TextField'
-import { bindPopover, usePopupState } from 'material-ui-popup-state/hooks'
+import Box from '@mui/material/Box'
+import ClickAwayListener from '@mui/material/ClickAwayListener'
+import Paper from '@mui/material/Paper'
+import Popper from '@mui/material/Popper'
+import { bindPopper, usePopupState } from 'material-ui-popup-state/hooks'
 import { useRef, useState } from 'react'
 
+import { GlobalSearchHit, ingestSearchHits } from '@/api/types/searchTypes'
 import { useLazyGlobalSearchQuery } from '@/api/worldSearchApi'
+import { SearchInput } from '@/app/components/SearchInput'
 import { useDebounce } from '@/app/hooks/useDebounce'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { pushApiError } from '../notifications/pushApiError'
+import { GlobalSearchResults } from './GlobalSearchResults'
 
 export function GlobalSearch() {
 	const anchorEl = useRef<HTMLInputElement>(null)
 	const popoverState = usePopupState({
 		popupId: 'global-search-popover',
-		variant: 'popover',
+		variant: 'popper',
 	})
 	const [performSearch] = useLazyGlobalSearchQuery()
 
-	const [query, setQuery] = useState('')
+	const [results, setResults] = useState<GlobalSearchHit[]>([])
 
 	const fetchResults = useDebounce(async (value: string) => {
+		console.log('fetch')
+		if (!value) {
+			setResults([])
+			return
+		}
 		const results = parseApiResponse(
 			await performSearch({
 				query: value,
@@ -32,49 +40,42 @@ export function GlobalSearch() {
 			return
 		}
 		if (results.response) {
+			setResults(ingestSearchHits(results.response.hits))
 		}
 		popoverState.open(anchorEl.current)
 	}, 500)
 
 	return (
-		<>
-			<TextField
-				ref={anchorEl}
-				size="small"
-				variant="outlined"
-				placeholder="Search..."
-				value={query}
-				onChange={(event) => {
-					const value = event.currentTarget.value
-					setQuery(value)
-					fetchResults(value)
-				}}
-				sx={{
-					padding: '2px 0',
-					maxWidth: 192,
-					'& .MuiOutlinedInput-input': { padding: '6px 6px 6px 0px' },
-				}}
-				slotProps={{
-					input: {
-						startAdornment: (
-							<InputAdornment position="start">
-								<SearchIcon
-									sx={{
-										color: (theme) => theme.palette.text.secondary,
-									}}
-								/>
-							</InputAdornment>
-						),
-					},
-				}}
-			/>
-			<Popover
-				{...bindPopover(popoverState)}
-				anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-				transformOrigin={{ horizontal: 'right', vertical: 'top' }}
-			>
-				test
-			</Popover>
-		</>
+		<ClickAwayListener onClickAway={() => popoverState.close()}>
+			<Box>
+				<SearchInput
+					ref={anchorEl}
+					onFocus={() => {
+						if (results.length > 0) {
+							popoverState.open(anchorEl.current)
+						}
+					}}
+					size="small"
+					variant="outlined"
+					placeholder="Search..."
+					onChange={(value) => {
+						popoverState.close()
+						fetchResults(value)
+					}}
+					debounceTimeout={50}
+				/>
+				<Popper
+					{...bindPopper(popoverState)}
+					sx={{
+						minWidth: 500,
+						zIndex: 1000,
+					}}
+				>
+					<Paper elevation={5}>
+						<GlobalSearchResults hits={results} onClose={popoverState.close} />
+					</Paper>
+				</Popper>
+			</Box>
+		</ClickAwayListener>
 	)
 }

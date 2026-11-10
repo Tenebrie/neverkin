@@ -45,6 +45,8 @@ export type WorldSearchEntryMinAggregateOutputType = {
   timestamp: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  icon: string | null
+  color: string | null
 }
 
 export type WorldSearchEntryMaxAggregateOutputType = {
@@ -58,6 +60,8 @@ export type WorldSearchEntryMaxAggregateOutputType = {
   timestamp: bigint | null
   createdAt: Date | null
   updatedAt: Date | null
+  icon: string | null
+  color: string | null
 }
 
 export type WorldSearchEntryCountAggregateOutputType = {
@@ -71,6 +75,8 @@ export type WorldSearchEntryCountAggregateOutputType = {
   timestamp: number
   createdAt: number
   updatedAt: number
+  icon: number
+  color: number
   _all: number
 }
 
@@ -94,6 +100,8 @@ export type WorldSearchEntryMinAggregateInputType = {
   timestamp?: true
   createdAt?: true
   updatedAt?: true
+  icon?: true
+  color?: true
 }
 
 export type WorldSearchEntryMaxAggregateInputType = {
@@ -107,6 +115,8 @@ export type WorldSearchEntryMaxAggregateInputType = {
   timestamp?: true
   createdAt?: true
   updatedAt?: true
+  icon?: true
+  color?: true
 }
 
 export type WorldSearchEntryCountAggregateInputType = {
@@ -120,6 +130,8 @@ export type WorldSearchEntryCountAggregateInputType = {
   timestamp?: true
   createdAt?: true
   updatedAt?: true
+  icon?: true
+  color?: true
   _all?: true
 }
 
@@ -214,6 +226,8 @@ export type WorldSearchEntryGroupByOutputType = {
   timestamp: bigint | null
   createdAt: Date
   updatedAt: Date
+  icon: string
+  color: string
   _count: WorldSearchEntryCountAggregateOutputType | null
   _avg: WorldSearchEntryAvgAggregateOutputType | null
   _sum: WorldSearchEntrySumAggregateOutputType | null
@@ -250,6 +264,8 @@ export type WorldSearchEntryWhereInput = {
   timestamp?: Prisma.BigIntNullableFilter<"WorldSearchEntry"> | bigint | number | null
   createdAt?: Prisma.DateTimeFilter<"WorldSearchEntry"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"WorldSearchEntry"> | Date | string
+  icon?: Prisma.StringFilter<"WorldSearchEntry"> | string
+  color?: Prisma.StringFilter<"WorldSearchEntry"> | string
 }
 
 export type WorldSearchEntryOrderByWithRelationInput = {
@@ -263,6 +279,8 @@ export type WorldSearchEntryOrderByWithRelationInput = {
   timestamp?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type WorldSearchEntryOrderByWithAggregationInput = {
@@ -276,6 +294,8 @@ export type WorldSearchEntryOrderByWithAggregationInput = {
   timestamp?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
   _count?: Prisma.WorldSearchEntryCountOrderByAggregateInput
   _avg?: Prisma.WorldSearchEntryAvgOrderByAggregateInput
   _max?: Prisma.WorldSearchEntryMaxOrderByAggregateInput
@@ -297,6 +317,8 @@ export type WorldSearchEntryScalarWhereWithAggregatesInput = {
   timestamp?: Prisma.BigIntNullableWithAggregatesFilter<"WorldSearchEntry"> | bigint | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorldSearchEntry"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorldSearchEntry"> | Date | string
+  icon?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
+  color?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
 }
 
 export type WorldSearchEntryCountOrderByAggregateInput = {
@@ -310,6 +332,8 @@ export type WorldSearchEntryCountOrderByAggregateInput = {
   timestamp?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type WorldSearchEntryAvgOrderByAggregateInput = {
@@ -327,6 +351,8 @@ export type WorldSearchEntryMaxOrderByAggregateInput = {
   timestamp?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type WorldSearchEntryMinOrderByAggregateInput = {
@@ -340,6 +366,8 @@ export type WorldSearchEntryMinOrderByAggregateInput = {
   timestamp?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  icon?: Prisma.SortOrder
+  color?: Prisma.SortOrder
 }
 
 export type WorldSearchEntrySumOrderByAggregateInput = {
@@ -359,6 +387,8 @@ export type WorldSearchEntrySelect<ExtArgs extends runtime.Types.Extensions.Inte
   timestamp?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  icon?: boolean
+  color?: boolean
 }, ExtArgs["result"]["worldSearchEntry"]>
 
 
@@ -374,9 +404,11 @@ export type WorldSearchEntrySelectScalar = {
   timestamp?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  icon?: boolean
+  color?: boolean
 }
 
-export type WorldSearchEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"worldId" | "entityType" | "entityId" | "pageId" | "name" | "title" | "content" | "timestamp" | "createdAt" | "updatedAt", ExtArgs["result"]["worldSearchEntry"]>
+export type WorldSearchEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"worldId" | "entityType" | "entityId" | "pageId" | "name" | "title" | "content" | "timestamp" | "createdAt" | "updatedAt" | "icon" | "color", ExtArgs["result"]["worldSearchEntry"]>
 
 export type $WorldSearchEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorldSearchEntry"
@@ -392,6 +424,8 @@ export type $WorldSearchEntryPayload<ExtArgs extends runtime.Types.Extensions.In
     timestamp: bigint | null
     createdAt: Date
     updatedAt: Date
+    icon: string
+    color: string
   }, ExtArgs["result"]["worldSearchEntry"]>
   composites: {}
 }
@@ -645,6 +679,8 @@ export interface WorldSearchEntryFieldRefs {
   readonly timestamp: Prisma.FieldRef<"WorldSearchEntry", 'BigInt'>
   readonly createdAt: Prisma.FieldRef<"WorldSearchEntry", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"WorldSearchEntry", 'DateTime'>
+  readonly icon: Prisma.FieldRef<"WorldSearchEntry", 'String'>
+  readonly color: Prisma.FieldRef<"WorldSearchEntry", 'String'>
 }
     
 

@@ -9,6 +9,8 @@ view WorldSearchEntry {
   timestamp  BigInt?
   createdAt  DateTime
   updatedAt  DateTime
+  icon       String
+  color      String
 
   @@unique([worldId, entityType, entityId, pageId])
 }

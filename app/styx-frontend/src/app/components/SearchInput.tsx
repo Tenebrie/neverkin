@@ -4,19 +4,21 @@ import IconButton from '@mui/material/IconButton'
 import InputAdornment from '@mui/material/InputAdornment'
 import Stack from '@mui/material/Stack'
 
-import { TextField } from '@/ui-lib/components/TextField/TextField'
+import { TextField, TextFieldProps } from '@/ui-lib/components/TextField/TextField'
 
 import { useStateWithDebounceCallback } from '../hooks/useStateWithDebounceCallback'
 
-type Props = {
+type Props = Omit<TextFieldProps, 'value' | 'onChange' | 'slotProps'> & {
 	initialQuery?: string
 	onChange?: (query: string) => void
+	debounceTimeout?: number
 }
 
-export const SearchInput = ({ initialQuery, onChange }: Props) => {
+export const SearchInput = ({ initialQuery, onChange, debounceTimeout, ...props }: Props) => {
 	const [query, setQuery, setQueryInstant] = useStateWithDebounceCallback({
 		initialValue: initialQuery ?? '',
 		onDebounce: onChange ?? (() => {}),
+		debounceTimeout,
 	})
 
 	return (
@@ -26,6 +28,7 @@ export const SearchInput = ({ initialQuery, onChange }: Props) => {
 				label="Search"
 				variant="outlined"
 				size="small"
+				{...props}
 				value={query}
 				onChange={(event) => setQuery(event.target.value)}
 				slotProps={{
