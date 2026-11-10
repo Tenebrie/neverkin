@@ -12,9 +12,11 @@ import { useDebounce } from '@/app/hooks/useDebounce'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
 
 import { pushApiError } from '../notifications/pushApiError'
+import { useCustomTheme } from '../theming/hooks/useCustomTheme'
 import { GlobalSearchResults } from './GlobalSearchResults'
 
 export function GlobalSearch() {
+	const theme = useCustomTheme()
 	const anchorEl = useRef<HTMLInputElement>(null)
 	const popoverState = usePopupState({
 		popupId: 'global-search-popover',
@@ -23,6 +25,7 @@ export function GlobalSearch() {
 	const [performSearch] = useLazyGlobalSearchQuery()
 
 	const [results, setResults] = useState<GlobalSearchHit[]>([])
+	const [resultsQuery, setResultsQuery] = useState('')
 
 	const fetchResults = useDebounce(async (value: string) => {
 		console.log('fetch')
@@ -41,6 +44,7 @@ export function GlobalSearch() {
 		}
 		if (results.response) {
 			setResults(ingestSearchHits(results.response.hits))
+			setResultsQuery(value)
 		}
 		popoverState.open(anchorEl.current)
 	}, 500)
@@ -70,12 +74,20 @@ export function GlobalSearch() {
 				<Popper
 					{...bindPopper(popoverState)}
 					sx={{
-						minWidth: 500,
+						width: 500,
 						zIndex: 1000,
 					}}
 				>
-					<Paper elevation={5}>
-						<GlobalSearchResults hits={results} onClose={popoverState.close} />
+					<Paper
+						elevation={0}
+						sx={{
+							borderRadius: '16px',
+							border: `1px solid ${theme.custom.palette.outlineStrong}`,
+							boxShadow: '0 40px 100px -30px rgb(0 0 0 / 90%)',
+							overflow: 'hidden',
+						}}
+					>
+						<GlobalSearchResults hits={results} query={resultsQuery} onClose={popoverState.close} />
 					</Paper>
 				</Popper>
 			</Box>

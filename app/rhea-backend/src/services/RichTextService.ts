@@ -127,7 +127,7 @@ export const RichTextService = {
 		)
 
 		// Add double newlines after block elements for proper plain text formatting
-		$('p, div, h1, h2, h3, h4, h5, h6, li').after('\n\n')
+		$('p, div, h1, h2, h3, h4, h5, h6, li, pre').after('\n\n')
 		$('br').replaceWith('\n')
 
 		// Get plain text content with resolved entity names

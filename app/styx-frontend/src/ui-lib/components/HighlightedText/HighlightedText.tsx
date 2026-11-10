@@ -21,10 +21,9 @@ export function HighlightedText({ text, query }: Props) {
 			<Box
 				component="span"
 				sx={{
-					backgroundColor: (theme) => alpha(theme.palette.secondary.main, 0.2),
+					backgroundColor: (theme) => alpha(theme.palette.secondary.main, 0.3),
 					borderRadius: 0.5,
-					px: 0.25,
-					mx: -0.25,
+					boxShadow: (theme) => `0 0 0 2px ${alpha(theme.palette.secondary.main, 0.3)}`,
 				}}
 			>
 				{text.slice(idx, idx + query.length)}
