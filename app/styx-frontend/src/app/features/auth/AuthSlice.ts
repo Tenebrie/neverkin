@@ -29,12 +29,6 @@ export const authSlice = createSlice({
 		setSessionId: (state, { payload }: PayloadAction<string>) => {
 			state.sessionId = payload
 		},
-		showRheaConnectionAlert: (state) => {
-			state.showRheaConnectionAlert = true
-		},
-		hideRheaConnectionAlert: (state) => {
-			state.showRheaConnectionAlert = false
-		},
 		showCalliopeConnectionAlert: (state) => {
 			state.showCalliopeConnectionAlert = true
 		},

@@ -17,6 +17,40 @@ export const WorldSearchService = {
 	async search({
 		worldIds,
 		query,
+		take,
+		skip,
+	}: {
+		worldIds: string[]
+		query: string
+		take?: number
+		skip?: number
+	}) {
+		const prisma = getPrismaClient()
+		const params: SearchParams = {
+			take: take ?? 100,
+			skip: skip ?? 0,
+		}
+		return prisma.worldSearchEntry.findMany({
+			...params,
+			where: {
+				worldId: {
+					in: worldIds,
+				},
+				OR: [
+					{ name: { contains: query, mode: 'insensitive' } },
+					{ title: { contains: query, mode: 'insensitive' } },
+					{ content: { contains: query, mode: 'insensitive' } },
+				],
+			},
+			orderBy: {
+				updatedAt: 'desc',
+			},
+		})
+	},
+
+	async detailedSearch({
+		worldIds,
+		query,
 		mode,
 		timeRange = {},
 		include,
@@ -45,7 +79,6 @@ export const WorldSearchService = {
 			take: take ?? 100,
 			skip: skip ?? 0,
 		}
-		console.log(params)
 
 		for (const q of queries) {
 			if (include.includes('actor') && !timeBoundSearch) {

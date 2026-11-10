@@ -1,8 +1,14 @@
 view WorldSearchEntry {
-  id             String          @unique
-  worldId        String
-  entityType     MentionedEntity
-  name           String
-  searchableText String
-  timestamp      BigInt?
+  worldId    String
+  entityType MentionedEntity
+  entityId   String
+  pageId     String?
+  name       String
+  title      String?
+  content    String
+  timestamp  BigInt?
+  createdAt  DateTime
+  updatedAt  DateTime
+
+  @@unique([worldId, entityType, entityId, pageId])
 }

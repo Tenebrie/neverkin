@@ -35,30 +35,42 @@ export type WorldSearchEntrySumAggregateOutputType = {
 }
 
 export type WorldSearchEntryMinAggregateOutputType = {
-  id: string | null
   worldId: string | null
   entityType: $Enums.MentionedEntity | null
+  entityId: string | null
+  pageId: string | null
   name: string | null
-  searchableText: string | null
+  title: string | null
+  content: string | null
   timestamp: bigint | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type WorldSearchEntryMaxAggregateOutputType = {
-  id: string | null
   worldId: string | null
   entityType: $Enums.MentionedEntity | null
+  entityId: string | null
+  pageId: string | null
   name: string | null
-  searchableText: string | null
+  title: string | null
+  content: string | null
   timestamp: bigint | null
+  createdAt: Date | null
+  updatedAt: Date | null
 }
 
 export type WorldSearchEntryCountAggregateOutputType = {
-  id: number
   worldId: number
   entityType: number
+  entityId: number
+  pageId: number
   name: number
-  searchableText: number
+  title: number
+  content: number
   timestamp: number
+  createdAt: number
+  updatedAt: number
   _all: number
 }
 
@@ -72,30 +84,42 @@ export type WorldSearchEntrySumAggregateInputType = {
 }
 
 export type WorldSearchEntryMinAggregateInputType = {
-  id?: true
   worldId?: true
   entityType?: true
+  entityId?: true
+  pageId?: true
   name?: true
-  searchableText?: true
+  title?: true
+  content?: true
   timestamp?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type WorldSearchEntryMaxAggregateInputType = {
-  id?: true
   worldId?: true
   entityType?: true
+  entityId?: true
+  pageId?: true
   name?: true
-  searchableText?: true
+  title?: true
+  content?: true
   timestamp?: true
+  createdAt?: true
+  updatedAt?: true
 }
 
 export type WorldSearchEntryCountAggregateInputType = {
-  id?: true
   worldId?: true
   entityType?: true
+  entityId?: true
+  pageId?: true
   name?: true
-  searchableText?: true
+  title?: true
+  content?: true
   timestamp?: true
+  createdAt?: true
+  updatedAt?: true
   _all?: true
 }
 
@@ -110,12 +134,6 @@ export type WorldSearchEntryAggregateArgs<ExtArgs extends runtime.Types.Extensio
    * Determine the order of WorldSearchEntries to fetch.
    */
   orderBy?: Prisma.WorldSearchEntryOrderByWithRelationInput | Prisma.WorldSearchEntryOrderByWithRelationInput[]
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   * 
-   * Sets the start position
-   */
-  cursor?: Prisma.WorldSearchEntryWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
@@ -186,12 +204,16 @@ export type WorldSearchEntryGroupByArgs<ExtArgs extends runtime.Types.Extensions
 }
 
 export type WorldSearchEntryGroupByOutputType = {
-  id: string
   worldId: string
   entityType: $Enums.MentionedEntity
+  entityId: string
+  pageId: string | null
   name: string
-  searchableText: string
+  title: string | null
+  content: string
   timestamp: bigint | null
+  createdAt: Date
+  updatedAt: Date
   _count: WorldSearchEntryCountAggregateOutputType | null
   _avg: WorldSearchEntryAvgAggregateOutputType | null
   _sum: WorldSearchEntrySumAggregateOutputType | null
@@ -218,42 +240,42 @@ export type WorldSearchEntryWhereInput = {
   AND?: Prisma.WorldSearchEntryWhereInput | Prisma.WorldSearchEntryWhereInput[]
   OR?: Prisma.WorldSearchEntryWhereInput[]
   NOT?: Prisma.WorldSearchEntryWhereInput | Prisma.WorldSearchEntryWhereInput[]
-  id?: Prisma.StringFilter<"WorldSearchEntry"> | string
   worldId?: Prisma.StringFilter<"WorldSearchEntry"> | string
   entityType?: Prisma.EnumMentionedEntityFilter<"WorldSearchEntry"> | $Enums.MentionedEntity
+  entityId?: Prisma.StringFilter<"WorldSearchEntry"> | string
+  pageId?: Prisma.StringNullableFilter<"WorldSearchEntry"> | string | null
   name?: Prisma.StringFilter<"WorldSearchEntry"> | string
-  searchableText?: Prisma.StringFilter<"WorldSearchEntry"> | string
+  title?: Prisma.StringNullableFilter<"WorldSearchEntry"> | string | null
+  content?: Prisma.StringFilter<"WorldSearchEntry"> | string
   timestamp?: Prisma.BigIntNullableFilter<"WorldSearchEntry"> | bigint | number | null
+  createdAt?: Prisma.DateTimeFilter<"WorldSearchEntry"> | Date | string
+  updatedAt?: Prisma.DateTimeFilter<"WorldSearchEntry"> | Date | string
 }
 
 export type WorldSearchEntryOrderByWithRelationInput = {
-  id?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   entityType?: Prisma.SortOrder
+  entityId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
-  searchableText?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrder
   timestamp?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
-export type WorldSearchEntryWhereUniqueInput = Prisma.AtLeast<{
-  id?: string
-  AND?: Prisma.WorldSearchEntryWhereInput | Prisma.WorldSearchEntryWhereInput[]
-  OR?: Prisma.WorldSearchEntryWhereInput[]
-  NOT?: Prisma.WorldSearchEntryWhereInput | Prisma.WorldSearchEntryWhereInput[]
-  worldId?: Prisma.StringFilter<"WorldSearchEntry"> | string
-  entityType?: Prisma.EnumMentionedEntityFilter<"WorldSearchEntry"> | $Enums.MentionedEntity
-  name?: Prisma.StringFilter<"WorldSearchEntry"> | string
-  searchableText?: Prisma.StringFilter<"WorldSearchEntry"> | string
-  timestamp?: Prisma.BigIntNullableFilter<"WorldSearchEntry"> | bigint | number | null
-}, "id">
-
 export type WorldSearchEntryOrderByWithAggregationInput = {
-  id?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   entityType?: Prisma.SortOrder
+  entityId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrderInput | Prisma.SortOrder
   name?: Prisma.SortOrder
-  searchableText?: Prisma.SortOrder
+  title?: Prisma.SortOrderInput | Prisma.SortOrder
+  content?: Prisma.SortOrder
   timestamp?: Prisma.SortOrderInput | Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
   _count?: Prisma.WorldSearchEntryCountOrderByAggregateInput
   _avg?: Prisma.WorldSearchEntryAvgOrderByAggregateInput
   _max?: Prisma.WorldSearchEntryMaxOrderByAggregateInput
@@ -265,21 +287,29 @@ export type WorldSearchEntryScalarWhereWithAggregatesInput = {
   AND?: Prisma.WorldSearchEntryScalarWhereWithAggregatesInput | Prisma.WorldSearchEntryScalarWhereWithAggregatesInput[]
   OR?: Prisma.WorldSearchEntryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.WorldSearchEntryScalarWhereWithAggregatesInput | Prisma.WorldSearchEntryScalarWhereWithAggregatesInput[]
-  id?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
   worldId?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
   entityType?: Prisma.EnumMentionedEntityWithAggregatesFilter<"WorldSearchEntry"> | $Enums.MentionedEntity
+  entityId?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
+  pageId?: Prisma.StringNullableWithAggregatesFilter<"WorldSearchEntry"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
-  searchableText?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
+  title?: Prisma.StringNullableWithAggregatesFilter<"WorldSearchEntry"> | string | null
+  content?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
   timestamp?: Prisma.BigIntNullableWithAggregatesFilter<"WorldSearchEntry"> | bigint | number | null
+  createdAt?: Prisma.DateTimeWithAggregatesFilter<"WorldSearchEntry"> | Date | string
+  updatedAt?: Prisma.DateTimeWithAggregatesFilter<"WorldSearchEntry"> | Date | string
 }
 
 export type WorldSearchEntryCountOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   entityType?: Prisma.SortOrder
+  entityId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  searchableText?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WorldSearchEntryAvgOrderByAggregateInput = {
@@ -287,21 +317,29 @@ export type WorldSearchEntryAvgOrderByAggregateInput = {
 }
 
 export type WorldSearchEntryMaxOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   entityType?: Prisma.SortOrder
+  entityId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  searchableText?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WorldSearchEntryMinOrderByAggregateInput = {
-  id?: Prisma.SortOrder
   worldId?: Prisma.SortOrder
   entityType?: Prisma.SortOrder
+  entityId?: Prisma.SortOrder
+  pageId?: Prisma.SortOrder
   name?: Prisma.SortOrder
-  searchableText?: Prisma.SortOrder
+  title?: Prisma.SortOrder
+  content?: Prisma.SortOrder
   timestamp?: Prisma.SortOrder
+  createdAt?: Prisma.SortOrder
+  updatedAt?: Prisma.SortOrder
 }
 
 export type WorldSearchEntrySumOrderByAggregateInput = {
@@ -311,37 +349,49 @@ export type WorldSearchEntrySumOrderByAggregateInput = {
 
 
 export type WorldSearchEntrySelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
-  id?: boolean
   worldId?: boolean
   entityType?: boolean
+  entityId?: boolean
+  pageId?: boolean
   name?: boolean
-  searchableText?: boolean
+  title?: boolean
+  content?: boolean
   timestamp?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }, ExtArgs["result"]["worldSearchEntry"]>
 
 
 
 export type WorldSearchEntrySelectScalar = {
-  id?: boolean
   worldId?: boolean
   entityType?: boolean
+  entityId?: boolean
+  pageId?: boolean
   name?: boolean
-  searchableText?: boolean
+  title?: boolean
+  content?: boolean
   timestamp?: boolean
+  createdAt?: boolean
+  updatedAt?: boolean
 }
 
-export type WorldSearchEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "worldId" | "entityType" | "name" | "searchableText" | "timestamp", ExtArgs["result"]["worldSearchEntry"]>
+export type WorldSearchEntryOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"worldId" | "entityType" | "entityId" | "pageId" | "name" | "title" | "content" | "timestamp" | "createdAt" | "updatedAt", ExtArgs["result"]["worldSearchEntry"]>
 
 export type $WorldSearchEntryPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "WorldSearchEntry"
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
-    id: string
     worldId: string
     entityType: $Enums.MentionedEntity
+    entityId: string
+    pageId: string | null
     name: string
-    searchableText: string
+    title: string | null
+    content: string
     timestamp: bigint | null
+    createdAt: Date
+    updatedAt: Date
   }, ExtArgs["result"]["worldSearchEntry"]>
   composites: {}
 }
@@ -356,33 +406,6 @@ export type WorldSearchEntryCountArgs<ExtArgs extends runtime.Types.Extensions.I
 export interface WorldSearchEntryDelegate<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> {
   [K: symbol]: { types: Prisma.TypeMap<ExtArgs>['model']['WorldSearchEntry'], meta: { name: 'WorldSearchEntry' } }
   /**
-   * Find zero or one WorldSearchEntry that matches the filter.
-   * @param {WorldSearchEntryFindUniqueArgs} args - Arguments to find a WorldSearchEntry
-   * @example
-   * // Get one WorldSearchEntry
-   * const worldSearchEntry = await prisma.worldSearchEntry.findUnique({
-   *   where: {
-   *     // ... provide filter here
-   *   }
-   * })
-   */
-  findUnique<T extends WorldSearchEntryFindUniqueArgs>(args: Prisma.SelectSubset<T, WorldSearchEntryFindUniqueArgs<ExtArgs>>): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findUnique", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
-
-  /**
-   * Find one WorldSearchEntry that matches the filter or throw an error with `error.code='P2025'`
-   * if no matches were found.
-   * @param {WorldSearchEntryFindUniqueOrThrowArgs} args - Arguments to find a WorldSearchEntry
-   * @example
-   * // Get one WorldSearchEntry
-   * const worldSearchEntry = await prisma.worldSearchEntry.findUniqueOrThrow({
-   *   where: {
-   *     // ... provide filter here
-   *   }
-   * })
-   */
-  findUniqueOrThrow<T extends WorldSearchEntryFindUniqueOrThrowArgs>(args: Prisma.SelectSubset<T, WorldSearchEntryFindUniqueOrThrowArgs<ExtArgs>>): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
-
-  /**
    * Find the first WorldSearchEntry that matches the filter.
    * Note, that providing `undefined` is treated as the value not being there.
    * Read more here: https://pris.ly/d/null-undefined
@@ -395,7 +418,11 @@ export interface WorldSearchEntryDelegate<ExtArgs extends runtime.Types.Extensio
    *   }
    * })
    */
-  findFirst<T extends WorldSearchEntryFindFirstArgs>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindFirstArgs<ExtArgs>>): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
+  findFirst<T extends WorldSearchEntryFindFirstArgs, TakeDependenciesValidator extends "take" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}, SkipDependenciesValidator extends "skip" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindFirstArgs<ExtArgs>> & TakeDependenciesValidator & SkipDependenciesValidator): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findFirst", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find the first WorldSearchEntry that matches the filter or
@@ -411,7 +438,11 @@ export interface WorldSearchEntryDelegate<ExtArgs extends runtime.Types.Extensio
    *   }
    * })
    */
-  findFirstOrThrow<T extends WorldSearchEntryFindFirstOrThrowArgs>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindFirstOrThrowArgs<ExtArgs>>): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
+  findFirstOrThrow<T extends WorldSearchEntryFindFirstOrThrowArgs, TakeDependenciesValidator extends "take" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}, SkipDependenciesValidator extends "skip" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindFirstOrThrowArgs<ExtArgs>> & TakeDependenciesValidator & SkipDependenciesValidator): Prisma.Prisma__WorldSearchEntryClient<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findFirstOrThrow", GlobalOmitOptions>, never, ExtArgs, GlobalOmitOptions>
 
   /**
    * Find zero or more WorldSearchEntries that matches the filter.
@@ -425,11 +456,15 @@ export interface WorldSearchEntryDelegate<ExtArgs extends runtime.Types.Extensio
    * // Get first 10 WorldSearchEntries
    * const worldSearchEntries = await prisma.worldSearchEntry.findMany({ take: 10 })
    * 
-   * // Only select the `id`
-   * const worldSearchEntryWithIdOnly = await prisma.worldSearchEntry.findMany({ select: { id: true } })
+   * // Only select the `worldId`
+   * const worldSearchEntryWithWorldIdOnly = await prisma.worldSearchEntry.findMany({ select: { worldId: true } })
    * 
    */
-  findMany<T extends WorldSearchEntryFindManyArgs>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindManyArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
+  findMany<T extends WorldSearchEntryFindManyArgs, TakeDependenciesValidator extends "take" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}, SkipDependenciesValidator extends "skip" extends Prisma.Keys<T> ? {
+    orderBy: {}
+  } : {}>(args?: Prisma.SelectSubset<T, WorldSearchEntryFindManyArgs<ExtArgs>> & TakeDependenciesValidator & SkipDependenciesValidator): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$WorldSearchEntryPayload<ExtArgs>, T, "findMany", GlobalOmitOptions>>
 
 
   /**
@@ -600,52 +635,20 @@ export interface Prisma__WorldSearchEntryClient<T, Null = never, ExtArgs extends
  * Fields of the WorldSearchEntry model
  */
 export interface WorldSearchEntryFieldRefs {
-  readonly id: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly worldId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly entityType: Prisma.FieldRef<"WorldSearchEntry", 'MentionedEntity'>
+  readonly entityId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
+  readonly pageId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly name: Prisma.FieldRef<"WorldSearchEntry", 'String'>
-  readonly searchableText: Prisma.FieldRef<"WorldSearchEntry", 'String'>
+  readonly title: Prisma.FieldRef<"WorldSearchEntry", 'String'>
+  readonly content: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly timestamp: Prisma.FieldRef<"WorldSearchEntry", 'BigInt'>
+  readonly createdAt: Prisma.FieldRef<"WorldSearchEntry", 'DateTime'>
+  readonly updatedAt: Prisma.FieldRef<"WorldSearchEntry", 'DateTime'>
 }
     
 
 // Custom InputTypes
-/**
- * WorldSearchEntry findUnique
- */
-export type WorldSearchEntryFindUniqueArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the WorldSearchEntry
-   */
-  select?: Prisma.WorldSearchEntrySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the WorldSearchEntry
-   */
-  omit?: Prisma.WorldSearchEntryOmit<ExtArgs> | null
-  /**
-   * Filter, which WorldSearchEntry to fetch.
-   */
-  where: Prisma.WorldSearchEntryWhereUniqueInput
-}
-
-/**
- * WorldSearchEntry findUniqueOrThrow
- */
-export type WorldSearchEntryFindUniqueOrThrowArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
-  /**
-   * Select specific fields to fetch from the WorldSearchEntry
-   */
-  select?: Prisma.WorldSearchEntrySelect<ExtArgs> | null
-  /**
-   * Omit specific fields from the WorldSearchEntry
-   */
-  omit?: Prisma.WorldSearchEntryOmit<ExtArgs> | null
-  /**
-   * Filter, which WorldSearchEntry to fetch.
-   */
-  where: Prisma.WorldSearchEntryWhereUniqueInput
-}
-
 /**
  * WorldSearchEntry findFirst
  */
@@ -668,12 +671,6 @@ export type WorldSearchEntryFindFirstArgs<ExtArgs extends runtime.Types.Extensio
    * Determine the order of WorldSearchEntries to fetch.
    */
   orderBy?: Prisma.WorldSearchEntryOrderByWithRelationInput | Prisma.WorldSearchEntryOrderByWithRelationInput[]
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   * 
-   * Sets the position for searching for WorldSearchEntries.
-   */
-  cursor?: Prisma.WorldSearchEntryWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
@@ -717,12 +714,6 @@ export type WorldSearchEntryFindFirstOrThrowArgs<ExtArgs extends runtime.Types.E
    */
   orderBy?: Prisma.WorldSearchEntryOrderByWithRelationInput | Prisma.WorldSearchEntryOrderByWithRelationInput[]
   /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   * 
-   * Sets the position for searching for WorldSearchEntries.
-   */
-  cursor?: Prisma.WorldSearchEntryWhereUniqueInput
-  /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 
    * Take `±n` WorldSearchEntries from the position of the cursor.
@@ -764,12 +755,6 @@ export type WorldSearchEntryFindManyArgs<ExtArgs extends runtime.Types.Extension
    * Determine the order of WorldSearchEntries to fetch.
    */
   orderBy?: Prisma.WorldSearchEntryOrderByWithRelationInput | Prisma.WorldSearchEntryOrderByWithRelationInput[]
-  /**
-   * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination#cursor-based-pagination Cursor Docs}
-   * 
-   * Sets the position for listing WorldSearchEntries.
-   */
-  cursor?: Prisma.WorldSearchEntryWhereUniqueInput
   /**
    * {@link https://www.prisma.io/docs/concepts/components/prisma-client/pagination Pagination Docs}
    * 

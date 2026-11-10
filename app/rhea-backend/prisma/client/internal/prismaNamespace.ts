@@ -2821,14 +2821,6 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
       payload: Prisma.$WorldSearchEntryPayload<ExtArgs>
       fields: Prisma.WorldSearchEntryFieldRefs
       operations: {
-        findUnique: {
-          args: Prisma.WorldSearchEntryFindUniqueArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload> | null
-        }
-        findUniqueOrThrow: {
-          args: Prisma.WorldSearchEntryFindUniqueOrThrowArgs<ExtArgs>
-          result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload>
-        }
         findFirst: {
           args: Prisma.WorldSearchEntryFindFirstArgs<ExtArgs>
           result: runtime.Types.Utils.PayloadToResult<Prisma.$WorldSearchEntryPayload> | null
@@ -3367,12 +3359,16 @@ export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnu
 
 
 export const WorldSearchEntryScalarFieldEnum = {
-  id: 'id',
   worldId: 'worldId',
   entityType: 'entityType',
+  entityId: 'entityId',
+  pageId: 'pageId',
   name: 'name',
-  searchableText: 'searchableText',
-  timestamp: 'timestamp'
+  title: 'title',
+  content: 'content',
+  timestamp: 'timestamp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]

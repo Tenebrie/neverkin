@@ -33,122 +33,17 @@ const injectedRtkApi = api
 	})
 export { injectedRtkApi as worldSearchApi }
 export type GlobalSearchApiResponse = /** status 200  */ {
-	actors: {
-		pages: {
-			id: string
-			name: string
-		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		nodes: {
-			worldId: string
-			id: string
-			createdAt: string
-			updatedAt: string
-			name: string
-			color: string
-			content: string
-			contentRich: string
-			parentFolderId?: null | string
-			parentActorId?: null | string
-			parentEventId?: null | string
-			parentArticleId?: null | string
-			positionX: number
-			positionY: number
-			parentTagId?: null | string
-		}[]
-		worldId: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		title: string
-		icon: string
-		color: string
-		content: string
-		contentRich: string
-		parentFolderId?: null | string
-		parentFolderPosition: number
-	}[]
-	articles: {
-		pages: {
-			id: string
-			name: string
-		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		worldId: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		icon: string
-		color: string
-		content: string
-		contentRich: string
-		parentFolderId?: null | string
-		parentFolderPosition: number
-	}[]
-	events: {
-		pages: {
-			id: string
-			name: string
-		}[]
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		worldId: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		icon: string
-		color: string
-		content: string
-		contentRich: string
-		parentFolderId?: null | string
-		parentFolderPosition: number
-		timestamp: string
-		revokedAt?: null | string
-		worldEventTrackId?: null | string
-	}[]
-	tags: {
-		mentions: {
-			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		mentionedIn: {
-			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		}[]
-		description: string
-		worldId: string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name: string
-		color: string
-		parentFolderId?: null | string
-		parentFolderPosition: number
-	}[]
-}
+	title?: null | string
+	worldId: string
+	createdAt: string
+	updatedAt: string
+	name: string
+	content: string
+	pageId?: null | string
+	timestamp?: null | string
+	entityType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+	entityId: string
+}[]
 export type GlobalSearchApiArg = {
 	query: string
 	mode?: 'string_match' | 'split_by_space'
@@ -170,8 +65,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		nodes: {
-			worldId: string
 			id: string
+			worldId: string
 			createdAt: string
 			updatedAt: string
 			name: string
@@ -186,12 +81,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 			parentTagId?: null | string
 		}[]
-		worldId: string
 		id: string
+		title: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		title: string
 		icon: string
 		color: string
 		content: string
@@ -212,8 +107,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -237,8 +132,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -262,8 +157,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		description: string
-		worldId: string
 		id: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string

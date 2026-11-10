@@ -16,7 +16,7 @@ describe('WorldSearchService', () => {
 	})
 
 	it('gracefully resolves empty results', async () => {
-		const result = WorldSearchService.search({
+		const result = WorldSearchService.detailedSearch({
 			worldIds: [world.id],
 			query: 'test',
 			mode: 'string_match',
@@ -33,7 +33,7 @@ describe('WorldSearchService', () => {
 	it('finds all matching entities with full string match', async () => {
 		await createEntities(db, world.id, ['not a partially matching entity', 'partial, but not a match'])
 
-		const result = WorldSearchService.search({
+		const result = WorldSearchService.detailedSearch({
 			worldIds: [world.id],
 			query: 'not a partial',
 			mode: 'string_match',
@@ -50,7 +50,7 @@ describe('WorldSearchService', () => {
 	it('searches for each part separately with split_by_space mode', async () => {
 		await createEntities(db, world.id, ['first query', 'second query', 'third query'])
 
-		const result = WorldSearchService.search({
+		const result = WorldSearchService.detailedSearch({
 			worldIds: [world.id],
 			query: 'first second',
 			mode: 'split_by_space',
@@ -79,7 +79,7 @@ describe('WorldSearchService', () => {
 	it('deduplicates results based on entity id', async () => {
 		await createEntities(db, world.id, ['first second'])
 
-		const result = WorldSearchService.search({
+		const result = WorldSearchService.detailedSearch({
 			worldIds: [world.id],
 			query: 'first second',
 			mode: 'split_by_space',

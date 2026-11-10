@@ -50,12 +50,12 @@ router.get('/api/search/:query', async (ctx) => {
 	return await WorldSearchService.search({
 		worldIds: worlds,
 		query,
-		mode: mode ?? 'string_match',
-		timeRange: {
-			from: minTime,
-			to: maxTime,
-		},
-		include: ['actor', 'article', 'event', 'tag'],
+		// mode: mode ?? 'string_match',
+		// timeRange: {
+		// 	from: minTime,
+		// 	to: maxTime,
+		// },
+		// include: ['actor', 'article', 'event', 'tag'],
 	})
 })
 
@@ -81,7 +81,7 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 		maxTime: z.number().optional(),
 	})
 
-	return await WorldSearchService.search({
+	return await WorldSearchService.detailedSearch({
 		worldIds: [worldId],
 		query,
 		mode: mode ?? 'string_match',

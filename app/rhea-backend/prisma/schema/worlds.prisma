@@ -75,6 +75,7 @@ model WorldEvent {
 
   @@index([worldId, parentFolderId])
   @@index([worldEventTrackId])
+  @@index([name(ops: raw("gin_trgm_ops")), content(ops: raw("gin_trgm_ops"))], type: Gin)
 }
 
 model WorldEventDelta {

@@ -575,12 +575,16 @@ export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnu
 
 
 export const WorldSearchEntryScalarFieldEnum = {
-  id: 'id',
   worldId: 'worldId',
   entityType: 'entityType',
+  entityId: 'entityId',
+  pageId: 'pageId',
   name: 'name',
-  searchableText: 'searchableText',
-  timestamp: 'timestamp'
+  title: 'title',
+  content: 'content',
+  timestamp: 'timestamp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
 } as const
 
 export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]
