@@ -58,6 +58,7 @@ export function mockWorldTag(overrides: Partial<MockWorldTag> & { id: string; na
 		description: '',
 		mentions: [],
 		mentionedIn: [],
+		icon: 'default',
 		color: '',
 		parentFolderId: null,
 		parentFolderPosition: 0,

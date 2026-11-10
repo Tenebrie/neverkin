@@ -103,6 +103,7 @@ export const mockTag = (data?: Partial<BaselineTag>): BaselineTag => ({
 	worldId: 'world-1111',
 	name: 'Test Tag',
 	description: 'Tag description',
+	icon: 'default',
 	color: '#000',
 	mentions: [],
 	mentionedIn: [],
