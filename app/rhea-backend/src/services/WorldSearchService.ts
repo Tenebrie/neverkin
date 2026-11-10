@@ -47,7 +47,29 @@ export const WorldSearchService = {
 			},
 		})
 
-		return { hits }
+		const entityHits = hits.filter((hit) => !hit.pageId)
+		const pageHits = hits.filter((hit) => hit.pageId)
+
+		const missingParentIds = pageHits
+			.map((page) => page.entityId)
+			.filter((id) => !entityHits.some((hit) => hit.entityId === id))
+
+		const missingParents = await prisma.worldSearchEntry.findMany({
+			where: {
+				entityId: { in: missingParentIds },
+				worldId: { in: worldIds },
+				pageId: null,
+			},
+		})
+
+		const allHits = [...entityHits, ...missingParents]
+			.map((entity) => ({
+				...entity,
+				pages: pageHits.filter((page) => page.entityId === entity.entityId),
+			}))
+			.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+
+		return { hits: allHits }
 	},
 
 	async detailedSearch({

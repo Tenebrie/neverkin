@@ -62,6 +62,9 @@ export function GlobalSearch() {
 						popoverState.close()
 						fetchResults(value)
 					}}
+					sx={{
+						maxWidth: 384,
+					}}
 					debounceTimeout={50}
 				/>
 				<Popper

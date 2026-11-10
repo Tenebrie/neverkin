@@ -22,10 +22,10 @@ export const SearchInput = ({ initialQuery, onChange, debounceTimeout, ...props 
 	})
 
 	return (
-		<Stack direction="row" sx={{ paddingTop: 0.5 }}>
+		<Stack direction="row">
 			<TextField
 				id="searchInput"
-				label="Search"
+				placeholder="Search"
 				variant="outlined"
 				size="small"
 				{...props}
@@ -34,8 +34,12 @@ export const SearchInput = ({ initialQuery, onChange, debounceTimeout, ...props 
 				slotProps={{
 					input: {
 						endAdornment: (
-							<InputAdornment position="end">
-								<IconButton onClick={() => setQueryInstant('')}>
+							<InputAdornment position="end" disablePointerEvents={query.length === 0}>
+								<IconButton
+									sx={{ marginRight: -1.5 }}
+									onClick={() => setQueryInstant('')}
+									disabled={query.length === 0}
+								>
 									{query.length > 0 ? <Clear /> : <Search />}
 								</IconButton>
 							</InputAdornment>
