@@ -352,6 +352,7 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 				createdAt: string
 				updatedAt: string
 				name: string
+				icon: string
 				color: string
 				content: string
 				contentRich: string

@@ -1,4 +1,5 @@
 import Delete from '@mui/icons-material/Delete'
+import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
 import Menu from '@mui/material/Menu'
@@ -6,24 +7,29 @@ import MenuItem from '@mui/material/MenuItem'
 import { useMemo, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { WikiContextMenuColorPicker } from '@/app/views/world/views/wiki/components/WikiContextMenuColorPicker'
 
 import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
+import { MindmapNodeParentParcel } from '../types'
 
 export function MindmapBulkContextMenu() {
 	const [open, setOpen] = useState(false)
 	const [position, setPosition] = useState({ x: 0, y: 0 })
 	const [targetNodes, setTargetNodes] = useState<string[]>([])
 	const [targetWires, setTargetWires] = useState<string[]>([])
-	const { deleteNodes, deleteWires } = useMindmapContext()
+	const [targetParents, setTargetParents] = useState<MindmapNodeParentParcel[]>([])
+	const { nodes, deleteNodes, deleteWires } = useMindmapContext()
 
 	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
 	useEventBusSubscribe['mindmap/bulk/requestOpenContextMenu']({
 		callback: (params) => {
+			const nodeIds = selectedNodes.keys()
 			setOpen(true)
 			setPosition(params.position)
-			setTargetNodes(selectedNodes.keys())
+			setTargetNodes(nodeIds)
 			setTargetWires(selectedWires.keys())
+			setTargetParents(nodeIds.flatMap((nodeId) => nodes.get(nodeId)?.parent ?? []))
 		},
 	})
 
@@ -50,6 +56,10 @@ export function MindmapBulkContextMenu() {
 			disableRestoreFocus
 			disableEnforceFocus
 		>
+			{targetParents.length > 0 && (
+				<WikiContextMenuColorPicker entities={targetParents} onClose={() => setOpen(false)} />
+			)}
+			{targetParents.length > 0 && <Divider sx={{ my: 1 }} />}
 			<MenuItem
 				color="error"
 				onClick={() => {

@@ -176,6 +176,7 @@ const makeMindmapNode = (
 		createdAt: now,
 		updatedAt: now,
 		name: '',
+		icon: 'default',
 		color: '#6b7a99',
 		content: '',
 		contentRich: '',

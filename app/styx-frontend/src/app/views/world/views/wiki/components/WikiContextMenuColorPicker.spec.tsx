@@ -1,7 +1,7 @@
 import { describe, expect, it } from '@rstest/core'
 import { screen, waitFor } from '@testing-library/react'
 
-import { mockGetWorldColors, mockUpdateMindmapNode } from '@/api/mock/rheaApi.mock'
+import { mockBulkUpdateEntities, mockGetWorldColors } from '@/api/mock/rheaApi.mock'
 import { mockMindmapNodeModel } from '@/api/mock/rheaModels.mock'
 import { DefaultColors } from '@/app/features/colors/defaultColors'
 import { boxPlainNode } from '@/app/views/world/views/wiki/utils/boxEntity'
@@ -19,20 +19,18 @@ describe('WikiContextMenuColorPicker', () => {
 	it('sends the picked color for a plain mindmap node', async () => {
 		const node = mockMindmapNodeModel({ worldId })
 		mockGetWorldColors(server, { worldId, response: [] })
-		const updateNode = mockUpdateMindmapNode(server, {
-			worldId,
-			nodeId: node.id,
-			response: { ...node, color: DefaultColors.actor },
-		})
+		const bulkUpdate = mockBulkUpdateEntities(server, { worldId, response: null })
 
 		const { user } = renderWithProviders(
-			<WikiContextMenuColorPicker article={boxPlainNode(node)} onClose={() => {}} />,
+			<WikiContextMenuColorPicker entities={[boxPlainNode(node)]} onClose={() => {}} />,
 			{ preloadedState: { world: { ...worldInitialState, id: worldId } } },
 		)
 		await user.click(screen.getByTestId('SavedColor/builtin:actor'))
 
 		await waitFor(() =>
-			expect(updateNode.invocations).toEqual([{ jsonBody: { color: DefaultColors.actor } }]),
+			expect(bulkUpdate.invocations).toEqual([
+				{ jsonBody: { entities: [node.id], color: DefaultColors.actor } },
+			]),
 		)
 	})
 })

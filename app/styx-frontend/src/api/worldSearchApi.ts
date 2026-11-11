@@ -35,11 +35,11 @@ export { injectedRtkApi as worldSearchApi }
 export type GlobalSearchApiResponse = /** status 200  */ {
 	hits: {
 		pages: {
-			title?: null | string
 			worldId: string
 			createdAt: string
 			updatedAt: string
 			name: string
+			title?: null | string
 			icon: string
 			color: string
 			content: string
@@ -48,11 +48,11 @@ export type GlobalSearchApiResponse = /** status 200  */ {
 			entityType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 			entityId: string
 		}[]
-		title?: null | string
 		worldId: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		title?: null | string
 		icon: string
 		color: string
 		content: string
@@ -83,11 +83,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		nodes: {
-			id: string
 			worldId: string
+			id: string
 			createdAt: string
 			updatedAt: string
 			name: string
+			icon: string
 			color: string
 			content: string
 			contentRich: string
@@ -99,12 +100,12 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 			parentTagId?: null | string
 		}[]
-		id: string
-		title: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
+		title: string
 		icon: string
 		color: string
 		content: string
@@ -125,8 +126,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -150,8 +151,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceId: string
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
@@ -175,8 +176,8 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 		}[]
 		description: string
-		id: string
 		worldId: string
+		id: string
 		createdAt: string
 		updatedAt: string
 		name: string

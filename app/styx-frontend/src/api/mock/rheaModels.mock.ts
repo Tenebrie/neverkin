@@ -86,6 +86,7 @@ export const mockMindmapNodeModel = (node: Partial<MindmapNode> = {}): MindmapNo
 	id: getRandomId(),
 	worldId: 'world-1111-2222-3333-4444',
 	name: 'Node name',
+	icon: 'default',
 	color: '#6b7a99',
 	content: '',
 	contentRich: '',
