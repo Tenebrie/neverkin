@@ -17,10 +17,16 @@ for (const file of files) {
 
 	let currentEndpoint = null
 	let isMutation = false
+	let isSkippingTags = false
 	const strippedEndpoints = []
 	const result = []
 
 	for (const line of lines) {
+		if (isSkippingTags) {
+			isSkippingTags = !line.includes(']')
+			continue
+		}
+
 		const endpointMatch = line.match(/^\s+(\w+):\s*build\.(mutation|query)/)
 		if (endpointMatch) {
 			currentEndpoint = endpointMatch[1]
@@ -33,7 +39,8 @@ for (const file of files) {
 			noInvalidate.has(currentEndpoint) &&
 			line.match(/^\s+invalidatesTags:/)
 		) {
-			result.push(line.replace(/invalidatesTags:\s*\[.*\]/, 'invalidatesTags: []'))
+			result.push(line.replace(/invalidatesTags:.*/, 'invalidatesTags: [],'))
+			isSkippingTags = !line.includes(']')
 			strippedEndpoints.push(currentEndpoint)
 		} else {
 			result.push(line)

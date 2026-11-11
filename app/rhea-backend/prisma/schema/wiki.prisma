@@ -24,6 +24,7 @@ model WikiArticle {
   parentFolderPosition Float       @default(0)
 
   @@index([worldId, parentFolderId])
+  @@index([name(ops: raw("gin_trgm_ops")), content(ops: raw("gin_trgm_ops"))], type: Gin)
 }
 
 model WikiFolder {

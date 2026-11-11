@@ -203,3 +203,8 @@ export type WorldEventTrack = Prisma.WorldEventTrackModel
  * 
  */
 export type WorldShareLink = Prisma.WorldShareLinkModel
+/**
+ * Model WorldSearchEntry
+ * 
+ */
+export type WorldSearchEntry = Prisma.WorldSearchEntryModel

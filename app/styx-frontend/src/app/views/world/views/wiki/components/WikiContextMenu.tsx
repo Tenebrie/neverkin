@@ -46,7 +46,7 @@ export function WikiContextMenu({ article, popupState }: Props) {
 		<Menu {...bindMenu(popupState)} disableRestoreFocus disableEnforceFocus>
 			{!bulkActionArticles.includes(article.id) && (
 				<Stack>
-					<WikiContextMenuColorPicker article={article} onClose={popupState.close} />
+					<WikiContextMenuColorPicker entities={[article]} onClose={popupState.close} />
 					<Divider sx={{ my: 1 }} />
 					{article.type === 'folder' && (
 						<>

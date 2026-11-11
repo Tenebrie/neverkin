@@ -1,8 +1,10 @@
 generator client {
   provider = "prisma-client"
   output   = "./client"
+  previewFeatures = ["views", "postgresqlExtensions"]
 }
 
 datasource db {
   provider = "postgresql"
+  extensions = [pg_trgm]
 }

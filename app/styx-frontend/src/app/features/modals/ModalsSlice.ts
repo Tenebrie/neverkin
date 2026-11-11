@@ -3,7 +3,7 @@ import { createSlice } from '@reduxjs/toolkit'
 import { useCallback, useRef } from 'react'
 import { useDispatch, useSelector } from 'react-redux'
 
-import { ActorDetails, WorldEvent, WorldEventDelta, WorldTag } from '@/api/types/worldTypes'
+import { ActorDetails, WorldEvent, WorldTag } from '@/api/types/worldTypes'
 import { isEventObject } from '@/app/utils/isEventObject'
 
 import { User } from '../auth/AuthSlice'
@@ -55,10 +55,6 @@ const modals = {
 	deleteTagModal: {
 		isOpen: false as boolean,
 		target: null as WorldTag | null,
-	},
-	deleteEventDeltaModal: {
-		isOpen: false as boolean,
-		target: null as WorldEventDelta | null,
 	},
 	revokedStatementWizard: {
 		isOpen: false as boolean,

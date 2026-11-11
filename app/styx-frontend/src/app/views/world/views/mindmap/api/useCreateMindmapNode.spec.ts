@@ -29,6 +29,7 @@ describe('useCreateMindmapNode', () => {
 						id: body.id ?? '',
 						worldId,
 						name: '',
+						icon: 'default',
 						color: '#6b7a99',
 						content: '',
 						contentRich: '',

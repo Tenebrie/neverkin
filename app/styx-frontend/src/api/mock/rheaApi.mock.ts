@@ -88,6 +88,13 @@ export const mockUpdateMindmapNode = (
 		...params,
 	})
 
+export const mockBulkUpdateEntities = (server: SetupServer, params: { worldId: string } & MockParams<null>) =>
+	generateEndpointMock(server, {
+		method: 'post',
+		path: `/api/world/${params.worldId}/bulk/update`,
+		...params,
+	})
+
 export const mockGetWorldColors = (
 	server: SetupServer,
 	params: { worldId: string } & MockParams<GetWorldColorsApiResponse>,

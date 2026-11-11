@@ -60,7 +60,7 @@ export function MindmapNodeContextMenu() {
 			disableRestoreFocus
 			disableEnforceFocus
 		>
-			<WikiContextMenuColorPicker article={parent} onClose={() => setOpen(false)} />
+			<WikiContextMenuColorPicker entities={[parent]} onClose={() => setOpen(false)} />
 			<Divider sx={{ my: 1 }} />
 			{parent.type !== 'folder' && (
 				<MenuItem

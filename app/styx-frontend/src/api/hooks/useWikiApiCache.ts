@@ -142,5 +142,10 @@ export function useWikiApiCache() {
 		[dispatch, worldId],
 	)
 
-	return { upsertCachedArticle, updateCachedFolder, updateCachedArticle, applyPositionUpdates }
+	return {
+		upsertCachedArticle,
+		updateCachedFolder,
+		updateCachedArticle,
+		applyPositionUpdates,
+	}
 }

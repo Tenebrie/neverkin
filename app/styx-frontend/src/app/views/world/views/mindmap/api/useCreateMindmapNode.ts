@@ -20,6 +20,7 @@ export function useCreateMindmapNode() {
 					draft.nodes.push({
 						worldId,
 						name: '',
+						icon: 'default',
 						color: DefaultColors.node,
 						content: '',
 						contentRich: '',

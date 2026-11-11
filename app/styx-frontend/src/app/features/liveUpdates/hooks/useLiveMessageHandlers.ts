@@ -3,6 +3,7 @@ import { useDispatch, useSelector } from 'react-redux'
 
 import { announcementListApi } from '@/api/announcementListApi'
 import { calendarApi } from '@/api/calendarApi'
+import { useBulkApiCache } from '@/api/hooks/useBulkApiCache'
 import { useWikiApiCache } from '@/api/hooks/useWikiApiCache'
 import { imageGenerationApi } from '@/api/imageGenerationApi'
 import { mindmapApi } from '@/api/mindmapApi'
@@ -34,6 +35,7 @@ export const useLiveMessageHandlers = () => {
 	const dispatch = useDispatch()
 
 	const { upsertCachedArticle, applyPositionUpdates } = useWikiApiCache()
+	const { applyEntityPatch } = useBulkApiCache()
 
 	const updatedAtRef = useAutoRef(currentUpdatedAt)
 
@@ -128,6 +130,12 @@ export const useLiveMessageHandlers = () => {
 
 		[CalliopeToClientMessageType.WIKI_ORDER_CHANGED]: (data) => {
 			applyPositionUpdates(JSON.parse(data.updates) as WikiPositionUpdate[])
+		},
+		[CalliopeToClientMessageType.ENTITIES_UPDATED]: (data) => {
+			applyEntityPatch(data)
+			if (data.tagIds.length > 0) {
+				dispatch(worldTagApi.util.invalidateTags(['worldTag']))
+			}
 		},
 
 		[CalliopeToClientMessageType.DOCUMENT_RESET]: (data) => {

@@ -2,7 +2,7 @@ import { useMemo } from 'react'
 import { useSelector } from 'react-redux'
 
 import { WorldEventTrack } from '@/api/types/worldEventTracksTypes'
-import { MarkerType, TimelineEntity, WorldEvent, WorldEventDelta } from '@/api/types/worldTypes'
+import { MarkerType, TimelineEntity, WorldEvent } from '@/api/types/worldTypes'
 import { asMarkerType } from '@/app/utils/asMarkerType'
 import { findStartingFrom } from '@/app/utils/findStartingFrom'
 import { isNotNull } from '@/app/utils/isNotNull'
@@ -43,7 +43,7 @@ const useEventTracks = ({ showHidden }: Props = {}): {
 				markerPosition: event.timestamp,
 				markerType: asMarkerType('issuedAt'),
 				markerHeight: 0,
-				baseEntity: event as WorldEvent | WorldEventDelta | null,
+				baseEntity: event as WorldEvent | null,
 				chainEntity: null,
 				followingEntity: null,
 			}))

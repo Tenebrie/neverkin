@@ -13,5 +13,6 @@ module.exports = [
 	'deleteMindmapWires',
 	'moveWikiEntity',
 	'bulkMoveWikiEntities',
+	'bulkUpdateEntities',
 	'reparentNode',
 ]

@@ -9,7 +9,6 @@ import {
 	WorldCalendar,
 	WorldDetails,
 	WorldEvent,
-	WorldEventDelta,
 	WorldTag,
 } from '@/api/types/worldTypes'
 import { WikiArticle } from '@/api/types/worldWikiTypes'
@@ -48,10 +47,6 @@ export const initialState = {
 
 	eventCreator: {
 		ghost: null as WorldEvent | null,
-	},
-
-	eventDeltaCreator: {
-		ghost: null as WorldEventDelta | null,
 	},
 
 	timelineContextMenu: {
@@ -188,9 +183,6 @@ export const worldSlice = createSlice({
 		/* Event creator */
 		setEventCreatorGhost: (state, { payload }: PayloadAction<WorldEvent | null>) => {
 			state.eventCreator.ghost = payload
-		},
-		setEventDeltaCreatorGhost: (state, { payload }: PayloadAction<WorldEventDelta | null>) => {
-			state.eventDeltaCreator.ghost = payload
 		},
 
 		/* Search */

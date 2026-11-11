@@ -2,7 +2,7 @@ import Box from '@mui/material/Box'
 import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs'
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider'
 import { Outlet } from '@tanstack/react-router'
-import { useEffect } from 'react'
+import { useEffect, useState } from 'react'
 import styled from 'styled-components'
 
 import { AnnouncementSnackbar } from './features/announcements/AnnouncementSnackbar'
@@ -14,6 +14,7 @@ import { LostConnectionAlert } from './features/liveUpdates/components/LostConne
 import { useLiveUpdates } from './features/liveUpdates/hooks/useLiveUpdates'
 import { BaseNavigator } from './features/navigation/components/BaseNavigator'
 import { NavigationReceiverWrapper } from './features/navigation/components/NavigationReceiverWrapper'
+import { NotificationBar } from './features/notifications/NotificationBar'
 import { PageMetadata } from './features/pageMetadata/PageMetadata'
 import { useSavedPreferences } from './features/preferences/hooks/useSavedPreferences'
 import { CustomThemeOverrides } from './features/theming/components/CustomThemeOverrides'
@@ -64,33 +65,36 @@ const App = () => {
 		}
 	})
 
+	const [open, setOpen] = useState(10)
+
 	return (
 		<div className="App">
 			<EventBusProvider bus={globalEventBus}>
 				<LocalizationProvider dateAdapter={AdapterDayjs}>
 					<CustomThemeProvider>
 						<CustomThemeOverrides>
-							<Container>
-								<BaseNavigator />
-								<Box
-									sx={{
-										width: '100%',
-										flex: 1,
-										minHeight: 0,
-										overflowY: 'auto',
-									}}
-								>
-									<AuthBackground>
-										<Outlet />
-									</AuthBackground>
-								</Box>
-								<DeleteAccountModal />
-								<DeleteAssetModal />
-							</Container>
-							<LostConnectionAlert server="rhea" />
-							<LostConnectionAlert server="calliope" />
-							<AnnouncementSnackbar />
-							<DragDropPortalSlot />
+							<NotificationBar>
+								<Container>
+									<BaseNavigator />
+									<Box
+										sx={{
+											width: '100%',
+											flex: 1,
+											minHeight: 0,
+											overflowY: 'auto',
+										}}
+									>
+										<AuthBackground>
+											<Outlet />
+										</AuthBackground>
+									</Box>
+									<DeleteAccountModal />
+									<DeleteAssetModal />
+								</Container>
+								<LostConnectionAlert server="calliope" />
+								<AnnouncementSnackbar />
+								<DragDropPortalSlot />
+							</NotificationBar>
 						</CustomThemeOverrides>
 					</CustomThemeProvider>
 					<NavigationReceiverWrapper />

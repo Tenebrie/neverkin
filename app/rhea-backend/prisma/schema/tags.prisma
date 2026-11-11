@@ -5,6 +5,7 @@ model Tag {
 
     name        String
     description String @default("")
+    icon        String @default("default")
     color       String @default("#9f2261")
 
     mentions    Mention[]        @relation("TagMentionSource")
@@ -21,4 +22,5 @@ model Tag {
     parentFolderPosition Float       @default(0)
 
     @@index([worldId, parentFolderId])
+    @@index([name(ops: raw("gin_trgm_ops")), description(ops: raw("gin_trgm_ops"))], type: Gin)
 }

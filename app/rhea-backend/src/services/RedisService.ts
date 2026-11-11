@@ -13,7 +13,11 @@ import {
 import { RedisChannel } from '@src/ts-shared/RedisChannel.js'
 import { ParameterizedContext } from 'koa'
 
-import { RheaToCalliopeMessage, RheaToCalliopeMessageType } from '../ts-shared/RheaToCalliopeMessage.js'
+import {
+	RheaToCalliopeMessage,
+	RheaToCalliopeMessagePayload,
+	RheaToCalliopeMessageType,
+} from '../ts-shared/RheaToCalliopeMessage.js'
 import { getRedisClient, openRedisChannel } from './dbClients/RedisClient.js'
 import { WikiPositionUpdate } from './dbQueries/makeSortWikiArticlesQuery.js'
 import { TagService } from './TagService.js'
@@ -348,6 +352,17 @@ export const RedisService = {
 				worldId,
 				updates: JSON.stringify(updates),
 			},
+		})
+	},
+
+	notifyAboutEntitiesUpdate: (
+		ctx: ContextWithSessionId,
+		data: RheaToCalliopeMessagePayload[RheaToCalliopeMessageType.ENTITIES_UPDATED],
+	) => {
+		calliope.sendMessage({
+			type: RheaToCalliopeMessageType.ENTITIES_UPDATED,
+			messageSourceSessionId: ctx.sessionId,
+			data,
 		})
 	},
 
