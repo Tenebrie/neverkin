@@ -3,6 +3,7 @@ import { existsSync, readdirSync, readFileSync, statSync } from 'node:fs'
 import { join } from 'node:path'
 
 import { PGlite } from '@electric-sql/pglite'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 
 /**
  * Pre-boot database preparation: replays Rhea's migration history into the
@@ -14,7 +15,7 @@ import { PGlite } from '@electric-sql/pglite'
 const SEED_ADMIN_PASSWORD_HASH = '$2b$12$yOVLWhUtcIgyLxs0Z0TIZekbZAtqmSfVmz7o1DakZu3Q/Lp/KVMYK'
 
 export async function prepareDatabase(migrationsDir, dataDir) {
-	const db = new PGlite(dataDir)
+	const db = new PGlite(dataDir, { extensions: { pg_trgm } })
 	try {
 		const migrations = await applyMigrations(db, migrationsDir)
 		await seedDatabase(db)

@@ -7,53 +7,27 @@ import { useState } from 'react'
 
 import { SavedColors } from '@/app/components/ColorPicker/SavedColors'
 import { useModal } from '@/app/features/modals/ModalsSlice'
-import { useUpdateActor } from '@/app/views/world/api/useUpdateActor'
-import { useUpdateArticle } from '@/app/views/world/api/useUpdateArticle'
-import { useUpdateEvent } from '@/app/views/world/api/useUpdateEvent'
-import { useUpdateFolder } from '@/app/views/world/api/useUpdateFolder'
-import { useUpdateTag } from '@/app/views/world/api/useUpdateTag'
-import { useUpdateMindmapNode } from '@/app/views/world/views/mindmap/api/useUpdateMindmapNode'
+import { useBulkUpdate } from '@/app/views/world/api/useBulkUpdate'
 import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
 import { Header } from '@/ui-lib/components/Header/Header'
 
 type Props = {
-	article: MindmapNodeParentParcel
+	entities: MindmapNodeParentParcel[]
 	onClose: () => void
 }
 
-export function WikiContextMenuColorPicker({ article, onClose }: Props) {
-	const [updateActor] = useUpdateActor()
-	const [updateArticle] = useUpdateArticle()
-	const [updateFolder] = useUpdateFolder()
-	const [updateEvent] = useUpdateEvent()
-	const [updateTag] = useUpdateTag()
-	const [updateNode] = useUpdateMindmapNode()
+export function WikiContextMenuColorPicker({ entities, onClose }: Props) {
+	const [bulkUpdate] = useBulkUpdate()
 
 	const { open: openCreateColorModal } = useModal('createColorModal')
 
 	const onSelectColor = (color: string) => {
-		switch (article.type) {
-			case 'actor':
-				updateActor(article.id, { color })
-				break
-			case 'article':
-				updateArticle(article.id, { color })
-				break
-			case 'event':
-				updateEvent(article.id, { color })
-				break
-			case 'tag':
-				updateTag(article.id, { color })
-				break
-			case 'folder':
-				updateFolder(article.id, { color })
-				break
-			case 'node':
-				updateNode(article.id, { color })
-				break
-		}
+		bulkUpdate({ entities: entities.map((entity) => entity.id), color })
 		onClose()
 	}
+
+	const firstColor = entities[0]?.color
+	const currentColor = entities.every((entity) => entity.color === firstColor) ? firstColor : undefined
 
 	const [limit, setLimit] = useState(4)
 
@@ -78,7 +52,7 @@ export function WikiContextMenuColorPicker({ article, onClose }: Props) {
 				Color
 			</Header>
 			<Stack direction="row" gap={1} alignItems="center" flexWrap="wrap" maxWidth={156}>
-				<SavedColors currentColor={article.color} onSelectColor={onSelectColor} size={20} limit={limit} />
+				<SavedColors currentColor={currentColor} onSelectColor={onSelectColor} size={20} limit={limit} />
 				{limit < Infinity && (
 					<Tooltip title="Show all colors" disableInteractive enterDelay={500}>
 						<Button

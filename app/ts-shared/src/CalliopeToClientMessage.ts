@@ -26,6 +26,7 @@ export enum CalliopeToClientMessageType {
 	WIKI_FOLDER_UPDATED = 'wikiFolderUpdated',
 	WIKI_FOLDER_DELETED = 'wikiFolderDeleted',
 	WIKI_ORDER_CHANGED = 'wikiOrderChanged',
+	ENTITIES_UPDATED = 'entitiesUpdated',
 	DOCUMENT_RESET = 'documentReset',
 	IMAGE_GENERATION_UPDATED = 'imageGenerationUpdated',
 	FEATURE_FLAGS_CHANGED = 'featureFlagsChanged',
@@ -93,6 +94,19 @@ export type CalliopeToClientMessagePayload = {
 		worldId: string
 		// TODO: Type properly
 		updates: string // JSON stringified array of updates
+	}
+	[CalliopeToClientMessageType.ENTITIES_UPDATED]: {
+		worldId: string
+		actorIds: string[]
+		articleIds: string[]
+		eventIds: string[]
+		tagIds: string[]
+		folderIds: string[]
+		nodeIds: string[]
+		patch: {
+			icon?: string
+			color?: string
+		}
 	}
 
 	[CalliopeToClientMessageType.MINDMAP_NODES_UPDATED]: {

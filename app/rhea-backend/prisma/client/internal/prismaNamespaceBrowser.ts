@@ -82,7 +82,8 @@ export const ModelName = {
   WorldEvent: 'WorldEvent',
   WorldEventDelta: 'WorldEventDelta',
   WorldEventTrack: 'WorldEventTrack',
-  WorldShareLink: 'WorldShareLink'
+  WorldShareLink: 'WorldShareLink',
+  WorldSearchEntry: 'WorldSearchEntry'
 } as const
 
 export type ModelName = (typeof ModelName)[keyof typeof ModelName]
@@ -373,6 +374,7 @@ export const MindmapNodeScalarFieldEnum = {
   createdAt: 'createdAt',
   updatedAt: 'updatedAt',
   name: 'name',
+  icon: 'icon',
   color: 'color',
   content: 'content',
   contentRich: 'contentRich',
@@ -408,6 +410,7 @@ export const TagScalarFieldEnum = {
   updatedAt: 'updatedAt',
   name: 'name',
   description: 'description',
+  icon: 'icon',
   color: 'color',
   worldId: 'worldId',
   parentFolderId: 'parentFolderId',
@@ -571,6 +574,24 @@ export const WorldShareLinkScalarFieldEnum = {
 } as const
 
 export type WorldShareLinkScalarFieldEnum = (typeof WorldShareLinkScalarFieldEnum)[keyof typeof WorldShareLinkScalarFieldEnum]
+
+
+export const WorldSearchEntryScalarFieldEnum = {
+  worldId: 'worldId',
+  entityType: 'entityType',
+  entityId: 'entityId',
+  pageId: 'pageId',
+  name: 'name',
+  title: 'title',
+  content: 'content',
+  timestamp: 'timestamp',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt',
+  icon: 'icon',
+  color: 'color'
+} as const
+
+export type WorldSearchEntryScalarFieldEnum = (typeof WorldSearchEntryScalarFieldEnum)[keyof typeof WorldSearchEntryScalarFieldEnum]
 
 
 export const SortOrder = {

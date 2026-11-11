@@ -78,6 +78,7 @@ export type CreateTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
@@ -106,6 +107,7 @@ export type UpdateTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
@@ -128,6 +130,7 @@ export type DeleteTagApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number
@@ -167,6 +170,7 @@ export type GetTagDetailsApiResponse = /** status 200  */ {
 	createdAt: string
 	updatedAt: string
 	name: string
+	icon: string
 	color: string
 	parentFolderId?: null | string
 	parentFolderPosition: number

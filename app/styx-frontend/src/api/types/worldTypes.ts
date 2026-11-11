@@ -26,7 +26,6 @@ export type WorldEvent = Omit<
 	timestamp: number
 	revokedAt?: number
 }
-export type WorldEventDelta = GetWorldInfoApiResponse['events'][number]['deltaStates'][number]
 export type WorldCalendar = Omit<GetWorldInfoApiResponse['calendars'][number], 'originTime'> & {
 	originTime: number
 }
@@ -52,13 +51,7 @@ export type TimelineEntity<T extends MarkerType> = WorldEvent & {
 	markerPosition: number
 	markerType: T
 	markerHeight: number
-	baseEntity: T extends 'issuedAt'
-		? WorldEvent
-		: T extends 'revokedAt'
-			? WorldEvent
-			: T extends 'deltaState'
-				? WorldEventDelta
-				: null
+	baseEntity: T extends 'issuedAt' ? WorldEvent : T extends 'revokedAt' ? WorldEvent : null
 	chainEntity: TimelineEntity<MarkerType> | null
 	followingEntity: TimelineEntity<MarkerType> | null
 }

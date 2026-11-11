@@ -20,7 +20,6 @@ import { useLoadWorldInfo } from './hooks/useLoadWorldInfo'
 import { CreateActorModal } from './modals/CreateActorModal'
 import { CreateEventModal } from './modals/CreateEventModal'
 import { DeleteActorModal } from './modals/DeleteActorModal'
-import { DeleteEventDeltaModal } from './modals/DeleteEventDeltaModal'
 import { DeleteEventModal } from './modals/DeleteEventModal'
 import { DeleteTagModal } from './modals/DeleteTagModal'
 import { EditEventModal } from './modals/editEventModal/EditEventModal'
@@ -99,7 +98,6 @@ export const World = () => {
 			<EditEventModal />
 			<DeleteEventModal />
 			<DeleteTagModal />
-			<DeleteEventDeltaModal />
 			<EntityModalReporter />
 			<MarkerTooltipSummoner />
 			<CreateEventModal />

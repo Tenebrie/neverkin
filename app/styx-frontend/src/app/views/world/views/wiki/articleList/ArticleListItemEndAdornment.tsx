@@ -7,7 +7,10 @@ import { BoxedWikiEntity } from '../hooks/useBoxedWikiContent'
 import { useFolderEntityCount } from './hooks/useFolderEntityCount'
 
 type Props = {
-	article: BoxedWikiEntity
+	article: {
+		id: string
+		type: BoxedWikiEntity['type'] | 'node'
+	}
 	color: string
 }
 

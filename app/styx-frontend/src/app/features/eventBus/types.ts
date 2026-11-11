@@ -1,3 +1,4 @@
+import type { AlertColor } from '@mui/material/Alert'
 import type { NavigateOptions } from '@tanstack/react-router'
 import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
@@ -85,6 +86,7 @@ export type EventParams = {
 	'calliope/documentReset': { worldId: string; entityId: string }
 	'calliope/announcementReceived': void
 	'announcements/requestOpen': void
+	'notifications/push': { severity?: AlertColor; message: string }
 	'quickSelect/onKeyDown': {
 		key: string
 		shiftKey: boolean

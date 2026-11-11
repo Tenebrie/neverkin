@@ -65,16 +65,6 @@ export type CreateWorldEventApiResponse = /** status 200  */ {
 		sourceId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
 	}[]
-	deltaStates: {
-		description?: null | string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name?: null | string
-		timestamp: string
-		descriptionRich?: null | string
-		worldEventId: string
-	}[]
 	worldId: string
 	id: string
 	createdAt: string
@@ -119,16 +109,6 @@ export type UpdateWorldEventApiResponse = /** status 200  */ {
 	mentionedIn: {
 		sourceId: string
 		sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-	}[]
-	deltaStates: {
-		description?: null | string
-		id: string
-		createdAt: string
-		updatedAt: string
-		name?: null | string
-		timestamp: string
-		descriptionRich?: null | string
-		worldEventId: string
 	}[]
 	worldId: string
 	id: string

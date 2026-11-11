@@ -137,6 +137,10 @@ const handlers: RheaToCalliopeMessageHandlers = {
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.WIKI_ORDER_CHANGED, ...ctx })
 	},
 
+	[RheaToCalliopeMessageType.ENTITIES_UPDATED]: (ctx) => {
+		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.ENTITIES_UPDATED, ...ctx })
+	},
+
 	[RheaToCalliopeMessageType.DOCUMENT_RESET]: async (ctx) => {
 		await YjsSyncService.resetDocument(ctx.data.worldId, ctx.data.entityId)
 		relayMessageToWorldSockets({ type: CalliopeToClientMessageType.DOCUMENT_RESET, ...ctx })

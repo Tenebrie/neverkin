@@ -1,0 +1,16 @@
+view WorldSearchEntry {
+  worldId    String
+  entityType MentionedEntity
+  entityId   String
+  pageId     String?
+  name       String
+  title      String?
+  content    String
+  timestamp  BigInt?
+  createdAt  DateTime
+  updatedAt  DateTime
+  icon       String
+  color      String
+
+  @@unique([worldId, entityType, entityId, pageId])
+}
