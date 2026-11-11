@@ -1,6 +1,7 @@
 import { AsyncLocalStorage } from 'node:async_hooks'
 
 import { PGlite } from '@electric-sql/pglite'
+import { pg_trgm } from '@electric-sql/pglite/contrib/pg_trgm'
 import { PrismaPGlite } from 'pglite-prisma-adapter'
 
 /**
@@ -95,7 +96,7 @@ export class PrismaPg {
 				'[echo-desktop] NEVERKIN_PGDATA is not set; the launcher must configure it before Rhea starts',
 			)
 		}
-		const factory = new PrismaPGlite(new PGlite(dataDir))
+		const factory = new PrismaPGlite(new PGlite(dataDir, { extensions: { pg_trgm } }))
 		const wrappedFactory = Object.create(factory)
 		wrappedFactory.connect = async () => serializeTransactions(await factory.connect())
 		return wrappedFactory
