@@ -158,17 +158,17 @@ export function GlobalSearchHit({ hit, query, onClose }: Props) {
 								whiteSpace: 'nowrap',
 							}}
 						>
-							<HighlightedText text={hit.name} query={query} />
+							<HighlightedText text={hit.name} query={query} mode="split_by_space" />
 							{hit.title && (
 								<>
 									{', '}
-									<HighlightedText text={hit.title} query={query} />
+									<HighlightedText text={hit.title} query={query} mode="split_by_space" />
 								</>
 							)}
 						</Box>
 						{snippet && (
 							<Typography variant="caption" sx={{ ...captionLineStyles, color: 'text.secondary' }}>
-								<HighlightedText text={snippet} query={query} />
+								<HighlightedText text={snippet} query={query} mode="split_by_space" />
 							</Typography>
 						)}
 					</Stack>

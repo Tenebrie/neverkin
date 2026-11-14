@@ -28,7 +28,6 @@ export function GlobalSearch() {
 	const [resultsQuery, setResultsQuery] = useState('')
 
 	const fetchResults = useDebounce(async (value: string) => {
-		console.log('fetch')
 		if (!value) {
 			setResults([])
 			return
@@ -63,7 +62,6 @@ export function GlobalSearch() {
 					variant="outlined"
 					placeholder="Search..."
 					onChange={(value) => {
-						popoverState.close()
 						fetchResults(value)
 					}}
 					sx={{

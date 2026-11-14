@@ -47,10 +47,10 @@ router.get('/api/search/:query', async (ctx) => {
 		...availableWorlds.visibleWorlds,
 	].map((world) => world.id)
 
-	return await WorldSearchService.search({
+	return await WorldSearchService.autocompleteSearch({
 		worldIds: worlds,
 		query,
-		// mode: mode ?? 'string_match',
+		mode: mode ?? 'split_by_space',
 		// timeRange: {
 		// 	from: minTime,
 		// 	to: maxTime,

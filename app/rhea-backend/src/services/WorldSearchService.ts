@@ -1,3 +1,4 @@
+import { WorldSearchEntry } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { deduplicateById } from '@src/utils/deduplicateById.js'
 import { z } from 'zod'
@@ -14,33 +15,33 @@ type SearchParams = {
 }
 
 export const WorldSearchService = {
-	async search({
+	async autocompleteSearch({
 		worldIds,
 		query,
+		mode,
 		take,
 		skip,
 	}: {
 		worldIds: string[]
 		query: string
+		mode: SearchMode
 		take?: number
 		skip?: number
 	}) {
 		const prisma = getPrismaClient()
-		const params: SearchParams = {
-			take: take ?? 100,
-			skip: skip ?? 0,
-		}
+
+		const terms = mode === 'string_match' ? [query] : query.split(/\s+/)
+
 		const hits = await prisma.worldSearchEntry.findMany({
-			...params,
 			where: {
 				worldId: {
 					in: worldIds,
 				},
-				OR: [
-					{ name: { contains: query, mode: 'insensitive' } },
-					{ title: { contains: query, mode: 'insensitive' } },
-					{ content: { contains: query, mode: 'insensitive' } },
-				],
+				OR: terms.flatMap((term) => [
+					{ name: { contains: term, mode: 'insensitive' } },
+					{ title: { contains: term, mode: 'insensitive' } },
+					{ content: { contains: term, mode: 'insensitive' } },
+				]),
 			},
 			orderBy: {
 				updatedAt: 'desc',
@@ -65,11 +66,37 @@ export const WorldSearchService = {
 		const allHits = [...entityHits, ...missingParents]
 			.map((entity) => ({
 				...entity,
-				pages: pageHits.filter((page) => page.entityId === entity.entityId),
+				pages: pageHits
+					.filter((page) => page.entityId === entity.entityId)
+					.map((page) => ({
+						...page,
+						selfRelevance: WorldSearchService.getHitRelevance(page, terms),
+					})),
+				selfRelevance: WorldSearchService.getHitRelevance(entity, terms),
 			}))
-			.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+			.map((entity) => ({
+				...entity,
+				totalRelevance:
+					entity.selfRelevance + entity.pages.reduce((total, current) => (total += current.selfRelevance), 0),
+			}))
+			.sort((a, b) => {
+				return b.totalRelevance - a.totalRelevance || b.updatedAt.getTime() - a.updatedAt.getTime()
+			})
+			.slice(skip ?? 0, skip ?? 0 + (take ?? 5))
 
 		return { hits: allHits }
+	},
+
+	getHitRelevance(entity: WorldSearchEntry, terms: string[]) {
+		return terms.reduce((total, current) => {
+			const term = current.toLowerCase()
+			const nameHit = entity.name.toLowerCase().includes(term) ? 1 : 0
+			const titleHit = entity.title?.toLowerCase().includes(term) ? 1 : 0
+			const contentHits = entity.content.toLowerCase().split(term).length - 1
+			const entityAgeMinutes = (Date.now() - entity.updatedAt.getTime()) / 60_000
+			const entityAgePenalty = Math.log1p(entityAgeMinutes / 2) / Math.log(6)
+			return total + nameHit * 20 + titleHit * 20 + contentHits - entityAgePenalty
+		}, 0)
 	},
 
 	async detailedSearch({
