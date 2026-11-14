@@ -40,14 +40,14 @@
 		"chalk": "^6.0.1",
 		"happy-dom": "^20.14.5",
 		"jsonwebtoken": "^9.0.3",
-		"koa": "^3.2.1",
+		"koa": "^3.3.0",
 		"koa-bodyparser": "^4.4.1",
 		"koa-route": "^4.0.1",
 		"koa-websocket": "^7.0.0",
 		"nodemon": "^3.1.14",
 		"openapi-fetch": "^0.17.0",
 		"redis": "^6.3.1",
-		"ws": "^8.22.0"
+		"ws": "^8.22.1"
 	},
 	"devDependencies": {
 		"@types/jsonwebtoken": "^9.0.10",
@@ -59,7 +59,7 @@
 		"@types/ws": "^8.18.2",
 		"@typescript-eslint/eslint-plugin": "^8.72.1",
 		"@typescript-eslint/parser": "^8.59.1",
-		"eslint": "^10.13.0",
+		"eslint": "^10.14.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-no-relative-import-paths": "^1.7.3",
 		"eslint-plugin-prettier": "^5.5.7",
@@ -67,10 +67,10 @@
 		"eslint-plugin-unused-imports": "^4.4.1",
 		"jsdom": "^30.0.1",
 		"prettier": "^3.9.10",
-		"tsc-alias": "^1.9.9",
+		"tsc-alias": "^1.9.10",
 		"tsx": "^4.23.15",
 		"typescript": "^6.0.3",
-		"vite": "^8.3.5",
+		"vite": "^8.3.6",
 		"vitest": "^4.1.11"
 	}
 }
