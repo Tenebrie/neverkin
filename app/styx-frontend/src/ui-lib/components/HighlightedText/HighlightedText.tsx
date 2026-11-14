@@ -6,7 +6,7 @@ import { GlobalSearchApiArg } from '@/api/worldSearchApi'
 type Props = {
 	text: string
 	query: string
-	mode: GlobalSearchApiArg['mode']
+	mode?: GlobalSearchApiArg['mode']
 }
 
 export function HighlightedText({ text, query, mode }: Props) {
