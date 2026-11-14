@@ -30,7 +30,11 @@ export const WorldSearchService = {
 	}) {
 		const prisma = getPrismaClient()
 
-		const terms = mode === 'string_match' ? [query] : query.split(/\s+/)
+		const rawTerms = mode === 'string_match' ? [query] : query.split(/\s+/)
+		const terms = rawTerms.filter((term) => term.length >= 3)
+		if (terms.length === 0) {
+			return { hits: [], worlds: [] }
+		}
 
 		const hits = await prisma.worldSearchEntry.findMany({
 			where: {
@@ -66,25 +70,46 @@ export const WorldSearchService = {
 		const allHits = [...entityHits, ...missingParents]
 			.map((entity) => ({
 				...entity,
-				pages: pageHits
-					.filter((page) => page.entityId === entity.entityId)
-					.map((page) => ({
-						...page,
-						selfRelevance: WorldSearchService.getHitRelevance(page, terms),
-					})),
-				selfRelevance: WorldSearchService.getHitRelevance(entity, terms),
+				pages: pageHits.filter((page) => page.entityId === entity.entityId),
 			}))
 			.map((entity) => ({
 				...entity,
-				totalRelevance:
-					entity.selfRelevance + entity.pages.reduce((total, current) => (total += current.selfRelevance), 0),
+				totalRelevance: (() => {
+					const selfRelevance = WorldSearchService.getHitRelevance(entity, terms)
+					const pagesRelevance = entity.pages.reduce(
+						(total, current) => (total += WorldSearchService.getHitRelevance(current, terms)),
+						0,
+					)
+					return selfRelevance + pagesRelevance
+				})(),
 			}))
 			.sort((a, b) => {
 				return b.totalRelevance - a.totalRelevance || b.updatedAt.getTime() - a.updatedAt.getTime()
 			})
-			.slice(skip ?? 0, skip ?? 0 + (take ?? 5))
 
-		return { hits: allHits }
+		const worlds = [
+			...allHits
+				.reduce((map, hit) => {
+					const world = map.get(hit.worldId) ?? { id: hit.worldId, relevance: 0 }
+					world.relevance += hit.totalRelevance
+					return map.set(hit.worldId, world)
+				}, new Map<string, { id: string; relevance: number }>())
+				.values(),
+		]
+			.sort((a, b) => b.relevance - a.relevance)
+			.map((world) => ({
+				...world,
+				relevance: undefined,
+			}))
+
+		const cleanHits = allHits
+			.map((entity) => ({
+				...entity,
+				totalRelevance: undefined,
+			}))
+			.slice(skip ?? 0, (skip ?? 0) + (take ?? 5))
+
+		return { hits: cleanHits, worlds }
 	},
 
 	getHitRelevance(entity: WorldSearchEntry, terms: string[]) {

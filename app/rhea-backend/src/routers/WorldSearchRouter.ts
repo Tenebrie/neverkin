@@ -21,7 +21,7 @@ export const SearchModeValidator = RequiredParam<z.infer<typeof SearchModeShape>
 	parse: SearchModeShape.parse,
 })
 
-router.get('/api/search/:query', async (ctx) => {
+router.get('/api/search', async (ctx) => {
 	useApiEndpoint({
 		name: 'globalSearch',
 		description: 'Searches for the user query across worlds',
@@ -30,8 +30,8 @@ router.get('/api/search/:query', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { query } = usePathParams(ctx, {
-		query: z.string(),
+	const { q: query } = useQueryParams(ctx, {
+		q: z.string(),
 	})
 
 	const { mode, minTime, maxTime } = useQueryParams(ctx, {

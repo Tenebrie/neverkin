@@ -8,15 +8,17 @@ import { useSelector } from 'react-redux'
 
 import { GlobalSearchHit } from '@/api/types/searchTypes'
 import { useGetWorldsQuery } from '@/api/worldListApi'
+import { GlobalSearchApiResponse } from '@/api/worldSearchApi'
 import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
 
 import { GlobalSearchHit as SearchHitComponent } from './GlobalSearchHit'
 
 export type Props = {
 	hits: GlobalSearchHit[]
+	rankedWorlds: GlobalSearchApiResponse['worlds']
 } & Omit<Parameters<typeof SearchHitComponent>[0], 'hit'>
 
-export function GlobalSearchResults({ hits, ...hitProps }: Props) {
+export function GlobalSearchResults({ hits, rankedWorlds, ...hitProps }: Props) {
 	const currentWorldId = useSelector(getWorldIdState)
 	const { data: worldList } = useGetWorldsQuery()
 	const worlds = [
@@ -29,8 +31,10 @@ export function GlobalSearchResults({ hits, ...hitProps }: Props) {
 	if (hits.some((hit) => hit.worldId === currentWorldId)) {
 		worldIds.add(currentWorldId)
 	}
-	for (const hit of hits) {
-		worldIds.add(hit.worldId)
+	for (const world of rankedWorlds) {
+		if (hits.some((hit) => hit.worldId === world.id)) {
+			worldIds.add(world.id)
+		}
 	}
 
 	return (
