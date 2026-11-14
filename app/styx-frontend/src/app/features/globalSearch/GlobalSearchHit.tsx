@@ -53,6 +53,7 @@ export function GlobalSearchHit({ hit, query, onClose }: Props) {
 	const entityColor = setOpacity(hit.color, 0.1)
 	const entityColorHover = setOpacity(hit.color, 0.15)
 	const typeColor = adaptColor(hit.color || getAccentColor(hit.id), theme.material.palette.background.paper)
+	const connectorColor = `color-mix(in oklab, ${typeColor} 45%, transparent)`
 
 	const tinted = false
 	const renderHighlighted = false

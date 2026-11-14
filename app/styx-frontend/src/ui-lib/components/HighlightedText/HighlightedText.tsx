@@ -36,8 +36,8 @@ export function HighlightedText({ text, query, mode }: Props) {
 						component="span"
 						sx={{
 							backgroundColor: (theme) => alpha(theme.palette.secondary.main, 0.3),
-							borderRadius: 0.5,
-							boxShadow: (theme) => `0 0 0 2px ${alpha(theme.palette.secondary.main, 0.3)}`,
+							borderRadius: '2px',
+							boxShadow: (theme) => `0 0 0px 1px ${alpha(theme.palette.secondary.main, 0.3)}`,
 						}}
 					>
 						{part}
