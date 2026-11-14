@@ -30,11 +30,13 @@ router.get('/api/search', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { q: query } = useQueryParams(ctx, {
+	const {
+		q: query,
+		mode,
+		minTime,
+		maxTime,
+	} = useQueryParams(ctx, {
 		q: z.string(),
-	})
-
-	const { mode, minTime, maxTime } = useQueryParams(ctx, {
 		mode: OptionalParam(SearchModeValidator),
 		minTime: z.number().optional(),
 		maxTime: z.number().optional(),

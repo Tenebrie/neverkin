@@ -8565,6 +8565,9 @@ export interface operations {
         parameters: {
             query: {
                 q: string;
+                mode?: "string_match" | "split_by_space";
+                minTime?: number;
+                maxTime?: number;
             };
             header?: never;
             path?: never;
@@ -8580,12 +8583,12 @@ export interface operations {
                     "application/json": {
                         hits: {
                             pages: {
+                                title?: null | string;
                                 name: string;
                                 worldId: string;
                                 entityType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                                 entityId: string;
                                 pageId?: null | string;
-                                title?: null | string;
                                 content: string;
                                 timestamp?: null | string;
                                 /** Format: date-time */
@@ -8595,12 +8598,12 @@ export interface operations {
                                 icon: string;
                                 color: string;
                             }[];
+                            title?: null | string;
                             name: string;
                             worldId: string;
                             entityType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                             entityId: string;
                             pageId?: null | string;
-                            title?: null | string;
                             content: string;
                             timestamp?: null | string;
                             /** Format: date-time */
@@ -8612,7 +8615,6 @@ export interface operations {
                         }[];
                         worlds: {
                             id: string;
-                            relevance: number;
                         }[];
                     };
                 };
@@ -8643,8 +8645,8 @@ export interface operations {
                     "application/json": {
                         actors: {
                             pages: {
-                                name: string;
                                 id: string;
+                                name: string;
                             }[];
                             mentions: {
                                 targetId: string;
@@ -8655,6 +8657,7 @@ export interface operations {
                                 sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                             }[];
                             nodes: {
+                                id: string;
                                 name: string;
                                 worldId: string;
                                 content: string;
@@ -8664,7 +8667,6 @@ export interface operations {
                                 updatedAt: string;
                                 icon: string;
                                 color: string;
-                                id: string;
                                 contentRich: string;
                                 parentFolderId?: null | string;
                                 parentActorId?: null | string;
@@ -8674,9 +8676,10 @@ export interface operations {
                                 positionY: number;
                                 parentTagId?: null | string;
                             }[];
+                            id: string;
+                            title: string;
                             name: string;
                             worldId: string;
-                            title: string;
                             content: string;
                             /** Format: date-time */
                             createdAt: string;
@@ -8684,15 +8687,14 @@ export interface operations {
                             updatedAt: string;
                             icon: string;
                             color: string;
-                            id: string;
                             contentRich: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
                         }[];
                         articles: {
                             pages: {
-                                name: string;
                                 id: string;
+                                name: string;
                             }[];
                             mentions: {
                                 targetId: string;
@@ -8702,6 +8704,7 @@ export interface operations {
                                 sourceId: string;
                                 sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                             }[];
+                            id: string;
                             name: string;
                             worldId: string;
                             content: string;
@@ -8711,15 +8714,14 @@ export interface operations {
                             updatedAt: string;
                             icon: string;
                             color: string;
-                            id: string;
                             contentRich: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
                         }[];
                         events: {
                             pages: {
-                                name: string;
                                 id: string;
+                                name: string;
                             }[];
                             mentions: {
                                 targetId: string;
@@ -8729,6 +8731,7 @@ export interface operations {
                                 sourceId: string;
                                 sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                             }[];
+                            id: string;
                             name: string;
                             worldId: string;
                             content: string;
@@ -8740,7 +8743,6 @@ export interface operations {
                             updatedAt: string;
                             icon: string;
                             color: string;
-                            id: string;
                             contentRich: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
@@ -8756,6 +8758,8 @@ export interface operations {
                                 sourceId: string;
                                 sourceType: "Actor" | "Event" | "Article" | "Tag" | "Node";
                             }[];
+                            description: string;
+                            id: string;
                             name: string;
                             worldId: string;
                             /** Format: date-time */
@@ -8764,10 +8768,8 @@ export interface operations {
                             updatedAt: string;
                             icon: string;
                             color: string;
-                            id: string;
                             parentFolderId?: null | string;
                             parentFolderPosition: number;
-                            description: string;
                         }[];
                     };
                 };

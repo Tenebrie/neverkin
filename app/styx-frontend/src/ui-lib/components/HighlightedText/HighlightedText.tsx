@@ -20,7 +20,8 @@ export function HighlightedText({ text, query, mode }: Props) {
 		.toSorted((a, b) => b.length - a.length)
 		.map((term) => RegExp.escape(term))
 		.join('|')
-	const textSegments = text.split(new RegExp(`(${anyTermMatchPattern})`, 'i'))
+	const termRunPattern = `(?:${anyTermMatchPattern})(?:\\s*(?:${anyTermMatchPattern}))*`
+	const textSegments = text.split(new RegExp(`(${termRunPattern})`, 'i'))
 
 	return (
 		<>

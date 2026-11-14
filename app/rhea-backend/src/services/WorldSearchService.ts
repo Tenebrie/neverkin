@@ -13,6 +13,14 @@ type SearchParams = {
 	skip: number
 	take: number
 }
+type SearchTermWithRarity = {
+	term: string
+	rarity: number
+}
+type SearchTerms = {
+	terms: SearchTermWithRarity[]
+	groups: SearchTermWithRarity[]
+}
 
 export const WorldSearchService = {
 	async autocompleteSearch({
@@ -30,7 +38,7 @@ export const WorldSearchService = {
 	}) {
 		const prisma = getPrismaClient()
 
-		const rawTerms = mode === 'string_match' ? [query] : query.split(/\s+/)
+		const rawTerms = mode === 'string_match' ? [query] : query.trim().split(/\s+/)
 		const terms = rawTerms.filter((term) => term.length >= 3)
 		if (terms.length === 0) {
 			return { hits: [], worlds: [] }
@@ -67,6 +75,8 @@ export const WorldSearchService = {
 			},
 		})
 
+		const termsWithRarity = WorldSearchService.getSearchTerms(hits, terms, rawTerms)
+
 		const allHits = [...entityHits, ...missingParents]
 			.map((entity) => ({
 				...entity,
@@ -75,12 +85,16 @@ export const WorldSearchService = {
 			.map((entity) => ({
 				...entity,
 				totalRelevance: (() => {
-					const selfRelevance = WorldSearchService.getHitRelevance(entity, terms)
-					const pagesRelevance = entity.pages.reduce(
-						(total, current) => (total += WorldSearchService.getHitRelevance(current, terms)),
-						0,
+					const selfRelevance = WorldSearchService.getHitRelevance(entity, termsWithRarity)
+					if (entity.pages.length === 0) {
+						return selfRelevance
+					}
+
+					const mostRelevantPage = entity.pages.map((page) =>
+						WorldSearchService.getHitRelevance(page, termsWithRarity),
 					)
-					return selfRelevance + pagesRelevance
+
+					return Math.max(selfRelevance, ...mostRelevantPage)
 				})(),
 			}))
 			.sort((a, b) => {
@@ -112,16 +126,67 @@ export const WorldSearchService = {
 		return { hits: cleanHits, worlds }
 	},
 
-	getHitRelevance(entity: WorldSearchEntry, terms: string[]) {
-		return terms.reduce((total, current) => {
-			const term = current.toLowerCase()
-			const nameHit = entity.name.toLowerCase().includes(term) ? 1 : 0
-			const titleHit = entity.title?.toLowerCase().includes(term) ? 1 : 0
-			const contentHits = entity.content.toLowerCase().split(term).length - 1
-			const entityAgeMinutes = (Date.now() - entity.updatedAt.getTime()) / 60_000
-			const entityAgePenalty = Math.log1p(entityAgeMinutes / 2) / Math.log(6)
-			return total + nameHit * 20 + titleHit * 20 + contentHits - entityAgePenalty
-		}, 0)
+	getSearchTerms(hits: WorldSearchEntry[], terms: string[], rawTerms: string[]): SearchTerms {
+		const textEntries = hits.map((hit) => [hit.name, hit.title ?? '', hit.content].join('\n').toLowerCase())
+
+		const termsWithRarity = terms.map((term) => ({
+			term: term.toLowerCase(),
+			rarity: WorldSearchService.getTermRarity(textEntries, term.toLowerCase()),
+		}))
+
+		const termGroups = rawTerms
+			.map((_, start) => rawTerms.slice(start))
+			.flatMap((tail) => tail.map((_, end) => tail.slice(0, end + 1)))
+			.filter((group) => group.length > 1)
+			.map((group) => group.join(' ').toLowerCase())
+			.map((group) => ({
+				term: group,
+				rarity: WorldSearchService.getTermRarity(textEntries, group),
+			}))
+
+		return {
+			terms: termsWithRarity,
+			groups: termGroups,
+		}
+	},
+
+	getTermRarity(textEntries: string[], term: string) {
+		const occurrences = textEntries.filter((text) => text.includes(term)).length
+		return Math.log(1 + textEntries.length / (1 + occurrences))
+	},
+
+	getHitRelevance(entity: WorldSearchEntry, { terms, groups }: SearchTerms) {
+		const entityAgeMinutes = (Date.now() - entity.updatedAt.getTime()) / 60_000
+		const entityAgePenalty = Math.log1p(entityAgeMinutes / 2) / Math.log(6)
+		if (terms.length === 0) {
+			return -entityAgePenalty
+		}
+
+		const name = entity.name.toLowerCase()
+		const title = entity.title?.toLowerCase() ?? ''
+		const content = entity.content.toLowerCase()
+
+		function rankTerm(current: SearchTermWithRarity) {
+			const term = current.term.toLowerCase()
+			const nameHits = Math.log1p(name.split(term).length - 1)
+			const titleHits = Math.log1p(title.split(term).length - 1)
+			const contentHits = Math.log1p(content.split(term).length - 1)
+			const termLengthMultiplier = Math.log1p(term.length)
+			return {
+				score: (nameHits * 20 + titleHits * 20 + contentHits) * termLengthMultiplier * current.rarity,
+				hasHits: nameHits > 0 || titleHits > 0 || contentHits > 0,
+			}
+		}
+
+		const perTermMatches = terms.map(rankTerm)
+		const perGroupMatches = groups.map(rankTerm)
+
+		const termsScore = perTermMatches.reduce((total, current) => total + current.score, 0)
+		const termGroupsScore = perGroupMatches.reduce((total, current) => total + current.score, 0)
+		const matchedTerms = perTermMatches.reduce((total, current) => total + (current.hasHits ? 1 : 0), 0)
+		const matchedTermsFraction = matchedTerms / terms.length
+
+		return (termsScore + termGroupsScore) * matchedTermsFraction - entityAgePenalty
 	},
 
 	async detailedSearch({
