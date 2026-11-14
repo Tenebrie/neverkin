@@ -48,16 +48,16 @@ export const app = new Koa()
 
 useApiHeader({
 	title: 'Neverkin Rhea',
-	description: 'This is a description field',
-	termsOfService: 'https://example.com',
+	description: 'Open-source collaborative worldbuilding and writing app.',
+	termsOfService: 'https://neverkin.com/terms',
 	contact: {
 		name: 'Tenebrie',
 		url: 'https://github.com/tenebrie',
 		email: 'tianara@tenebrie.com',
 	},
 	license: {
-		name: 'Unlicensed',
-		url: 'https://example.com',
+		name: 'GPL-3.0',
+		url: 'https://neverkin.com/',
 	},
 	version: '1.0.0',
 })
