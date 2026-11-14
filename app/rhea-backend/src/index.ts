@@ -1,6 +1,8 @@
+import etag from '@koa/etag'
 import chalk from 'chalk'
 import Koa from 'koa'
 import bodyParser from 'koa-bodyparser'
+import conditional from 'koa-conditional-get'
 import { HttpErrorHandler, initOpenApiEngine, useApiHeader } from 'moonflower'
 
 import { ActorRouter } from './routers/ActorRouter.js'
@@ -64,6 +66,8 @@ app.proxy = true
 
 app
 	.use(HttpErrorHandler)
+	.use(conditional())
+	.use(etag())
 	.use(
 		bodyParser({
 			enableTypes: ['text', 'json', 'form'],
