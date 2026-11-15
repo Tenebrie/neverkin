@@ -1,3 +1,4 @@
+import { WorldSearchEntry } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { deduplicateById } from '@src/utils/deduplicateById.js'
 import { z } from 'zod'
@@ -12,35 +13,47 @@ type SearchParams = {
 	skip: number
 	take: number
 }
+type SearchTermWithRarity = {
+	term: string
+	rarity: number
+}
+type SearchTerms = {
+	terms: SearchTermWithRarity[]
+	groups: SearchTermWithRarity[]
+}
 
 export const WorldSearchService = {
-	async search({
+	async autocompleteSearch({
 		worldIds,
 		query,
+		mode,
 		take,
 		skip,
 	}: {
 		worldIds: string[]
 		query: string
+		mode: SearchMode
 		take?: number
 		skip?: number
 	}) {
 		const prisma = getPrismaClient()
-		const params: SearchParams = {
-			take: take ?? 100,
-			skip: skip ?? 0,
+
+		const rawTerms = mode === 'string_match' ? [query] : query.trim().split(/\s+/)
+		const terms = rawTerms.filter((term) => term.length >= 3)
+		if (terms.length === 0) {
+			return { hits: [], worlds: [] }
 		}
+
 		const hits = await prisma.worldSearchEntry.findMany({
-			...params,
 			where: {
 				worldId: {
 					in: worldIds,
 				},
-				OR: [
-					{ name: { contains: query, mode: 'insensitive' } },
-					{ title: { contains: query, mode: 'insensitive' } },
-					{ content: { contains: query, mode: 'insensitive' } },
-				],
+				OR: terms.flatMap((term) => [
+					{ name: { contains: term, mode: 'insensitive' } },
+					{ title: { contains: term, mode: 'insensitive' } },
+					{ content: { contains: term, mode: 'insensitive' } },
+				]),
 			},
 			orderBy: {
 				updatedAt: 'desc',
@@ -62,14 +75,118 @@ export const WorldSearchService = {
 			},
 		})
 
+		const termsWithRarity = WorldSearchService.getSearchTerms(hits, terms, rawTerms)
+
 		const allHits = [...entityHits, ...missingParents]
 			.map((entity) => ({
 				...entity,
 				pages: pageHits.filter((page) => page.entityId === entity.entityId),
 			}))
-			.sort((a, b) => b.updatedAt.getTime() - a.updatedAt.getTime())
+			.map((entity) => ({
+				...entity,
+				totalRelevance: (() => {
+					const selfRelevance = WorldSearchService.getHitRelevance(entity, termsWithRarity)
+					if (entity.pages.length === 0) {
+						return selfRelevance
+					}
 
-		return { hits: allHits }
+					const mostRelevantPage = entity.pages.map((page) =>
+						WorldSearchService.getHitRelevance(page, termsWithRarity),
+					)
+
+					return Math.max(selfRelevance, ...mostRelevantPage)
+				})(),
+			}))
+			.sort((a, b) => {
+				return b.totalRelevance - a.totalRelevance || b.updatedAt.getTime() - a.updatedAt.getTime()
+			})
+
+		const worlds = [
+			...allHits
+				.reduce((map, hit) => {
+					const world = map.get(hit.worldId) ?? { id: hit.worldId, relevance: 0 }
+					world.relevance += hit.totalRelevance
+					return map.set(hit.worldId, world)
+				}, new Map<string, { id: string; relevance: number }>())
+				.values(),
+		]
+			.sort((a, b) => b.relevance - a.relevance)
+			.map((world) => ({
+				...world,
+				relevance: undefined,
+			}))
+
+		const cleanHits = allHits
+			.map((entity) => ({
+				...entity,
+				totalRelevance: undefined,
+			}))
+			.slice(skip ?? 0, (skip ?? 0) + (take ?? 5))
+
+		return { hits: cleanHits, worlds }
+	},
+
+	getSearchTerms(hits: WorldSearchEntry[], terms: string[], rawTerms: string[]): SearchTerms {
+		const textEntries = hits.map((hit) => [hit.name, hit.title ?? '', hit.content].join('\n').toLowerCase())
+
+		const termsWithRarity = terms.map((term) => ({
+			term: term.toLowerCase(),
+			rarity: WorldSearchService.getTermRarity(textEntries, term.toLowerCase()),
+		}))
+
+		const termGroups = rawTerms
+			.map((_, start) => rawTerms.slice(start))
+			.flatMap((tail) => tail.map((_, end) => tail.slice(0, end + 1)))
+			.filter((group) => group.length > 1)
+			.map((group) => group.join(' ').toLowerCase())
+			.map((group) => ({
+				term: group,
+				rarity: WorldSearchService.getTermRarity(textEntries, group),
+			}))
+
+		return {
+			terms: termsWithRarity,
+			groups: termGroups,
+		}
+	},
+
+	getTermRarity(textEntries: string[], term: string) {
+		const occurrences = textEntries.filter((text) => text.includes(term)).length
+		return Math.log(1 + textEntries.length / (1 + occurrences))
+	},
+
+	getHitRelevance(entity: WorldSearchEntry, { terms, groups }: SearchTerms) {
+		const entityAgeMinutes = (Date.now() - entity.updatedAt.getTime()) / 60_000
+		const entityAgePenalty = Math.log1p(entityAgeMinutes / 2) / Math.log(6)
+		if (terms.length === 0) {
+			return -entityAgePenalty
+		}
+
+		const name = entity.name.toLowerCase()
+		const title = entity.title?.toLowerCase() ?? ''
+		const content = entity.content.toLowerCase()
+
+		function rankTerm(current: SearchTermWithRarity) {
+			const term = current.term.toLowerCase()
+			const nameHits = Math.log1p(name.split(term).length - 1)
+			const titleHits = Math.log1p(title.split(term).length - 1)
+			const contentHits = Math.log1p(content.split(term).length - 1)
+			const termLengthMultiplier = Math.log1p(term.length)
+			return {
+				score: (nameHits * 20 + titleHits * 20 + contentHits) * termLengthMultiplier * current.rarity,
+				hasHits: nameHits > 0 || titleHits > 0 || contentHits > 0,
+			}
+		}
+
+		const perTermMatches = terms.map(rankTerm)
+		const perGroupMatches = groups.map(rankTerm)
+
+		const termsScore = perTermMatches.reduce((total, current) => total + current.score, 0)
+		const termGroupsScore = perGroupMatches.reduce((total, current) => total + current.score, 0)
+		const matchedTerms = perTermMatches.reduce((total, current) => total + (current.hasHits ? 1 : 0), 0)
+		const matchedTermsFraction = matchedTerms / terms.length
+
+		return (termsScore + termGroupsScore) * matchedTermsFraction - entityAgePenalty
 	},
 
 	async detailedSearch({

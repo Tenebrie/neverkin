@@ -21,7 +21,7 @@ export const SearchModeValidator = RequiredParam<z.infer<typeof SearchModeShape>
 	parse: SearchModeShape.parse,
 })
 
-router.get('/api/search/:query', async (ctx) => {
+router.get('/api/search', async (ctx) => {
 	useApiEndpoint({
 		name: 'globalSearch',
 		description: 'Searches for the user query across worlds',
@@ -30,11 +30,13 @@ router.get('/api/search/:query', async (ctx) => {
 
 	const user = await useAuth(ctx, UserAuthenticator)
 
-	const { query } = usePathParams(ctx, {
-		query: z.string(),
-	})
-
-	const { mode, minTime, maxTime } = useQueryParams(ctx, {
+	const {
+		q: query,
+		mode,
+		minTime,
+		maxTime,
+	} = useQueryParams(ctx, {
+		q: z.string(),
 		mode: OptionalParam(SearchModeValidator),
 		minTime: z.number().optional(),
 		maxTime: z.number().optional(),
@@ -47,10 +49,10 @@ router.get('/api/search/:query', async (ctx) => {
 		...availableWorlds.visibleWorlds,
 	].map((world) => world.id)
 
-	return await WorldSearchService.search({
+	return await WorldSearchService.autocompleteSearch({
 		worldIds: worlds,
 		query,
-		// mode: mode ?? 'string_match',
+		mode: mode ?? 'split_by_space',
 		// timeRange: {
 		// 	from: minTime,
 		// 	to: maxTime,

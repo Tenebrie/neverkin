@@ -53,6 +53,7 @@ export function GlobalSearchHit({ hit, query, onClose }: Props) {
 	const entityColor = setOpacity(hit.color, 0.1)
 	const entityColorHover = setOpacity(hit.color, 0.15)
 	const typeColor = adaptColor(hit.color || getAccentColor(hit.id), theme.material.palette.background.paper)
+	const connectorColor = `color-mix(in oklab, ${typeColor} 45%, transparent)`
 
 	const tinted = false
 	const renderHighlighted = false
@@ -158,17 +159,17 @@ export function GlobalSearchHit({ hit, query, onClose }: Props) {
 								whiteSpace: 'nowrap',
 							}}
 						>
-							<HighlightedText text={hit.name} query={query} />
+							<HighlightedText text={hit.name} query={query} mode="split_by_space" />
 							{hit.title && (
 								<>
 									{', '}
-									<HighlightedText text={hit.title} query={query} />
+									<HighlightedText text={hit.title} query={query} mode="split_by_space" />
 								</>
 							)}
 						</Box>
 						{snippet && (
 							<Typography variant="caption" sx={{ ...captionLineStyles, color: 'text.secondary' }}>
-								<HighlightedText text={snippet} query={query} />
+								<HighlightedText text={snippet} query={query} mode="split_by_space" />
 							</Typography>
 						)}
 					</Stack>

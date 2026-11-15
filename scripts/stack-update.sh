@@ -36,7 +36,7 @@ if $NEEDS_DEPLOY; then
   exit 0
 fi
 
-docker system prune -f
+docker system prune -af
 
 SERVICES=("timelines_rhea" "timelines_calliope" "timelines_styx" "timelines_orpheus" "timelines_thetis" "timelines_chronos")
 IMAGES=(
@@ -96,4 +96,4 @@ else
 fi
 
 echo "All services updated successfully"
-docker system prune -f
+docker system prune -af

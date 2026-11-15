@@ -81,10 +81,11 @@ export async function startDesktopServices() {
 	const bucketPort = await services.whenBound(9000)
 
 	console.info('[echo-desktop] preparing database...')
-	const migrationResult = await prepareDatabase(
-		join(rheaDir, 'prisma', 'migrations'),
-		process.env.NEVERKIN_PGDATA,
-	)
+	const migrationResult = await prepareDatabase({
+		migrationsDir: join(rheaDir, 'prisma', 'migrations'),
+		dataDir: process.env.NEVERKIN_PGDATA,
+		backupDir: join(dataDir, 'backups'),
+	})
 	console.info(
 		`[echo-desktop] migrations: ${migrationResult.applied} applied, ${migrationResult.total} total`,
 	)
