@@ -36,7 +36,7 @@ jobs:
       - name: Generate Version Number (Staging)
         id: version
         if: ${{ github.ref_name == 'dev' }}
-        uses: paulhatch/semantic-version@v6.0.5
+        uses: paulhatch/semantic-version@v6.0.7
         with:
           major_pattern: 'major:'
           minor_pattern: 'feat:'
@@ -65,7 +65,7 @@ jobs:
           cache-dependency-path: '**/package-lock.json'
 
       - name: Log in to Docker Hub
-        uses: docker/login-action@v4.7.0
+        uses: docker/login-action@v4.8.0
         with:
           username: ${{ secrets.DOCKER_USERNAME }}
           password: ${{ secrets.DOCKER_PASSWORD }}
