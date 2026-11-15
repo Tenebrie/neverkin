@@ -4,20 +4,21 @@ import MenuList from '@mui/material/MenuList'
 import Stack from '@mui/material/Stack'
 import { alpha } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
-import { useSelector } from 'react-redux'
 
 import { GlobalSearchHit } from '@/api/types/searchTypes'
 import { useGetWorldsQuery } from '@/api/worldListApi'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+import { GlobalSearchApiResponse } from '@/api/worldSearchApi'
+import { useCurrentWorldIdOptional } from '@/app/views/world/hooks/useCurrentWorldIdOptional'
 
 import { GlobalSearchHit as SearchHitComponent } from './GlobalSearchHit'
 
 export type Props = {
 	hits: GlobalSearchHit[]
+	rankedWorlds: GlobalSearchApiResponse['worlds']
 } & Omit<Parameters<typeof SearchHitComponent>[0], 'hit'>
 
-export function GlobalSearchResults({ hits, ...hitProps }: Props) {
-	const currentWorldId = useSelector(getWorldIdState)
+export function GlobalSearchResults({ hits, rankedWorlds, ...hitProps }: Props) {
+	const currentWorldId = useCurrentWorldIdOptional()
 	const { data: worldList } = useGetWorldsQuery()
 	const worlds = [
 		...(worldList?.ownedWorlds ?? []),
@@ -26,11 +27,15 @@ export function GlobalSearchResults({ hits, ...hitProps }: Props) {
 	]
 
 	const worldIds = new Set<string>()
-	if (hits.some((hit) => hit.worldId === currentWorldId)) {
-		worldIds.add(currentWorldId)
+	if (currentWorldId) {
+		if (hits.some((hit) => hit.worldId === currentWorldId)) {
+			worldIds.add(currentWorldId)
+		}
 	}
-	for (const hit of hits) {
-		worldIds.add(hit.worldId)
+	for (const world of rankedWorlds) {
+		if (hits.some((hit) => hit.worldId === world.id)) {
+			worldIds.add(world.id)
+		}
 	}
 
 	return (

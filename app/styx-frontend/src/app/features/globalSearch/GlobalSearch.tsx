@@ -6,7 +6,7 @@ import { bindPopper, usePopupState } from 'material-ui-popup-state/hooks'
 import { useRef, useState } from 'react'
 
 import { GlobalSearchHit, ingestSearchHits } from '@/api/types/searchTypes'
-import { useLazyGlobalSearchQuery } from '@/api/worldSearchApi'
+import { GlobalSearchApiResponse, useLazyGlobalSearchQuery } from '@/api/worldSearchApi'
 import { SearchInput } from '@/app/components/SearchInput'
 import { useDebounce } from '@/app/hooks/useDebounce'
 import { parseApiResponse } from '@/app/utils/parseApiResponse'
@@ -25,17 +25,17 @@ export function GlobalSearch() {
 	const [performSearch] = useLazyGlobalSearchQuery()
 
 	const [results, setResults] = useState<GlobalSearchHit[]>([])
+	const [rankedWorlds, setRankedWorlds] = useState<GlobalSearchApiResponse['worlds']>([])
 	const [resultsQuery, setResultsQuery] = useState('')
 
 	const fetchResults = useDebounce(async (value: string) => {
-		console.log('fetch')
 		if (!value) {
 			setResults([])
 			return
 		}
 		const results = parseApiResponse(
 			await performSearch({
-				query: value,
+				q: value,
 			}),
 		)
 		if (results.error) {
@@ -44,6 +44,7 @@ export function GlobalSearch() {
 		}
 		if (results.response) {
 			setResults(ingestSearchHits(results.response.hits))
+			setRankedWorlds(results.response.worlds)
 			setResultsQuery(value)
 		}
 		popoverState.open(anchorEl.current)
@@ -63,7 +64,6 @@ export function GlobalSearch() {
 					variant="outlined"
 					placeholder="Search..."
 					onChange={(value) => {
-						popoverState.close()
 						fetchResults(value)
 					}}
 					sx={{
@@ -87,7 +87,12 @@ export function GlobalSearch() {
 							overflow: 'hidden',
 						}}
 					>
-						<GlobalSearchResults hits={results} query={resultsQuery} onClose={popoverState.close} />
+						<GlobalSearchResults
+							hits={results}
+							rankedWorlds={rankedWorlds}
+							query={resultsQuery}
+							onClose={popoverState.close}
+						/>
 					</Paper>
 				</Popper>
 			</Box>
