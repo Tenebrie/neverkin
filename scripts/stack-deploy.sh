@@ -46,4 +46,4 @@ echo -e "\nAll services deployed successfully!"
 
 # Run prune regardless of status codes
 echo -e "\nCleaning up after Docker..."
-docker system prune -f
+docker system prune -af
