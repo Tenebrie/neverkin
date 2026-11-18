@@ -71,6 +71,7 @@ export const ModelName = {
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   MindmapLink: 'MindmapLink',
+  MindmapLinkWaypoint: 'MindmapLinkWaypoint',
   Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
@@ -402,6 +403,17 @@ export const MindmapLinkScalarFieldEnum = {
 } as const
 
 export type MindmapLinkScalarFieldEnum = (typeof MindmapLinkScalarFieldEnum)[keyof typeof MindmapLinkScalarFieldEnum]
+
+
+export const MindmapLinkWaypointScalarFieldEnum = {
+  id: 'id',
+  index: 'index',
+  positionX: 'positionX',
+  positionY: 'positionY',
+  linkId: 'linkId'
+} as const
+
+export type MindmapLinkWaypointScalarFieldEnum = (typeof MindmapLinkWaypointScalarFieldEnum)[keyof typeof MindmapLinkWaypointScalarFieldEnum]
 
 
 export const TagScalarFieldEnum = {
