@@ -12,6 +12,10 @@ import {
 } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
 import { getMovingWaypointIds } from '@/app/views/world/views/mindmap/utils/getMovingWaypointIds'
+import {
+	collectMergeTargets,
+	snapToMergeTarget,
+} from '@/app/views/world/views/mindmap/utils/waypointMergeSnap'
 import { Point } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 import { useMindmapWaypointDrag } from '@/app/views/world/views/mindmap/workspace/content/wires/hooks/useMindmapWaypointDrag'
 
@@ -31,14 +35,18 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 		selectedWaypoints,
 		addWaypointsToSelection,
 		removeWaypointsFromSelection,
+		clearSelections,
 	} = useMindmapSelectionContext()
 	const ref = useRef<SVGGElement>(null)
 	const selectedRef = useRef(false)
+	const isCompanionRef = useRef(false)
 	const [currentState] = useState(() => ({
 		x: waypoint.positionX,
 		y: waypoint.positionY,
 		grabX: 0,
 		grabY: 0,
+		mergeTargets: [] as Point[],
+		companions: new Set<string>(),
 	}))
 
 	useLayoutEffect(() => {
@@ -68,6 +76,8 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 		return entries
 	}
 
+	const movingWaypointIds = () => getMovingWaypointIds({ selectedWaypoints, selectedWires, wires })
+
 	const place = (point: Point) => {
 		currentState.x = point.x
 		currentState.y = point.y
@@ -76,7 +86,10 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 	}
 
 	const dragTo = (point: Point) => {
-		const next = { x: point.x + currentState.grabX, y: point.y + currentState.grabY }
+		const next = snapToMergeTarget(
+			{ x: point.x + currentState.grabX, y: point.y + currentState.grabY },
+			currentState.mergeTargets,
+		)
 		const deltaX = next.x - currentState.x
 		const deltaY = next.y - currentState.y
 		place(next)
@@ -86,11 +99,17 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 	const onPointerDown = useMindmapWaypointDrag({
 		onStart: (point) => {
 			if (!selectedRef.current) {
-				addWaypointsToSelection({ entries: stack(), multiselect: false })
+				clearSelections()
 			}
 			currentState.grabX = currentState.x - point.x
 			currentState.grabY = currentState.y - point.y
-			dispatchGlobalEvent['mindmap/selection/onDragStart']({ sourceId: waypoint.id })
+			currentState.companions = new Set(stack().map((entry) => entry.waypointId))
+			const moving = new Set([...movingWaypointIds(), ...currentState.companions])
+			currentState.mergeTargets = collectMergeTargets(wires, moving)
+			dispatchGlobalEvent['mindmap/selection/onDragStart']({
+				sourceId: waypoint.id,
+				companions: currentState.companions,
+			})
 		},
 		onMove: dragTo,
 		onEnd: (point) => {
@@ -98,23 +117,40 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 			const snappedX = Math.round(currentState.x)
 			const snappedY = Math.round(currentState.y)
 			dragTo({ x: snappedX - currentState.grabX, y: snappedY - currentState.grabY })
+			const moved = [...new Set([...movingWaypointIds(), ...currentState.companions])]
 			moveElements({
 				nodeIds: selectedNodes.keys(),
-				waypointIds: getMovingWaypointIds({ selectedWaypoints, selectedWires, wires }),
+				waypointIds: moved,
 				deltaX: snappedX - waypoint.positionX,
 				deltaY: snappedY - waypoint.positionY,
 			})
 			dispatchGlobalEvent['mindmap/selection/onDragEnd']({ sourceId: waypoint.id })
+			const merged = currentState.mergeTargets.some(
+				(target) => target.x === snappedX && target.y === snappedY,
+			)
+			if (merged) {
+				removeWaypointsFromSelection(moved)
+			}
 		},
 	})
 
+	useEventBusSubscribe['mindmap/selection/onDragStart']({
+		callback: ({ sourceId, companions }) => {
+			isCompanionRef.current = sourceId !== waypoint.id && companions.has(waypoint.id)
+		},
+	})
 	useEventBusSubscribe['mindmap/selection/onDragUpdate']({
 		callback: ({ sourceId, deltaX, deltaY }) => {
-			const isMoving = selectedRef.current || selectedWires.has(wireId)
+			const isMoving = selectedRef.current || selectedWires.has(wireId) || isCompanionRef.current
 			if (sourceId === waypoint.id || !isMoving) {
 				return
 			}
 			place({ x: currentState.x + deltaX, y: currentState.y + deltaY })
+		},
+	})
+	useEventBusSubscribe['mindmap/selection/onDragEnd']({
+		callback: () => {
+			isCompanionRef.current = false
 		},
 	})
 

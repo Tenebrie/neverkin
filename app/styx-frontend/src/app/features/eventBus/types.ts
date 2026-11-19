@@ -42,6 +42,7 @@ export type EventParams = {
 	}
 	'mindmap/selection/onDragStart': {
 		sourceId: string
+		companions: Set<string>
 	}
 	'mindmap/selection/onDragUpdate': {
 		sourceId: string
