@@ -26,8 +26,8 @@ model MindmapNode {
   mentions  Mention[]        @relation("NodeMentionSource")
   assetRefs AssetReference[] @relation("NodeAssetReference")
 
-  links    MindmapLink[] @relation("MindmapLinkSource")
-  linkedBy MindmapLink[] @relation("MindmapLinkTarget")
+  links     MindmapLink[]         @relation("MindmapLinkSource")
+  linkedBy  MindmapLink[]         @relation("MindmapLinkTarget")
 
   world   World  @relation(fields: [worldId], references: [id], onDelete: Cascade)
   worldId String
@@ -59,7 +59,21 @@ model MindmapLink {
 
   direction MindmapLinkDirection @default(Normal)
   content   String               @default("")
+  waypoints MindmapLinkWaypoint[]
 
   @@index([sourceNodeId, targetNodeId])
   @@index([targetNodeId])
+}
+
+model MindmapLinkWaypoint {
+  id    String @id @default(uuid())
+  index Int
+
+  positionX Int
+  positionY Int
+
+  link   MindmapLink @relation(fields: [linkId], references: [id], onDelete: Cascade)
+  linkId String
+
+  @@index([linkId])
 }

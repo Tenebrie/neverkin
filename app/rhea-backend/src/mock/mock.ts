@@ -1,4 +1,4 @@
-import { CollaboratingUser, MindmapLink, MindmapNode, User, World } from '@prisma/client'
+import { CollaboratingUser, MindmapLink, MindmapLinkWaypoint, MindmapNode, User, World } from '@prisma/client'
 import { BaselineActor, BaselineArticle, BaselineTag, BaselineWorldEvent } from '@src/services/types.js'
 import { randomUUID } from 'crypto'
 
@@ -140,6 +140,15 @@ export const mockMindmapLink = (data?: Partial<MindmapLink>): MindmapLink => ({
 	targetNodeId: 'unknown-node-2222',
 	direction: 'Normal',
 	content: '',
+	...data,
+})
+
+export const mockMindmapLinkWaypoint = (data?: Partial<MindmapLinkWaypoint>): MindmapLinkWaypoint => ({
+	id: randomUUID(),
+	index: 0,
+	positionX: 0,
+	positionY: 0,
+	linkId: 'unknown-link-1111',
 	...data,
 })
 

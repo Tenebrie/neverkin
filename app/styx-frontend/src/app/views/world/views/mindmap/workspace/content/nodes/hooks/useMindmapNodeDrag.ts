@@ -12,6 +12,7 @@ import {
 	useMindmapSelectionContext,
 } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+import { getMovingWaypointIds } from '@/app/views/world/views/mindmap/utils/getMovingWaypointIds'
 
 import { getNodeLayout } from '../../wires/utils/getNodeLayout'
 
@@ -25,8 +26,8 @@ type Props = {
 }
 
 export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart, onDragEnd }: Props) {
-	const { moveNodes, nodeLayouts } = useMindmapContext()
-	const { selectedNodes, clearSelections } = useMindmapSelectionContext()
+	const { moveElements, nodeLayouts, wires } = useMindmapContext()
+	const { selectedNodes, selectedWires, selectedWaypoints, clearSelections } = useMindmapSelectionContext()
 	const nodeRef = useAutoRef(node)
 	const getPosition = useEvent(() => getNodeLayout(nodeLayouts, nodeRef.current))
 	const { capture: capturePointer, release: releasePointer } = usePointerCapture()
@@ -41,26 +42,26 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 		onDragEnd()
 	})
 
-	useEventBusSubscribe['mindmap/node/onGroupDragStart']({
-		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selectedRef.current) {
+	useEventBusSubscribe['mindmap/selection/onDragStart']({
+		callback: ({ sourceId }) => {
+			if (sourceId === node.id || !selectedRef.current) {
 				return
 			}
 			startDragging(false)
 		},
 	})
-	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
-		callback: ({ sourceNodeId, deltaX, deltaY }) => {
-			if (sourceNodeId === node.id || !selectedRef.current) {
+	useEventBusSubscribe['mindmap/selection/onDragUpdate']({
+		callback: ({ sourceId, deltaX, deltaY }) => {
+			if (sourceId === node.id || !selectedRef.current) {
 				return
 			}
 			const { x, y } = getPosition()
 			moveTo(x + deltaX, y + deltaY)
 		},
 	})
-	useEventBusSubscribe['mindmap/node/onGroupDragEnd']({
-		callback: ({ sourceNodeId }) => {
-			if (sourceNodeId === node.id || !selectedRef.current) {
+	useEventBusSubscribe['mindmap/selection/onDragEnd']({
+		callback: ({ sourceId }) => {
+			if (sourceId === node.id || !selectedRef.current) {
 				return
 			}
 			stopDragging()
@@ -129,8 +130,9 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 				mouseState.isDragging = true
 				startDragging(true)
 				capturePointer('grabbing', event.pointerId)
-				dispatchGlobalEvent['mindmap/node/onGroupDragStart']({
-					sourceNodeId: nodeRef.current.id,
+				dispatchGlobalEvent['mindmap/selection/onDragStart']({
+					sourceId: nodeRef.current.id,
+					companions: new Set(),
 				})
 			}
 
@@ -138,8 +140,8 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 				const nextPositionX = mouseState.startPositionX + pointerOffsetX / mouseState.gridScale
 				const nextPositionY = mouseState.startPositionY + pointerOffsetY / mouseState.gridScale
 				moveTo(nextPositionX, nextPositionY)
-				dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
-					sourceNodeId: nodeRef.current.id,
+				dispatchGlobalEvent['mindmap/selection/onDragUpdate']({
+					sourceId: nodeRef.current.id,
 					deltaX: nextPositionX - mouseState.positionX,
 					deltaY: nextPositionY - mouseState.positionY,
 				})
@@ -168,19 +170,20 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 			const snappedY = Math.round(y)
 			moveTo(snappedX, snappedY)
 
-			moveNodes({
+			moveElements({
 				nodeIds: [...new Set(selectedNodes.keys()).add(nodeRef.current.id)],
+				waypointIds: getMovingWaypointIds({ selectedWaypoints, selectedWires, wires }),
 				deltaX: snappedX - nodeRef.current.positionX,
 				deltaY: snappedY - nodeRef.current.positionY,
 			})
 
-			dispatchGlobalEvent['mindmap/node/onGroupDragUpdate']({
-				sourceNodeId: nodeRef.current.id,
+			dispatchGlobalEvent['mindmap/selection/onDragUpdate']({
+				sourceId: nodeRef.current.id,
 				deltaX: snappedX - mouseState.positionX,
 				deltaY: snappedY - mouseState.positionY,
 			})
-			dispatchGlobalEvent['mindmap/node/onGroupDragEnd']({
-				sourceNodeId: nodeRef.current.id,
+			dispatchGlobalEvent['mindmap/selection/onDragEnd']({
+				sourceId: nodeRef.current.id,
 			})
 
 			stopDragging()
@@ -201,7 +204,7 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 		getPosition,
 		selectedRef,
 		nodeRef,
-		moveNodes,
+		moveElements,
 		moveTo,
 		startDragging,
 		stopDragging,
@@ -209,5 +212,8 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 		releasePointer,
 		clearSelections,
 		selectedNodes,
+		selectedWires,
+		selectedWaypoints,
+		wires,
 	])
 }

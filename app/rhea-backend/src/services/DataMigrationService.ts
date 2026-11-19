@@ -82,7 +82,7 @@ export const DataMigrationService = {
 							savedColors: true,
 							mindmapNodes: {
 								include: {
-									links: true,
+									links: { include: { waypoints: true } },
 									mentions: true,
 									pages: true,
 								},
@@ -308,6 +308,9 @@ export const DataMigrationService = {
 					const refs = [link.sourceNodeId, link.targetNodeId].filter((id): id is string => id != null)
 					if (refs.some((id) => !nodeIds.has(id))) {
 						throw new BadRequestError(`Mindmap link in world ${world.id} references a node outside the world`)
+					}
+					if (link.waypoints.some((waypoint) => waypoint.linkId !== link.id)) {
+						throw new BadRequestError(`Mindmap link ${link.id} carries a waypoint of another link`)
 					}
 				}
 			}
@@ -581,7 +584,12 @@ export const DataMigrationService = {
 					],
 				})
 
-				await prisma.mindmapLink.createMany({ data: allMindmapLinks })
+				await prisma.mindmapLink.createMany({
+					data: allMindmapLinks.map(({ waypoints: _w, ...link }) => link),
+				})
+				await prisma.mindmapLinkWaypoint.createMany({
+					data: allMindmapLinks.flatMap((link) => link.waypoints),
+				})
 				await prisma.calendarUnitRelation.createMany({ data: allCalendarUnitRelations })
 
 				await prisma.mention.createMany({ data: allMentions })

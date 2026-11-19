@@ -6,16 +6,18 @@ import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
 
 export function MindmapHotkeys() {
-	const { nodes, deleteNodes, deleteWires } = useMindmapContext()
+	const { nodes, deleteNodes, deleteWires, deleteWaypoints } = useMindmapContext()
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
 
 	const {
 		selectedNodes: selectedNodesMap,
 		selectedWires: selectedWiresMap,
+		selectedWaypoints: selectedWaypointsMap,
 		clearSelections,
 	} = useMindmapSelectionContext()
 	const selectedNodes = useReactiveMapKeys(selectedNodesMap)
 	const selectedWires = useReactiveMapKeys(selectedWiresMap)
+	const selectedWaypoints = useReactiveMapKeys(selectedWaypointsMap)
 
 	useShortcut(
 		Shortcut.EditSelected,
@@ -43,9 +45,12 @@ export function MindmapHotkeys() {
 			if (selectedWires.length > 0) {
 				deleteWires(selectedWires)
 			}
+			if (selectedWaypoints.length > 0) {
+				deleteWaypoints(selectedWaypoints)
+			}
 			clearSelections()
 		},
-		selectedNodes.length > 0 || selectedWires.length > 0,
+		selectedNodes.length > 0 || selectedWires.length > 0 || selectedWaypoints.length > 0,
 	)
 	return null
 }

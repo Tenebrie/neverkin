@@ -61,6 +61,36 @@ export const ValidationService = {
 		return count > 0
 	},
 
+	areMindmapNodesValid: async ({ worldId, nodeIds }: { worldId: string; nodeIds: string[] }) => {
+		const count = await getPrismaClient().mindmapNode.count({
+			where: {
+				id: { in: nodeIds },
+				worldId,
+			},
+		})
+		return count === new Set(nodeIds).size
+	},
+
+	areMindmapWiresValid: async ({ worldId, wireIds }: { worldId: string; wireIds: string[] }) => {
+		const count = await getPrismaClient().mindmapLink.count({
+			where: {
+				id: { in: wireIds },
+				sourceNode: { worldId },
+			},
+		})
+		return count === new Set(wireIds).size
+	},
+
+	areMindmapWaypointsValid: async ({ worldId, waypointIds }: { worldId: string; waypointIds: string[] }) => {
+		const count = await getPrismaClient().mindmapLinkWaypoint.count({
+			where: {
+				id: { in: waypointIds },
+				link: { sourceNode: { worldId } },
+			},
+		})
+		return count === new Set(waypointIds).size
+	},
+
 	checkActorValidity: async (actorId: string) => {
 		const isValid = await ValidationService.isActorValid(actorId)
 		if (!isValid) {
@@ -93,6 +123,27 @@ export const ValidationService = {
 		const isValid = await ValidationService.isTagValid(tagId)
 		if (!isValid) {
 			throw new BadRequestError('Tag does not exist')
+		}
+	},
+
+	checkMindmapNodesValidity: async (params: { worldId: string; nodeIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapNodesValid(params)
+		if (!isValid) {
+			throw new BadRequestError('Node does not exist')
+		}
+	},
+
+	checkMindmapWiresValidity: async (params: { worldId: string; wireIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapWiresValid(params)
+		if (!isValid) {
+			throw new BadRequestError('Wire does not exist')
+		}
+	},
+
+	checkMindmapWaypointsValidity: async (params: { worldId: string; waypointIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapWaypointsValid(params)
+		if (!isValid) {
+			throw new BadRequestError('Waypoint does not exist')
 		}
 	},
 

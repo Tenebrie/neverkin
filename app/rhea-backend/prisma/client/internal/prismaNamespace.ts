@@ -417,6 +417,7 @@ export const ModelName = {
   Mention: 'Mention',
   MindmapNode: 'MindmapNode',
   MindmapLink: 'MindmapLink',
+  MindmapLinkWaypoint: 'MindmapLinkWaypoint',
   Tag: 'Tag',
   User: 'User',
   CollaboratingUser: 'CollaboratingUser',
@@ -445,7 +446,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink" | "worldSearchEntry"
+    modelProps: "actor" | "userAnnouncement" | "asset" | "assetReference" | "auditLog" | "calendar" | "calendarUnit" | "calendarUnitRelation" | "calendarPresentation" | "calendarPresentationUnit" | "calendarSeason" | "calendarSeasonInterval" | "savedColor" | "contentPage" | "flags" | "userFavoriteIconSet" | "worldCommonIconSet" | "mention" | "mindmapNode" | "mindmapLink" | "mindmapLinkWaypoint" | "tag" | "user" | "collaboratingUser" | "featureFlagEntry" | "userWorldPin" | "wikiArticle" | "wikiFolder" | "world" | "worldEvent" | "worldEventDelta" | "worldEventTrack" | "worldShareLink" | "worldSearchEntry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -1929,6 +1930,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         }
       }
     }
+    MindmapLinkWaypoint: {
+      payload: Prisma.$MindmapLinkWaypointPayload<ExtArgs>
+      fields: Prisma.MindmapLinkWaypointFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MindmapLinkWaypointFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MindmapLinkWaypointFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        findFirst: {
+          args: Prisma.MindmapLinkWaypointFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MindmapLinkWaypointFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        findMany: {
+          args: Prisma.MindmapLinkWaypointFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>[]
+        }
+        create: {
+          args: Prisma.MindmapLinkWaypointCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        createMany: {
+          args: Prisma.MindmapLinkWaypointCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MindmapLinkWaypointCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>[]
+        }
+        delete: {
+          args: Prisma.MindmapLinkWaypointDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        update: {
+          args: Prisma.MindmapLinkWaypointUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        deleteMany: {
+          args: Prisma.MindmapLinkWaypointDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MindmapLinkWaypointUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MindmapLinkWaypointUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>[]
+        }
+        upsert: {
+          args: Prisma.MindmapLinkWaypointUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MindmapLinkWaypointPayload>
+        }
+        aggregate: {
+          args: Prisma.MindmapLinkWaypointAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMindmapLinkWaypoint>
+        }
+        groupBy: {
+          args: Prisma.MindmapLinkWaypointGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MindmapLinkWaypointGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MindmapLinkWaypointCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MindmapLinkWaypointCountAggregateOutputType> | number
+        }
+      }
+    }
     Tag: {
       payload: Prisma.$TagPayload<ExtArgs>
       fields: Prisma.TagFieldRefs
@@ -3188,6 +3263,17 @@ export const MindmapLinkScalarFieldEnum = {
 export type MindmapLinkScalarFieldEnum = (typeof MindmapLinkScalarFieldEnum)[keyof typeof MindmapLinkScalarFieldEnum]
 
 
+export const MindmapLinkWaypointScalarFieldEnum = {
+  id: 'id',
+  index: 'index',
+  positionX: 'positionX',
+  positionY: 'positionY',
+  linkId: 'linkId'
+} as const
+
+export type MindmapLinkWaypointScalarFieldEnum = (typeof MindmapLinkWaypointScalarFieldEnum)[keyof typeof MindmapLinkWaypointScalarFieldEnum]
+
+
 export const TagScalarFieldEnum = {
   id: 'id',
   createdAt: 'createdAt',
@@ -3881,6 +3967,7 @@ export type GlobalOmitConfig = {
   mention?: Prisma.MentionOmit
   mindmapNode?: Prisma.MindmapNodeOmit
   mindmapLink?: Prisma.MindmapLinkOmit
+  mindmapLinkWaypoint?: Prisma.MindmapLinkWaypointOmit
   tag?: Prisma.TagOmit
   user?: Prisma.UserOmit
   collaboratingUser?: Prisma.CollaboratingUserOmit

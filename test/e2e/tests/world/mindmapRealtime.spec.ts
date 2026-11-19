@@ -61,8 +61,7 @@ test.describe('Mindmap realtime', () => {
 
 		const moveResponse = page.waitForResponse(
 			(res) =>
-				res.request().method() === 'POST' &&
-				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/move/),
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/move/),
 		)
 		await card.locator('[data-mindmap-header]').hover()
 		await page.mouse.down()

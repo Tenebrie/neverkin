@@ -200,6 +200,7 @@ export type MindmapLinkWhereInput = {
   content?: Prisma.StringFilter<"MindmapLink"> | string
   sourceNode?: Prisma.XOR<Prisma.MindmapNodeScalarRelationFilter, Prisma.MindmapNodeWhereInput>
   targetNode?: Prisma.XOR<Prisma.MindmapNodeScalarRelationFilter, Prisma.MindmapNodeWhereInput>
+  waypoints?: Prisma.MindmapLinkWaypointListRelationFilter
 }
 
 export type MindmapLinkOrderByWithRelationInput = {
@@ -212,6 +213,7 @@ export type MindmapLinkOrderByWithRelationInput = {
   content?: Prisma.SortOrder
   sourceNode?: Prisma.MindmapNodeOrderByWithRelationInput
   targetNode?: Prisma.MindmapNodeOrderByWithRelationInput
+  waypoints?: Prisma.MindmapLinkWaypointOrderByRelationAggregateInput
 }
 
 export type MindmapLinkWhereUniqueInput = Prisma.AtLeast<{
@@ -227,6 +229,7 @@ export type MindmapLinkWhereUniqueInput = Prisma.AtLeast<{
   content?: Prisma.StringFilter<"MindmapLink"> | string
   sourceNode?: Prisma.XOR<Prisma.MindmapNodeScalarRelationFilter, Prisma.MindmapNodeWhereInput>
   targetNode?: Prisma.XOR<Prisma.MindmapNodeScalarRelationFilter, Prisma.MindmapNodeWhereInput>
+  waypoints?: Prisma.MindmapLinkWaypointListRelationFilter
 }, "id">
 
 export type MindmapLinkOrderByWithAggregationInput = {
@@ -263,6 +266,7 @@ export type MindmapLinkCreateInput = {
   content?: string
   sourceNode: Prisma.MindmapNodeCreateNestedOneWithoutLinksInput
   targetNode: Prisma.MindmapNodeCreateNestedOneWithoutLinkedByInput
+  waypoints?: Prisma.MindmapLinkWaypointCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkUncheckedCreateInput = {
@@ -273,6 +277,7 @@ export type MindmapLinkUncheckedCreateInput = {
   targetNodeId: string
   direction?: $Enums.MindmapLinkDirection
   content?: string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkUpdateInput = {
@@ -283,6 +288,7 @@ export type MindmapLinkUpdateInput = {
   content?: Prisma.StringFieldUpdateOperationsInput | string
   sourceNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinksNestedInput
   targetNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinkedByNestedInput
+  waypoints?: Prisma.MindmapLinkWaypointUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkUncheckedUpdateInput = {
@@ -293,6 +299,7 @@ export type MindmapLinkUncheckedUpdateInput = {
   targetNodeId?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkCreateManyInput = {
@@ -361,6 +368,11 @@ export type MindmapLinkMinOrderByAggregateInput = {
   targetNodeId?: Prisma.SortOrder
   direction?: Prisma.SortOrder
   content?: Prisma.SortOrder
+}
+
+export type MindmapLinkScalarRelationFilter = {
+  is?: Prisma.MindmapLinkWhereInput
+  isNot?: Prisma.MindmapLinkWhereInput
 }
 
 export type MindmapLinkCreateNestedManyWithoutSourceNodeInput = {
@@ -451,6 +463,20 @@ export type EnumMindmapLinkDirectionFieldUpdateOperationsInput = {
   set?: $Enums.MindmapLinkDirection
 }
 
+export type MindmapLinkCreateNestedOneWithoutWaypointsInput = {
+  create?: Prisma.XOR<Prisma.MindmapLinkCreateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedCreateWithoutWaypointsInput>
+  connectOrCreate?: Prisma.MindmapLinkCreateOrConnectWithoutWaypointsInput
+  connect?: Prisma.MindmapLinkWhereUniqueInput
+}
+
+export type MindmapLinkUpdateOneRequiredWithoutWaypointsNestedInput = {
+  create?: Prisma.XOR<Prisma.MindmapLinkCreateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedCreateWithoutWaypointsInput>
+  connectOrCreate?: Prisma.MindmapLinkCreateOrConnectWithoutWaypointsInput
+  upsert?: Prisma.MindmapLinkUpsertWithoutWaypointsInput
+  connect?: Prisma.MindmapLinkWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.MindmapLinkUpdateToOneWithWhereWithoutWaypointsInput, Prisma.MindmapLinkUpdateWithoutWaypointsInput>, Prisma.MindmapLinkUncheckedUpdateWithoutWaypointsInput>
+}
+
 export type MindmapLinkCreateWithoutSourceNodeInput = {
   id?: string
   createdAt?: Date | string
@@ -458,6 +484,7 @@ export type MindmapLinkCreateWithoutSourceNodeInput = {
   direction?: $Enums.MindmapLinkDirection
   content?: string
   targetNode: Prisma.MindmapNodeCreateNestedOneWithoutLinkedByInput
+  waypoints?: Prisma.MindmapLinkWaypointCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkUncheckedCreateWithoutSourceNodeInput = {
@@ -467,6 +494,7 @@ export type MindmapLinkUncheckedCreateWithoutSourceNodeInput = {
   targetNodeId: string
   direction?: $Enums.MindmapLinkDirection
   content?: string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkCreateOrConnectWithoutSourceNodeInput = {
@@ -486,6 +514,7 @@ export type MindmapLinkCreateWithoutTargetNodeInput = {
   direction?: $Enums.MindmapLinkDirection
   content?: string
   sourceNode: Prisma.MindmapNodeCreateNestedOneWithoutLinksInput
+  waypoints?: Prisma.MindmapLinkWaypointCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkUncheckedCreateWithoutTargetNodeInput = {
@@ -495,6 +524,7 @@ export type MindmapLinkUncheckedCreateWithoutTargetNodeInput = {
   sourceNodeId: string
   direction?: $Enums.MindmapLinkDirection
   content?: string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedCreateNestedManyWithoutLinkInput
 }
 
 export type MindmapLinkCreateOrConnectWithoutTargetNodeInput = {
@@ -552,6 +582,62 @@ export type MindmapLinkUpdateManyWithWhereWithoutTargetNodeInput = {
   data: Prisma.XOR<Prisma.MindmapLinkUpdateManyMutationInput, Prisma.MindmapLinkUncheckedUpdateManyWithoutTargetNodeInput>
 }
 
+export type MindmapLinkCreateWithoutWaypointsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  direction?: $Enums.MindmapLinkDirection
+  content?: string
+  sourceNode: Prisma.MindmapNodeCreateNestedOneWithoutLinksInput
+  targetNode: Prisma.MindmapNodeCreateNestedOneWithoutLinkedByInput
+}
+
+export type MindmapLinkUncheckedCreateWithoutWaypointsInput = {
+  id?: string
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  sourceNodeId: string
+  targetNodeId: string
+  direction?: $Enums.MindmapLinkDirection
+  content?: string
+}
+
+export type MindmapLinkCreateOrConnectWithoutWaypointsInput = {
+  where: Prisma.MindmapLinkWhereUniqueInput
+  create: Prisma.XOR<Prisma.MindmapLinkCreateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedCreateWithoutWaypointsInput>
+}
+
+export type MindmapLinkUpsertWithoutWaypointsInput = {
+  update: Prisma.XOR<Prisma.MindmapLinkUpdateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedUpdateWithoutWaypointsInput>
+  create: Prisma.XOR<Prisma.MindmapLinkCreateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedCreateWithoutWaypointsInput>
+  where?: Prisma.MindmapLinkWhereInput
+}
+
+export type MindmapLinkUpdateToOneWithWhereWithoutWaypointsInput = {
+  where?: Prisma.MindmapLinkWhereInput
+  data: Prisma.XOR<Prisma.MindmapLinkUpdateWithoutWaypointsInput, Prisma.MindmapLinkUncheckedUpdateWithoutWaypointsInput>
+}
+
+export type MindmapLinkUpdateWithoutWaypointsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+  sourceNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinksNestedInput
+  targetNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinkedByNestedInput
+}
+
+export type MindmapLinkUncheckedUpdateWithoutWaypointsInput = {
+  id?: Prisma.StringFieldUpdateOperationsInput | string
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  sourceNodeId?: Prisma.StringFieldUpdateOperationsInput | string
+  targetNodeId?: Prisma.StringFieldUpdateOperationsInput | string
+  direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
+  content?: Prisma.StringFieldUpdateOperationsInput | string
+}
+
 export type MindmapLinkCreateManySourceNodeInput = {
   id?: string
   createdAt?: Date | string
@@ -577,6 +663,7 @@ export type MindmapLinkUpdateWithoutSourceNodeInput = {
   direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
   content?: Prisma.StringFieldUpdateOperationsInput | string
   targetNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinkedByNestedInput
+  waypoints?: Prisma.MindmapLinkWaypointUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkUncheckedUpdateWithoutSourceNodeInput = {
@@ -586,6 +673,7 @@ export type MindmapLinkUncheckedUpdateWithoutSourceNodeInput = {
   targetNodeId?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkUncheckedUpdateManyWithoutSourceNodeInput = {
@@ -604,6 +692,7 @@ export type MindmapLinkUpdateWithoutTargetNodeInput = {
   direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
   content?: Prisma.StringFieldUpdateOperationsInput | string
   sourceNode?: Prisma.MindmapNodeUpdateOneRequiredWithoutLinksNestedInput
+  waypoints?: Prisma.MindmapLinkWaypointUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkUncheckedUpdateWithoutTargetNodeInput = {
@@ -613,6 +702,7 @@ export type MindmapLinkUncheckedUpdateWithoutTargetNodeInput = {
   sourceNodeId?: Prisma.StringFieldUpdateOperationsInput | string
   direction?: Prisma.EnumMindmapLinkDirectionFieldUpdateOperationsInput | $Enums.MindmapLinkDirection
   content?: Prisma.StringFieldUpdateOperationsInput | string
+  waypoints?: Prisma.MindmapLinkWaypointUncheckedUpdateManyWithoutLinkNestedInput
 }
 
 export type MindmapLinkUncheckedUpdateManyWithoutTargetNodeInput = {
@@ -625,6 +715,35 @@ export type MindmapLinkUncheckedUpdateManyWithoutTargetNodeInput = {
 }
 
 
+/**
+ * Count Type MindmapLinkCountOutputType
+ */
+
+export type MindmapLinkCountOutputType = {
+  waypoints: number
+}
+
+export type MindmapLinkCountOutputTypeSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  waypoints?: boolean | MindmapLinkCountOutputTypeCountWaypointsArgs
+}
+
+/**
+ * MindmapLinkCountOutputType without action
+ */
+export type MindmapLinkCountOutputTypeDefaultArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MindmapLinkCountOutputType
+   */
+  select?: Prisma.MindmapLinkCountOutputTypeSelect<ExtArgs> | null
+}
+
+/**
+ * MindmapLinkCountOutputType without action
+ */
+export type MindmapLinkCountOutputTypeCountWaypointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  where?: Prisma.MindmapLinkWaypointWhereInput
+}
+
 
 export type MindmapLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
   id?: boolean
@@ -636,6 +755,8 @@ export type MindmapLinkSelect<ExtArgs extends runtime.Types.Extensions.InternalA
   content?: boolean
   sourceNode?: boolean | Prisma.MindmapNodeDefaultArgs<ExtArgs>
   targetNode?: boolean | Prisma.MindmapNodeDefaultArgs<ExtArgs>
+  waypoints?: boolean | Prisma.MindmapLink$waypointsArgs<ExtArgs>
+  _count?: boolean | Prisma.MindmapLinkCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["mindmapLink"]>
 
 export type MindmapLinkSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetSelect<{
@@ -676,6 +797,8 @@ export type MindmapLinkOmit<ExtArgs extends runtime.Types.Extensions.InternalArg
 export type MindmapLinkInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceNode?: boolean | Prisma.MindmapNodeDefaultArgs<ExtArgs>
   targetNode?: boolean | Prisma.MindmapNodeDefaultArgs<ExtArgs>
+  waypoints?: boolean | Prisma.MindmapLink$waypointsArgs<ExtArgs>
+  _count?: boolean | Prisma.MindmapLinkCountOutputTypeDefaultArgs<ExtArgs>
 }
 export type MindmapLinkIncludeCreateManyAndReturn<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   sourceNode?: boolean | Prisma.MindmapNodeDefaultArgs<ExtArgs>
@@ -691,6 +814,7 @@ export type $MindmapLinkPayload<ExtArgs extends runtime.Types.Extensions.Interna
   objects: {
     sourceNode: Prisma.$MindmapNodePayload<ExtArgs>
     targetNode: Prisma.$MindmapNodePayload<ExtArgs>
+    waypoints: Prisma.$MindmapLinkWaypointPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     id: string
@@ -1096,6 +1220,7 @@ export interface Prisma__MindmapLinkClient<T, Null = never, ExtArgs extends runt
   readonly [Symbol.toStringTag]: "PrismaPromise"
   sourceNode<T extends Prisma.MindmapNodeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNodeDefaultArgs<ExtArgs>>): Prisma.Prisma__MindmapNodeClient<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
   targetNode<T extends Prisma.MindmapNodeDefaultArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapNodeDefaultArgs<ExtArgs>>): Prisma.Prisma__MindmapNodeClient<runtime.Types.Result.GetResult<Prisma.$MindmapNodePayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | Null, Null, ExtArgs, GlobalOmitOptions>
+  waypoints<T extends Prisma.MindmapLink$waypointsArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.MindmapLink$waypointsArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MindmapLinkWaypointPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
    * @param onfulfilled The callback to execute when the Promise is resolved.
@@ -1530,6 +1655,30 @@ export type MindmapLinkDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.I
    * Limit how many MindmapLinks to delete.
    */
   limit?: number
+}
+
+/**
+ * MindmapLink.waypoints
+ */
+export type MindmapLink$waypointsArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MindmapLinkWaypoint
+   */
+  select?: Prisma.MindmapLinkWaypointSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MindmapLinkWaypoint
+   */
+  omit?: Prisma.MindmapLinkWaypointOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MindmapLinkWaypointInclude<ExtArgs> | null
+  where?: Prisma.MindmapLinkWaypointWhereInput
+  orderBy?: Prisma.MindmapLinkWaypointOrderByWithRelationInput | Prisma.MindmapLinkWaypointOrderByWithRelationInput[]
+  cursor?: Prisma.MindmapLinkWaypointWhereUniqueInput
+  take?: number
+  skip?: number
+  distinct?: Prisma.MindmapLinkWaypointScalarFieldEnum | Prisma.MindmapLinkWaypointScalarFieldEnum[]
 }
 
 /**

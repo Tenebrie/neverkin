@@ -553,6 +553,15 @@ export const exportedUserDataSchema = z.object({
 										sourceNodeId: z.string(),
 										targetNodeId: z.string(),
 										direction: mindmapLinkDirectionSchema,
+										waypoints: z.array(
+											z.object({
+												id: z.string(),
+												index: z.number(),
+												positionX: z.number(),
+												positionY: z.number(),
+												linkId: z.string(),
+											}),
+										),
 									}),
 								),
 							})

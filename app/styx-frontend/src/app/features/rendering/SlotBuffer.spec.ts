@@ -41,7 +41,7 @@ describe('SlotBuffer', () => {
 		expect(buffer.takeChanges()).toMatchObject({ offset: 0, length: 0 })
 	})
 
-	it('moves the last record into the slot of a deleted one', () => {
+	it('shifts the records after a deleted one down, keeping their order', () => {
 		const buffer = new SlotBuffer<string>(2)
 		buffer.write('a', [1, 2])
 		buffer.write('b', [3, 4])
@@ -52,20 +52,21 @@ describe('SlotBuffer', () => {
 		const { data, offset, length } = buffer.takeChanges()
 
 		expect(buffer.count).toEqual(2)
-		expect({ offset, length }).toEqual({ offset: 0, length: 2 })
-		expect(Array.from(data.subarray(0, 4))).toEqual([5, 6, 3, 4])
+		expect({ offset, length }).toEqual({ offset: 0, length: 4 })
+		expect(Array.from(data.subarray(0, 4))).toEqual([3, 4, 5, 6])
 	})
 
-	it('keeps the moved record addressable by its key', () => {
+	it('keeps the shifted records addressable by their keys', () => {
 		const buffer = new SlotBuffer<string>(2)
 		buffer.write('a', [1, 2])
 		buffer.write('b', [3, 4])
+		buffer.write('c', [5, 6])
 		buffer.delete('a')
 
-		buffer.write('b', [9, 9])
+		buffer.write('c', [9, 9])
 
-		expect(buffer.count).toEqual(1)
-		expect(Array.from(buffer.takeChanges().data.subarray(0, 2))).toEqual([9, 9])
+		expect(buffer.count).toEqual(2)
+		expect(Array.from(buffer.takeChanges().data.subarray(0, 4))).toEqual([3, 4, 9, 9])
 	})
 
 	it('reports nothing when the last record is deleted', () => {

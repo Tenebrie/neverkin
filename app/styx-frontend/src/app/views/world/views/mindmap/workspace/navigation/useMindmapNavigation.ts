@@ -6,7 +6,7 @@ import { EventParams } from '@/app/features/eventBus/types'
 import { usePointerCapture } from '@/app/hooks/usePointerCapture'
 import { useCurrentWorldId } from '@/app/views/world/hooks/useCurrentWorldId'
 
-import { useMindmapContext } from '../../context/useMindmapContext'
+import { useMindmapContext, useMindmapSelectionContext } from '../../context/useMindmapContext'
 import { useMindmapEdgeScroll } from '../../hooks/useMindmapEdgeScroll'
 import { makeMindmapNavigationState } from '../../MindmapState'
 import { MindmapState } from '../../MindmapState'
@@ -36,6 +36,7 @@ export function useMindmapNavigation({ ref }: Props) {
 	const bus = useEventBusContext()
 
 	const { capture, release } = usePointerCapture()
+	const { hasBulkSelection } = useMindmapSelectionContext()
 
 	const worldId = useCurrentWorldId()
 	const [state, setState] = useMindmapCameraPersistence()
@@ -138,6 +139,12 @@ export function useMindmapNavigation({ ref }: Props) {
 		const handleClick = (event: MouseEvent) => {
 			const target = event.target as HTMLElement
 			if (event.button === 2 && target.hasAttribute('data-mindmap-click-area') && navState.canClick) {
+				if (hasBulkSelection()) {
+					dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
+						position: { x: event.clientX, y: event.clientY },
+					})
+					return
+				}
 				dispatchGlobalEvent['quickSelect/requestOpen']({
 					query: '',
 					screenPosTop: event.clientY,
@@ -353,6 +360,7 @@ export function useMindmapNavigation({ ref }: Props) {
 		paint,
 		workspaceRect,
 		wireBuffer,
+		hasBulkSelection,
 	])
 }
 

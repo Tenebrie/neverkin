@@ -146,11 +146,11 @@ router.post('/api/world/:worldId/mindmap/nodes/:nodeId/reparent', async (ctx) =>
 	return node
 })
 
-router.post('/api/world/:worldId/mindmap/nodes/move', async (ctx) => {
+router.post('/api/world/:worldId/mindmap/move', async (ctx) => {
 	useApiEndpoint({
-		name: 'moveMindmapNodes',
-		description: 'Moves multiple nodes by a delta in a single transaction',
-		tags: [mindmapGroupTag, mindmapNodeTag],
+		name: 'moveMindmapElements',
+		description: 'Moves the given nodes and waypoints by a delta in a single transaction',
+		tags: [mindmapGroupTag, mindmapNodeTag, mindmapWireTag],
 	})
 
 	const { worldId } = usePathParams(ctx, {
@@ -161,14 +161,19 @@ router.post('/api/world/:worldId/mindmap/nodes/move', async (ctx) => {
 
 	const params = useRequestBody(ctx, {
 		nodeIds: z.array(z.string()),
+		waypointIds: z.array(z.string()),
 		deltaX: z.number(),
 		deltaY: z.number(),
 	})
 
-	const nodes = await MindmapService.moveNodes(params.nodeIds, params.deltaX, params.deltaY, worldId)
-	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes })
+	await ValidationService.checkMindmapNodesValidity({ worldId, nodeIds: params.nodeIds })
+	await ValidationService.checkMindmapWaypointsValidity({ worldId, waypointIds: params.waypointIds })
 
-	return nodes
+	const { nodes, wires } = await MindmapService.moveElements({ ...params, worldId })
+	RedisService.notifyAboutMindmapNodesUpdate(ctx, { worldId, nodes })
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created: [], updated: wires })
+
+	return { nodes, wires }
 })
 
 router.post('/api/world/:worldId/mindmap/nodes/paste', async (ctx) => {
@@ -295,6 +300,7 @@ router.post('/api/world/:worldId/mindmap/wires/:wireId/split', async (ctx) => {
 	})
 
 	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+	await ValidationService.checkMindmapWiresValidity({ worldId, wireIds: [wireId] })
 
 	const params = useRequestBody(ctx, {
 		positionX: z.number(),
@@ -331,6 +337,70 @@ router.post('/api/world/:worldId/mindmap/wires/delete', async (ctx) => {
 
 	await MindmapService.deleteLinks(worldId, wires)
 	RedisService.notifyAboutMindmapWiresDelete(ctx, { worldId, wires })
+
+	return wires
+})
+
+/**
+ * Mindmap wire waypoints
+ */
+router.post('/api/world/:worldId/mindmap/waypoints', async (ctx) => {
+	useApiEndpoint({
+		name: 'createMindmapWaypoints',
+		description: 'Adds a waypoint at one position to each target wire, at the given index of that wire',
+		tags: [mindmapGroupTag, mindmapWireTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const { targets, ...position } = useRequestBody(ctx, {
+		targets: z.array(
+			z.object({
+				id: z.uuid(),
+				wireId: z.string(),
+				index: z.number().int().min(0),
+			}),
+		),
+		positionX: z.number(),
+		positionY: z.number(),
+	})
+
+	await ValidationService.checkMindmapWiresValidity({
+		worldId,
+		wireIds: targets.map((target) => target.wireId),
+	})
+
+	const wires = await MindmapService.createWaypoints(targets, position)
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created: [], updated: wires })
+
+	return wires
+})
+
+router.post('/api/world/:worldId/mindmap/waypoints/delete', async (ctx) => {
+	useApiEndpoint({
+		name: 'deleteMindmapWaypoints',
+		description: 'Removes the target waypoints from their wires',
+		tags: [mindmapGroupTag, mindmapWireTag],
+	})
+
+	const { worldId } = usePathParams(ctx, {
+		worldId: z.string(),
+	})
+
+	await AuthorizationService.checkUserWriteAccessById(ctx.user, worldId)
+
+	const { waypointIds } = useRequestBody(ctx, {
+		waypointIds: z.array(z.string()),
+	})
+
+	await ValidationService.checkMindmapWaypointsValidity({ worldId, waypointIds })
+
+	const wires = await MindmapService.deleteWaypoints(waypointIds)
+	RedisService.notifyAboutMindmapWiresCreate(ctx, { worldId, created: [], updated: wires })
 
 	return wires
 })

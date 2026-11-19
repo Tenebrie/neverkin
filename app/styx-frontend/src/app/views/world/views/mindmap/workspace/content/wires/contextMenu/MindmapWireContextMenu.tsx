@@ -1,5 +1,6 @@
 import CallSplit from '@mui/icons-material/CallSplit'
 import Delete from '@mui/icons-material/Delete'
+import LinkOff from '@mui/icons-material/LinkOff'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -14,7 +15,7 @@ import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapDa
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 
 import { NODE_FALLBACK_H, NODE_W } from '../../nodes/MindmapNodeRenderer'
-import { midpointOf } from '../canvas/MindmapCanvasMath'
+import { wireMidpoint } from '../canvas/MindmapCanvasMath'
 import { MindmapWireContextMenuEditor } from './MindmapWireContextMenuEditor'
 
 export type MindmapWireState = {
@@ -27,7 +28,7 @@ export type MindmapWireState = {
 
 export function MindmapWireContextMenu({ open, wireId, position, onClose }: MindmapWireState) {
 	const { wires } = useMindmapData()
-	const { wireGeometry, splitWire, updateWire, deleteWires } = useMindmapContext()
+	const { wireGeometry, splitWire, updateWire, deleteWires, deleteWaypoints } = useMindmapContext()
 
 	const currentWire = useMemo(() => wires.find((wire) => wire.id === wireId), [wireId, wires])
 
@@ -45,8 +46,8 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 	}, [currentWire, direction, label, onClose, updateWire])
 
 	const handleSplit = useCallback(() => {
-		const curve = currentWire ? wireGeometry.get(currentWire.id) : undefined
-		const midpoint = curve ? midpointOf(curve) : null
+		const curves = currentWire ? wireGeometry.get(currentWire.id) : undefined
+		const midpoint = curves ? wireMidpoint(curves) : null
 		if (!currentWire || !midpoint) {
 			return
 		}
@@ -92,6 +93,19 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 							<CallSplit />
 						</ListItemIcon>
 						<ListItemText>Split</ListItemText>
+					</MenuItem>
+				)}
+				{currentWire && currentWire.waypoints.length > 0 && (
+					<MenuItem
+						onClick={() => {
+							deleteWaypoints(currentWire.waypoints.map((waypoint) => waypoint.id))
+							handleClose()
+						}}
+					>
+						<ListItemIcon>
+							<LinkOff />
+						</ListItemIcon>
+						<ListItemText>Release link</ListItemText>
 					</MenuItem>
 				)}
 				<MenuItem

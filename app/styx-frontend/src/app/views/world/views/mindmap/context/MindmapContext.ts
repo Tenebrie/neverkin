@@ -6,10 +6,12 @@ import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
+import { useCreateMindmapWaypoints } from '../api/useCreateMindmapWaypoints'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
+import { useDeleteMindmapWaypoints } from '../api/useDeleteMindmapWaypoints'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
-import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
+import { useMoveMindmapElements } from '../api/useMoveMindmapElements'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { useSplitMindmapWire } from '../api/useSplitMindmapWire'
 import { useUpdateMindmapWire } from '../api/useUpdateMindmapWire'
@@ -21,7 +23,7 @@ import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWire
 export const MindmapContext = createRealtimeContext(() => {
 	const [painters] = useState(() => new Set<(navState: MindmapNavigationState) => void>())
 
-	const [moveNodes] = useMoveMindmapNodes()
+	const [moveElements] = useMoveMindmapElements()
 	const [createNode] = useCreateMindmapNode()
 	const [deleteNodes] = useDeleteMindmapNodes()
 	const [reparentNode] = useReparentMindmapNode()
@@ -30,6 +32,9 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [updateWire] = useUpdateMindmapWire()
 	const [splitWire] = useSplitMindmapWire()
 	const [deleteWires] = useDeleteMindmapWires()
+
+	const [createWaypoints] = useCreateMindmapWaypoints()
+	const [deleteWaypoints] = useDeleteMindmapWaypoints()
 
 	const onPaint = useEvent((painter: (navState: MindmapNavigationState) => void) => {
 		painters.add(painter)
@@ -63,7 +68,7 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [nodeResizeObserver] = useState(() => new SharedResizeObserver())
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
-	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
+	const [wireGeometry] = useState(() => new Map<string, WireControlPoints[]>())
 
 	return {
 		nodes,
@@ -75,7 +80,7 @@ export const MindmapContext = createRealtimeContext(() => {
 		onPaint,
 		paint,
 
-		moveNodes,
+		moveElements,
 		createNode,
 		deleteNodes,
 		reparentNode,
@@ -84,6 +89,9 @@ export const MindmapContext = createRealtimeContext(() => {
 		updateWire,
 		splitWire,
 		deleteWires,
+
+		createWaypoints,
+		deleteWaypoints,
 
 		workspaceRect,
 		updateWorkspaceRect,

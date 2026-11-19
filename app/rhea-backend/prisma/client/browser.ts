@@ -120,6 +120,11 @@ export type MindmapNode = Prisma.MindmapNodeModel
  */
 export type MindmapLink = Prisma.MindmapLinkModel
 /**
+ * Model MindmapLinkWaypoint
+ * 
+ */
+export type MindmapLinkWaypoint = Prisma.MindmapLinkWaypointModel
+/**
  * Model Tag
  * 
  */

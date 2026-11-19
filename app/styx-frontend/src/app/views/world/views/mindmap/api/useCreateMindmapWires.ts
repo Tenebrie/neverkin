@@ -37,6 +37,7 @@ export function useCreateMindmapWires() {
 							targetNodeId: wire.targetNodeId,
 							direction: wire.direction ?? direction,
 							content: wire.content ?? existingWire?.content ?? '',
+							waypoints: wire.waypoints ?? [],
 						})
 					})
 				}),

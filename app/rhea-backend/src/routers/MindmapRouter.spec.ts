@@ -1,6 +1,13 @@
 import { MindmapPasteData } from '@neverkin/zod-schema'
 import { MindmapLinkDirection } from '@prisma/client'
-import { mockMindmapLink, mockMindmapNode, mockUser, mockWorld, withUserAuth } from '@src/mock/index.js'
+import {
+	mockMindmapLink,
+	mockMindmapLinkWaypoint,
+	mockMindmapNode,
+	mockUser,
+	mockWorld,
+	withUserAuth,
+} from '@src/mock/index.js'
 import { setupMockDatabase } from '@src/mock/utils/setupMockDatabase.js'
 import { RedisService } from '@src/services/RedisService.js'
 import { randomUUID } from 'crypto'
@@ -234,7 +241,13 @@ describe('MindmapRouter', () => {
 						entityNode({ tempId: 'foreign', parentType: 'actor', parentId: foreignActor.id }),
 					],
 					internalLinks: [
-						{ sourceTempId: 'plain', targetTempId: 'foreign', direction: 'Normal', content: '' },
+						{
+							sourceTempId: 'plain',
+							targetTempId: 'foreign',
+							direction: 'Normal',
+							content: '',
+							waypoints: [],
+						},
 					],
 					externalLinks: [],
 				},
@@ -277,9 +290,9 @@ describe('MindmapRouter', () => {
 						plainNode({ tempId: 'c', plainNodeName: 'C' }),
 					],
 					internalLinks: [
-						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Reversed', content: 'knows' },
-						{ sourceTempId: 'b', targetTempId: 'c', direction: 'TwoWay', content: '' },
-						{ sourceTempId: 'a', targetTempId: 'missing', direction: 'Normal', content: '' },
+						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Reversed', content: 'knows', waypoints: [] },
+						{ sourceTempId: 'b', targetTempId: 'c', direction: 'TwoWay', content: '', waypoints: [] },
+						{ sourceTempId: 'a', targetTempId: 'missing', direction: 'Normal', content: '', waypoints: [] },
 					],
 					externalLinks: [],
 				},
@@ -306,6 +319,40 @@ describe('MindmapRouter', () => {
 					}),
 				]),
 			)
+		})
+
+		it('pastes the waypoints of internal links relative to the paste origin', async () => {
+			const response = await api.send({
+				originX: 100,
+				originY: 200,
+				pasteData: {
+					nodes: [
+						plainNode({ tempId: 'a', plainNodeName: 'A' }),
+						plainNode({ tempId: 'b', plainNodeName: 'B' }),
+					],
+					internalLinks: [
+						{
+							sourceTempId: 'a',
+							targetTempId: 'b',
+							direction: 'Normal',
+							content: '',
+							waypoints: [
+								{ offsetX: -10, offsetY: 5 },
+								{ offsetX: 30, offsetY: -15 },
+							],
+						},
+					],
+					externalLinks: [],
+				},
+			})
+
+			expect(response.statusCode).toEqual(200)
+			const waypoints = await db.mindmapLinkWaypoint.findMany({ orderBy: { index: 'asc' } })
+			expect(waypoints.map(({ index, positionX, positionY }) => ({ index, positionX, positionY }))).toEqual([
+				{ index: 0, positionX: 90, positionY: 205 },
+				{ index: 2, positionX: 130, positionY: 185 },
+			])
+			expect(response.body.wires[0].waypoints).toHaveLength(2)
 		})
 
 		it('creates external links only to existing nodes in the same world', async () => {
@@ -350,7 +397,9 @@ describe('MindmapRouter', () => {
 				originY: 0,
 				pasteData: {
 					nodes: [plainNode({ tempId: 'a' }), plainNode({ tempId: 'b' })],
-					internalLinks: [{ sourceTempId: 'a', targetTempId: 'b', direction: 'Normal', content: '' }],
+					internalLinks: [
+						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Normal', content: '', waypoints: [] },
+					],
 					externalLinks: [
 						{ sourceTempId: 'a', targetNodeId: localNode.id, direction: 'Normal', content: '' },
 					],
@@ -445,6 +494,251 @@ describe('MindmapRouter', () => {
 			expect(response.statusCode).toEqual(400)
 			const updated = await db.mindmapLink.findFirstOrThrow({ where: { id: wire.id } })
 			expect(updated).toMatchObject({ content: '' })
+		})
+	})
+
+	describe('POST /api/world/:worldId/mindmap/move', () => {
+		const first = mockMindmapNode({ worldId: world.id, positionX: 0, positionY: 0 })
+		const second = mockMindmapNode({ worldId: world.id, positionX: 100, positionY: 0 })
+		const wire = mockMindmapLink({ sourceNodeId: first.id, targetNodeId: second.id })
+		const listed = mockMindmapLinkWaypoint({ linkId: wire.id, index: 0, positionX: 10, positionY: 10 })
+		const unlisted = mockMindmapLinkWaypoint({ linkId: wire.id, index: 2, positionX: 20, positionY: 20 })
+
+		const otherUser = mockUser({ email: 'other@localhost', username: 'other' })
+		const otherWorld = mockWorld({ id: randomUUID(), ownerId: otherUser.id })
+
+		beforeEach(async () => {
+			await db.user.create({ data: otherUser })
+			await db.world.create({ data: otherWorld })
+			await db.mindmapNode.createMany({ data: [first, second] })
+			await db.mindmapLink.create({ data: wire })
+			await db.mindmapLinkWaypoint.createMany({ data: [listed, unlisted] })
+		})
+
+		it('moves exactly the listed nodes and waypoints by the delta', async () => {
+			const response = await withUserAuth(user)
+				.post(`/api/world/${world.id}/mindmap/move`)
+				.send({ nodeIds: [first.id, second.id], waypointIds: [listed.id], deltaX: 5, deltaY: -3 })
+
+			expect(response.statusCode).toEqual(200)
+			const nodes = await db.mindmapNode.findMany({ orderBy: { positionX: 'asc' } })
+			expect(nodes.map((node) => [node.positionX, node.positionY])).toEqual([
+				[5, -3],
+				[105, -3],
+			])
+			const movedWaypoint = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: listed.id } })
+			const stayingWaypoint = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: unlisted.id } })
+			expect(movedWaypoint).toMatchObject({ positionX: 15, positionY: 7 })
+			expect(stayingWaypoint).toMatchObject({ positionX: 20, positionY: 20 })
+			expect(response.body.wires.map((returned: { id: string }) => returned.id)).toEqual([wire.id])
+		})
+
+		it('rejects when any waypoint belongs to another world', async () => {
+			const response = await withUserAuth(otherUser)
+				.post(`/api/world/${otherWorld.id}/mindmap/move`)
+				.send({ nodeIds: [], waypointIds: [listed.id], deltaX: 5, deltaY: -3 })
+
+			expect(response.statusCode).toEqual(400)
+			const unchanged = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: listed.id } })
+			expect(unchanged).toMatchObject({ positionX: 10, positionY: 10 })
+		})
+
+		it('rejects when any node belongs to another world', async () => {
+			const response = await withUserAuth(otherUser)
+				.post(`/api/world/${otherWorld.id}/mindmap/move`)
+				.send({ nodeIds: [first.id], waypointIds: [], deltaX: 5, deltaY: -3 })
+
+			expect(response.statusCode).toEqual(400)
+			const unchanged = await db.mindmapNode.findFirstOrThrow({ where: { id: first.id } })
+			expect(unchanged).toMatchObject({ positionX: 0, positionY: 0 })
+		})
+	})
+
+	describe('POST /api/world/:worldId/mindmap/wires/:wireId/split', () => {
+		const source = mockMindmapNode({ worldId: world.id })
+		const target = mockMindmapNode({ worldId: world.id })
+		const wire = mockMindmapLink({ sourceNodeId: source.id, targetNodeId: target.id })
+		const body = { positionX: 50, positionY: 50, name: 'Middle', direction: MindmapLinkDirection.Normal }
+
+		const otherUser = mockUser({ email: 'other@localhost', username: 'other' })
+		const otherWorld = mockWorld({ id: randomUUID(), ownerId: otherUser.id })
+
+		beforeEach(async () => {
+			await db.user.create({ data: otherUser })
+			await db.world.create({ data: otherWorld })
+			await db.mindmapNode.createMany({ data: [source, target] })
+			await db.mindmapLink.create({ data: wire })
+		})
+
+		it('replaces the wire with a node and two wires through it', async () => {
+			const response = await withUserAuth(user)
+				.post(`/api/world/${world.id}/mindmap/wires/${wire.id}/split`)
+				.send(body)
+
+			expect(response.statusCode).toEqual(200)
+			const node = await db.mindmapNode.findFirstOrThrow({ where: { name: 'Middle' } })
+			const wires = await db.mindmapLink.findMany()
+			expect(wires.map((link) => [link.sourceNodeId, link.targetNodeId])).toEqual([
+				[source.id, node.id],
+				[node.id, target.id],
+			])
+		})
+
+		it('rejects a wire that belongs to another world', async () => {
+			const response = await withUserAuth(otherUser)
+				.post(`/api/world/${otherWorld.id}/mindmap/wires/${wire.id}/split`)
+				.send(body)
+
+			expect(response.statusCode).toEqual(400)
+			expect(await db.mindmapLink.findMany()).toHaveLength(1)
+		})
+	})
+
+	describe('waypoints', () => {
+		const source = mockMindmapNode({ worldId: world.id })
+		const target = mockMindmapNode({ worldId: world.id })
+		const wire = mockMindmapLink({ sourceNodeId: source.id, targetNodeId: target.id })
+		const first = mockMindmapLinkWaypoint({ linkId: wire.id, index: 0, positionX: 10, positionY: 10 })
+		const second = mockMindmapLinkWaypoint({ linkId: wire.id, index: 2, positionX: 20, positionY: 20 })
+		const third = mockMindmapLinkWaypoint({ linkId: wire.id, index: 4, positionX: 30, positionY: 30 })
+		const waypointsUrl = `/api/world/${world.id}/mindmap/waypoints`
+
+		const detour = mockMindmapNode({ worldId: world.id })
+		const otherWire = mockMindmapLink({ sourceNodeId: source.id, targetNodeId: detour.id })
+		const otherWaypoints = [
+			mockMindmapLinkWaypoint({ linkId: otherWire.id, index: 0 }),
+			mockMindmapLinkWaypoint({ linkId: otherWire.id, index: 2 }),
+		]
+		const otherRanks = otherWaypoints.map((waypoint) => [waypoint.id, waypoint.index])
+
+		const otherUser = mockUser({ email: 'other@localhost', username: 'other' })
+		const otherWorld = mockWorld({ id: randomUUID(), ownerId: otherUser.id })
+		const foreignNode = mockMindmapNode({ worldId: otherWorld.id })
+		const foreignWire = mockMindmapLink({ sourceNodeId: foreignNode.id, targetNodeId: foreignNode.id })
+		const foreignWaypoint = mockMindmapLinkWaypoint({ linkId: foreignWire.id })
+
+		beforeEach(async () => {
+			await db.user.create({ data: otherUser })
+			await db.world.create({ data: otherWorld })
+			await db.mindmapNode.createMany({ data: [source, target, detour, foreignNode] })
+			await db.mindmapLink.createMany({ data: [wire, otherWire, foreignWire] })
+			await db.mindmapLinkWaypoint.createMany({
+				data: [third, first, second, ...otherWaypoints, foreignWaypoint],
+			})
+			vi.spyOn(RedisService, 'notifyAboutMindmapWiresCreate')
+		})
+
+		const rankedIds = async (linkId: string) => {
+			const waypoints = await db.mindmapLinkWaypoint.findMany({
+				where: { linkId },
+				orderBy: { index: 'asc' },
+			})
+			return waypoints.map((waypoint) => [waypoint.id, waypoint.index])
+		}
+
+		describe('GET /api/world/:worldId/mindmap', () => {
+			it('returns each wire with its waypoints in path order', async () => {
+				const response = await withUserAuth(user).get(`/api/world/${world.id}/mindmap`)
+
+				expect(response.statusCode).toEqual(200)
+				const wires: { id: string; waypoints: { id: string }[] }[] = response.body.wires
+				const returned = wires.find((returnedWire) => returnedWire.id === wire.id)
+				expect(returned?.waypoints.map((waypoint) => waypoint.id)).toEqual([first.id, second.id, third.id])
+			})
+		})
+
+		describe('POST /api/world/:worldId/mindmap/waypoints', () => {
+			it('inserts one waypoint per target wire under the given id and index and spreads the ranks per wire', async () => {
+				const insertedInWire = randomUUID()
+				const insertedInOther = randomUUID()
+				const response = await withUserAuth(user)
+					.post(waypointsUrl)
+					.send({
+						targets: [
+							{ id: insertedInWire, wireId: wire.id, index: 1 },
+							{ id: insertedInOther, wireId: otherWire.id, index: 2 },
+						],
+						positionX: 15,
+						positionY: 15,
+					})
+
+				expect(response.statusCode).toEqual(200)
+				expect(await rankedIds(wire.id)).toEqual([
+					[first.id, 0],
+					[insertedInWire, 2],
+					[second.id, 4],
+					[third.id, 6],
+				])
+				expect(await rankedIds(otherWire.id)).toEqual([...otherRanks, [insertedInOther, 4]])
+			})
+
+			it('returns and broadcasts the affected wires with their waypoints', async () => {
+				const id = randomUUID()
+				const response = await withUserAuth(user)
+					.post(waypointsUrl)
+					.send({ targets: [{ id, wireId: wire.id, index: 0 }], positionX: 5, positionY: 5 })
+
+				expect(response.statusCode).toEqual(200)
+				expect(response.body).toHaveLength(1)
+				expect(response.body[0].id).toEqual(wire.id)
+				expect(response.body[0].waypoints[0]).toMatchObject({ id, index: 0, positionX: 5, positionY: 5 })
+				expect(RedisService.notifyAboutMindmapWiresCreate).toHaveBeenCalledWith(
+					expect.anything(),
+					expect.objectContaining({ worldId: world.id, updated: [expect.objectContaining({ id: wire.id })] }),
+				)
+			})
+
+			it('rejects a user without write access', async () => {
+				const response = await withUserAuth(otherUser)
+					.post(waypointsUrl)
+					.send({ targets: [{ id: randomUUID(), wireId: wire.id, index: 0 }], positionX: 5, positionY: 5 })
+
+				expect(response.statusCode).toEqual(401)
+				expect(await rankedIds(wire.id)).toHaveLength(3)
+			})
+
+			it('rejects when any target wire belongs to another world', async () => {
+				const response = await withUserAuth(otherUser)
+					.post(`/api/world/${otherWorld.id}/mindmap/waypoints`)
+					.send({
+						targets: [
+							{ id: randomUUID(), wireId: foreignWire.id, index: 0 },
+							{ id: randomUUID(), wireId: wire.id, index: 0 },
+						],
+						positionX: 5,
+						positionY: 5,
+					})
+
+				expect(response.statusCode).toEqual(400)
+				expect(await rankedIds(wire.id)).toHaveLength(3)
+				expect(await rankedIds(foreignWire.id)).toHaveLength(1)
+			})
+		})
+
+		describe('POST /api/world/:worldId/mindmap/waypoints/delete', () => {
+			it('removes waypoints of different wires and closes each gap', async () => {
+				const response = await withUserAuth(user)
+					.post(`${waypointsUrl}/delete`)
+					.send({ waypointIds: [second.id, otherWaypoints[0].id] })
+
+				expect(response.statusCode).toEqual(200)
+				expect(response.body).toHaveLength(2)
+				expect(await rankedIds(wire.id)).toEqual([
+					[first.id, 0],
+					[third.id, 2],
+				])
+				expect(await rankedIds(otherWire.id)).toEqual([[otherWaypoints[1].id, 0]])
+			})
+
+			it('rejects when any waypoint belongs to another world', async () => {
+				const response = await withUserAuth(otherUser)
+					.post(`/api/world/${otherWorld.id}/mindmap/waypoints/delete`)
+					.send({ waypointIds: [foreignWaypoint.id, second.id] })
+
+				expect(response.statusCode).toEqual(400)
+				expect(await rankedIds(wire.id)).toHaveLength(3)
+				expect(await rankedIds(foreignWire.id)).toHaveLength(1)
+			})
 		})
 	})
 })

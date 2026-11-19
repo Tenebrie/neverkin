@@ -14,7 +14,7 @@ import {
 import { getWikiState } from '@/app/views/world/views/wiki/WikiSliceSelectors'
 import { getWorldState } from '@/app/views/world/WorldSliceSelectors'
 
-import { useMindmapContext } from '../../context/useMindmapContext'
+import { useMindmapContext, useMindmapSelectionContext } from '../../context/useMindmapContext'
 import { MindmapNodeParcel, MindmapWireParcel } from '../../types'
 import { getMindmapNodeParentId } from '../../utils/getMindmapNodeParentId'
 
@@ -40,11 +40,13 @@ export function MindmapContentManager() {
 	)
 	const { data: mindmapData } = useGetMindmapQuery({ worldId })
 	const { nodes, wires } = useMindmapContext()
+	const { dropMissingFromSelection } = useMindmapSelectionContext()
 
 	useLayoutEffect(() => {
 		if (!mindmapData || !foldersLoaded || !articlesLoaded || !isWorldLoaded) {
 			nodes.replace(new Map())
 			wires.replace(new Map())
+			dropMissingFromSelection(new Map(), new Map())
 			return
 		}
 
@@ -102,6 +104,7 @@ export function MindmapContentManager() {
 
 		nodes.replace(nextNodes)
 		wires.replace(nextWires)
+		dropMissingFromSelection(nextNodes, nextWires)
 	}, [
 		mindmapData,
 		foldersLoaded,
@@ -114,6 +117,7 @@ export function MindmapContentManager() {
 		tags,
 		nodes,
 		wires,
+		dropMissingFromSelection,
 	])
 
 	return null
