@@ -59,9 +59,9 @@
 		"lint:library": "node scripts/run-all.mjs lint library/*"
 	},
 	"dependencies": {
-		"@typescript-eslint/parser": "^8.69.0",
+		"@typescript-eslint/parser": "^8.73.0",
 		"cloc": "^2.8.0",
-		"eslint": "^10.9.1",
+		"eslint": "^10.15.0",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-astro": "^1.6.0",
 		"eslint-plugin-prettier": "^5.5.6",
@@ -90,6 +90,6 @@
 		"eslint-plugin-react-hooks": "^7.0.1",
 		"husky": "^9.1.7",
 		"prettier-plugin-astro": "^0.14.1",
-		"typescript-eslint": "^8.69.0"
+		"typescript-eslint": "^8.73.0"
 	}
 }
