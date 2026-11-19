@@ -69,12 +69,27 @@ export const MindmapService = {
 		})
 	},
 	async moveNodes(nodes: string[], deltaX: number, deltaY: number, worldId: string) {
-		return getPrismaClient().mindmapNode.updateManyAndReturn({
-			where: { id: { in: nodes }, worldId },
-			data: {
-				positionX: { increment: deltaX },
-				positionY: { increment: deltaY },
-			},
+		return getPrismaClient().$transaction(async (prisma) => {
+			await prisma.mindmapLinkWaypoint.updateMany({
+				where: {
+					link: {
+						sourceNode: { worldId },
+						sourceNodeId: { in: nodes },
+						targetNodeId: { in: nodes },
+					},
+				},
+				data: {
+					positionX: { increment: deltaX },
+					positionY: { increment: deltaY },
+				},
+			})
+			return prisma.mindmapNode.updateManyAndReturn({
+				where: { id: { in: nodes }, worldId },
+				data: {
+					positionX: { increment: deltaX },
+					positionY: { increment: deltaY },
+				},
+			})
 		})
 	},
 	async deleteNodes(worldId: string, nodeIds: string[]) {
@@ -209,49 +224,64 @@ export const MindmapService = {
 		})
 	},
 
-	async createWaypoint(
-		wireId: string,
-		{
-			index,
-			...position
-		}: {
-			index: number
-			positionX: number
-			positionY: number
-		},
-	) {
-		return getPrismaClient().$transaction(async (prisma) => {
-			await prisma.mindmapLinkWaypoint.create({
-				data: {
-					linkId: wireId,
-					index: index * 2 - 1,
-					...position,
-				},
-			})
-
-			await makeSortMindmapWaypointsQuery(wireId, prisma)
-			return MindmapService.getLink(wireId, prisma)
+	async getLinksByIds(wireIds: string[], prisma?: Prisma.TransactionClient) {
+		return getPrismaClient(prisma).mindmapLink.findMany({
+			where: { id: { in: wireIds } },
+			include: { waypoints: { orderBy: { index: 'asc' } } },
+			orderBy: CommonOrderBy,
 		})
 	},
-	async updateWaypoint(
-		{ wireId, waypointId }: { wireId: string; waypointId: string },
+
+	async createWaypoints(
+		targets: { id: string; wireId: string; index: number }[],
 		position: { positionX: number; positionY: number },
 	) {
 		return getPrismaClient().$transaction(async (prisma) => {
-			await prisma.mindmapLinkWaypoint.update({
-				where: { id: waypointId },
+			await prisma.mindmapLinkWaypoint.createMany({
+				data: targets.map((target) => ({
+					id: target.id,
+					linkId: target.wireId,
+					index: target.index * 2 - 1,
+					...position,
+				})),
+			})
+
+			const wireIds = [...new Set(targets.map((target) => target.wireId))]
+			for (const wireId of wireIds) {
+				await makeSortMindmapWaypointsQuery(wireId, prisma)
+			}
+			return MindmapService.getLinksByIds(wireIds, prisma)
+		})
+	},
+	async moveWaypoints(waypointIds: string[], position: { positionX: number; positionY: number }) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			await prisma.mindmapLinkWaypoint.updateMany({
+				where: { id: { in: waypointIds } },
 				data: position,
 			})
-			return MindmapService.getLink(wireId, prisma)
+			const wireIds = await findWaypointLinkIds(waypointIds, prisma)
+			return MindmapService.getLinksByIds(wireIds, prisma)
 		})
 	},
-	async deleteWaypoint({ wireId, waypointId }: { wireId: string; waypointId: string }) {
+	async deleteWaypoints(waypointIds: string[]) {
 		return getPrismaClient().$transaction(async (prisma) => {
-			await prisma.mindmapLinkWaypoint.delete({
-				where: { id: waypointId },
+			const wireIds = await findWaypointLinkIds(waypointIds, prisma)
+			await prisma.mindmapLinkWaypoint.deleteMany({
+				where: { id: { in: waypointIds } },
 			})
-			await makeSortMindmapWaypointsQuery(wireId, prisma)
-			return MindmapService.getLink(wireId, prisma)
+			for (const wireId of wireIds) {
+				await makeSortMindmapWaypointsQuery(wireId, prisma)
+			}
+			return MindmapService.getLinksByIds(wireIds, prisma)
 		})
 	},
+}
+
+async function findWaypointLinkIds(waypointIds: string[], prisma: Prisma.TransactionClient) {
+	const waypoints = await prisma.mindmapLinkWaypoint.findMany({
+		where: { id: { in: waypointIds } },
+		select: { linkId: true },
+		distinct: ['linkId'],
+	})
+	return waypoints.map((waypoint) => waypoint.linkId)
 }

@@ -51,6 +51,19 @@ export type EventParams = {
 	'mindmap/node/onGroupDragEnd': {
 		sourceNodeId: string
 	}
+	'mindmap/waypoint/onGroupDragUpdate': {
+		waypointIds: Set<string>
+		x: number
+		y: number
+	}
+	'mindmap/wire/onWaypointPreviewStart': {
+		wireIds: Set<string>
+		position: Position
+	}
+	'mindmap/wire/onWaypointPreviewMove': {
+		wireIds: Set<string>
+		position: Position
+	}
 	'mindmap/node/requestOpenContextMenu': {
 		position: Position
 		node: MindmapNode

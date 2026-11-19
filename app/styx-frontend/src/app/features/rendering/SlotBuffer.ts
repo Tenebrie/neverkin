@@ -1,8 +1,8 @@
 /**
  * Fixed-size records packed back to back in one `Float32Array`, ready to hand to the GPU as-is.
  *
- * Records stay contiguous: deleting one moves the last record into its place, so the order of records is not
- * preserved. The buffer remembers the range written since the last `takeChanges`, so only that part needs uploading.
+ * Records stay contiguous and in write order: deleting one shifts the records after it down. The buffer remembers
+ * the range written since the last `takeChanges`, so only that part needs uploading.
  */
 export class SlotBuffer<Key> {
 	private data: Float32Array
@@ -40,20 +40,21 @@ export class SlotBuffer<Key> {
 		this.markChanged(slot)
 	}
 
-	/** Removes the record of `key` by moving the last record into its slot. Returns false if there was none. */
+	/** Removes the record of `key` and shifts the records after it down a slot. Returns false if there was none. */
 	delete(key: Key) {
 		const slot = this.slotOfKey.get(key)
 		if (slot === undefined) {
 			return false
 		}
 		const lastSlot = this.keyInSlot.length - 1
-		const lastKey = this.keyInSlot[lastSlot]
-		this.data.copyWithin(slot * this.stride, lastSlot * this.stride, (lastSlot + 1) * this.stride)
-		this.keyInSlot[slot] = lastKey
-		this.slotOfKey.set(lastKey, slot)
-		this.keyInSlot.pop()
+		this.data.copyWithin(slot * this.stride, (slot + 1) * this.stride, (lastSlot + 1) * this.stride)
+		this.keyInSlot.splice(slot, 1)
 		this.slotOfKey.delete(key)
+		for (let shifted = slot; shifted < this.keyInSlot.length; shifted++) {
+			this.slotOfKey.set(this.keyInSlot[shifted], shifted)
+		}
 		this.markChanged(slot)
+		this.markChanged(lastSlot)
 		return true
 	}
 

@@ -1,10 +1,7 @@
 import { useCallback, useLayoutEffect, useState } from 'react'
 
-import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
-import {
-	useMindmapSelectionContext,
-	useMindmapWireIds,
-} from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { useMindmapWireIds } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { useMindmapPainter } from '@/app/views/world/views/mindmap/context/useMindmapPainter'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
 import { MindmapWireLine } from '@/app/views/world/views/mindmap/workspace/content/wires/MindmapWire'
@@ -17,7 +14,6 @@ import { MindmapWireGhost } from './ghost/MindmapWireGhost'
 export function MindmapWireLayer() {
 	const wireIds = useMindmapWireIds()
 	const [svgGroup, setSvgGroup] = useState<SVGGElement | null>(null)
-	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
 	useLayoutEffect(() => {
 		svgGroup?.style.setProperty('--grid-scale', String(MindmapState.scale))
@@ -47,16 +43,9 @@ export function MindmapWireLayer() {
 			position: { x: number; y: number }
 			mode: 'doubleClick' | 'contextMenu'
 		}) => {
-			const isBulkSelectContext = selectedNodes.size() + selectedWires.size() > 1
-			if (isBulkSelectContext) {
-				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
-					position,
-				})
-			} else {
-				setPopoverState({ open: true, wireId, position, mode })
-			}
+			setPopoverState({ open: true, wireId, position, mode })
 		},
-		[selectedNodes, selectedWires],
+		[],
 	)
 
 	useMindmapPainter((navState) => {

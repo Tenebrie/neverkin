@@ -2012,7 +2012,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/wires/{wireId}/waypoints": {
+    "/api/world/{worldId}/mindmap/waypoints": {
         parameters: {
             query?: never;
             header?: never;
@@ -2021,15 +2021,15 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Adds a waypoint the wire passes through */
-        post: operations["createMindmapWaypoint"];
+        /** @description Adds a waypoint at one position to each target wire, at the given index of that wire */
+        post: operations["createMindmapWaypoints"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/wires/{wireId}/waypoints/{waypointId}": {
+    "/api/world/{worldId}/mindmap/waypoints/move": {
         parameters: {
             query?: never;
             header?: never;
@@ -2038,13 +2038,29 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        post?: never;
-        /** @description Removes the target waypoint from the wire */
-        delete: operations["deleteMindmapWaypoint"];
+        /** @description Moves every target waypoint to one position */
+        post: operations["moveMindmapWaypoints"];
+        delete?: never;
         options?: never;
         head?: never;
-        /** @description Moves the target waypoint */
-        patch: operations["updateMindmapWaypoint"];
+        patch?: never;
+        trace?: never;
+    };
+    "/api/world/{worldId}/mindmap/waypoints/delete": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /** @description Removes the target waypoints from their wires */
+        post: operations["deleteMindmapWaypoints"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
         trace?: never;
     };
 }
@@ -8818,25 +8834,32 @@ export interface operations {
             };
         };
     };
-    createMindmapWaypoint: {
+    createMindmapWaypoints: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 worldId: string;
-                wireId: string;
             };
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
-                    index: number;
+                    targets: {
+                        id: string;
+                        wireId: string;
+                        index: number;
+                    }[];
                     positionX: number;
                     positionY: number;
                 };
                 "application/x-www-form-urlencoded": {
-                    index: number;
+                    targets: {
+                        id: string;
+                        wireId: string;
+                        index: number;
+                    }[];
                     positionX: number;
                     positionY: number;
                 };
@@ -8865,69 +8888,29 @@ export interface operations {
                         content: string;
                         sourceNodeId: string;
                         targetNodeId: string;
-                    };
+                    }[];
                 };
             };
         };
     };
-    deleteMindmapWaypoint: {
+    moveMindmapWaypoints: {
         parameters: {
             query?: never;
             header?: never;
             path: {
                 worldId: string;
-                wireId: string;
-                waypointId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: never;
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        waypoints: {
-                            id: string;
-                            positionX: number;
-                            positionY: number;
-                            index: number;
-                            linkId: string;
-                        }[];
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    };
-                };
-            };
-        };
-    };
-    updateMindmapWaypoint: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-                wireId: string;
-                waypointId: string;
             };
             cookie?: never;
         };
         requestBody?: {
             content: {
                 "application/json": {
+                    waypointIds: string[];
                     positionX: number;
                     positionY: number;
                 };
                 "application/x-www-form-urlencoded": {
+                    waypointIds: string[];
                     positionX: number;
                     positionY: number;
                 };
@@ -8956,7 +8939,54 @@ export interface operations {
                         content: string;
                         sourceNodeId: string;
                         targetNodeId: string;
-                    };
+                    }[];
+                };
+            };
+        };
+    };
+    deleteMindmapWaypoints: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                worldId: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: {
+            content: {
+                "application/json": {
+                    waypointIds: string[];
+                };
+                "application/x-www-form-urlencoded": {
+                    waypointIds: string[];
+                };
+            };
+        };
+        responses: {
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": {
+                        waypoints: {
+                            id: string;
+                            positionX: number;
+                            positionY: number;
+                            index: number;
+                            linkId: string;
+                        }[];
+                        id: string;
+                        /** Format: date-time */
+                        createdAt: string;
+                        /** Format: date-time */
+                        updatedAt: string;
+                        direction: "Normal" | "Reversed" | "TwoWay";
+                        content: string;
+                        sourceNodeId: string;
+                        targetNodeId: string;
+                    }[];
                 };
             };
         };

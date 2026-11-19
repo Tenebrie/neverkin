@@ -1,3 +1,4 @@
+import CallMerge from '@mui/icons-material/CallMerge'
 import Delete from '@mui/icons-material/Delete'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
@@ -11,6 +12,8 @@ import { WikiContextMenuColorPicker } from '@/app/views/world/views/wiki/compone
 
 import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
 import { MindmapNodeParentParcel } from '../types'
+import { toWorkspaceCoords } from '../utils/toWorkspaceCoords'
+import { nearestWirePoint } from '../workspace/content/wires/canvas/MindmapCanvasMath'
 
 export function MindmapBulkContextMenu() {
 	const [open, setOpen] = useState(false)
@@ -18,7 +21,7 @@ export function MindmapBulkContextMenu() {
 	const [targetNodes, setTargetNodes] = useState<string[]>([])
 	const [targetWires, setTargetWires] = useState<string[]>([])
 	const [targetParents, setTargetParents] = useState<MindmapNodeParentParcel[]>([])
-	const { nodes, deleteNodes, deleteWires } = useMindmapContext()
+	const { nodes, wireGeometry, deleteNodes, deleteWires, createWaypoints } = useMindmapContext()
 
 	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
@@ -43,6 +46,22 @@ export function MindmapBulkContextMenu() {
 		return `Delete ${targetNodes.length + targetWires.length} items`
 	}, [targetNodes, targetWires])
 
+	const collectWires = () => {
+		const point = toWorkspaceCoords({ screenX: position.x, screenY: position.y })
+		if (!point) {
+			return
+		}
+		createWaypoints({
+			targets: targetWires.map((wireId) => ({
+				wireId,
+				index: nearestWirePoint(wireGeometry.get(wireId) ?? [], point).index,
+			})),
+			positionX: Math.round(point.x),
+			positionY: Math.round(point.y),
+		})
+		setOpen(false)
+	}
+
 	return (
 		<Menu
 			anchorReference="anchorPosition"
@@ -60,6 +79,14 @@ export function MindmapBulkContextMenu() {
 				<WikiContextMenuColorPicker entities={targetParents} onClose={() => setOpen(false)} />
 			)}
 			{targetParents.length > 0 && <Divider sx={{ my: 1 }} />}
+			{targetWires.length > 1 && (
+				<MenuItem onClick={collectWires}>
+					<ListItemIcon>
+						<CallMerge />
+					</ListItemIcon>
+					<ListItemText>Collect {targetWires.length} links here</ListItemText>
+				</MenuItem>
+			)}
 			<MenuItem
 				color="error"
 				onClick={() => {

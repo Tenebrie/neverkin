@@ -61,32 +61,24 @@ export const ValidationService = {
 		return count > 0
 	},
 
-	isMindmapWireValid: async ({ worldId, wireId }: { worldId: string; wireId: string }) => {
+	areMindmapWiresValid: async ({ worldId, wireIds }: { worldId: string; wireIds: string[] }) => {
 		const count = await getPrismaClient().mindmapLink.count({
 			where: {
-				id: wireId,
+				id: { in: wireIds },
 				sourceNode: { worldId },
 			},
 		})
-		return count > 0
+		return count === new Set(wireIds).size
 	},
 
-	isMindmapWaypointValid: async ({
-		worldId,
-		wireId,
-		waypointId,
-	}: {
-		worldId: string
-		wireId: string
-		waypointId: string
-	}) => {
+	areMindmapWaypointsValid: async ({ worldId, waypointIds }: { worldId: string; waypointIds: string[] }) => {
 		const count = await getPrismaClient().mindmapLinkWaypoint.count({
 			where: {
-				id: waypointId,
-				link: { id: wireId, sourceNode: { worldId } },
+				id: { in: waypointIds },
+				link: { sourceNode: { worldId } },
 			},
 		})
-		return count > 0
+		return count === new Set(waypointIds).size
 	},
 
 	checkActorValidity: async (actorId: string) => {
@@ -124,15 +116,15 @@ export const ValidationService = {
 		}
 	},
 
-	checkMindmapWireValidity: async (params: { worldId: string; wireId: string }) => {
-		const isValid = await ValidationService.isMindmapWireValid(params)
+	checkMindmapWiresValidity: async (params: { worldId: string; wireIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapWiresValid(params)
 		if (!isValid) {
 			throw new BadRequestError('Wire does not exist')
 		}
 	},
 
-	checkMindmapWaypointValidity: async (params: { worldId: string; wireId: string; waypointId: string }) => {
-		const isValid = await ValidationService.isMindmapWaypointValid(params)
+	checkMindmapWaypointsValidity: async (params: { worldId: string; waypointIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapWaypointsValid(params)
 		if (!isValid) {
 			throw new BadRequestError('Waypoint does not exist')
 		}

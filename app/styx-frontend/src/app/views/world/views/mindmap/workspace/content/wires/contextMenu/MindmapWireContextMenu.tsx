@@ -14,7 +14,7 @@ import { useMindmapData } from '@/app/views/world/views/mindmap/api/useMindmapDa
 import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 
 import { NODE_FALLBACK_H, NODE_W } from '../../nodes/MindmapNodeRenderer'
-import { midpointOf } from '../canvas/MindmapCanvasMath'
+import { wireMidpoint } from '../canvas/MindmapCanvasMath'
 import { MindmapWireContextMenuEditor } from './MindmapWireContextMenuEditor'
 
 export type MindmapWireState = {
@@ -45,8 +45,8 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 	}, [currentWire, direction, label, onClose, updateWire])
 
 	const handleSplit = useCallback(() => {
-		const curve = currentWire ? wireGeometry.get(currentWire.id) : undefined
-		const midpoint = curve ? midpointOf(curve) : null
+		const curves = currentWire ? wireGeometry.get(currentWire.id) : undefined
+		const midpoint = curves ? wireMidpoint(curves) : null
 		if (!currentWire || !midpoint) {
 			return
 		}

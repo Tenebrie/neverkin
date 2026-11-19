@@ -6,10 +6,13 @@ import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { SharedResizeObserver } from '@/app/utils/SharedResizeObserver'
 
 import { useCreateMindmapNode } from '../api/useCreateMindmapNode'
+import { useCreateMindmapWaypoints } from '../api/useCreateMindmapWaypoints'
 import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
+import { useDeleteMindmapWaypoints } from '../api/useDeleteMindmapWaypoints'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
 import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
+import { useMoveMindmapWaypoints } from '../api/useMoveMindmapWaypoints'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { useSplitMindmapWire } from '../api/useSplitMindmapWire'
 import { useUpdateMindmapWire } from '../api/useUpdateMindmapWire'
@@ -30,6 +33,10 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [updateWire] = useUpdateMindmapWire()
 	const [splitWire] = useSplitMindmapWire()
 	const [deleteWires] = useDeleteMindmapWires()
+
+	const [createWaypoints] = useCreateMindmapWaypoints()
+	const [moveWaypoints] = useMoveMindmapWaypoints()
+	const [deleteWaypoints] = useDeleteMindmapWaypoints()
 
 	const onPaint = useEvent((painter: (navState: MindmapNavigationState) => void) => {
 		painters.add(painter)
@@ -63,7 +70,7 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [nodeResizeObserver] = useState(() => new SharedResizeObserver())
 	const [wires] = useState(() => new ReactiveMap<string, MindmapWireParcel>())
 	const [wireBuffer] = useState(() => new MindmapWireBuffer())
-	const [wireGeometry] = useState(() => new Map<string, WireControlPoints>())
+	const [wireGeometry] = useState(() => new Map<string, WireControlPoints[]>())
 
 	return {
 		nodes,
@@ -84,6 +91,10 @@ export const MindmapContext = createRealtimeContext(() => {
 		updateWire,
 		splitWire,
 		deleteWires,
+
+		createWaypoints,
+		moveWaypoints,
+		deleteWaypoints,
 
 		workspaceRect,
 		updateWorkspaceRect,

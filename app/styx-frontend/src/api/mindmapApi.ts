@@ -90,29 +90,34 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			createMindmapWaypoint: build.mutation<CreateMindmapWaypointApiResponse, CreateMindmapWaypointApiArg>({
+			createMindmapWaypoints: build.mutation<CreateMindmapWaypointsApiResponse, CreateMindmapWaypointsApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/world/${queryArg.worldId}/mindmap/waypoints`,
+						method: 'POST',
+						body: queryArg.body,
+					}),
+					invalidatesTags: [],
+				},
+			),
+			moveMindmapWaypoints: build.mutation<MoveMindmapWaypointsApiResponse, MoveMindmapWaypointsApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/wires/${queryArg.wireId}/waypoints`,
+					url: `/api/world/${queryArg.worldId}/mindmap/waypoints/move`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
-				invalidatesTags: ['mindmap', 'mindmapWire'],
+				invalidatesTags: [],
 			}),
-			updateMindmapWaypoint: build.mutation<UpdateMindmapWaypointApiResponse, UpdateMindmapWaypointApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/wires/${queryArg.wireId}/waypoints/${queryArg.waypointId}`,
-					method: 'PATCH',
-					body: queryArg.body,
-				}),
-				invalidatesTags: ['mindmap', 'mindmapWire'],
-			}),
-			deleteMindmapWaypoint: build.mutation<DeleteMindmapWaypointApiResponse, DeleteMindmapWaypointApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/wires/${queryArg.wireId}/waypoints/${queryArg.waypointId}`,
-					method: 'DELETE',
-				}),
-				invalidatesTags: ['mindmap', 'mindmapWire'],
-			}),
+			deleteMindmapWaypoints: build.mutation<DeleteMindmapWaypointsApiResponse, DeleteMindmapWaypointsApiArg>(
+				{
+					query: (queryArg) => ({
+						url: `/api/world/${queryArg.worldId}/mindmap/waypoints/delete`,
+						method: 'POST',
+						body: queryArg.body,
+					}),
+					invalidatesTags: [],
+				},
+			),
 		}),
 		overrideExisting: false,
 	})
@@ -433,7 +438,7 @@ export type DeleteMindmapWiresApiArg = {
 		wires: string[]
 	}
 }
-export type CreateMindmapWaypointApiResponse = /** status 200  */ {
+export type CreateMindmapWaypointsApiResponse = /** status 200  */ {
 	waypoints: {
 		id: string
 		positionX: number
@@ -448,17 +453,20 @@ export type CreateMindmapWaypointApiResponse = /** status 200  */ {
 	content: string
 	sourceNodeId: string
 	targetNodeId: string
-}
-export type CreateMindmapWaypointApiArg = {
+}[]
+export type CreateMindmapWaypointsApiArg = {
 	worldId: string
-	wireId: string
 	body: {
-		index: number
+		targets: {
+			id: string
+			wireId: string
+			index: number
+		}[]
 		positionX: number
 		positionY: number
 	}
 }
-export type UpdateMindmapWaypointApiResponse = /** status 200  */ {
+export type MoveMindmapWaypointsApiResponse = /** status 200  */ {
 	waypoints: {
 		id: string
 		positionX: number
@@ -473,17 +481,16 @@ export type UpdateMindmapWaypointApiResponse = /** status 200  */ {
 	content: string
 	sourceNodeId: string
 	targetNodeId: string
-}
-export type UpdateMindmapWaypointApiArg = {
+}[]
+export type MoveMindmapWaypointsApiArg = {
 	worldId: string
-	wireId: string
-	waypointId: string
 	body: {
+		waypointIds: string[]
 		positionX: number
 		positionY: number
 	}
 }
-export type DeleteMindmapWaypointApiResponse = /** status 200  */ {
+export type DeleteMindmapWaypointsApiResponse = /** status 200  */ {
 	waypoints: {
 		id: string
 		positionX: number
@@ -498,11 +505,12 @@ export type DeleteMindmapWaypointApiResponse = /** status 200  */ {
 	content: string
 	sourceNodeId: string
 	targetNodeId: string
-}
-export type DeleteMindmapWaypointApiArg = {
+}[]
+export type DeleteMindmapWaypointsApiArg = {
 	worldId: string
-	wireId: string
-	waypointId: string
+	body: {
+		waypointIds: string[]
+	}
 }
 export const {
 	useGetMindmapQuery,
@@ -517,7 +525,7 @@ export const {
 	useUpdateMindmapWireMutation,
 	useSplitMindmapWireMutation,
 	useDeleteMindmapWiresMutation,
-	useCreateMindmapWaypointMutation,
-	useUpdateMindmapWaypointMutation,
-	useDeleteMindmapWaypointMutation,
+	useCreateMindmapWaypointsMutation,
+	useMoveMindmapWaypointsMutation,
+	useDeleteMindmapWaypointsMutation,
 } = injectedRtkApi

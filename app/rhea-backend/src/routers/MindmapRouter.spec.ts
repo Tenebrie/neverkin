@@ -455,6 +455,34 @@ describe('MindmapRouter', () => {
 		})
 	})
 
+	describe('POST /api/world/:worldId/mindmap/nodes/move', () => {
+		const first = mockMindmapNode({ worldId: world.id })
+		const second = mockMindmapNode({ worldId: world.id })
+		const third = mockMindmapNode({ worldId: world.id })
+		const movedWire = mockMindmapLink({ sourceNodeId: first.id, targetNodeId: second.id })
+		const stayingWire = mockMindmapLink({ sourceNodeId: second.id, targetNodeId: third.id })
+		const movedWaypoint = mockMindmapLinkWaypoint({ linkId: movedWire.id, positionX: 10, positionY: 10 })
+		const stayingWaypoint = mockMindmapLinkWaypoint({ linkId: stayingWire.id, positionX: 10, positionY: 10 })
+
+		beforeEach(async () => {
+			await db.mindmapNode.createMany({ data: [first, second, third] })
+			await db.mindmapLink.createMany({ data: [movedWire, stayingWire] })
+			await db.mindmapLinkWaypoint.createMany({ data: [movedWaypoint, stayingWaypoint] })
+		})
+
+		it('moves the waypoints of wires whose both ends move', async () => {
+			const response = await withUserAuth(user)
+				.post(`/api/world/${world.id}/mindmap/nodes/move`)
+				.send({ nodeIds: [first.id, second.id], deltaX: 5, deltaY: -3 })
+
+			expect(response.statusCode).toEqual(200)
+			const moved = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: movedWaypoint.id } })
+			const staying = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: stayingWaypoint.id } })
+			expect(moved).toMatchObject({ positionX: 15, positionY: 7 })
+			expect(staying).toMatchObject({ positionX: 10, positionY: 10 })
+		})
+	})
+
 	describe('POST /api/world/:worldId/mindmap/wires/:wireId/split', () => {
 		const source = mockMindmapNode({ worldId: world.id })
 		const target = mockMindmapNode({ worldId: world.id })
@@ -502,7 +530,7 @@ describe('MindmapRouter', () => {
 		const first = mockMindmapLinkWaypoint({ linkId: wire.id, index: 0, positionX: 10, positionY: 10 })
 		const second = mockMindmapLinkWaypoint({ linkId: wire.id, index: 2, positionX: 20, positionY: 20 })
 		const third = mockMindmapLinkWaypoint({ linkId: wire.id, index: 4, positionX: 30, positionY: 30 })
-		const waypointsUrl = `/api/world/${world.id}/mindmap/wires/${wire.id}/waypoints`
+		const waypointsUrl = `/api/world/${world.id}/mindmap/waypoints`
 
 		const detour = mockMindmapNode({ worldId: world.id })
 		const otherWire = mockMindmapLink({ sourceNodeId: source.id, targetNodeId: detour.id })
@@ -514,14 +542,19 @@ describe('MindmapRouter', () => {
 
 		const otherUser = mockUser({ email: 'other@localhost', username: 'other' })
 		const otherWorld = mockWorld({ id: randomUUID(), ownerId: otherUser.id })
+		const foreignNode = mockMindmapNode({ worldId: otherWorld.id })
+		const foreignWire = mockMindmapLink({ sourceNodeId: foreignNode.id, targetNodeId: foreignNode.id })
+		const foreignWaypoint = mockMindmapLinkWaypoint({ linkId: foreignWire.id })
 
 		beforeEach(async () => {
 			await db.user.create({ data: otherUser })
 			await db.world.create({ data: otherWorld })
-			await db.mindmapNode.createMany({ data: [source, target, detour] })
-			await db.mindmapLink.createMany({ data: [wire, otherWire] })
-			await db.mindmapLinkWaypoint.createMany({ data: [third, first, second, ...otherWaypoints] })
-			vi.spyOn(RedisService, 'notifyAboutMindmapWireUpdate')
+			await db.mindmapNode.createMany({ data: [source, target, detour, foreignNode] })
+			await db.mindmapLink.createMany({ data: [wire, otherWire, foreignWire] })
+			await db.mindmapLinkWaypoint.createMany({
+				data: [third, first, second, ...otherWaypoints, foreignWaypoint],
+			})
+			vi.spyOn(RedisService, 'notifyAboutMindmapWiresCreate')
 		})
 
 		const rankedIds = async (linkId: string) => {
@@ -543,97 +576,97 @@ describe('MindmapRouter', () => {
 			})
 		})
 
-		describe('POST /api/world/:worldId/mindmap/wires/:wireId/waypoints', () => {
-			it('inserts at the given index and spreads the ranks of that wire only', async () => {
+		describe('POST /api/world/:worldId/mindmap/waypoints', () => {
+			it('inserts one waypoint per target wire under the given id and index and spreads the ranks per wire', async () => {
+				const insertedInWire = randomUUID()
+				const insertedInOther = randomUUID()
 				const response = await withUserAuth(user)
 					.post(waypointsUrl)
-					.send({ index: 1, positionX: 15, positionY: 15 })
+					.send({
+						targets: [
+							{ id: insertedInWire, wireId: wire.id, index: 1 },
+							{ id: insertedInOther, wireId: otherWire.id, index: 2 },
+						],
+						positionX: 15,
+						positionY: 15,
+					})
 
 				expect(response.statusCode).toEqual(200)
-				const inserted = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { positionX: 15 } })
 				expect(await rankedIds(wire.id)).toEqual([
 					[first.id, 0],
-					[inserted.id, 2],
+					[insertedInWire, 2],
 					[second.id, 4],
 					[third.id, 6],
 				])
-				expect(await rankedIds(otherWire.id)).toEqual(otherRanks)
+				expect(await rankedIds(otherWire.id)).toEqual([...otherRanks, [insertedInOther, 4]])
 			})
 
-			it('appends when the index is the waypoint count', async () => {
+			it('returns and broadcasts the affected wires with their waypoints', async () => {
+				const id = randomUUID()
 				const response = await withUserAuth(user)
 					.post(waypointsUrl)
-					.send({ index: 3, positionX: 40, positionY: 40 })
+					.send({ targets: [{ id, wireId: wire.id, index: 0 }], positionX: 5, positionY: 5 })
 
 				expect(response.statusCode).toEqual(200)
-				const inserted = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { positionX: 40 } })
-				expect(await rankedIds(wire.id)).toEqual([
-					[first.id, 0],
-					[second.id, 2],
-					[third.id, 4],
-					[inserted.id, 6],
-				])
-			})
-
-			it('returns and broadcasts the wire with its waypoints', async () => {
-				const response = await withUserAuth(user)
-					.post(waypointsUrl)
-					.send({ index: 0, positionX: 5, positionY: 5 })
-
-				expect(response.statusCode).toEqual(200)
-				expect(response.body.id).toEqual(wire.id)
-				expect(response.body.waypoints).toHaveLength(4)
-				expect(response.body.waypoints[0]).toMatchObject({ index: 0, positionX: 5, positionY: 5 })
-				expect(RedisService.notifyAboutMindmapWireUpdate).toHaveBeenCalledWith(
+				expect(response.body).toHaveLength(1)
+				expect(response.body[0].id).toEqual(wire.id)
+				expect(response.body[0].waypoints[0]).toMatchObject({ id, index: 0, positionX: 5, positionY: 5 })
+				expect(RedisService.notifyAboutMindmapWiresCreate).toHaveBeenCalledWith(
 					expect.anything(),
-					expect.objectContaining({ worldId: world.id, wire: expect.objectContaining({ id: wire.id }) }),
+					expect.objectContaining({ worldId: world.id, updated: [expect.objectContaining({ id: wire.id })] }),
 				)
 			})
 
 			it('rejects a user without write access', async () => {
 				const response = await withUserAuth(otherUser)
 					.post(waypointsUrl)
-					.send({ index: 0, positionX: 5, positionY: 5 })
+					.send({ targets: [{ id: randomUUID(), wireId: wire.id, index: 0 }], positionX: 5, positionY: 5 })
 
 				expect(response.statusCode).toEqual(401)
 				expect(await rankedIds(wire.id)).toHaveLength(3)
 			})
 
-			it('rejects a wire that belongs to another world', async () => {
+			it('rejects when any target wire belongs to another world', async () => {
 				const response = await withUserAuth(otherUser)
-					.post(`/api/world/${otherWorld.id}/mindmap/wires/${wire.id}/waypoints`)
-					.send({ index: 0, positionX: 5, positionY: 5 })
+					.post(`/api/world/${otherWorld.id}/mindmap/waypoints`)
+					.send({
+						targets: [
+							{ id: randomUUID(), wireId: foreignWire.id, index: 0 },
+							{ id: randomUUID(), wireId: wire.id, index: 0 },
+						],
+						positionX: 5,
+						positionY: 5,
+					})
 
 				expect(response.statusCode).toEqual(400)
 				expect(await rankedIds(wire.id)).toHaveLength(3)
+				expect(await rankedIds(foreignWire.id)).toHaveLength(1)
 			})
 		})
 
-		describe('PATCH /api/world/:worldId/mindmap/wires/:wireId/waypoints/:waypointId', () => {
-			it('moves the waypoint and keeps its rank', async () => {
+		describe('POST /api/world/:worldId/mindmap/waypoints/move', () => {
+			it('moves waypoints of different wires to one position and keeps their ranks', async () => {
 				const response = await withUserAuth(user)
-					.patch(`${waypointsUrl}/${second.id}`)
-					.send({ positionX: 25, positionY: 26 })
+					.post(`${waypointsUrl}/move`)
+					.send({ waypointIds: [second.id, otherWaypoints[0].id], positionX: 25, positionY: 26 })
 
 				expect(response.statusCode).toEqual(200)
-				const moved = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: second.id } })
-				expect(moved).toMatchObject({ index: 2, positionX: 25, positionY: 26 })
+				expect(response.body.map((returned: { id: string }) => returned.id).toSorted()).toEqual(
+					[wire.id, otherWire.id].toSorted(),
+				)
+				const moved = await db.mindmapLinkWaypoint.findMany({ where: { positionX: 25, positionY: 26 } })
+				expect(moved.map((waypoint) => [waypoint.id, waypoint.index]).toSorted()).toEqual(
+					[
+						[second.id, 2],
+						[otherWaypoints[0].id, 0],
+					].toSorted(),
+				)
 			})
 
-			it('rejects a user without write access', async () => {
+			it('rejects when any waypoint belongs to another world', async () => {
 				const response = await withUserAuth(otherUser)
-					.patch(`${waypointsUrl}/${second.id}`)
-					.send({ positionX: 25, positionY: 26 })
-
-				expect(response.statusCode).toEqual(401)
-				const unchanged = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: second.id } })
-				expect(unchanged).toMatchObject({ positionX: 20, positionY: 20 })
-			})
-
-			it('rejects a wire that belongs to another world', async () => {
-				const response = await withUserAuth(otherUser)
-					.patch(`/api/world/${otherWorld.id}/mindmap/wires/${wire.id}/waypoints/${second.id}`)
-					.send({ positionX: 25, positionY: 26 })
+					.post(`/api/world/${otherWorld.id}/mindmap/waypoints/move`)
+					.send({ waypointIds: [foreignWaypoint.id, second.id], positionX: 25, positionY: 26 })
 
 				expect(response.statusCode).toEqual(400)
 				const unchanged = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: second.id } })
@@ -641,33 +674,29 @@ describe('MindmapRouter', () => {
 			})
 		})
 
-		describe('DELETE /api/world/:worldId/mindmap/wires/:wireId/waypoints/:waypointId', () => {
-			it('removes the waypoint and closes the rank gap of that wire only', async () => {
-				const response = await withUserAuth(user).delete(`${waypointsUrl}/${second.id}`)
+		describe('POST /api/world/:worldId/mindmap/waypoints/delete', () => {
+			it('removes waypoints of different wires and closes each gap', async () => {
+				const response = await withUserAuth(user)
+					.post(`${waypointsUrl}/delete`)
+					.send({ waypointIds: [second.id, otherWaypoints[0].id] })
 
 				expect(response.statusCode).toEqual(200)
-				expect(response.body.waypoints).toHaveLength(2)
+				expect(response.body).toHaveLength(2)
 				expect(await rankedIds(wire.id)).toEqual([
 					[first.id, 0],
 					[third.id, 2],
 				])
-				expect(await rankedIds(otherWire.id)).toEqual(otherRanks)
+				expect(await rankedIds(otherWire.id)).toEqual([[otherWaypoints[1].id, 0]])
 			})
 
-			it('rejects a user without write access', async () => {
-				const response = await withUserAuth(otherUser).delete(`${waypointsUrl}/${second.id}`)
-
-				expect(response.statusCode).toEqual(401)
-				expect(await rankedIds(wire.id)).toHaveLength(3)
-			})
-
-			it('rejects a wire that belongs to another world', async () => {
-				const response = await withUserAuth(otherUser).delete(
-					`/api/world/${otherWorld.id}/mindmap/wires/${wire.id}/waypoints/${second.id}`,
-				)
+			it('rejects when any waypoint belongs to another world', async () => {
+				const response = await withUserAuth(otherUser)
+					.post(`/api/world/${otherWorld.id}/mindmap/waypoints/delete`)
+					.send({ waypointIds: [foreignWaypoint.id, second.id] })
 
 				expect(response.statusCode).toEqual(400)
 				expect(await rankedIds(wire.id)).toHaveLength(3)
+				expect(await rankedIds(foreignWire.id)).toHaveLength(1)
 			})
 		})
 	})

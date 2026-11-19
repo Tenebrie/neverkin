@@ -22,6 +22,16 @@ export function useMoveMindmapNodes() {
 							node.positionY += body.deltaY
 						}
 					})
+					const moved = new Set(body.nodeIds)
+					draft.wires.forEach((wire) => {
+						if (!moved.has(wire.sourceNodeId) || !moved.has(wire.targetNodeId)) {
+							return
+						}
+						wire.waypoints.forEach((waypoint) => {
+							waypoint.positionX += body.deltaX
+							waypoint.positionY += body.deltaY
+						})
+					})
 				}),
 			)
 		},

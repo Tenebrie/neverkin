@@ -26,8 +26,14 @@ type Props = {
 
 export function MindmapSelectionBox({ ref }: Props) {
 	const { wireGeometry } = useMindmapContext()
-	const { selectedNodes, selectedWires, setNodeSelection, setWireSelection, clearSelections } =
-		useMindmapSelectionContext()
+	const {
+		selectedNodes,
+		selectedWires,
+		setNodeSelection,
+		setWireSelection,
+		hasBulkSelection,
+		clearSelections,
+	} = useMindmapSelectionContext()
 	const selectionBoxHandle = useRef<SelectionBoxHandle>(null)
 	const lastScale = useRef(MindmapState.scale)
 
@@ -43,7 +49,8 @@ export function MindmapSelectionBox({ ref }: Props) {
 	})
 
 	const onClick = useEvent((event: MouseEvent) => {
-		if (isMultiselectEvent(event)) {
+		const opensBulkMenu = event.button === 2 && hasBulkSelection()
+		if (isMultiselectEvent(event) || opensBulkMenu) {
 			return
 		}
 		clearSelections()
@@ -132,7 +139,7 @@ function checkNodeIntersection(parentElement: HTMLElement | null, selectionBox: 
 function checkWireIntersection(
 	parentElement: HTMLElement | null,
 	selectionBox: SelectionRect,
-	wireGeometry: Map<string, WireControlPoints>,
+	wireGeometry: Map<string, WireControlPoints[]>,
 ) {
 	if (!parentElement) {
 		return []
@@ -161,33 +168,45 @@ function checkWireIntersection(
 }
 
 export function getWiresInRect(
-	wireGeometry: Map<string, WireControlPoints>,
+	wireGeometry: Map<string, WireControlPoints[]>,
 	svgLeft: number,
 	svgTop: number,
 	svgRight: number,
 	svgBottom: number,
 ): string[] {
 	const result: string[] = []
-	wireGeometry.forEach((cp, wireId) => {
-		const bboxLeft = Math.min(cp.x1, cp.cx1, cp.cx2, cp.x2)
-		const bboxRight = Math.max(cp.x1, cp.cx1, cp.cx2, cp.x2)
-		const bboxTop = Math.min(cp.y1, cp.cy1, cp.cy2, cp.y2)
-		const bboxBottom = Math.max(cp.y1, cp.cy1, cp.cy2, cp.y2)
-		if (svgLeft > bboxRight || svgRight < bboxLeft || svgTop > bboxBottom || svgBottom < bboxTop) {
-			return
-		}
-		const SEGMENTS = 20
-		let segmentStart = bezierPoint(cp, 0)
-		for (let i = 1; i <= SEGMENTS; i++) {
-			const segmentEnd = bezierPoint(cp, i / SEGMENTS)
-			if (segmentIntersectsRect(segmentStart, segmentEnd, svgLeft, svgTop, svgRight, svgBottom)) {
-				result.push(wireId)
-				return
-			}
-			segmentStart = segmentEnd
+	wireGeometry.forEach((curves, wireId) => {
+		if (curves.some((cp) => curveIntersectsRect(cp, svgLeft, svgTop, svgRight, svgBottom))) {
+			result.push(wireId)
 		}
 	})
 	return result
+}
+
+function curveIntersectsRect(
+	cp: WireControlPoints,
+	left: number,
+	top: number,
+	right: number,
+	bottom: number,
+): boolean {
+	const bboxLeft = Math.min(cp.x1, cp.cx1, cp.cx2, cp.x2)
+	const bboxRight = Math.max(cp.x1, cp.cx1, cp.cx2, cp.x2)
+	const bboxTop = Math.min(cp.y1, cp.cy1, cp.cy2, cp.y2)
+	const bboxBottom = Math.max(cp.y1, cp.cy1, cp.cy2, cp.y2)
+	if (left > bboxRight || right < bboxLeft || top > bboxBottom || bottom < bboxTop) {
+		return false
+	}
+	const SEGMENTS = 20
+	let segmentStart = bezierPoint(cp, 0)
+	for (let i = 1; i <= SEGMENTS; i++) {
+		const segmentEnd = bezierPoint(cp, i / SEGMENTS)
+		if (segmentIntersectsRect(segmentStart, segmentEnd, left, top, right, bottom)) {
+			return true
+		}
+		segmentStart = segmentEnd
+	}
+	return false
 }
 
 function segmentIntersectsRect(

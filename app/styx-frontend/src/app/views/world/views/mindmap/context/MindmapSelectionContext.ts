@@ -7,6 +7,7 @@ import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 export const MindmapSelectionContext = createRealtimeContext(() => {
 	const [selectedNodes] = useState(() => new ReactiveMap<string, true>())
 	const [selectedWires] = useState(() => new ReactiveMap<string, true>())
+	const [selectedWaypoints] = useState(() => new ReactiveMap<string, string>())
 	const [hoveredNodes] = useState(() => new ReactiveMap<string, true>())
 	const [hoveredWires] = useState(() => new ReactiveMap<string, true>())
 
@@ -17,6 +18,7 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		}
 		selectedNodes.replace(new Map([[id, true]]))
 		selectedWires.replace(new Map())
+		selectedWaypoints.replace(new Map())
 	})
 
 	const setNodeSelection = useEvent((nodeIds: string[]) => {
@@ -34,6 +36,7 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		}
 		selectedWires.replace(new Map([[wireId, true]]))
 		selectedNodes.replace(new Map())
+		selectedWaypoints.replace(new Map())
 	})
 
 	const setWireSelection = useEvent((wireIds: string[]) => {
@@ -44,9 +47,28 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		selectedWires.delete(wireId)
 	})
 
+	const addWaypointToSelection = useEvent(
+		({ waypointId, wireId, multiselect }: { waypointId: string; wireId: string; multiselect: boolean }) => {
+			if (multiselect) {
+				selectedWaypoints.set(waypointId, wireId)
+				return
+			}
+			selectedWaypoints.replace(new Map([[waypointId, wireId]]))
+			selectedNodes.replace(new Map())
+			selectedWires.replace(new Map())
+		},
+	)
+
+	const removeWaypointFromSelection = useEvent((waypointId: string) => {
+		selectedWaypoints.delete(waypointId)
+	})
+
+	const hasBulkSelection = useEvent(() => selectedNodes.size() + selectedWires.size() > 1)
+
 	const clearSelections = useEvent(() => {
 		selectedNodes.replace(new Map())
 		selectedWires.replace(new Map())
+		selectedWaypoints.replace(new Map())
 	})
 
 	const addNodeToHover = useEvent((nodeId: string) => {
@@ -68,6 +90,7 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 	return {
 		selectedNodes,
 		selectedWires,
+		selectedWaypoints,
 		hoveredNodes,
 		hoveredWires,
 		addNodeToSelection,
@@ -76,6 +99,9 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		addWireToSelection,
 		setWireSelection,
 		removeWireFromSelection,
+		addWaypointToSelection,
+		removeWaypointFromSelection,
+		hasBulkSelection,
 		clearSelections,
 		addNodeToHover,
 		removeNodeFromHover,

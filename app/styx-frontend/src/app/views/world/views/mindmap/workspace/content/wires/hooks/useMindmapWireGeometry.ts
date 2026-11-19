@@ -1,16 +1,19 @@
 import { RefObject, useEffect, useLayoutEffect, useState } from 'react'
 import useEvent from 'react-use-event-hook'
 
-import { useMindmapContext } from '@/app/views/world/views/mindmap/context/useMindmapContext'
+import { useEventBusSubscribe } from '@/app/features/eventBus'
+import {
+	useMindmapContext,
+	useMindmapSelectionContext,
+} from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapWireParcel } from '@/app/views/world/views/mindmap/types'
 import {
-	midpointOf,
-	toControlPoints,
+	nearestWirePoint,
+	Point,
+	toWireSegments,
+	wireMidpoint,
 } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
-import {
-	WireEndpoints,
-	WirePaint,
-} from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapWireBuffer'
+import { WirePaint } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapWireBuffer'
 import { buildSvgBezierString } from '@/app/views/world/views/mindmap/workspace/content/wires/utils/buildSvgBezierString'
 import { getEdgePoints } from '@/app/views/world/views/mindmap/workspace/content/wires/utils/getEdgePoints'
 import { getNodeLayout } from '@/app/views/world/views/mindmap/workspace/content/wires/utils/getNodeLayout'
@@ -27,48 +30,94 @@ export function useMindmapWireGeometry({
 	hitPathRef,
 }: Props) {
 	const { wireBuffer, wireGeometry, nodeLayouts } = useMindmapContext()
+	const { selectedNodes } = useMindmapSelectionContext()
 
 	const showSourceArrow = wire.direction === 'Reversed' || wire.direction === 'TwoWay'
 	const showTargetArrow = wire.direction === 'Normal' || wire.direction === 'TwoWay'
 
-	const resolveEndpoints = (): WireEndpoints => {
-		return getEdgePoints(
+	const [live] = useState(() => ({ waypoints: toPoints(wire), previewIndex: 0 }))
+
+	const resolveSegments = () => {
+		const endpoints = getEdgePoints(
 			getNodeLayout(nodeLayouts, sourceNode.node),
 			getNodeLayout(nodeLayouts, targetNode.node),
+			live.waypoints,
 		)
+		return toWireSegments(endpoints, live.waypoints)
 	}
 
-	const [paint] = useState<WirePaint>(() => {
-		const endpoints = resolveEndpoints()
-		return {
-			endpoints,
-			curve: toControlPoints(endpoints),
-			hasSourceArrow: showSourceArrow,
-			hasTargetArrow: showTargetArrow,
-			sourceColor: 'transparent',
-			midColor: 'transparent',
-			targetColor: 'transparent',
-			glowOpacity: 0.12,
-			isActive: false,
-		}
-	})
+	const [paint] = useState<WirePaint>(() => ({
+		segments: resolveSegments(),
+		hasSourceArrow: showSourceArrow,
+		hasTargetArrow: showTargetArrow,
+		sourceColor: 'transparent',
+		midColor: 'transparent',
+		targetColor: 'transparent',
+		glowOpacity: 0.12,
+		isActive: false,
+	}))
 
-	const updateDom = (ep: WireEndpoints) => {
-		const curve = toControlPoints(ep)
-		hitPathRef.current?.setAttribute('d', buildSvgBezierString(curve))
-		const mid = midpointOf(curve)
+	const updateDom = () => {
+		const segments = resolveSegments()
+		const curves = segments.map((segment) => segment.curve)
+		hitPathRef.current?.setAttribute('d', curves.map(buildSvgBezierString).join(' '))
+		const mid = wireMidpoint(curves)
 		containerRef.current?.style.setProperty('--label-position-x', `${mid.x}px`)
 		containerRef.current?.style.setProperty('--label-position-y', `${mid.y}px`)
-		wireGeometry.set(wire.id, curve)
+		wireGeometry.set(wire.id, curves)
 
-		paint.endpoints = ep
-		paint.curve = curve
+		paint.segments = segments
 		paint.hasSourceArrow = showSourceArrow
 		paint.hasTargetArrow = showTargetArrow
 		wireBuffer.publish(wire.id, paint)
 	}
 
-	const onNodeLayoutChanged = useEvent(() => updateDom(resolveEndpoints()))
+	const moveWaypoint = useEvent((index: number, point: Point) => {
+		live.waypoints[index] = point
+		updateDom()
+	})
+
+	useEventBusSubscribe['mindmap/wire/onWaypointPreviewStart']({
+		callback: ({ wireIds, position }) => {
+			if (!wireIds.has(wire.id)) {
+				return
+			}
+			live.previewIndex = nearestWirePoint(
+				paint.segments.map((segment) => segment.curve),
+				position,
+			).index
+			live.waypoints.splice(live.previewIndex, 0, position)
+			updateDom()
+		},
+	})
+	useEventBusSubscribe['mindmap/wire/onWaypointPreviewMove']({
+		callback: ({ wireIds, position }) => {
+			if (wireIds.has(wire.id)) {
+				moveWaypoint(live.previewIndex, position)
+			}
+		},
+	})
+
+	const isNodeMoving = (nodeId: string, draggedNodeId: string) =>
+		nodeId === draggedNodeId || selectedNodes.has(nodeId)
+
+	useEventBusSubscribe['mindmap/node/onGroupDragUpdate']({
+		callback: ({ sourceNodeId: draggedNodeId, deltaX, deltaY }) => {
+			if (
+				!isNodeMoving(sourceNode.node.id, draggedNodeId) ||
+				!isNodeMoving(targetNode.node.id, draggedNodeId)
+			) {
+				return
+			}
+			for (const point of live.waypoints) {
+				point.x += deltaX
+				point.y += deltaY
+			}
+			updateDom()
+		},
+	})
+
+	const onNodeLayoutChanged = useEvent(updateDom)
 	useLayoutEffect(() => {
 		const offSource = nodeLayouts.subscribe(sourceNode.node.id, onNodeLayoutChanged)
 		const offTarget = nodeLayouts.subscribe(targetNode.node.id, onNodeLayoutChanged)
@@ -79,7 +128,8 @@ export function useMindmapWireGeometry({
 	}, [nodeLayouts, sourceNode.node.id, targetNode.node.id, onNodeLayoutChanged])
 
 	useLayoutEffect(() => {
-		updateDom(resolveEndpoints())
+		live.waypoints = toPoints(wire)
+		updateDom()
 	})
 
 	useEffect(
@@ -90,5 +140,9 @@ export function useMindmapWireGeometry({
 		[wire.id, wireBuffer, wireGeometry],
 	)
 
-	return paint
+	return { paint, moveWaypoint }
+}
+
+function toPoints(wire: MindmapWireParcel['wire']): Point[] {
+	return wire.waypoints.map((waypoint) => ({ x: waypoint.positionX, y: waypoint.positionY }))
 }
