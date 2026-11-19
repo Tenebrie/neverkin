@@ -10,6 +10,10 @@ import {
 } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 import {
+	collectMergeTargets,
+	snapToMergeTarget,
+} from '@/app/views/world/views/mindmap/utils/waypointMergeSnap'
+import {
 	nearestWirePoint,
 	Point,
 } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
@@ -27,7 +31,7 @@ type Props = {
 }
 
 export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Props) {
-	const { wireBuffer, wireGeometry, createWaypoints } = useMindmapContext()
+	const { wireBuffer, wireGeometry, wires, createWaypoints } = useMindmapContext()
 	const {
 		selectedWires,
 		addWireToSelection,
@@ -75,27 +79,28 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 		})
 	}
 
-	const previewWireIds = useRef(new Set<string>())
+	const preview = useRef({ wireIds: new Set<string>(), mergeTargets: [] as Point[] })
 	const onPointerDown = useMindmapWaypointDrag({
 		onStart: (point) => {
-			previewWireIds.current = editedWireIds()
+			preview.current = { wireIds: editedWireIds(), mergeTargets: collectMergeTargets(wires, new Set()) }
 			dispatchGlobalEvent['mindmap/wire/onWaypointPreviewStart']({
-				wireIds: previewWireIds.current,
+				wireIds: preview.current.wireIds,
 				position: point,
 			})
 		},
 		onMove: (point) => {
 			dispatchGlobalEvent['mindmap/wire/onWaypointPreviewMove']({
-				wireIds: previewWireIds.current,
-				position: point,
+				wireIds: preview.current.wireIds,
+				position: snapToMergeTarget(point, preview.current.mergeTargets),
 			})
 		},
 		onEnd: (point) => {
+			const snapped = snapToMergeTarget(point, preview.current.mergeTargets)
 			dispatchGlobalEvent['mindmap/wire/onWaypointPreviewMove']({
-				wireIds: previewWireIds.current,
-				position: point,
+				wireIds: preview.current.wireIds,
+				position: snapped,
 			})
-			createWaypointAt(point)
+			createWaypointAt(snapped)
 		},
 	})
 

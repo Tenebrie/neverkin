@@ -132,6 +132,7 @@ export function useMindmapNodeDrag({ node, ref, moveTo, selectedRef, onDragStart
 				capturePointer('grabbing', event.pointerId)
 				dispatchGlobalEvent['mindmap/selection/onDragStart']({
 					sourceId: nodeRef.current.id,
+					companions: new Set(),
 				})
 			}
 
