@@ -34,9 +34,9 @@ const injectedRtkApi = api
 				}),
 				invalidatesTags: [],
 			}),
-			moveMindmapNodes: build.mutation<MoveMindmapNodesApiResponse, MoveMindmapNodesApiArg>({
+			moveMindmapElements: build.mutation<MoveMindmapElementsApiResponse, MoveMindmapElementsApiArg>({
 				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/nodes/move`,
+					url: `/api/world/${queryArg.worldId}/mindmap/move`,
 					method: 'POST',
 					body: queryArg.body,
 				}),
@@ -100,14 +100,6 @@ const injectedRtkApi = api
 					invalidatesTags: [],
 				},
 			),
-			moveMindmapWaypoints: build.mutation<MoveMindmapWaypointsApiResponse, MoveMindmapWaypointsApiArg>({
-				query: (queryArg) => ({
-					url: `/api/world/${queryArg.worldId}/mindmap/waypoints/move`,
-					method: 'POST',
-					body: queryArg.body,
-				}),
-				invalidatesTags: [],
-			}),
 			deleteMindmapWaypoints: build.mutation<DeleteMindmapWaypointsApiResponse, DeleteMindmapWaypointsApiArg>(
 				{
 					query: (queryArg) => ({
@@ -252,28 +244,47 @@ export type ReparentNodeApiArg = {
 		parentTagId?: string
 	}
 }
-export type MoveMindmapNodesApiResponse = /** status 200  */ {
-	id: string
-	createdAt: string
-	updatedAt: string
-	name: string
-	worldId: string
-	positionX: number
-	positionY: number
-	icon: string
-	color: string
-	content: string
-	contentRich: string
-	parentActorId?: null | string
-	parentArticleId?: null | string
-	parentEventId?: null | string
-	parentFolderId?: null | string
-	parentTagId?: null | string
-}[]
-export type MoveMindmapNodesApiArg = {
+export type MoveMindmapElementsApiResponse = /** status 200  */ {
+	nodes: {
+		id: string
+		createdAt: string
+		updatedAt: string
+		name: string
+		worldId: string
+		positionX: number
+		positionY: number
+		icon: string
+		color: string
+		content: string
+		contentRich: string
+		parentActorId?: null | string
+		parentArticleId?: null | string
+		parentEventId?: null | string
+		parentFolderId?: null | string
+		parentTagId?: null | string
+	}[]
+	wires: {
+		waypoints: {
+			id: string
+			positionX: number
+			positionY: number
+			index: number
+			linkId: string
+		}[]
+		id: string
+		createdAt: string
+		updatedAt: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
+		content: string
+		sourceNodeId: string
+		targetNodeId: string
+	}[]
+}
+export type MoveMindmapElementsApiArg = {
 	worldId: string
 	body: {
 		nodeIds: string[]
+		waypointIds: string[]
 		deltaX: number
 		deltaY: number
 	}
@@ -466,30 +477,6 @@ export type CreateMindmapWaypointsApiArg = {
 		positionY: number
 	}
 }
-export type MoveMindmapWaypointsApiResponse = /** status 200  */ {
-	waypoints: {
-		id: string
-		positionX: number
-		positionY: number
-		index: number
-		linkId: string
-	}[]
-	id: string
-	createdAt: string
-	updatedAt: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
-	content: string
-	sourceNodeId: string
-	targetNodeId: string
-}[]
-export type MoveMindmapWaypointsApiArg = {
-	worldId: string
-	body: {
-		waypointIds: string[]
-		positionX: number
-		positionY: number
-	}
-}
 export type DeleteMindmapWaypointsApiResponse = /** status 200  */ {
 	waypoints: {
 		id: string
@@ -518,7 +505,7 @@ export const {
 	useCreateNodeMutation,
 	useUpdateNodeMutation,
 	useReparentNodeMutation,
-	useMoveMindmapNodesMutation,
+	useMoveMindmapElementsMutation,
 	usePasteMindmapNodesMutation,
 	useDeleteNodesMutation,
 	useCreateMindmapWiresMutation,
@@ -526,6 +513,5 @@ export const {
 	useSplitMindmapWireMutation,
 	useDeleteMindmapWiresMutation,
 	useCreateMindmapWaypointsMutation,
-	useMoveMindmapWaypointsMutation,
 	useDeleteMindmapWaypointsMutation,
 } = injectedRtkApi

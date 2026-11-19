@@ -3,6 +3,7 @@ import useEvent from 'react-use-event-hook'
 
 import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
+import { WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
 
 export const MindmapSelectionContext = createRealtimeContext(() => {
 	const [selectedNodes] = useState(() => new ReactiveMap<string, true>())
@@ -47,20 +48,28 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		selectedWires.delete(wireId)
 	})
 
-	const addWaypointToSelection = useEvent(
-		({ waypointId, wireId, multiselect }: { waypointId: string; wireId: string; multiselect: boolean }) => {
+	const addWaypointsToSelection = useEvent(
+		({ entries, multiselect }: { entries: WaypointSelectionEntry[]; multiselect: boolean }) => {
 			if (multiselect) {
-				selectedWaypoints.set(waypointId, wireId)
+				for (const { waypointId, wireId } of entries) {
+					selectedWaypoints.set(waypointId, wireId)
+				}
 				return
 			}
-			selectedWaypoints.replace(new Map([[waypointId, wireId]]))
+			setWaypointSelection(entries)
 			selectedNodes.replace(new Map())
 			selectedWires.replace(new Map())
 		},
 	)
 
-	const removeWaypointFromSelection = useEvent((waypointId: string) => {
-		selectedWaypoints.delete(waypointId)
+	const setWaypointSelection = useEvent((entries: WaypointSelectionEntry[]) => {
+		selectedWaypoints.replace(new Map(entries.map(({ waypointId, wireId }) => [waypointId, wireId])))
+	})
+
+	const removeWaypointsFromSelection = useEvent((waypointIds: string[]) => {
+		for (const waypointId of waypointIds) {
+			selectedWaypoints.delete(waypointId)
+		}
 	})
 
 	const hasBulkSelection = useEvent(() => selectedNodes.size() + selectedWires.size() > 1)
@@ -99,8 +108,9 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		addWireToSelection,
 		setWireSelection,
 		removeWireFromSelection,
-		addWaypointToSelection,
-		removeWaypointFromSelection,
+		addWaypointsToSelection,
+		setWaypointSelection,
+		removeWaypointsFromSelection,
 		hasBulkSelection,
 		clearSelections,
 		addNodeToHover,

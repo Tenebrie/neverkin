@@ -4,12 +4,14 @@ import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
 import { useDoubleClick } from '@/app/hooks/useDoubleClick'
+import { useDraggableClick } from '@/app/hooks/useDraggableClick'
 import { isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import {
 	useMindmapContext,
 	useMindmapSelectionContext,
 } from '@/app/views/world/views/mindmap/context/useMindmapContext'
-import { getMindmapWaypointSiblings } from '@/app/views/world/views/mindmap/utils/getMindmapWaypointSiblings'
+import { WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
+import { getMovingWaypointIds } from '@/app/views/world/views/mindmap/utils/getMovingWaypointIds'
 import { Point } from '@/app/views/world/views/mindmap/workspace/content/wires/canvas/MindmapCanvasMath'
 import { useMindmapWaypointDrag } from '@/app/views/world/views/mindmap/workspace/content/wires/hooks/useMindmapWaypointDrag'
 
@@ -22,9 +24,14 @@ type Props = {
 }
 
 export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: Props) {
-	const { wires, moveWaypoints, deleteWaypoints } = useMindmapContext()
-	const { selectedWaypoints, addWaypointToSelection, removeWaypointFromSelection } =
-		useMindmapSelectionContext()
+	const { wires, moveElements, deleteWaypoints } = useMindmapContext()
+	const {
+		selectedNodes,
+		selectedWires,
+		selectedWaypoints,
+		addWaypointsToSelection,
+		removeWaypointsFromSelection,
+	} = useMindmapSelectionContext()
 	const ref = useRef<SVGGElement>(null)
 	const selectedRef = useRef(false)
 	const [currentState] = useState(() => ({
@@ -32,7 +39,6 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 		y: waypoint.positionY,
 		grabX: 0,
 		grabY: 0,
-		group: new Set<string>(),
 	}))
 
 	useLayoutEffect(() => {
@@ -51,65 +57,93 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 
 	useEffect(
 		() => () => {
-			removeWaypointFromSelection(waypoint.id)
+			removeWaypointsFromSelection([waypoint.id])
 		},
-		[removeWaypointFromSelection, waypoint.id],
+		[removeWaypointsFromSelection, waypoint.id],
 	)
 
-	const moveTo = (point: Point) => {
+	/** The waypoints drawn on top of each other at this spot; the user sees them as one handle */
+	const stack = () => {
+		const entries: WaypointSelectionEntry[] = []
+		for (const parcel of wires.values()) {
+			for (const other of parcel.wire.waypoints) {
+				if (other.positionX === waypoint.positionX && other.positionY === waypoint.positionY) {
+					entries.push({ waypointId: other.id, wireId: parcel.wire.id })
+				}
+			}
+		}
+		return entries
+	}
+
+	const place = (point: Point) => {
 		currentState.x = point.x
 		currentState.y = point.y
 		ref.current?.setAttribute('transform', `translate(${point.x} ${point.y})`)
 		onMove(index, point)
 	}
 
-	const getSiblingWaypoints = () => {
-		return new Set([...selectedWaypoints.keys(), ...getMindmapWaypointSiblings(wires, waypoint.id)])
-	}
-
 	const dragTo = (point: Point) => {
-		dispatchGlobalEvent['mindmap/waypoint/onGroupDragUpdate']({
-			waypointIds: currentState.group,
-			x: point.x + currentState.grabX,
-			y: point.y + currentState.grabY,
-		})
+		const next = { x: point.x + currentState.grabX, y: point.y + currentState.grabY }
+		const deltaX = next.x - currentState.x
+		const deltaY = next.y - currentState.y
+		place(next)
+		dispatchGlobalEvent['mindmap/selection/onDragUpdate']({ sourceId: waypoint.id, deltaX, deltaY })
 	}
 
 	const onPointerDown = useMindmapWaypointDrag({
 		onStart: (point) => {
+			if (!selectedRef.current) {
+				addWaypointsToSelection({ entries: stack(), multiselect: false })
+			}
 			currentState.grabX = currentState.x - point.x
 			currentState.grabY = currentState.y - point.y
-			currentState.group = getSiblingWaypoints()
+			dispatchGlobalEvent['mindmap/selection/onDragStart']({ sourceId: waypoint.id })
 		},
 		onMove: dragTo,
 		onEnd: (point) => {
 			dragTo(point)
-			moveWaypoints({
-				waypointIds: [...currentState.group],
-				positionX: Math.round(currentState.x),
-				positionY: Math.round(currentState.y),
+			const snappedX = Math.round(currentState.x)
+			const snappedY = Math.round(currentState.y)
+			dragTo({ x: snappedX - currentState.grabX, y: snappedY - currentState.grabY })
+			moveElements({
+				nodeIds: selectedNodes.keys(),
+				waypointIds: getMovingWaypointIds({ selectedWaypoints, selectedWires, wires }),
+				deltaX: snappedX - waypoint.positionX,
+				deltaY: snappedY - waypoint.positionY,
 			})
+			dispatchGlobalEvent['mindmap/selection/onDragEnd']({ sourceId: waypoint.id })
 		},
 	})
 
-	useEventBusSubscribe['mindmap/waypoint/onGroupDragUpdate']({
-		callback: ({ waypointIds, x, y }) => {
-			if (waypointIds.has(waypoint.id)) {
-				moveTo({ x, y })
+	useEventBusSubscribe['mindmap/selection/onDragUpdate']({
+		callback: ({ sourceId, deltaX, deltaY }) => {
+			const isMoving = selectedRef.current || selectedWires.has(wireId)
+			if (sourceId === waypoint.id || !isMoving) {
+				return
 			}
+			place({ x: currentState.x + deltaX, y: currentState.y + deltaY })
 		},
 	})
 
 	const { triggerClick } = useDoubleClick<{ multiselect: boolean }>({
 		onClick: ({ multiselect }) => {
 			if (selectedRef.current) {
-				removeWaypointFromSelection(waypoint.id)
+				removeWaypointsFromSelection(stack().map((entry) => entry.waypointId))
 			} else {
-				addWaypointToSelection({ waypointId: waypoint.id, wireId, multiselect })
+				addWaypointsToSelection({ entries: stack(), multiselect })
 			}
 		},
-		onDoubleClick: () => deleteWaypoints([...getSiblingWaypoints()]),
+		onDoubleClick: () => deleteWaypoints(stack().map((entry) => entry.waypointId)),
 		ignoreDelay: true,
+	})
+
+	const { onMouseDown, onMouseUp } = useDraggableClick({
+		onRightClick: (event) => {
+			dispatchGlobalEvent['mindmap/waypoint/requestOpenContextMenu']({
+				position: { x: event.clientX, y: event.clientY },
+				stack: stack(),
+			})
+		},
 	})
 
 	return (
@@ -119,6 +153,8 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 			ref={ref}
 			transform={`translate(${waypoint.positionX} ${waypoint.positionY})`}
 			onPointerDown={onPointerDown}
+			onMouseDown={onMouseDown}
+			onMouseUp={onMouseUp}
 			onClick={(event: React.MouseEvent<SVGGElement>) =>
 				triggerClick(event, { multiselect: isMultiselectEvent(event) })
 			}

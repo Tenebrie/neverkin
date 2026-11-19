@@ -2,12 +2,14 @@ import { useRef } from 'react'
 import useEvent from 'react-use-event-hook'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
 import { isMultiselectAltEvent, isMultiselectEvent } from '@/app/utils/isMultiselectClick'
 import {
 	useMindmapContext,
 	useMindmapSelectionContext,
 } from '@/app/views/world/views/mindmap/context/useMindmapContext'
 import { MindmapState } from '@/app/views/world/views/mindmap/MindmapState'
+import { MindmapWireParcel, WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
 import { toWorkspaceCoords } from '@/app/views/world/views/mindmap/utils/toWorkspaceCoords'
 import {
 	bezierPoint,
@@ -25,12 +27,14 @@ type Props = {
 }
 
 export function MindmapSelectionBox({ ref }: Props) {
-	const { wireGeometry } = useMindmapContext()
+	const { wireGeometry, wires } = useMindmapContext()
 	const {
 		selectedNodes,
 		selectedWires,
+		selectedWaypoints,
 		setNodeSelection,
 		setWireSelection,
+		setWaypointSelection,
 		hasBulkSelection,
 		clearSelections,
 	} = useMindmapSelectionContext()
@@ -59,12 +63,20 @@ export function MindmapSelectionBox({ ref }: Props) {
 	const onUpdateSelection = useEvent((rect: SelectionRect, event: MouseEvent) => {
 		const intersectingNodes = checkNodeIntersection(ref.current, rect)
 		const intersectingWires = checkWireIntersection(ref.current, rect, wireGeometry)
+		const intersectingWaypoints = checkWaypointIntersection(ref.current, rect, wires)
 		let newSelectedNodes: ReturnType<typeof checkNodeIntersection> = []
 		let newSelectedWires: ReturnType<typeof checkWireIntersection> = []
+		let newSelectedWaypoints: ReturnType<typeof checkWaypointIntersection> = []
 
 		if (isMultiselectEvent(event)) {
 			newSelectedNodes.push(...selectedNodes.keys())
 			newSelectedWires.push(...selectedWires.keys())
+			for (const waypointId of selectedWaypoints.keys()) {
+				const wireId = selectedWaypoints.get(waypointId)
+				if (wireId) {
+					newSelectedWaypoints.push({ waypointId, wireId })
+				}
+			}
 		}
 
 		if (isMultiselectAltEvent(event)) {
@@ -74,16 +86,25 @@ export function MindmapSelectionBox({ ref }: Props) {
 			newSelectedWires = newSelectedWires.filter(
 				(wireId) => !intersectingWires.some((intersectingWireId) => intersectingWireId === wireId),
 			)
+			newSelectedWaypoints = newSelectedWaypoints.filter(
+				(entry) =>
+					!intersectingWaypoints.some((intersecting) => intersecting.waypointId === entry.waypointId),
+			)
 		} else {
 			newSelectedNodes.push(...intersectingNodes)
 			newSelectedWires.push(...intersectingWires)
+			newSelectedWaypoints.push(...intersectingWaypoints)
 		}
 
 		newSelectedNodes = [...new Set(newSelectedNodes)]
 		newSelectedWires = [...new Set(newSelectedWires)]
+		newSelectedWaypoints = [
+			...new Map(newSelectedWaypoints.map((entry) => [entry.waypointId, entry])).values(),
+		]
 
 		setNodeSelection(newSelectedNodes)
 		setWireSelection(newSelectedWires)
+		setWaypointSelection(newSelectedWaypoints)
 	})
 
 	return (
@@ -141,8 +162,42 @@ function checkWireIntersection(
 	selectionBox: SelectionRect,
 	wireGeometry: Map<string, WireControlPoints[]>,
 ) {
-	if (!parentElement) {
+	const box = toWorkspaceRect(parentElement, selectionBox)
+	if (!box) {
 		return []
+	}
+	return getWiresInRect(wireGeometry, box.left, box.top, box.right, box.bottom)
+}
+
+function checkWaypointIntersection(
+	parentElement: HTMLElement | null,
+	selectionBox: SelectionRect,
+	wires: ReactiveMap<string, MindmapWireParcel>,
+): WaypointSelectionEntry[] {
+	const box = toWorkspaceRect(parentElement, selectionBox)
+	if (!box) {
+		return []
+	}
+	const entries: WaypointSelectionEntry[] = []
+	for (const parcel of wires.values()) {
+		for (const waypoint of parcel.wire.waypoints) {
+			const isInside =
+				waypoint.positionX >= box.left &&
+				waypoint.positionX <= box.right &&
+				waypoint.positionY >= box.top &&
+				waypoint.positionY <= box.bottom
+			if (isInside) {
+				entries.push({ waypointId: waypoint.id, wireId: parcel.wire.id })
+			}
+		}
+	}
+	return entries
+}
+
+/** The selection rect in workspace coordinates, whichever way it was dragged out */
+function toWorkspaceRect(parentElement: HTMLElement | null, selectionBox: SelectionRect) {
+	if (!parentElement) {
+		return null
 	}
 
 	const boxLeft = selectionBox.width < 0 ? selectionBox.x + selectionBox.width : selectionBox.x
@@ -150,7 +205,6 @@ function checkWireIntersection(
 	const boxRight = boxLeft + Math.abs(selectionBox.width)
 	const boxBottom = boxTop + Math.abs(selectionBox.height)
 
-	// Convert selection rect from container coords to SVG node coords using grid transform
 	const containerRect = parentElement.getBoundingClientRect()
 	const topLeft = toWorkspaceCoords({
 		screenX: containerRect.left + boxLeft,
@@ -161,10 +215,9 @@ function checkWireIntersection(
 		screenY: containerRect.top + boxBottom,
 	})
 	if (!topLeft || !bottomRight) {
-		return []
+		return null
 	}
-
-	return getWiresInRect(wireGeometry, topLeft.x, topLeft.y, bottomRight.x, bottomRight.y)
+	return { left: topLeft.x, top: topLeft.y, right: bottomRight.x, bottom: bottomRight.y }
 }
 
 export function getWiresInRect(

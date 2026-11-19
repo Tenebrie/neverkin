@@ -1,5 +1,6 @@
 import CallSplit from '@mui/icons-material/CallSplit'
 import Delete from '@mui/icons-material/Delete'
+import LinkOff from '@mui/icons-material/LinkOff'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -27,7 +28,7 @@ export type MindmapWireState = {
 
 export function MindmapWireContextMenu({ open, wireId, position, onClose }: MindmapWireState) {
 	const { wires } = useMindmapData()
-	const { wireGeometry, splitWire, updateWire, deleteWires } = useMindmapContext()
+	const { wireGeometry, splitWire, updateWire, deleteWires, deleteWaypoints } = useMindmapContext()
 
 	const currentWire = useMemo(() => wires.find((wire) => wire.id === wireId), [wireId, wires])
 
@@ -92,6 +93,19 @@ export function MindmapWireContextMenu({ open, wireId, position, onClose }: Mind
 							<CallSplit />
 						</ListItemIcon>
 						<ListItemText>Split</ListItemText>
+					</MenuItem>
+				)}
+				{currentWire && currentWire.waypoints.length > 0 && (
+					<MenuItem
+						onClick={() => {
+							deleteWaypoints(currentWire.waypoints.map((waypoint) => waypoint.id))
+							handleClose()
+						}}
+					>
+						<ListItemIcon>
+							<LinkOff />
+						</ListItemIcon>
+						<ListItemText>Release link</ListItemText>
 					</MenuItem>
 				)}
 				<MenuItem

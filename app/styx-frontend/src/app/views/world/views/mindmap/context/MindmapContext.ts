@@ -11,8 +11,7 @@ import { useCreateMindmapWires } from '../api/useCreateMindmapWires'
 import { useDeleteMindmapNodes } from '../api/useDeleteMindmapNodes'
 import { useDeleteMindmapWaypoints } from '../api/useDeleteMindmapWaypoints'
 import { useDeleteMindmapWires } from '../api/useDeleteMindmapWires'
-import { useMoveMindmapNodes } from '../api/useMoveMindmapNodes'
-import { useMoveMindmapWaypoints } from '../api/useMoveMindmapWaypoints'
+import { useMoveMindmapElements } from '../api/useMoveMindmapElements'
 import { useReparentMindmapNode } from '../api/useReparentMindmapNode'
 import { useSplitMindmapWire } from '../api/useSplitMindmapWire'
 import { useUpdateMindmapWire } from '../api/useUpdateMindmapWire'
@@ -24,7 +23,7 @@ import { MindmapWireBuffer } from '../workspace/content/wires/canvas/MindmapWire
 export const MindmapContext = createRealtimeContext(() => {
 	const [painters] = useState(() => new Set<(navState: MindmapNavigationState) => void>())
 
-	const [moveNodes] = useMoveMindmapNodes()
+	const [moveElements] = useMoveMindmapElements()
 	const [createNode] = useCreateMindmapNode()
 	const [deleteNodes] = useDeleteMindmapNodes()
 	const [reparentNode] = useReparentMindmapNode()
@@ -35,7 +34,6 @@ export const MindmapContext = createRealtimeContext(() => {
 	const [deleteWires] = useDeleteMindmapWires()
 
 	const [createWaypoints] = useCreateMindmapWaypoints()
-	const [moveWaypoints] = useMoveMindmapWaypoints()
 	const [deleteWaypoints] = useDeleteMindmapWaypoints()
 
 	const onPaint = useEvent((painter: (navState: MindmapNavigationState) => void) => {
@@ -82,7 +80,7 @@ export const MindmapContext = createRealtimeContext(() => {
 		onPaint,
 		paint,
 
-		moveNodes,
+		moveElements,
 		createNode,
 		deleteNodes,
 		reparentNode,
@@ -93,7 +91,6 @@ export const MindmapContext = createRealtimeContext(() => {
 		deleteWires,
 
 		createWaypoints,
-		moveWaypoints,
 		deleteWaypoints,
 
 		workspaceRect,

@@ -4,7 +4,7 @@ import { Node as ProseMirrorNode } from '@tiptap/pm/model'
 
 import { MindmapNode } from '@/api/types/mindmapTypes'
 import { MarkerType, TimelineEntity } from '@/api/types/worldTypes'
-import { MindmapNodeParentParcel } from '@/app/views/world/views/mindmap/types'
+import { MindmapNodeParentParcel, WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
 import { Position } from '@/app/views/world/views/timeline/utils/Position'
 import { ClientToCalliopeMessage } from '@/ts-shared/ClientToCalliopeMessage'
 
@@ -40,21 +40,16 @@ export type EventParams = {
 			followerSpacing: number
 		} | null
 	}
-	'mindmap/node/onGroupDragStart': {
-		sourceNodeId: string
+	'mindmap/selection/onDragStart': {
+		sourceId: string
 	}
-	'mindmap/node/onGroupDragUpdate': {
-		sourceNodeId: string
+	'mindmap/selection/onDragUpdate': {
+		sourceId: string
 		deltaX: number
 		deltaY: number
 	}
-	'mindmap/node/onGroupDragEnd': {
-		sourceNodeId: string
-	}
-	'mindmap/waypoint/onGroupDragUpdate': {
-		waypointIds: Set<string>
-		x: number
-		y: number
+	'mindmap/selection/onDragEnd': {
+		sourceId: string
 	}
 	'mindmap/wire/onWaypointPreviewStart': {
 		wireIds: Set<string>
@@ -68,6 +63,10 @@ export type EventParams = {
 		position: Position
 		node: MindmapNode
 		parent: MindmapNodeParentParcel
+	}
+	'mindmap/waypoint/requestOpenContextMenu': {
+		position: Position
+		stack: WaypointSelectionEntry[]
 	}
 	'mindmap/node/requestEditPlainNode': {
 		nodeId: string

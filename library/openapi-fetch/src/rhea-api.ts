@@ -1893,7 +1893,7 @@ export interface paths {
         patch?: never;
         trace?: never;
     };
-    "/api/world/{worldId}/mindmap/nodes/move": {
+    "/api/world/{worldId}/mindmap/move": {
         parameters: {
             query?: never;
             header?: never;
@@ -1902,8 +1902,8 @@ export interface paths {
         };
         get?: never;
         put?: never;
-        /** @description Moves multiple nodes by a delta in a single transaction */
-        post: operations["moveMindmapNodes"];
+        /** @description Moves the given nodes and waypoints by a delta in a single transaction */
+        post: operations["moveMindmapElements"];
         delete?: never;
         options?: never;
         head?: never;
@@ -2023,23 +2023,6 @@ export interface paths {
         put?: never;
         /** @description Adds a waypoint at one position to each target wire, at the given index of that wire */
         post: operations["createMindmapWaypoints"];
-        delete?: never;
-        options?: never;
-        head?: never;
-        patch?: never;
-        trace?: never;
-    };
-    "/api/world/{worldId}/mindmap/waypoints/move": {
-        parameters: {
-            query?: never;
-            header?: never;
-            path?: never;
-            cookie?: never;
-        };
-        get?: never;
-        put?: never;
-        /** @description Moves every target waypoint to one position */
-        post: operations["moveMindmapWaypoints"];
         delete?: never;
         options?: never;
         head?: never;
@@ -8438,7 +8421,7 @@ export interface operations {
             };
         };
     };
-    moveMindmapNodes: {
+    moveMindmapElements: {
         parameters: {
             query?: never;
             header?: never;
@@ -8451,11 +8434,13 @@ export interface operations {
             content: {
                 "application/json": {
                     nodeIds: string[];
+                    waypointIds: string[];
                     deltaX: number;
                     deltaY: number;
                 };
                 "application/x-www-form-urlencoded": {
                     nodeIds: string[];
+                    waypointIds: string[];
                     deltaX: number;
                     deltaY: number;
                 };
@@ -8468,25 +8453,45 @@ export interface operations {
                 };
                 content: {
                     "application/json": {
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        name: string;
-                        worldId: string;
-                        positionX: number;
-                        positionY: number;
-                        icon: string;
-                        color: string;
-                        content: string;
-                        contentRich: string;
-                        parentActorId?: null | string;
-                        parentArticleId?: null | string;
-                        parentEventId?: null | string;
-                        parentFolderId?: null | string;
-                        parentTagId?: null | string;
-                    }[];
+                        nodes: {
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            name: string;
+                            worldId: string;
+                            positionX: number;
+                            positionY: number;
+                            icon: string;
+                            color: string;
+                            content: string;
+                            contentRich: string;
+                            parentActorId?: null | string;
+                            parentArticleId?: null | string;
+                            parentEventId?: null | string;
+                            parentFolderId?: null | string;
+                            parentTagId?: null | string;
+                        }[];
+                        wires: {
+                            waypoints: {
+                                id: string;
+                                positionX: number;
+                                positionY: number;
+                                index: number;
+                                linkId: string;
+                            }[];
+                            id: string;
+                            /** Format: date-time */
+                            createdAt: string;
+                            /** Format: date-time */
+                            updatedAt: string;
+                            direction: "Normal" | "Reversed" | "TwoWay";
+                            content: string;
+                            sourceNodeId: string;
+                            targetNodeId: string;
+                        }[];
+                    };
                 };
             };
         };
@@ -8860,57 +8865,6 @@ export interface operations {
                         wireId: string;
                         index: number;
                     }[];
-                    positionX: number;
-                    positionY: number;
-                };
-            };
-        };
-        responses: {
-            200: {
-                headers: {
-                    [name: string]: unknown;
-                };
-                content: {
-                    "application/json": {
-                        waypoints: {
-                            id: string;
-                            positionX: number;
-                            positionY: number;
-                            index: number;
-                            linkId: string;
-                        }[];
-                        id: string;
-                        /** Format: date-time */
-                        createdAt: string;
-                        /** Format: date-time */
-                        updatedAt: string;
-                        direction: "Normal" | "Reversed" | "TwoWay";
-                        content: string;
-                        sourceNodeId: string;
-                        targetNodeId: string;
-                    }[];
-                };
-            };
-        };
-    };
-    moveMindmapWaypoints: {
-        parameters: {
-            query?: never;
-            header?: never;
-            path: {
-                worldId: string;
-            };
-            cookie?: never;
-        };
-        requestBody?: {
-            content: {
-                "application/json": {
-                    waypointIds: string[];
-                    positionX: number;
-                    positionY: number;
-                };
-                "application/x-www-form-urlencoded": {
-                    waypointIds: string[];
                     positionX: number;
                     positionY: number;
                 };

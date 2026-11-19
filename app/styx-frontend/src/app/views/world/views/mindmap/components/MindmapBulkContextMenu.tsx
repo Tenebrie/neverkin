@@ -1,5 +1,6 @@
 import CallMerge from '@mui/icons-material/CallMerge'
 import Delete from '@mui/icons-material/Delete'
+import LinkOff from '@mui/icons-material/LinkOff'
 import Divider from '@mui/material/Divider'
 import ListItemIcon from '@mui/material/ListItemIcon'
 import ListItemText from '@mui/material/ListItemText'
@@ -8,6 +9,7 @@ import MenuItem from '@mui/material/MenuItem'
 import { useMemo, useState } from 'react'
 
 import { useEventBusSubscribe } from '@/app/features/eventBus'
+import { pluralize } from '@/app/utils/pluralize'
 import { WikiContextMenuColorPicker } from '@/app/views/world/views/wiki/components/WikiContextMenuColorPicker'
 
 import { useMindmapContext, useMindmapSelectionContext } from '../context/useMindmapContext'
@@ -21,7 +23,9 @@ export function MindmapBulkContextMenu() {
 	const [targetNodes, setTargetNodes] = useState<string[]>([])
 	const [targetWires, setTargetWires] = useState<string[]>([])
 	const [targetParents, setTargetParents] = useState<MindmapNodeParentParcel[]>([])
-	const { nodes, wireGeometry, deleteNodes, deleteWires, createWaypoints } = useMindmapContext()
+	const [releasable, setReleasable] = useState({ wireCount: 0, waypointIds: [] as string[] })
+	const { nodes, wires, wireGeometry, deleteNodes, deleteWires, createWaypoints, deleteWaypoints } =
+		useMindmapContext()
 
 	const { selectedNodes, selectedWires } = useMindmapSelectionContext()
 
@@ -33,6 +37,11 @@ export function MindmapBulkContextMenu() {
 			setTargetNodes(nodeIds)
 			setTargetWires(selectedWires.keys())
 			setTargetParents(nodeIds.flatMap((nodeId) => nodes.get(nodeId)?.parent ?? []))
+			const waypointsPerWire = selectedWires.keys().map((wireId) => wires.get(wireId)?.wire.waypoints ?? [])
+			setReleasable({
+				wireCount: waypointsPerWire.filter((waypoints) => waypoints.length > 0).length,
+				waypointIds: waypointsPerWire.flat().map((waypoint) => waypoint.id),
+			})
 		},
 	})
 
@@ -85,6 +94,19 @@ export function MindmapBulkContextMenu() {
 						<CallMerge />
 					</ListItemIcon>
 					<ListItemText>Collect {targetWires.length} links here</ListItemText>
+				</MenuItem>
+			)}
+			{releasable.wireCount > 0 && (
+				<MenuItem
+					onClick={() => {
+						deleteWaypoints(releasable.waypointIds)
+						setOpen(false)
+					}}
+				>
+					<ListItemIcon>
+						<LinkOff />
+					</ListItemIcon>
+					<ListItemText>Release {pluralize(releasable.wireCount, 'link')}</ListItemText>
 				</MenuItem>
 			)}
 			<MenuItem

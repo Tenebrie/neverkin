@@ -115,8 +115,9 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 			if (!clicked) {
 				return
 			}
+			addWireToSelection({ wireId, multiselect: true })
 			createWaypointAt(nearestWirePoint(wireGeometry.get(wireId) ?? [], clicked).point)
-			if (!multiselect) {
+			if (!multiselect && !hasBulkSelection()) {
 				removeWireFromSelection(wireId)
 			}
 		},

@@ -3,7 +3,7 @@ import ClickAwayListener from '@mui/material/ClickAwayListener'
 import Paper from '@mui/material/Paper'
 import Popper from '@mui/material/Popper'
 import { bindPopper, usePopupState } from 'material-ui-popup-state/hooks'
-import { useRef, useState } from 'react'
+import { memo, useRef, useState } from 'react'
 
 import { GlobalSearchHit, ingestSearchHits } from '@/api/types/searchTypes'
 import { GlobalSearchApiResponse, useLazyGlobalSearchQuery } from '@/api/worldSearchApi'
@@ -15,7 +15,9 @@ import { pushApiError } from '../notifications/pushApiError'
 import { useCustomTheme } from '../theming/hooks/useCustomTheme'
 import { GlobalSearchResults } from './GlobalSearchResults'
 
-export function GlobalSearch() {
+export const GlobalSearch = memo(GlobalSearchComponent)
+
+function GlobalSearchComponent() {
 	const theme = useCustomTheme()
 	const anchorEl = useRef<HTMLInputElement>(null)
 	const popoverState = usePopupState({

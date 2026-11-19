@@ -68,28 +68,34 @@ export const MindmapService = {
 			}
 		})
 	},
-	async moveNodes(nodes: string[], deltaX: number, deltaY: number, worldId: string) {
+	async moveElements({
+		nodeIds,
+		waypointIds,
+		deltaX,
+		deltaY,
+		worldId,
+	}: {
+		nodeIds: string[]
+		waypointIds: string[]
+		deltaX: number
+		deltaY: number
+		worldId: string
+	}) {
 		return getPrismaClient().$transaction(async (prisma) => {
+			const shift = {
+				positionX: { increment: deltaX },
+				positionY: { increment: deltaY },
+			}
+			const nodes = await prisma.mindmapNode.updateManyAndReturn({
+				where: { id: { in: nodeIds }, worldId },
+				data: shift,
+			})
 			await prisma.mindmapLinkWaypoint.updateMany({
-				where: {
-					link: {
-						sourceNode: { worldId },
-						sourceNodeId: { in: nodes },
-						targetNodeId: { in: nodes },
-					},
-				},
-				data: {
-					positionX: { increment: deltaX },
-					positionY: { increment: deltaY },
-				},
+				where: { id: { in: waypointIds } },
+				data: shift,
 			})
-			return prisma.mindmapNode.updateManyAndReturn({
-				where: { id: { in: nodes }, worldId },
-				data: {
-					positionX: { increment: deltaX },
-					positionY: { increment: deltaY },
-				},
-			})
+			const wires = await MindmapService.getLinksByIds(await findWaypointLinkIds(waypointIds, prisma), prisma)
+			return { nodes, wires }
 		})
 	},
 	async deleteNodes(worldId: string, nodeIds: string[]) {
@@ -250,16 +256,6 @@ export const MindmapService = {
 			for (const wireId of wireIds) {
 				await makeSortMindmapWaypointsQuery(wireId, prisma)
 			}
-			return MindmapService.getLinksByIds(wireIds, prisma)
-		})
-	},
-	async moveWaypoints(waypointIds: string[], position: { positionX: number; positionY: number }) {
-		return getPrismaClient().$transaction(async (prisma) => {
-			await prisma.mindmapLinkWaypoint.updateMany({
-				where: { id: { in: waypointIds } },
-				data: position,
-			})
-			const wireIds = await findWaypointLinkIds(waypointIds, prisma)
 			return MindmapService.getLinksByIds(wireIds, prisma)
 		})
 	},

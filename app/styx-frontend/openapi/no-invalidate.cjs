@@ -7,12 +7,11 @@
 module.exports = [
 	'createNode',
 	'updateNode',
-	'moveMindmapNodes',
+	'moveMindmapElements',
 	'createMindmapWires',
 	'updateMindmapWire',
 	'deleteMindmapWires',
 	'createMindmapWaypoints',
-	'moveMindmapWaypoints',
 	'deleteMindmapWaypoints',
 	'moveWikiEntity',
 	'bulkMoveWikiEntities',
