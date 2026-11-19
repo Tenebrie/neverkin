@@ -1,4 +1,17 @@
-// PIECE_*, GLOW_RADIUS, STROKE_RADIUS, PORT_RADIUS and ARROW_SIZE are prepended as #defines by MindmapCanvas.tsx
+// Default constant values, defined in TS.
+#ifndef PIECE_GLOW
+#define PIECE_GLOW 0.0
+#define PIECE_STROKE 1.0
+#define PIECE_PORT 2.0
+#define PIECE_BARB_LEFT 3.0
+#define PIECE_BARB_RIGHT 4.0
+#define PIECE_ARROW_TIP 5.0
+#define GLOW_RADIUS 4.0
+#define STROKE_RADIUS 1.0
+#define PORT_RADIUS 4.0
+#define WAYPOINT_RADIUS 2.8
+#define ARROW_SIZE 8.0
+#endif
 
 // Shared template: where this vertex sits on one wire
 attribute float a_piece;
@@ -19,6 +32,8 @@ attribute vec4 a_midColor;
 attribute vec4 a_targetColor;
 /** Glow opacity, stroke shade, has source arrow, has target arrow */
 attribute vec4 a_style;
+/** Progress along the wire at this segment's start and end */
+attribute vec2 a_progress;
 
 uniform float u_scale;
 uniform vec2 u_camera;
@@ -50,7 +65,8 @@ vec2 headingOnWire(float along) {
 vec4 colorAt(vec2 point) {
 	vec2 span = a_targetPoint - a_sourcePoint;
 	float spanLengthSquared = dot(span, span);
-	float progress = clamp(dot(point - a_sourcePoint, span) / (spanLengthSquared > 0.0 ? spanLengthSquared : 1.0), 0.0, 1.0);
+	float along = clamp(dot(point - a_sourcePoint, span) / (spanLengthSquared > 0.0 ? spanLengthSquared : 1.0), 0.0, 1.0);
+	float progress = mix(a_progress.x, a_progress.y, along);
 	if (progress < 0.5) {
 		return mix(a_sourceColor, a_midColor, progress * 2.0);
 	}
@@ -90,7 +106,9 @@ void main() {
 	bool isStrip = a_piece == PIECE_GLOW || a_piece == PIECE_STROKE;
 	bool isArrow = a_piece == PIECE_BARB_LEFT || a_piece == PIECE_BARB_RIGHT || a_piece == PIECE_ARROW_TIP;
 	bool hasArrow = (a_atTarget > 0.5 ? a_style.w : a_style.z) > 0.5;
-	if ((isArrow && !hasArrow) || (a_piece == PIECE_PORT && hasArrow)) {
+	// Only the segment ending at a waypoint draws its dot
+	bool isInteriorStart = a_atTarget < 0.5 && a_progress.x > 0.0;
+	if ((isArrow && !hasArrow) || (a_piece == PIECE_PORT && (hasArrow || isInteriorStart))) {
 		// Outside clip space, so the piece is dropped
 		gl_Position = vec4(2.0, 2.0, 2.0, 1.0);
 		return;
@@ -125,7 +143,8 @@ void main() {
 		if (a_piece == PIECE_PORT) {
 			center = tip;
 			offset = a_corner;
-			radius = PORT_RADIUS;
+			bool isWaypoint = a_atTarget > 0.5 && a_progress.y < 1.0;
+			radius = isWaypoint ? WAYPOINT_RADIUS : PORT_RADIUS;
 		} else if (a_piece == PIECE_ARROW_TIP) {
 			center = tip;
 			offset = a_corner;

@@ -6,6 +6,7 @@ import { MindmapHotkeys } from './components/MindmapHotkeys'
 import { MindmapNodeContextMenu } from './components/MindmapNodeContextMenu'
 import { MindmapQuickSelect } from './components/MindmapQuickSelect'
 import { MindmapScaleReporter } from './components/MindmapScaleReporter'
+import { MindmapWaypointContextMenu } from './components/MindmapWaypointContextMenu'
 import { MindmapBackground } from './screenspace/MindmapBackground'
 import { MindmapEmptyState } from './screenspace/MindmapEmptyState'
 import { MindmapClickArea } from './workspace/clickArea/MindmapClickArea'
@@ -43,6 +44,7 @@ export function Mindmap() {
 			<MindmapQuickSelect />
 			<MindmapNodeContextMenu />
 			<MindmapBulkContextMenu />
+			<MindmapWaypointContextMenu />
 			<MindmapClipboardManager containerRef={containerRef} />
 		</Stack>
 	)

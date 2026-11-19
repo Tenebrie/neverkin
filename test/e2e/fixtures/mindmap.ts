@@ -20,27 +20,36 @@ export async function createMindmapWires(
 	return postJson<CreateMindmapWiresApiResponse>(page, `/api/world/${worldId}/mindmap/wires`, body)
 }
 
-export async function multiselectWire(wire: Locator) {
-	await wire.click({ modifiers: [multiselectModifier], force: true, position: await wireMidpoint(wire) })
+export async function multiselectWire(wire: Locator, along = 0.5) {
+	await wire.click({
+		modifiers: [multiselectModifier],
+		force: true,
+		position: await wirePointAt(wire, along),
+	})
 }
 
 export async function rightClickWire(wire: Locator) {
-	await wire.click({ button: 'right', force: true, position: await wireMidpoint(wire) })
+	await wire.click({ button: 'right', force: true, position: await wirePointAt(wire, 0.5) })
 }
 
-async function wireMidpoint(wire: Locator) {
-	return wire.evaluate((path) => {
+export async function doubleClickWire(wire: Locator, along = 0.5) {
+	await wire.dblclick({ force: true, position: await wirePointAt(wire, along) })
+}
+
+/** The point `along` the wire's length, from 0 at the source to 1 at the target, relative to the path's box */
+async function wirePointAt(wire: Locator, along: number) {
+	return wire.evaluate((path, along: number) => {
 		if (!(path instanceof SVGPathElement)) {
 			throw new Error('MindmapWire is not an SVG path')
 		}
-		const point = path.getPointAtLength(path.getTotalLength() / 2)
+		const point = path.getPointAtLength(path.getTotalLength() * along)
 		const pathBox = path.getBBox()
 		const screenBox = path.getBoundingClientRect()
 		return {
 			x: ((point.x - pathBox.x) / pathBox.width) * screenBox.width,
 			y: ((point.y - pathBox.y) / pathBox.height) * screenBox.height,
 		}
-	})
+	}, along)
 }
 
 async function postJson<TResponse>(page: Page, path: string, body: object): Promise<TResponse> {

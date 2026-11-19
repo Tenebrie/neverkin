@@ -23,6 +23,12 @@ export const MindmapPasteDataSchema = z.object({
 			targetTempId: z.string(),
 			direction: z.enum(wireDirections),
 			content: EntityNameSchema,
+			waypoints: z.array(
+				z.object({
+					offsetX: z.number(),
+					offsetY: z.number(),
+				}),
+			),
 		}),
 	),
 	externalLinks: z.array(

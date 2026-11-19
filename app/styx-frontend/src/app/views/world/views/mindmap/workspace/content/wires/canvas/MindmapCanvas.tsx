@@ -10,15 +10,14 @@ import VERTEX_SHADER from './shaders/MindmapCanvas.glsl.vert?raw'
 
 export const GLOW_WIDTH = 8
 const STROKE_WIDTH = 2
-/** The former SVG port: an r=3 circle with a 2px stroke */
 const PORT_RADIUS = 4
+const WAYPOINT_RADIUS = PORT_RADIUS * 0.7
 const ARROW_SIZE = 8
 
 type ShaderAttribute = { name: string; size: number }
 
 /**
- * Draws every wire with one instanced draw call. The triangles of a single wire are uploaded once and shared;
- * each wire only contributes its ends, handles, colors and style, and only the wires that changed are uploaded.
+ * Draws every wire segment with one instanced draw call
  */
 export function MindmapWireCanvas() {
 	const canvasRef = useRef<HTMLCanvasElement>(null)
@@ -68,7 +67,7 @@ export function MindmapWireCanvas() {
 			gl.uniform1f(scaleLocation, MindmapState.scale)
 			gl.uniform2f(cameraLocation, MindmapState.cameraX, MindmapState.cameraY)
 			gl.uniform2f(viewportLocation, width, height)
-			gl.drawArraysInstanced(gl.TRIANGLES, 0, templateVertexCount, wireBuffer.wireCount)
+			gl.drawArraysInstanced(gl.TRIANGLES, 0, templateVertexCount, wireBuffer.segmentCount)
 		})
 
 		const resizeObserver = new ResizeObserver(() => {
@@ -107,6 +106,7 @@ function createProgram(gl: WebGL2RenderingContext) {
 			GLOW_RADIUS: GLOW_WIDTH / 2,
 			STROKE_RADIUS: STROKE_WIDTH / 2,
 			PORT_RADIUS,
+			WAYPOINT_RADIUS,
 			ARROW_SIZE,
 		}) + VERTEX_SHADER,
 	)

@@ -50,7 +50,7 @@ export function MindmapWireGhostLine({ node }: Props) {
 		let colors = palette.free
 
 		if (target) {
-			endpoints = getEdgePoints(layout, target)
+			endpoints = getEdgePoints(layout, target, [])
 			const isDuplicate =
 				wirePairs.has(`${node.id}->${target.id}`) || wirePairs.has(`${target.id}->${node.id}`)
 			if (isDuplicate) {

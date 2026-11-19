@@ -18,7 +18,7 @@ type Props = {
 
 export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 	const navigate = useStableNavigate({ from: '/world/$worldId/mindmap' })
-	const { selectedNodes, selectedWires, addNodeToSelection, removeNodeFromSelection } =
+	const { selectedNodes, addNodeToSelection, removeNodeFromSelection, hasBulkSelection } =
 		useMindmapSelectionContext()
 	const selectedRef = useRef(false)
 
@@ -69,8 +69,7 @@ export function useMindmapNodeClicks({ node, parent, ref, onClick }: Props) {
 
 	const { onMouseDown, onMouseUp } = useDraggableClick({
 		onRightClick: (event) => {
-			const isBulkSelectContext =
-				selectedNodes.size() + selectedWires.size() > 1 && selectedNodes.has(node.id)
+			const isBulkSelectContext = hasBulkSelection() && selectedNodes.has(node.id)
 			if (isBulkSelectContext) {
 				dispatchGlobalEvent['mindmap/bulk/requestOpenContextMenu']({
 					position: {

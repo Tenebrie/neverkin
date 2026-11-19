@@ -14,7 +14,9 @@ describe('useDoubleClick', () => {
 		rstest.useRealTimers()
 	})
 
-	const mockMouseEvent = (data: { target?: unknown } = {}) =>
+	const mockMouseEvent = (
+		data: { target?: unknown; button?: number; clientX?: number; clientY?: number } = {},
+	) =>
 		({
 			target: 'div1',
 			...data,
@@ -179,5 +181,83 @@ describe('useDoubleClick', () => {
 		})
 
 		expect(onDoubleClickSpy).not.toHaveBeenCalled()
+	})
+
+	describe('long click', () => {
+		const pressAt = (clientX: number, clientY: number) => mockMouseEvent({ button: 0, clientX, clientY })
+
+		const moveMouseTo = (clientX: number, clientY: number) => {
+			window.dispatchEvent(new window.MouseEvent('mousemove', { clientX, clientY }))
+		}
+
+		const renderLongClick = () => {
+			const onClickSpy = rstest.fn()
+			const onLongClickSpy = rstest.fn()
+			const { result } = renderHookWithProviders(() =>
+				useDoubleClick<void>({
+					onClick: onClickSpy,
+					onDoubleClick: rstest.fn(),
+					onLongClick: onLongClickSpy,
+					ignoreDelay: true,
+				}),
+			)
+			return { ...result.current, onClickSpy, onLongClickSpy }
+		}
+
+		it('fires after holding the button still', () => {
+			const { startLongClick, onLongClickSpy } = renderLongClick()
+
+			act(() => {
+				moveMouseTo(10, 10)
+				startLongClick(pressAt(10, 10))
+				rstest.advanceTimersByTime(600)
+			})
+
+			expect(onLongClickSpy).toHaveBeenCalledTimes(1)
+		})
+
+		it('does not fire when the pointer moves away during the hold', () => {
+			const { startLongClick, onLongClickSpy } = renderLongClick()
+
+			act(() => {
+				moveMouseTo(10, 10)
+				startLongClick(pressAt(10, 10))
+				moveMouseTo(40, 40)
+				rstest.advanceTimersByTime(600)
+			})
+
+			expect(onLongClickSpy).not.toHaveBeenCalled()
+		})
+
+		it('does not fire when the button is released first', () => {
+			const { startLongClick, cancelLongClick, onLongClickSpy } = renderLongClick()
+
+			act(() => {
+				moveMouseTo(10, 10)
+				startLongClick(pressAt(10, 10))
+				cancelLongClick()
+				rstest.advanceTimersByTime(600)
+			})
+
+			expect(onLongClickSpy).not.toHaveBeenCalled()
+		})
+
+		it('swallows the click that follows it, but not the next one', () => {
+			const { startLongClick, triggerClick, onClickSpy } = renderLongClick()
+
+			act(() => {
+				moveMouseTo(10, 10)
+				startLongClick(pressAt(10, 10))
+				rstest.advanceTimersByTime(600)
+				triggerClick(mockMouseEvent())
+			})
+			expect(onClickSpy).not.toHaveBeenCalled()
+
+			act(() => {
+				startLongClick(pressAt(10, 10))
+				triggerClick(mockMouseEvent())
+			})
+			expect(onClickSpy).toHaveBeenCalledTimes(1)
+		})
 	})
 })

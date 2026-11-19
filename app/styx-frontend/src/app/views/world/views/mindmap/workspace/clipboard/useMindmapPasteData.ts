@@ -125,6 +125,10 @@ export function useMindmapPasteData() {
 					targetTempId: remappedNodeIds.get(parcel.targetNode.id)!,
 					direction: parcel.wire.direction,
 					content: parcel.wire.content,
+					waypoints: parcel.wire.waypoints.map((waypoint) => ({
+						offsetX: Math.round(waypoint.positionX - geometricCenter.x),
+						offsetY: Math.round(waypoint.positionY - geometricCenter.y),
+					})),
 				})),
 			)
 			structuredData.externalLinks = structuredData.externalLinks.concat(

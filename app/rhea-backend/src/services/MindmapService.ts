@@ -3,6 +3,7 @@ import { BadRequestError } from 'moonflower'
 
 import { AssetRefService } from './AssetRefService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
+import { makeSortMindmapWaypointsQuery } from './dbQueries/makeSortMindmapWaypointsQuery.js'
 import { makeTouchWorldQuery } from './dbQueries/makeTouchWorldQuery.js'
 import { MentionsService } from './MentionsService.js'
 import { CommonOrderBy } from './utils/commonOrderBy.js'
@@ -67,13 +68,34 @@ export const MindmapService = {
 			}
 		})
 	},
-	async moveNodes(nodes: string[], deltaX: number, deltaY: number, worldId: string) {
-		return getPrismaClient().mindmapNode.updateManyAndReturn({
-			where: { id: { in: nodes }, worldId },
-			data: {
+	async moveElements({
+		nodeIds,
+		waypointIds,
+		deltaX,
+		deltaY,
+		worldId,
+	}: {
+		nodeIds: string[]
+		waypointIds: string[]
+		deltaX: number
+		deltaY: number
+		worldId: string
+	}) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const shift = {
 				positionX: { increment: deltaX },
 				positionY: { increment: deltaY },
-			},
+			}
+			const nodes = await prisma.mindmapNode.updateManyAndReturn({
+				where: { id: { in: nodeIds }, worldId },
+				data: shift,
+			})
+			await prisma.mindmapLinkWaypoint.updateMany({
+				where: { id: { in: waypointIds } },
+				data: shift,
+			})
+			const wires = await MindmapService.getLinksByIds(await findWaypointLinkIds(waypointIds, prisma), prisma)
+			return { nodes, wires }
 		})
 	},
 	async deleteNodes(worldId: string, nodeIds: string[]) {
@@ -90,7 +112,14 @@ export const MindmapService = {
 			where: {
 				sourceNode: { worldId },
 			},
+			include: { waypoints: { orderBy: { index: 'asc' } } },
 			orderBy: CommonOrderBy,
+		})
+	},
+	async getLink(wireId: string, prisma?: Prisma.TransactionClient) {
+		return getPrismaClient(prisma).mindmapLink.findUniqueOrThrow({
+			where: { id: wireId },
+			include: { waypoints: { orderBy: { index: 'asc' } } },
 		})
 	},
 	async createLinks(worldId: string, data: Prisma.MindmapLinkUncheckedCreateInput[]) {
@@ -174,9 +203,7 @@ export const MindmapService = {
 		}: { name: string; direction: MindmapLinkDirection; positionX: number; positionY: number },
 	) {
 		return getPrismaClient().$transaction(async (prisma) => {
-			const link = await prisma.mindmapLink.findFirstOrThrow({
-				where: { id: wireId, sourceNode: { worldId } },
-			})
+			const link = await MindmapService.getLink(wireId, prisma)
 
 			const node = await prisma.mindmapNode.create({
 				data: { worldId, name, ...position },
@@ -202,4 +229,55 @@ export const MindmapService = {
 			},
 		})
 	},
+
+	async getLinksByIds(wireIds: string[], prisma?: Prisma.TransactionClient) {
+		return getPrismaClient(prisma).mindmapLink.findMany({
+			where: { id: { in: wireIds } },
+			include: { waypoints: { orderBy: { index: 'asc' } } },
+			orderBy: CommonOrderBy,
+		})
+	},
+
+	async createWaypoints(
+		targets: { id: string; wireId: string; index: number }[],
+		position: { positionX: number; positionY: number },
+	) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			await prisma.mindmapLinkWaypoint.createMany({
+				data: targets.map((target) => ({
+					id: target.id,
+					linkId: target.wireId,
+					index: target.index * 2 - 1,
+					...position,
+				})),
+			})
+
+			const wireIds = [...new Set(targets.map((target) => target.wireId))]
+			for (const wireId of wireIds) {
+				await makeSortMindmapWaypointsQuery(wireId, prisma)
+			}
+			return MindmapService.getLinksByIds(wireIds, prisma)
+		})
+	},
+	async deleteWaypoints(waypointIds: string[]) {
+		return getPrismaClient().$transaction(async (prisma) => {
+			const wireIds = await findWaypointLinkIds(waypointIds, prisma)
+			await prisma.mindmapLinkWaypoint.deleteMany({
+				where: { id: { in: waypointIds } },
+			})
+			for (const wireId of wireIds) {
+				await makeSortMindmapWaypointsQuery(wireId, prisma)
+			}
+			return MindmapService.getLinksByIds(wireIds, prisma)
+		})
+	},
+}
+
+async function findWaypointLinkIds(waypointIds: string[], prisma: Prisma.TransactionClient) {
+	const waypoints = await prisma.mindmapLinkWaypoint.findMany({
+		where: { id: { in: waypointIds } },
+		select: { linkId: true },
+		distinct: ['linkId'],
+	})
+	return waypoints.map((waypoint) => waypoint.linkId)
 }

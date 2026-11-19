@@ -15,6 +15,8 @@ export type MindmapNodeLayout = {
 	height: number
 }
 
+export type WaypointSelectionEntry = { waypointId: string; wireId: string }
+
 export type MindmapWireParcel = {
 	wire: MindmapWire
 	sourceNode: MindmapNodeParcel

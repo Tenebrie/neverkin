@@ -11,6 +11,12 @@ import appShowcase01 from '~/assets/showcase/app-showcase-02.png'
 import mindmap01 from '~/assets/docs/mindmap/mindmap-01.png'
 import mindmap02 from '~/assets/docs/mindmap/mindmap-02.png'
 import mindmap03 from '~/assets/docs/mindmap/mindmap-03.png'
+import cableManagement01 from '~/assets/docs/mindmap/cable-management-01.png'
+import cableManagement02 from '~/assets/docs/mindmap/cable-management-02.png'
+import cableManagement03 from '~/assets/docs/mindmap/cable-management-03.png'
+import cableManagement04 from '~/assets/docs/mindmap/cable-management-04.png'
+import cableManagement05 from '~/assets/docs/mindmap/cable-management-05.png'
+import cableManagement06 from '~/assets/docs/mindmap/cable-management-06.png'
 
 The **Mindmap** is a place for your visualizations. The sky is the limit. It could be a chart of character relationships, a family tree, the physical layout of rooms in a dungeon, or whatever else you want to use it for.
 
@@ -38,10 +44,39 @@ Nodes can be linked together to show their relationship. To link a node, drag a 
 
 <Image src={mindmap03} alt="Two nodes linked together" />
 
-You can also double-click the wire to add a label to it, or flip the link direction.
+You can also right-click or long-click the wire to add a label to it, or flip the link direction.
 
 <Aside type="note">
 While node links and mentions may look similar, they are not the same concept. You can mention entities and link nodes independently from each other.
+</Aside>
+
+### Cable management
+
+By default, two linked nodes will display a single wire taking the shortest path with minor creative freedom for aesthetic reasons. You may customize the path by pinning the wire to a specific spot either by double clicking it, or by dragging a wire with the left click.
+
+<Image src={cableManagement01} alt="Default link path" />
+<Image src={cableManagement02} alt="Adjusted link path" />
+
+You may also use this feature to organize messy mindmaps into something more palatable. To create a wire bundle - a zip tie, if you will - select the wires you want to collect, right-click some spot to place the bundle and choose the "Collect links here" option.
+
+<Image src={cableManagement03} alt="Bulk selection context menu with wires selected" />
+
+And so you may go from a weird mess:
+
+<Image src={cableManagement04} alt="Mindmap nodes before cable management" />
+
+To a slightly more manageable mess:
+
+<Image src={cableManagement05} alt="Mindmap nodes after cable management" />
+
+You are able to place as many pins as necessary. The Collect option chooses the nearest wire segment to your chosen position to pin.
+
+<Image src={cableManagement06} alt="Mindmap nodes with multiple pins in their wires" />
+
+To remove a single wire pin or a release a bunch of wires, you can just double click the pin, or right-click and select the "Unbundle" option.
+
+<Aside type="note">
+When moving the nodes, pins stay in place by default. To move them, you may either select individual pins together with the nodes you're moving, or add the entire wire to selection. When the wire is selected, all pins are moved as well.
 </Aside>
 
 ### Deleting nodes
