@@ -92,8 +92,7 @@ test.describe('World Mindmap', () => {
 
 		const moveResponse = page.waitForResponse(
 			(res) =>
-				res.request().method() === 'POST' &&
-				!!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/move/),
+				res.request().method() === 'POST' && !!res.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/move/),
 		)
 
 		await nodeOneHeader.hover()
@@ -240,8 +239,7 @@ test.describe('World Mindmap', () => {
 		}
 
 		const moveRequest = page.waitForRequest(
-			(req) =>
-				req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/nodes\/move/),
+			(req) => req.method() === 'POST' && !!req.url().match(/\/api\/world\/[a-zA-Z0-9-]+\/mindmap\/move/),
 		)
 		await firstNodeHeader.hover()
 		await page.mouse.down()

@@ -94,19 +94,28 @@ export function toWireSegments(ep: WireEndpoints, waypoints: Point[]): WireSegme
 /** The closest point on the wire, and which of its curves it lies on */
 export function nearestWirePoint(curves: WireControlPoints[], point: Point): { index: number; point: Point } {
 	const SAMPLES = 32
-	let nearest = { index: 0, point }
+	let nearest = { index: 0, t: 0 }
 	let nearestDistance = Infinity
-	for (let index = 0; index < curves.length; index++) {
-		for (let step = 0; step <= SAMPLES; step++) {
-			const sample = bezierPoint(curves[index], step / SAMPLES)
-			const distance = Math.hypot(sample.x - point.x, sample.y - point.y)
-			if (distance < nearestDistance) {
-				nearestDistance = distance
-				nearest = { index, point: sample }
-			}
+	const consider = (index: number, t: number) => {
+		const sample = bezierPoint(curves[index], t)
+		const distance = Math.hypot(sample.x - point.x, sample.y - point.y)
+		if (distance < nearestDistance) {
+			nearestDistance = distance
+			nearest = { index, t }
 		}
 	}
-	return nearest
+	for (let index = 0; index < curves.length; index++) {
+		for (let step = 0; step <= SAMPLES; step++) {
+			consider(index, step / SAMPLES)
+		}
+	}
+	for (let span = 1 / SAMPLES; span > 1 / 4096; span /= 4) {
+		const { index, t } = nearest
+		for (let step = -3; step <= 3; step++) {
+			consider(index, Math.min(1, Math.max(0, t + (step * span) / 4)))
+		}
+	}
+	return { index: nearest.index, point: bezierPoint(curves[nearest.index], nearest.t) }
 }
 
 /** Where a wire's label sits: the middle of its middle curve */

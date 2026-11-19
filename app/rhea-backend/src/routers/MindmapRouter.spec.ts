@@ -241,7 +241,13 @@ describe('MindmapRouter', () => {
 						entityNode({ tempId: 'foreign', parentType: 'actor', parentId: foreignActor.id }),
 					],
 					internalLinks: [
-						{ sourceTempId: 'plain', targetTempId: 'foreign', direction: 'Normal', content: '' },
+						{
+							sourceTempId: 'plain',
+							targetTempId: 'foreign',
+							direction: 'Normal',
+							content: '',
+							waypoints: [],
+						},
 					],
 					externalLinks: [],
 				},
@@ -284,9 +290,9 @@ describe('MindmapRouter', () => {
 						plainNode({ tempId: 'c', plainNodeName: 'C' }),
 					],
 					internalLinks: [
-						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Reversed', content: 'knows' },
-						{ sourceTempId: 'b', targetTempId: 'c', direction: 'TwoWay', content: '' },
-						{ sourceTempId: 'a', targetTempId: 'missing', direction: 'Normal', content: '' },
+						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Reversed', content: 'knows', waypoints: [] },
+						{ sourceTempId: 'b', targetTempId: 'c', direction: 'TwoWay', content: '', waypoints: [] },
+						{ sourceTempId: 'a', targetTempId: 'missing', direction: 'Normal', content: '', waypoints: [] },
 					],
 					externalLinks: [],
 				},
@@ -313,6 +319,40 @@ describe('MindmapRouter', () => {
 					}),
 				]),
 			)
+		})
+
+		it('pastes the waypoints of internal links relative to the paste origin', async () => {
+			const response = await api.send({
+				originX: 100,
+				originY: 200,
+				pasteData: {
+					nodes: [
+						plainNode({ tempId: 'a', plainNodeName: 'A' }),
+						plainNode({ tempId: 'b', plainNodeName: 'B' }),
+					],
+					internalLinks: [
+						{
+							sourceTempId: 'a',
+							targetTempId: 'b',
+							direction: 'Normal',
+							content: '',
+							waypoints: [
+								{ offsetX: -10, offsetY: 5 },
+								{ offsetX: 30, offsetY: -15 },
+							],
+						},
+					],
+					externalLinks: [],
+				},
+			})
+
+			expect(response.statusCode).toEqual(200)
+			const waypoints = await db.mindmapLinkWaypoint.findMany({ orderBy: { index: 'asc' } })
+			expect(waypoints.map(({ index, positionX, positionY }) => ({ index, positionX, positionY }))).toEqual([
+				{ index: 0, positionX: 90, positionY: 205 },
+				{ index: 2, positionX: 130, positionY: 185 },
+			])
+			expect(response.body.wires[0].waypoints).toHaveLength(2)
 		})
 
 		it('creates external links only to existing nodes in the same world', async () => {
@@ -357,7 +397,9 @@ describe('MindmapRouter', () => {
 				originY: 0,
 				pasteData: {
 					nodes: [plainNode({ tempId: 'a' }), plainNode({ tempId: 'b' })],
-					internalLinks: [{ sourceTempId: 'a', targetTempId: 'b', direction: 'Normal', content: '' }],
+					internalLinks: [
+						{ sourceTempId: 'a', targetTempId: 'b', direction: 'Normal', content: '', waypoints: [] },
+					],
 					externalLinks: [
 						{ sourceTempId: 'a', targetNodeId: localNode.id, direction: 'Normal', content: '' },
 					],
@@ -499,6 +541,16 @@ describe('MindmapRouter', () => {
 			expect(response.statusCode).toEqual(400)
 			const unchanged = await db.mindmapLinkWaypoint.findFirstOrThrow({ where: { id: listed.id } })
 			expect(unchanged).toMatchObject({ positionX: 10, positionY: 10 })
+		})
+
+		it('rejects when any node belongs to another world', async () => {
+			const response = await withUserAuth(otherUser)
+				.post(`/api/world/${otherWorld.id}/mindmap/move`)
+				.send({ nodeIds: [first.id], waypointIds: [], deltaX: 5, deltaY: -3 })
+
+			expect(response.statusCode).toEqual(400)
+			const unchanged = await db.mindmapNode.findFirstOrThrow({ where: { id: first.id } })
+			expect(unchanged).toMatchObject({ positionX: 0, positionY: 0 })
 		})
 	})
 

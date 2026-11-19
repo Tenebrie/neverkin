@@ -186,9 +186,8 @@ export function useMindmapWireInteraction({ wireId, paint, onOpenPopover }: Prop
 	useEffect(
 		() => () => {
 			removeWireFromHover(wireId)
-			removeWireFromSelection(wireId)
 		},
-		[removeWireFromHover, removeWireFromSelection, wireId],
+		[removeWireFromHover, wireId],
 	)
 
 	const labelProps = { onClick, onMouseDown: onPressStart, onMouseUp: onPressEnd }

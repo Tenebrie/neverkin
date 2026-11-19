@@ -3,7 +3,11 @@ import useEvent from 'react-use-event-hook'
 
 import { createRealtimeContext } from '@/app/components/RealtimeContext/RealtimeContext'
 import { ReactiveMap } from '@/app/features/reactivity/ReactiveMap'
-import { WaypointSelectionEntry } from '@/app/views/world/views/mindmap/types'
+import {
+	MindmapNodeParcel,
+	MindmapWireParcel,
+	WaypointSelectionEntry,
+} from '@/app/views/world/views/mindmap/types'
 
 export const MindmapSelectionContext = createRealtimeContext(() => {
 	const [selectedNodes] = useState(() => new ReactiveMap<string, true>())
@@ -74,6 +78,23 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 
 	const hasBulkSelection = useEvent(() => selectedNodes.size() + selectedWires.size() > 1)
 
+	const dropMissingFromSelection = useEvent(
+		(nodes: Map<string, MindmapNodeParcel>, wires: Map<string, MindmapWireParcel>) => {
+			for (const nodeId of selectedNodes.keys().filter((id) => !nodes.has(id))) {
+				selectedNodes.delete(nodeId)
+			}
+			for (const wireId of selectedWires.keys().filter((id) => !wires.has(id))) {
+				selectedWires.delete(wireId)
+			}
+			const waypointIds = new Set(
+				[...wires.values()].flatMap((parcel) => parcel.wire.waypoints.map((waypoint) => waypoint.id)),
+			)
+			for (const waypointId of selectedWaypoints.keys().filter((id) => !waypointIds.has(id))) {
+				selectedWaypoints.delete(waypointId)
+			}
+		},
+	)
+
 	const clearSelections = useEvent(() => {
 		selectedNodes.replace(new Map())
 		selectedWires.replace(new Map())
@@ -112,6 +133,7 @@ export const MindmapSelectionContext = createRealtimeContext(() => {
 		setWaypointSelection,
 		removeWaypointsFromSelection,
 		hasBulkSelection,
+		dropMissingFromSelection,
 		clearSelections,
 		addNodeToHover,
 		removeNodeFromHover,

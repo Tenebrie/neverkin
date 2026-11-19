@@ -193,7 +193,12 @@ const makeMindmapNode = (
 		pages,
 	}) satisfies ExportedWorld['mindmapNodes'][number]
 
-const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-1') =>
+const makeMindmapLink = (
+	sourceNodeId: string,
+	targetNodeId: string,
+	id = 'link-1',
+	waypoints: ReturnType<typeof makeWaypoint>[] = [],
+) =>
 	({
 		id,
 		createdAt: now,
@@ -202,7 +207,17 @@ const makeMindmapLink = (sourceNodeId: string, targetNodeId: string, id = 'link-
 		sourceNodeId,
 		targetNodeId,
 		content: '',
+		waypoints,
 	}) satisfies ExportedWorld['mindmapNodes'][number]['links'][number]
+
+const makeWaypoint = (linkId: string, id = 'waypoint-1', index = 0) =>
+	({
+		id,
+		index,
+		positionX: 10,
+		positionY: 20,
+		linkId,
+	}) satisfies ExportedWorld['mindmapNodes'][number]['links'][number]['waypoints'][number]
 
 const makeTrack = (worldId: string, id = 'track-1') => ({
 	id,
@@ -402,6 +417,7 @@ const tx = {
 	tag: { createMany: vi.fn() },
 	mindmapNode: { createMany: vi.fn() },
 	mindmapLink: { createMany: vi.fn() },
+	mindmapLinkWaypoint: { createMany: vi.fn() },
 	calendarUnitRelation: { createMany: vi.fn() },
 }
 
@@ -780,6 +796,18 @@ describe('DataMigrationService', () => {
 			const prisma = makePrisma()
 			await expect(DataMigrationService.validateOwnership(ctx, data, prisma)).rejects.toThrow(
 				'references a node outside the world',
+			)
+		})
+
+		it('rejects a mindmap link carrying a waypoint of another link', async () => {
+			const world = makeWorld(userId)
+			world.mindmapNodes = [
+				makeMindmapNode(world.id, 'n1', [makeMindmapLink('n1', 'n2', 'l1', [makeWaypoint('other-link')])]),
+				makeMindmapNode(world.id, 'n2'),
+			]
+			const data = makeExportData(userId, [world], [])
+			await expect(DataMigrationService.validateOwnership(ctx, data, makePrisma())).rejects.toThrow(
+				'carries a waypoint of another link',
 			)
 		})
 
@@ -1172,6 +1200,26 @@ describe('DataMigrationService', () => {
 
 			expect(tx.mindmapLink.createMany).toHaveBeenCalledWith({
 				data: [expect.objectContaining({ id: 'l1', sourceNodeId: 'n1', targetNodeId: 'n2' })],
+			})
+		})
+
+		it('inserts mindmap link waypoints after their links, not nested in them', async () => {
+			const world = makeWorld(userId)
+			const waypoints = [makeWaypoint('l1', 'w1', 0), makeWaypoint('l1', 'w2', 2)]
+			world.mindmapNodes = [
+				makeMindmapNode(world.id, 'n1', [makeMindmapLink('n1', 'n2', 'l1', waypoints)]),
+				makeMindmapNode(world.id, 'n2'),
+			]
+			const data = makeExportData(userId, [world], [])
+			await DataMigrationService.importUserData(ctx, serialize(data), { dryRun: false })
+
+			const insertedLink = tx.mindmapLink.createMany.mock.calls[0][0].data[0]
+			expect(insertedLink).not.toHaveProperty('waypoints')
+			expect(tx.mindmapLinkWaypoint.createMany).toHaveBeenCalledWith({
+				data: [
+					expect.objectContaining({ id: 'w1', linkId: 'l1', index: 0, positionX: 10, positionY: 20 }),
+					expect.objectContaining({ id: 'w2', linkId: 'l1', index: 2 }),
+				],
 			})
 		})
 

@@ -40,6 +40,7 @@ export default defineConfig(
 			'app/thetis-landing/dist',
 			'app/thetis-landing/.astro',
 			'test/e2e/dist',
+			'test/e2e/test-report',
 			'*.gen.ts',
 			'node_modules',
 			'.husky',

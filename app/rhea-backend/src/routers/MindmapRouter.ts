@@ -166,6 +166,7 @@ router.post('/api/world/:worldId/mindmap/move', async (ctx) => {
 		deltaY: z.number(),
 	})
 
+	await ValidationService.checkMindmapNodesValidity({ worldId, nodeIds: params.nodeIds })
 	await ValidationService.checkMindmapWaypointsValidity({ worldId, waypointIds: params.waypointIds })
 
 	const { nodes, wires } = await MindmapService.moveElements({ ...params, worldId })

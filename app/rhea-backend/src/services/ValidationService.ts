@@ -61,6 +61,16 @@ export const ValidationService = {
 		return count > 0
 	},
 
+	areMindmapNodesValid: async ({ worldId, nodeIds }: { worldId: string; nodeIds: string[] }) => {
+		const count = await getPrismaClient().mindmapNode.count({
+			where: {
+				id: { in: nodeIds },
+				worldId,
+			},
+		})
+		return count === new Set(nodeIds).size
+	},
+
 	areMindmapWiresValid: async ({ worldId, wireIds }: { worldId: string; wireIds: string[] }) => {
 		const count = await getPrismaClient().mindmapLink.count({
 			where: {
@@ -113,6 +123,13 @@ export const ValidationService = {
 		const isValid = await ValidationService.isTagValid(tagId)
 		if (!isValid) {
 			throw new BadRequestError('Tag does not exist')
+		}
+	},
+
+	checkMindmapNodesValidity: async (params: { worldId: string; nodeIds: string[] }) => {
+		const isValid = await ValidationService.areMindmapNodesValid(params)
+		if (!isValid) {
+			throw new BadRequestError('Node does not exist')
 		}
 	},
 

@@ -9,6 +9,7 @@ import {
 import { AuthorizationService } from './AuthorizationService.js'
 import { getPrismaClient } from './dbClients/DatabaseClient.js'
 import { EntityResolverService } from './EntityResolverService.js'
+import { MindmapService } from './MindmapService.js'
 
 export const MindmapPasteService = {
 	async pasteNodes(
@@ -74,15 +75,27 @@ export const MindmapPasteService = {
 				(link) => remappedToNewNodes.has(link.sourceTempId) && remappedToNewNodes.has(link.targetTempId),
 			)
 
-			const createdInternalLinks = await prisma.mindmapLink.createManyAndReturn({
+			const internalLinkIds = internalLinks.map(() => randomUUID())
+			await prisma.mindmapLink.createMany({
 				data: internalLinks.map(
-					(wire) =>
+					(wire, index) =>
 						({
+							id: internalLinkIds[index],
 							sourceNodeId: remappedToNewNodes.get(wire.sourceTempId)!,
 							targetNodeId: remappedToNewNodes.get(wire.targetTempId)!,
 							direction: wire.direction,
 							content: wire.content,
 						}) satisfies MindmapLinkUncheckedCreateInput,
+				),
+			})
+			await prisma.mindmapLinkWaypoint.createMany({
+				data: internalLinks.flatMap((wire, linkIndex) =>
+					wire.waypoints.map((waypoint, index) => ({
+						linkId: internalLinkIds[linkIndex],
+						index: index * 2,
+						positionX: originX + waypoint.offsetX,
+						positionY: originY + waypoint.offsetY,
+					})),
 				),
 			})
 
@@ -102,10 +115,12 @@ export const MindmapPasteService = {
 				(link) => remappedToNewNodes.has(link.sourceTempId) && validTargetIds.has(link.targetNodeId),
 			)
 
-			const createdExternalLinks = await prisma.mindmapLink.createManyAndReturn({
+			const externalLinkIds = externalLinks.map(() => randomUUID())
+			await prisma.mindmapLink.createMany({
 				data: externalLinks.map(
-					(wire) =>
+					(wire, index) =>
 						({
+							id: externalLinkIds[index],
 							sourceNodeId: remappedToNewNodes.get(wire.sourceTempId)!,
 							targetNodeId: wire.targetNodeId,
 							direction: wire.direction,
@@ -116,7 +131,7 @@ export const MindmapPasteService = {
 
 			return {
 				nodes: createdNodes,
-				wires: createdInternalLinks.concat(createdExternalLinks),
+				wires: await MindmapService.getLinksByIds([...internalLinkIds, ...externalLinkIds], prisma),
 			}
 		})
 	},

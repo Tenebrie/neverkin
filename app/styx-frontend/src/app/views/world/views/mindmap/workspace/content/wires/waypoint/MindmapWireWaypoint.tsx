@@ -1,5 +1,5 @@
 import Box from '@mui/material/Box'
-import { useEffect, useLayoutEffect, useRef, useState } from 'react'
+import { useLayoutEffect, useRef, useState } from 'react'
 
 import { MindmapWire } from '@/api/types/mindmapTypes'
 import { dispatchGlobalEvent, useEventBusSubscribe } from '@/app/features/eventBus'
@@ -54,13 +54,6 @@ export function MindmapWireWaypoint({ wireId, waypoint, index, color, onMove }: 
 		applySelection()
 		return selectedWaypoints.subscribe(waypoint.id, applySelection)
 	}, [selectedWaypoints, waypoint.id])
-
-	useEffect(
-		() => () => {
-			removeWaypointsFromSelection([waypoint.id])
-		},
-		[removeWaypointsFromSelection, waypoint.id],
-	)
 
 	/** The waypoints drawn on top of each other at this spot; the user sees them as one handle */
 	const stack = () => {
