@@ -1,4 +1,5 @@
 import { UserAuthenticator } from '@src/middleware/auth/UserAuthenticator.js'
+import { SearchableEntitySchema } from '@src/schema/EntityType.js'
 import { AuthorizationService } from '@src/services/AuthorizationService.js'
 import { SearchModeShape, WorldSearchService } from '@src/services/WorldSearchService.js'
 import { WorldService } from '@src/services/WorldService.js'
@@ -33,13 +34,11 @@ router.get('/api/search', async (ctx) => {
 	const {
 		q: query,
 		mode,
-		minTime,
-		maxTime,
+		include,
 	} = useQueryParams(ctx, {
 		q: z.string(),
 		mode: OptionalParam(SearchModeValidator),
-		minTime: z.number().optional(),
-		maxTime: z.number().optional(),
+		include: SearchableEntitySchema.array().optional(),
 	})
 
 	const availableWorlds = await WorldService.listAvailableWorlds({ owner: user })
@@ -53,11 +52,7 @@ router.get('/api/search', async (ctx) => {
 		worldIds: worlds,
 		query,
 		mode: mode ?? 'split_by_space',
-		// timeRange: {
-		// 	from: minTime,
-		// 	to: maxTime,
-		// },
-		// include: ['actor', 'article', 'event', 'tag'],
+		include,
 	})
 })
 
@@ -91,7 +86,7 @@ router.get('/api/world/:worldId/search/:query', async (ctx) => {
 			from: minTime,
 			to: maxTime,
 		},
-		include: ['actor', 'article', 'event', 'tag'],
+		include: ['Actor', 'Article', 'Event', 'Tag'],
 	})
 })
 

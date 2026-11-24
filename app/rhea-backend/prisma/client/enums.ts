@@ -122,6 +122,18 @@ export const MindmapLinkDirection = {
 export type MindmapLinkDirection = (typeof MindmapLinkDirection)[keyof typeof MindmapLinkDirection]
 
 
+export const SearchableEntity = {
+  Actor: 'Actor',
+  Article: 'Article',
+  Folder: 'Folder',
+  Event: 'Event',
+  Tag: 'Tag',
+  Node: 'Node'
+} as const
+
+export type SearchableEntity = (typeof SearchableEntity)[keyof typeof SearchableEntity]
+
+
 export const UserLevel = {
   Guest: 'Guest',
   Free: 'Free',

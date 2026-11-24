@@ -1,14 +1,8 @@
-import { useSelector } from 'react-redux'
-
 import { useGetFoldersQuery } from '@/api/worldWikiFolderApi'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+
+import { useCurrentWorldId } from '../hooks/useCurrentWorldId'
 
 export function useListFolders() {
-	const worldId = useSelector(getWorldIdState)
-	return useGetFoldersQuery(
-		{ worldId },
-		{
-			skip: !worldId,
-		},
-	)
+	const worldId = useCurrentWorldId()
+	return useGetFoldersQuery({ worldId })
 }

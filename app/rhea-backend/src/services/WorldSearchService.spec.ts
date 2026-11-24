@@ -20,7 +20,7 @@ describe('WorldSearchService', () => {
 			worldIds: [world.id],
 			query: 'test',
 			mode: 'string_match',
-			include: ['actor', 'article', 'event', 'tag'],
+			include: ['Actor', 'Article', 'Event', 'Tag'],
 		})
 		await expect(result).resolves.toEqual({
 			actors: [],
@@ -37,7 +37,7 @@ describe('WorldSearchService', () => {
 			worldIds: [world.id],
 			query: 'not a partial',
 			mode: 'string_match',
-			include: ['actor', 'article', 'event', 'tag'],
+			include: ['Actor', 'Article', 'Event', 'Tag'],
 		})
 		await expect(result).resolves.toEqual({
 			actors: [expect.objectContaining({ name: 'not a partially matching entity' })],
@@ -54,7 +54,7 @@ describe('WorldSearchService', () => {
 			worldIds: [world.id],
 			query: 'first second',
 			mode: 'split_by_space',
-			include: ['actor', 'article', 'event', 'tag'],
+			include: ['Actor', 'Article', 'Event', 'Tag'],
 		})
 		await expect(result).resolves.toEqual({
 			actors: [
@@ -83,7 +83,7 @@ describe('WorldSearchService', () => {
 			worldIds: [world.id],
 			query: 'first second',
 			mode: 'split_by_space',
-			include: ['actor', 'article', 'event', 'tag'],
+			include: ['Actor', 'Article', 'Event', 'Tag'],
 		})
 		await expect(result).resolves.toEqual({
 			actors: [expect.objectContaining({ name: 'first second' })],

@@ -339,6 +339,13 @@ export type ExportUserDataInlineApiResponse = /** status 200  */ {
 					pageId?: null | string
 				}[]
 				links: {
+					waypoints: {
+						id: string
+						positionX: number
+						positionY: number
+						index: number
+						linkId: string
+					}[]
 					id: string
 					createdAt: string
 					updatedAt: string

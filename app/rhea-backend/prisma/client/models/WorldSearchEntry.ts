@@ -36,7 +36,7 @@ export type WorldSearchEntrySumAggregateOutputType = {
 
 export type WorldSearchEntryMinAggregateOutputType = {
   worldId: string | null
-  entityType: $Enums.MentionedEntity | null
+  entityType: $Enums.SearchableEntity | null
   entityId: string | null
   pageId: string | null
   name: string | null
@@ -51,7 +51,7 @@ export type WorldSearchEntryMinAggregateOutputType = {
 
 export type WorldSearchEntryMaxAggregateOutputType = {
   worldId: string | null
-  entityType: $Enums.MentionedEntity | null
+  entityType: $Enums.SearchableEntity | null
   entityId: string | null
   pageId: string | null
   name: string | null
@@ -217,7 +217,7 @@ export type WorldSearchEntryGroupByArgs<ExtArgs extends runtime.Types.Extensions
 
 export type WorldSearchEntryGroupByOutputType = {
   worldId: string
-  entityType: $Enums.MentionedEntity
+  entityType: $Enums.SearchableEntity
   entityId: string
   pageId: string | null
   name: string
@@ -255,7 +255,7 @@ export type WorldSearchEntryWhereInput = {
   OR?: Prisma.WorldSearchEntryWhereInput[]
   NOT?: Prisma.WorldSearchEntryWhereInput | Prisma.WorldSearchEntryWhereInput[]
   worldId?: Prisma.StringFilter<"WorldSearchEntry"> | string
-  entityType?: Prisma.EnumMentionedEntityFilter<"WorldSearchEntry"> | $Enums.MentionedEntity
+  entityType?: Prisma.EnumSearchableEntityFilter<"WorldSearchEntry"> | $Enums.SearchableEntity
   entityId?: Prisma.StringFilter<"WorldSearchEntry"> | string
   pageId?: Prisma.StringNullableFilter<"WorldSearchEntry"> | string | null
   name?: Prisma.StringFilter<"WorldSearchEntry"> | string
@@ -308,7 +308,7 @@ export type WorldSearchEntryScalarWhereWithAggregatesInput = {
   OR?: Prisma.WorldSearchEntryScalarWhereWithAggregatesInput[]
   NOT?: Prisma.WorldSearchEntryScalarWhereWithAggregatesInput | Prisma.WorldSearchEntryScalarWhereWithAggregatesInput[]
   worldId?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
-  entityType?: Prisma.EnumMentionedEntityWithAggregatesFilter<"WorldSearchEntry"> | $Enums.MentionedEntity
+  entityType?: Prisma.EnumSearchableEntityWithAggregatesFilter<"WorldSearchEntry"> | $Enums.SearchableEntity
   entityId?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
   pageId?: Prisma.StringNullableWithAggregatesFilter<"WorldSearchEntry"> | string | null
   name?: Prisma.StringWithAggregatesFilter<"WorldSearchEntry"> | string
@@ -415,7 +415,7 @@ export type $WorldSearchEntryPayload<ExtArgs extends runtime.Types.Extensions.In
   objects: {}
   scalars: runtime.Types.Extensions.GetPayloadResult<{
     worldId: string
-    entityType: $Enums.MentionedEntity
+    entityType: $Enums.SearchableEntity
     entityId: string
     pageId: string | null
     name: string
@@ -670,7 +670,7 @@ export interface Prisma__WorldSearchEntryClient<T, Null = never, ExtArgs extends
  */
 export interface WorldSearchEntryFieldRefs {
   readonly worldId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
-  readonly entityType: Prisma.FieldRef<"WorldSearchEntry", 'MentionedEntity'>
+  readonly entityType: Prisma.FieldRef<"WorldSearchEntry", 'SearchableEntity'>
   readonly entityId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly pageId: Prisma.FieldRef<"WorldSearchEntry", 'String'>
   readonly name: Prisma.FieldRef<"WorldSearchEntry", 'String'>

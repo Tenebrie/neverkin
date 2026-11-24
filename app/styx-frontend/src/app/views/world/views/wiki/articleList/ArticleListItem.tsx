@@ -143,9 +143,11 @@ function ArticleListItemInnerComponent({
 	return (
 		<Box
 			data-testid={`ArticleListItem/${article.name}/${depth}`}
+			data-entity-id={article.id}
 			data-item-type={article.type}
 			sx={{
 				pointerEvents: 'none',
+				scrollMarginBlock: article.type === 'folder' ? 'unset' : '24px',
 			}}
 		>
 			<Stack
