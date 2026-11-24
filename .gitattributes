@@ -1,0 +1,3 @@
+app/rhea-backend/prisma/client/** linguist-generated=true
+app/*/src/api/*.ts linguist-generated=true
+library/openapi-fetch/src/rhea-api.ts linguist-generated=true
