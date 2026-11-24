@@ -32,22 +32,22 @@
 	"devDependencies": {
 		"@modelcontextprotocol/inspector": "^2.11.0",
 		"@neverkin/openapi-fetch": "file:../../library/openapi-fetch",
-		"@types/node": "^25.6.2",
+		"@types/node": "^26.6.6",
 		"@typescript-eslint/eslint-plugin": "^8.69.0",
 		"@typescript-eslint/parser": "^8.59.3",
-		"@vitest/coverage-v8": "^4.1.11",
+		"@vitest/coverage-v8": "^5.1.1",
 		"eslint": "^10.9.1",
 		"eslint-config-prettier": "^10.1.8",
 		"eslint-plugin-prettier": "^5.5.6",
 		"eslint-plugin-simple-import-sort": "^14.0.0",
 		"eslint-plugin-unused-imports": "^4.1.4",
-		"msw": "^2.15.0",
+		"msw": "^3.0.7",
 		"nodemon": "^3.1.14",
 		"prettier": "^3.9.6",
 		"tsc-alias": "^1.9.4",
 		"tsx": "^4.23.13",
 		"typescript": "^6.0.3",
 		"vite": "^8.3.5",
-		"vitest": "^4.1.6"
+		"vitest": "^5.1.1"
 	}
 }
