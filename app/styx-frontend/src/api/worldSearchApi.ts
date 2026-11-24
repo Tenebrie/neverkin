@@ -12,8 +12,7 @@ const injectedRtkApi = api
 					params: {
 						q: queryArg.q,
 						mode: queryArg.mode,
-						minTime: queryArg.minTime,
-						maxTime: queryArg.maxTime,
+						include: queryArg.include,
 					},
 				}),
 				providesTags: ['worldSearch', 'worldDetails', 'worldTag'],
@@ -36,31 +35,31 @@ export { injectedRtkApi as worldSearchApi }
 export type GlobalSearchApiResponse = /** status 200  */ {
 	hits: {
 		pages: {
+			title?: null | string
+			name: string
 			worldId: string
+			entityType: 'Actor' | 'Article' | 'Folder' | 'Event' | 'Tag' | 'Node'
+			entityId: string
+			pageId?: null | string
+			content: string
+			timestamp?: null | string
 			createdAt: string
 			updatedAt: string
-			name: string
-			title?: null | string
 			icon: string
 			color: string
-			content: string
-			pageId?: null | string
-			timestamp?: null | string
-			entityType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-			entityId: string
 		}[]
+		title?: null | string
+		name: string
 		worldId: string
+		entityType: 'Actor' | 'Article' | 'Folder' | 'Event' | 'Tag' | 'Node'
+		entityId: string
+		pageId?: null | string
+		content: string
+		timestamp?: null | string
 		createdAt: string
 		updatedAt: string
-		name: string
-		title?: null | string
 		icon: string
 		color: string
-		content: string
-		pageId?: null | string
-		timestamp?: null | string
-		entityType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
-		entityId: string
 	}[]
 	worlds: {
 		id: string
@@ -69,8 +68,7 @@ export type GlobalSearchApiResponse = /** status 200  */ {
 export type GlobalSearchApiArg = {
 	q: string
 	mode?: 'string_match' | 'split_by_space'
-	minTime?: number
-	maxTime?: number
+	include?: ('Actor' | 'Article' | 'Folder' | 'Event' | 'Tag' | 'Node')[]
 }
 export type SearchWorldApiResponse = /** status 200  */ {
 	actors: {
@@ -80,21 +78,21 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			targetType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			sourceType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		nodes: {
-			worldId: string
 			id: string
+			name: string
+			worldId: string
+			content: string
 			createdAt: string
 			updatedAt: string
-			name: string
 			icon: string
 			color: string
-			content: string
 			contentRich: string
 			parentFolderId?: null | string
 			parentActorId?: null | string
@@ -104,15 +102,15 @@ export type SearchWorldApiResponse = /** status 200  */ {
 			positionY: number
 			parentTagId?: null | string
 		}[]
-		worldId: string
 		id: string
+		title: string
+		name: string
+		worldId: string
+		content: string
 		createdAt: string
 		updatedAt: string
-		name: string
-		title: string
 		icon: string
 		color: string
-		content: string
 		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
@@ -124,20 +122,20 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			targetType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			sourceType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
-		worldId: string
 		id: string
+		name: string
+		worldId: string
+		content: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		content: string
 		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
@@ -149,42 +147,42 @@ export type SearchWorldApiResponse = /** status 200  */ {
 		}[]
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			targetType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			sourceType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
-		worldId: string
 		id: string
+		name: string
+		worldId: string
+		content: string
+		timestamp: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
-		content: string
 		contentRich: string
 		parentFolderId?: null | string
 		parentFolderPosition: number
-		timestamp: string
 		revokedAt?: null | string
 		worldEventTrackId?: null | string
 	}[]
 	tags: {
 		mentions: {
 			targetId: string
-			targetType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			targetType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		mentionedIn: {
 			sourceId: string
-			sourceType: 'Actor' | 'Event' | 'Article' | 'Tag' | 'Node'
+			sourceType: 'Actor' | 'Article' | 'Event' | 'Tag' | 'Node'
 		}[]
 		description: string
-		worldId: string
 		id: string
+		name: string
+		worldId: string
 		createdAt: string
 		updatedAt: string
-		name: string
 		icon: string
 		color: string
 		parentFolderId?: null | string

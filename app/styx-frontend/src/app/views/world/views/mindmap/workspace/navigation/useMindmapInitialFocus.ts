@@ -22,8 +22,8 @@ const CENTERED_TOLERANCE = 1
 
 export function useMindmapInitialFocus() {
 	const worldId = useCurrentWorldId()
-	const { data } = useGetMindmapQuery({ worldId })
-	const revealEntityId = useSelector((state: RootState) => state.mindmap.pendingRevealEntityId)
+	const { currentData: data } = useGetMindmapQuery({ worldId })
+	const pendingReveal = useSelector((state: RootState) => state.mindmap.pendingReveal)
 	const dispatch = useDispatch()
 	const lookAt = useEventBusDispatch['mindmap/camera/requestLookAt']()
 
@@ -34,11 +34,13 @@ export function useMindmapInitialFocus() {
 	const { workspaceRect, nodeLayouts } = useMindmapContext()
 
 	useLayoutEffect(() => {
-		if (!data || !revealEntityId) {
+		if (!data || !pendingReveal || pendingReveal.worldId !== worldId) {
 			return
 		}
 
-		const entityNodes = data.nodes.filter((node) => getMindmapNodeParentId(node) === revealEntityId)
+		const entityNodes = data.nodes.filter(
+			(node) => (getMindmapNodeParentId(node) ?? node.id) === pendingReveal.entityId,
+		)
 		const viewCenter = toWorkspaceCoords({
 			screenX: workspaceRect.x + workspaceRect.width / 2,
 			screenY: workspaceRect.y + workspaceRect.height / 2,
@@ -49,7 +51,7 @@ export function useMindmapInitialFocus() {
 			lookAt(getCenter(pickNextNode(entityNodes, viewCenter, getCenter)))
 		}
 		dispatch(mindmapSlice.actions.setPendingReveal(null))
-	}, [data, dispatch, lookAt, revealEntityId, nodeLayouts, workspaceRect])
+	}, [data, dispatch, lookAt, pendingReveal, worldId, nodeLayouts, workspaceRect])
 
 	useLayoutEffect(() => {
 		if (!data || !pending.current) {

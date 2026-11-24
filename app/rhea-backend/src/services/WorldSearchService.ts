@@ -1,4 +1,4 @@
-import { WorldSearchEntry } from '@prisma/client'
+import { SearchableEntity, WorldSearchEntry } from '@prisma/client'
 import { getPrismaClient } from '@src/services/dbClients/DatabaseClient.js'
 import { deduplicateById } from '@src/utils/deduplicateById.js'
 import { z } from 'zod'
@@ -7,7 +7,6 @@ import { BaselineActor, BaselineArticle, BaselineTag, BaselineWorldEvent } from 
 
 export const SearchModeShape = z.enum(['string_match', 'split_by_space'])
 export type SearchMode = z.infer<typeof SearchModeShape>
-type SearchableEntityType = 'actor' | 'event' | 'article' | 'tag'
 type TimeRange = { from?: number; to?: number }
 type SearchParams = {
 	skip: number
@@ -29,12 +28,14 @@ export const WorldSearchService = {
 		mode,
 		take,
 		skip,
+		include,
 	}: {
 		worldIds: string[]
 		query: string
 		mode: SearchMode
 		take?: number
 		skip?: number
+		include?: SearchableEntity[]
 	}) {
 		const prisma = getPrismaClient()
 
@@ -54,6 +55,9 @@ export const WorldSearchService = {
 					{ title: { contains: term, mode: 'insensitive' } },
 					{ content: { contains: term, mode: 'insensitive' } },
 				]),
+				entityType: {
+					in: include,
+				},
 			},
 			orderBy: {
 				updatedAt: 'desc',
@@ -202,7 +206,7 @@ export const WorldSearchService = {
 		query: string
 		mode: SearchMode
 		timeRange?: TimeRange
-		include: SearchableEntityType[]
+		include: SearchableEntity[]
 		take?: number
 		skip?: number
 	}) {
@@ -222,16 +226,16 @@ export const WorldSearchService = {
 		}
 
 		for (const q of queries) {
-			if (include.includes('actor') && !timeBoundSearch) {
+			if (include.includes('Actor') && !timeBoundSearch) {
 				searchPromises.actors.push(this.findActors(worldIds, q, params))
 			}
-			if (include.includes('article') && !timeBoundSearch) {
+			if (include.includes('Article') && !timeBoundSearch) {
 				searchPromises.articles.push(this.findArticles(worldIds, q, params))
 			}
-			if (include.includes('event')) {
+			if (include.includes('Event')) {
 				searchPromises.events.push(this.findEvents(worldIds, q, params, timeRange))
 			}
-			if (include.includes('tag') && !timeBoundSearch) {
+			if (include.includes('Tag') && !timeBoundSearch) {
 				searchPromises.tags.push(this.findTags(worldIds, q, params))
 			}
 		}

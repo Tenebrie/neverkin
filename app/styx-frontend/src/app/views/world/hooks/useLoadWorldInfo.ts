@@ -20,8 +20,8 @@ export const useLoadWorldInfo = (worldId: string) => {
 			refetchOnMountOrArgChange: true,
 		},
 	)
-	const { data: articles, isLoading: articlesLoading } = useListArticles()
-	const { data: folders, isLoading: foldersLoading } = useListFolders()
+	const { currentData: articles } = useListArticles()
+	const { currentData: folders } = useListFolders()
 
 	const isLoaded = useSelector(getWorldStateLoaded)
 
@@ -61,12 +61,12 @@ export const useLoadWorldInfo = (worldId: string) => {
 	}, [data, dispatch, loadWorld])
 
 	useEffect(() => {
-		dispatch(loadArticles({ articles: articles ?? [], articlesLoading }))
-	}, [articles, articlesLoading, dispatch, loadArticles])
+		dispatch(loadArticles({ articles }))
+	}, [articles, dispatch, loadArticles])
 
 	useEffect(() => {
-		dispatch(loadFolders({ folders: folders ?? [], foldersLoading }))
-	}, [folders, dispatch, loadFolders, foldersLoading])
+		dispatch(loadFolders({ folders }))
+	}, [folders, dispatch, loadFolders])
 
 	return {
 		isLoaded,

@@ -1,15 +1,15 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit'
 
 export const initialState = {
-	pendingRevealEntityId: null as string | null,
+	pendingReveal: null as { worldId: string; entityId: string } | null,
 }
 
 export const mindmapSlice = createSlice({
 	name: 'mindmap',
 	initialState,
 	reducers: {
-		setPendingReveal: (state, { payload }: PayloadAction<string | null>) => {
-			state.pendingRevealEntityId = payload
+		setPendingReveal: (state, { payload }: PayloadAction<{ worldId: string; entityId: string } | null>) => {
+			state.pendingReveal = payload
 		},
 	},
 })
