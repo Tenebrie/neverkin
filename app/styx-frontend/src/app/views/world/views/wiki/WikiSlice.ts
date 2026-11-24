@@ -11,6 +11,7 @@ export const initialState = {
 	lastCheckedArticle: null as string | null,
 	isBulkSelecting: false as boolean,
 	bulkActionArticles: [] as string[],
+	pendingReveal: null as { worldId: string; entityId: string } | null,
 }
 
 export const wikiSlice = createSlice({
@@ -23,17 +24,14 @@ export const wikiSlice = createSlice({
 			)
 			state.articles = [...state.articles, ...payload.articles]
 		},
-		loadArticles: (
-			state,
-			{ payload }: PayloadAction<{ articles: WikiArticle[]; articlesLoading: boolean }>,
-		) => {
-			state.articlesLoaded = !payload.articlesLoading
-			state.articles = payload.articles
+		loadArticles: (state, { payload }: PayloadAction<{ articles: WikiArticle[] | undefined }>) => {
+			state.articlesLoaded = payload.articles !== undefined
+			state.articles = payload.articles ?? []
 		},
 
-		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[]; foldersLoading: boolean }>) => {
-			state.foldersLoaded = !payload.foldersLoading
-			state.folders = payload.folders
+		loadFolders: (state, { payload }: PayloadAction<{ folders: WikiFolder[] | undefined }>) => {
+			state.foldersLoaded = payload.folders !== undefined
+			state.folders = payload.folders ?? []
 		},
 
 		setLastCheckedArticle: (state, { payload }: PayloadAction<{ article: string | null }>) => {
@@ -60,6 +58,18 @@ export const wikiSlice = createSlice({
 		clearBulkSelection: (state) => {
 			state.bulkActionArticles = []
 			state.lastCheckedArticle = null
+		},
+
+		setPendingReveal: (
+			state,
+			{
+				payload,
+			}: PayloadAction<{
+				worldId: string
+				entityId: string
+			} | null>,
+		) => {
+			state.pendingReveal = payload
 		},
 	},
 })

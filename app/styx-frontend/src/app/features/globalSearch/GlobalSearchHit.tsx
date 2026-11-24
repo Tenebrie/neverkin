@@ -4,13 +4,18 @@ import Stack from '@mui/material/Stack'
 import { alpha } from '@mui/material/styles'
 import Typography from '@mui/material/Typography'
 import { useCallback, useMemo } from 'react'
+import { useDispatch } from 'react-redux'
 
 import { GlobalSearchEntry } from '@/api/types/searchTypes'
+import { useGlobalRevealInMindmap } from '@/app/features/mindmap/hooks/useGlobalRevealInMindmap'
+import { useGlobalRevealInOutliner } from '@/app/features/outliner/hooks/useGlobalRevealInOutliner'
 import { useCustomTheme } from '@/app/features/theming/hooks/useCustomTheme'
 import { getAccentColor } from '@/app/utils/colors/getAccentColor'
 import { useColorUtils } from '@/app/utils/colors/useColorUtils'
 import { formatTimeAgo } from '@/app/utils/formatTimeAgo'
+import { useCurrentWorldIdOptional } from '@/app/views/world/hooks/useCurrentWorldIdOptional'
 import { ArticleListItemIcon } from '@/app/views/world/views/wiki/articleList/icon/ArticleListItemIcon'
+import { wikiSlice } from '@/app/views/world/views/wiki/WikiSlice'
 import { useStableNavigate } from '@/router-utils/hooks/useStableNavigate'
 import { HighlightedText } from '@/ui-lib/components/HighlightedText/HighlightedText'
 
@@ -35,18 +40,39 @@ type Props = {
 
 export function GlobalSearchHit({ hit, query, onClose }: Props) {
 	const navigate = useStableNavigate({})
-	// const reveal = useRevealInMindmap(hit)
+	const dispatch = useDispatch()
+	const currentWorldId = useCurrentWorldIdOptional()
+	const revealInMindmap = useGlobalRevealInMindmap(hit)
+	const revealInOutliner = useGlobalRevealInOutliner(hit)
 
 	const onNavigate = useCallback(() => {
-		navigate({
-			to: '/world/$worldId/wiki/$articleId',
-			params: {
-				worldId: hit.worldId,
-				articleId: hit.id,
-			},
-		})
+		if (hit.type === 'node') {
+			revealInMindmap()
+		} else if (hit.type === 'folder') {
+			revealInOutliner()
+		} else {
+			dispatch(wikiSlice.actions.setPendingReveal({ worldId: hit.worldId, entityId: hit.id }))
+			navigate({
+				to: '/world/$worldId/wiki/$articleId',
+				params: {
+					worldId: hit.worldId,
+					articleId: hit.id,
+				},
+				search: currentWorldId === hit.worldId ? true : {},
+			})
+		}
 		onClose()
-	}, [hit.id, hit.worldId, navigate, onClose])
+	}, [
+		currentWorldId,
+		dispatch,
+		hit.id,
+		hit.type,
+		hit.worldId,
+		navigate,
+		onClose,
+		revealInMindmap,
+		revealInOutliner,
+	])
 
 	const theme = useCustomTheme()
 	const { adaptColor, setOpacity } = useColorUtils()
@@ -103,7 +129,7 @@ export function GlobalSearchHit({ hit, query, onClose }: Props) {
 					role="button"
 					startIcon={
 						<Stack direction="row" alignItems="center" sx={{ gap: 0.5, height: 32 }}>
-							<ArticleListItemIcon article={hit} highlighted={renderHighlighted} folderCollapseIcon />
+							<ArticleListItemIcon article={hit} highlighted={renderHighlighted} />
 						</Stack>
 					}
 					variant={renderHighlighted ? 'contained' : 'text'}

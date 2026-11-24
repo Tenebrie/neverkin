@@ -1,6 +1,15 @@
+enum SearchableEntity {
+  Actor
+  Article
+  Folder
+  Event
+  Tag
+  Node
+}
+
 view WorldSearchEntry {
   worldId    String
-  entityType MentionedEntity
+  entityType SearchableEntity
   entityId   String
   pageId     String?
   name       String

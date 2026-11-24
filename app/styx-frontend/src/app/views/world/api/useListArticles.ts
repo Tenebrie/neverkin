@@ -1,14 +1,8 @@
-import { useSelector } from 'react-redux'
-
 import { useGetArticlesQuery } from '@/api/worldWikiApi'
-import { getWorldIdState } from '@/app/views/world/WorldSliceSelectors'
+
+import { useCurrentWorldId } from '../hooks/useCurrentWorldId'
 
 export const useListArticles = () => {
-	const worldId = useSelector(getWorldIdState)
-	return useGetArticlesQuery(
-		{ worldId },
-		{
-			skip: !worldId,
-		},
-	)
+	const worldId = useCurrentWorldId()
+	return useGetArticlesQuery({ worldId })
 }

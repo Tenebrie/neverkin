@@ -116,21 +116,21 @@ const injectedRtkApi = api
 export { injectedRtkApi as mindmapApi }
 export type GetMindmapApiResponse = /** status 200  */ {
 	nodes: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
-		positionX: number
-		positionY: number
 		icon: string
 		color: string
 		content: string
 		contentRich: string
-		parentActorId?: null | string
-		parentArticleId?: null | string
-		parentEventId?: null | string
 		parentFolderId?: null | string
+		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
+		positionX: number
+		positionY: number
 		parentTagId?: null | string
 	}[]
 	wires: {
@@ -144,9 +144,9 @@ export type GetMindmapApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 }
@@ -154,21 +154,21 @@ export type GetMindmapApiArg = {
 	worldId: string
 }
 export type CreateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
-	positionX: number
-	positionY: number
 	icon: string
 	color: string
 	content: string
 	contentRich: string
-	parentActorId?: null | string
-	parentArticleId?: null | string
-	parentEventId?: null | string
 	parentFolderId?: null | string
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+	positionX: number
+	positionY: number
 	parentTagId?: null | string
 }
 export type CreateNodeApiArg = {
@@ -186,21 +186,21 @@ export type CreateNodeApiArg = {
 	}
 }
 export type UpdateNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
-	positionX: number
-	positionY: number
 	icon: string
 	color: string
 	content: string
 	contentRich: string
-	parentActorId?: null | string
-	parentArticleId?: null | string
-	parentEventId?: null | string
 	parentFolderId?: null | string
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+	positionX: number
+	positionY: number
 	parentTagId?: null | string
 }
 export type UpdateNodeApiArg = {
@@ -214,21 +214,21 @@ export type UpdateNodeApiArg = {
 	}
 }
 export type ReparentNodeApiResponse = /** status 200  */ {
+	worldId: string
 	id: string
 	createdAt: string
 	updatedAt: string
 	name: string
-	worldId: string
-	positionX: number
-	positionY: number
 	icon: string
 	color: string
 	content: string
 	contentRich: string
-	parentActorId?: null | string
-	parentArticleId?: null | string
-	parentEventId?: null | string
 	parentFolderId?: null | string
+	parentActorId?: null | string
+	parentEventId?: null | string
+	parentArticleId?: null | string
+	positionX: number
+	positionY: number
 	parentTagId?: null | string
 }
 export type ReparentNodeApiArg = {
@@ -246,21 +246,21 @@ export type ReparentNodeApiArg = {
 }
 export type MoveMindmapElementsApiResponse = /** status 200  */ {
 	nodes: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
-		positionX: number
-		positionY: number
 		icon: string
 		color: string
 		content: string
 		contentRich: string
-		parentActorId?: null | string
-		parentArticleId?: null | string
-		parentEventId?: null | string
 		parentFolderId?: null | string
+		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
+		positionX: number
+		positionY: number
 		parentTagId?: null | string
 	}[]
 	wires: {
@@ -274,9 +274,9 @@ export type MoveMindmapElementsApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 }
@@ -291,30 +291,37 @@ export type MoveMindmapElementsApiArg = {
 }
 export type PasteMindmapNodesApiResponse = /** status 200  */ {
 	nodes: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
-		positionX: number
-		positionY: number
 		icon: string
 		color: string
 		content: string
 		contentRich: string
-		parentActorId?: null | string
-		parentArticleId?: null | string
-		parentEventId?: null | string
 		parentFolderId?: null | string
+		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
+		positionX: number
+		positionY: number
 		parentTagId?: null | string
 	}[]
 	wires: {
+		waypoints: {
+			id: string
+			positionX: number
+			positionY: number
+			index: number
+			linkId: string
+		}[]
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 }
@@ -329,7 +336,7 @@ export type PasteMindmapNodesApiArg = {
 				offsetX: number
 				offsetY: number
 				parentId?: null | string
-				parentType: 'actor' | 'tag' | 'node' | 'article' | 'event' | 'folder'
+				parentType: 'actor' | 'tag' | 'event' | 'article' | 'node' | 'folder'
 				plainNodeName: string
 				plainNodeColor?: string
 			}[]
@@ -338,6 +345,10 @@ export type PasteMindmapNodesApiArg = {
 				targetTempId: string
 				direction: 'Normal' | 'Reversed' | 'TwoWay'
 				content: string
+				waypoints: {
+					offsetX: number
+					offsetY: number
+				}[]
 			}[]
 			externalLinks: {
 				sourceTempId: string
@@ -362,18 +373,18 @@ export type CreateMindmapWiresApiResponse = /** status 200  */ {
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 	updated: {
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 }
@@ -390,9 +401,9 @@ export type UpdateMindmapWireApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	content: string
 	sourceNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	targetNodeId: string
 }
 export type UpdateMindmapWireApiArg = {
@@ -405,30 +416,30 @@ export type UpdateMindmapWireApiArg = {
 }
 export type SplitMindmapWireApiResponse = /** status 200  */ {
 	node: {
+		worldId: string
 		id: string
 		createdAt: string
 		updatedAt: string
 		name: string
-		worldId: string
-		positionX: number
-		positionY: number
 		icon: string
 		color: string
 		content: string
 		contentRich: string
-		parentActorId?: null | string
-		parentArticleId?: null | string
-		parentEventId?: null | string
 		parentFolderId?: null | string
+		parentActorId?: null | string
+		parentEventId?: null | string
+		parentArticleId?: null | string
+		positionX: number
+		positionY: number
 		parentTagId?: null | string
 	}
 	wires: {
 		id: string
 		createdAt: string
 		updatedAt: string
-		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		content: string
 		sourceNodeId: string
+		direction: 'Normal' | 'Reversed' | 'TwoWay'
 		targetNodeId: string
 	}[]
 }
@@ -460,9 +471,9 @@ export type CreateMindmapWaypointsApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	content: string
 	sourceNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	targetNodeId: string
 }[]
 export type CreateMindmapWaypointsApiArg = {
@@ -488,9 +499,9 @@ export type DeleteMindmapWaypointsApiResponse = /** status 200  */ {
 	id: string
 	createdAt: string
 	updatedAt: string
-	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	content: string
 	sourceNodeId: string
+	direction: 'Normal' | 'Reversed' | 'TwoWay'
 	targetNodeId: string
 }[]
 export type DeleteMindmapWaypointsApiArg = {

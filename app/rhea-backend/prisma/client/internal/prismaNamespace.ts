@@ -80,12 +80,12 @@ export type PrismaVersion = {
 }
 
 /**
- * Prisma Client JS version: 7.10.0
- * Query Engine version: 0edf323efd1d98336f3f0a68684b56f689b900d3
+ * Prisma Client JS version: 7.10.1
+ * Query Engine version: d1b3f377ca835d73fd50954a5e22128b9ebdd6b8
  */
 export const prismaVersion: PrismaVersion = {
-  client: "7.10.0",
-  engine: "0edf323efd1d98336f3f0a68684b56f689b900d3"
+  client: "7.10.1",
+  engine: "d1b3f377ca835d73fd50954a5e22128b9ebdd6b8"
 }
 
 /**
@@ -3794,6 +3794,20 @@ export type EnumWorldAccessModeFieldRefInput<$PrismaModel> = FieldRefInputType<$
  * Reference to a field of type 'WorldAccessMode[]'
  */
 export type ListEnumWorldAccessModeFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'WorldAccessMode[]'>
+    
+
+
+/**
+ * Reference to a field of type 'SearchableEntity'
+ */
+export type EnumSearchableEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchableEntity'>
+    
+
+
+/**
+ * Reference to a field of type 'SearchableEntity[]'
+ */
+export type ListEnumSearchableEntityFieldRefInput<$PrismaModel> = FieldRefInputType<$PrismaModel, 'SearchableEntity[]'>
     
 
 /**
